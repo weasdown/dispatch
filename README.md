@@ -1,6 +1,8 @@
 # dispatch
 
-A mock ambulance dispatch app, built with Flutter.
+A **mock** ambulance dispatch app, built with Flutter.
+
+**This software is a work in progress and will only be for training. It MUST NOT be used for any real emergency services operations.**
 
 ## Getting Started
 
