@@ -6,13 +6,32 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
-  Event({required this.id, required this.address})
+  Event({required this.id, required this.category, required this.address})
     : location = _locationFromAddress(address);
 
+  /// A [Category] one call.
+  Event.cat1({required this.id, required this.address, required this.location})
+    : category = Category.one;
+
+  /// A [Category] two call.
+  Event.cat2({required this.id, required this.address, required this.location})
+    : category = Category.two;
+
+  /// A [Category] three call.
+  Event.cat3({required this.id, required this.address, required this.location})
+    : category = Category.three;
+
+  /// A [Category] four call.
+  Event.cat4({required this.id, required this.address, required this.location})
+    : category = Category.four;
+
+  /// A unique numerical identifier.
   final int id;
 
   /// The street address of the emergency.
   final String address;
+
+  final Category category;
 
   /// Latitude.
   double get lat => location.latitude;
@@ -47,12 +66,12 @@ class Event {
 }
 
 final List<Event> defaultEvents = [
-  Event(id: 423123, address: '1 Broad Street, Oxford'),
-  Event(id: 423124, address: '2 Wide Street, Oxford'),
-  Event(id: 423125, address: '3 Deep Street, Oxford'),
-  Event(id: 423126, address: '4 Long Street, Oxford'),
-  Event(id: 423127, address: '5 Tall Street, Oxford'),
-  Event(id: 423128, address: '6 Big Street, Oxford'),
+  Event(id: 423123, category: Category.one, address: '1 Broad Street, Oxford'),
+  Event(id: 423124, category: Category.two, address: '2 Wide Street, Oxford'),
+  Event(id: 423125, category: Category.three, address: '3 Deep Street, Oxford'),
+  Event(id: 423126, category: Category.four, address: '4 Long Street, Oxford'),
+  Event(id: 423127, category: Category.three, address: '5 Tall Street, Oxford'),
+  Event(id: 423128, category: Category.two, address: '6 Big Street, Oxford'),
 ];
 
 /// Storage for all the events that units will respond to.
