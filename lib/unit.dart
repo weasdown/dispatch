@@ -1,5 +1,7 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'map.dart';
+
 /// An ambulance vehicle, air ambulance or other resource.
 class Unit {
   Unit({
@@ -11,6 +13,14 @@ class Unit {
   /// A unique identifier for this resource.
   final String callsign;
 
+  /// Path to the image used as this [Event]'s icon.
+  String get _iconAsset => switch (vehicleType) {
+    VehicleType.dca => 'assets/images/dca.jpg',
+    VehicleType.rrv => 'assets/images/rrv.jpg',
+    VehicleType.helicopter => 'assets/images/tvaa.jpg',
+    VehicleType.criticalCareCar => 'assets/images/hems-car.png',
+  };
+
   /// The current latitude and longitude of this unit.
   LatLng location;
 
@@ -18,7 +28,7 @@ class Unit {
   Marker get mapMarker => Marker(
     markerId: MarkerId(callsign),
     position: LatLng(location.latitude, location.longitude),
-    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    icon: markerIcon(_iconAsset),
     infoWindow: InfoWindow(title: callsign, snippet: location.toString()),
   );
 
@@ -42,6 +52,7 @@ final List<Unit> defaultUnits = [
   Unit(
     callsign: 'NT431',
     location: LatLng(51.397809576171085, -1.3230646597735394),
+    vehicleType: VehicleType.rrv,
   ),
   Unit(
     callsign: 'NR154',

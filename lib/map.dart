@@ -65,3 +65,5 @@ class _MapPageState extends State<MapPage> {
     );
   }
 }
+
+AssetMapBitmap markerIcon(String asset) => AssetMapBitmap(asset, height: 40);
