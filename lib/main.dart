@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'event.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key, EventListModel? events})
+    : events = events ?? EventListModel.blank();
+
+  final EventListModel events;
 
   // This widget is the root of your application.
   @override
