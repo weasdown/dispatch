@@ -1,24 +1,92 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'map.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
-  Event({required this.address}) : location = _locationFromAddress(address);
+  Event({required this.id, required this.category, required this.address})
+    : location = _locationFromAddress(address);
+
+  /// A [Category] one call.
+  Event.cat1({required this.id, required this.address, required this.location})
+    : category = Category.one;
+
+  /// A [Category] two call.
+  Event.cat2({required this.id, required this.address, required this.location})
+    : category = Category.two;
+
+  /// A [Category] three call.
+  Event.cat3({required this.id, required this.address, required this.location})
+    : category = Category.three;
+
+  /// A [Category] four call.
+  Event.cat4({required this.id, required this.address, required this.location})
+    : category = Category.four;
+
+  /// A unique numerical identifier.
+  final int id;
 
   /// The street address of the emergency.
   final String address;
 
+  final Category category;
+
+  // TODO vary the icon based on the category of event.
+  /// Path to the image used as this [Event]'s icon.
+  String? get _iconAsset => null;
+
+  /// Latitude.
+  double get lat => location.latitude;
+
   /// The latitude and longitude of the emergency.
   final LatLng location;
 
+  /// Longitude.
+  double get lng => location.longitude;
+
+  // TODO: implement _locationFromAddress - use Geocoding API (see https://developers.google.com/maps/documentation/geocoding/start)
   /// Returns the latitude and longitude of a given street [address].
   static LatLng _locationFromAddress(String address) {
-    // TODO: implement _locationFromAddress
-    return LatLng(0, 0);
+    // Value is >= 0.0 and < 0.6, plus 51.
+    double randomLat = 51 + Random().nextDouble() * 0.6;
+
+    // Value is >= 0.0 and < 0.6, plus -1.25.
+    double randomLng = -1.25 + Random().nextDouble() * 0.55;
+
+    return LatLng(randomLat, randomLng);
+  }
+
+  /// Gets a [Marker] for showing this [Event] on a map.
+  Marker get mapMarker {
+    final String id = this.id.toString();
+
+    return Marker(
+      markerId: MarkerId(id),
+      position: LatLng(lat, lng),
+      icon:
+          (_iconAsset != null)
+              ? markerIcon(_iconAsset!)
+              : BitmapDescriptor.defaultMarker,
+      infoWindow: InfoWindow(
+        title: 'Event $id (cat ${category.number})',
+        snippet: address,
+      ),
+    );
   }
 }
+
+final List<Event> defaultEvents = [
+  Event(id: 423123, category: Category.one, address: '1 Broad Street, Oxford'),
+  Event(id: 423124, category: Category.two, address: '2 Wide Street, Oxford'),
+  Event(id: 423125, category: Category.three, address: '3 Deep Street, Oxford'),
+  Event(id: 423126, category: Category.four, address: '4 Long Street, Oxford'),
+  Event(id: 423127, category: Category.three, address: '5 Tall Street, Oxford'),
+  Event(id: 423128, category: Category.two, address: '6 Big Street, Oxford'),
+];
 
 /// Storage for all the events that units will respond to.
 class EventListModel extends ChangeNotifier {
@@ -51,4 +119,18 @@ class EventListModel extends ChangeNotifier {
     // This call tells the widgets that are listening to this model to rebuild.
     notifyListeners();
   }
+}
+
+/// The category assigned to an [Event].
+enum Category {
+  one('1', Colors.purple),
+  two('2', Colors.red),
+  three('3', Colors.yellow),
+  four('4', Colors.green);
+
+  const Category(this.number, this.colour);
+
+  final String number;
+
+  final Color colour;
 }
