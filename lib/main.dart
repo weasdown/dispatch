@@ -5,7 +5,7 @@ import 'map.dart';
 import 'unit.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MyApp(events: EventListModel(events: defaultEvents)));
 }
 
 class MyApp extends StatelessWidget {
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue[700]!),
       ),
-      home: MapPage(events: defaultEvents, units: defaultUnits),
+      home: MapPage(events: events.events, units: defaultUnits),
     );
   }
 }
