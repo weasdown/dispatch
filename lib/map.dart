@@ -35,30 +35,51 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   late GoogleMapController mapController;
 
-  final Set<Marker> _markers = {};
+  bool showEvents = true;
+  bool showUnits = true;
+
+  Set<Marker> get _markers => {
+    ...(showEvents) ? widget.events.map((Event event) => event.mapMarker) : {},
+    ...(showUnits) ? widget.units.map((Unit unit) => unit.mapMarker) : {},
+  };
 
   Future<void> _onMapCreated(GoogleMapController controller) async {
     setState(() {
       _markers.clear();
-
-      // Add event markers
-      widget.events.asMap().forEach((int index, Event event) {
-        _markers.addAll(widget.events.map((Event event) => event.mapMarker));
-      });
-
-      // Add unit markers
-      widget.units.asMap().forEach((int index, Unit unit) {
-        _markers.addAll(widget.units.map((Unit unit) => unit.mapMarker));
-      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final Switch showEventsSwitch = Switch(
+      value: showEvents,
+      activeColor: Colors.green,
+      onChanged: (bool value) {
+        setState(() => showEvents = value);
+      },
+    );
+
+    final Switch showUnitsSwitch = Switch(
+      value: showUnits,
+      activeColor: Colors.green,
+      onChanged: (bool value) {
+        setState(() => showUnits = value);
+      },
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('New CAD'),
         elevation: 2,
+        actions: [
+          Row(
+            children: [
+              Row(children: [Text('Show Events? '), showEventsSwitch]),
+              SizedBox(width: 8),
+              Row(children: [Text('Show Units? '), showUnitsSwitch]),
+            ],
+          ),
+        ],
       ),
       body: GoogleMap(
         onMapCreated: _onMapCreated,
