@@ -56,7 +56,10 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Maps Sample App'), elevation: 2),
+      appBar: AppBar(
+        title: const Text('New CAD'),
+        elevation: 2,
+      ),
       body: GoogleMap(
         onMapCreated: _onMapCreated,
         initialCameraPosition: CameraPosition(target: widget.centre, zoom: 9),
