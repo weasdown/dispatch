@@ -1,6 +1,8 @@
-import 'package:dispatch/event.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'event.dart';
+import 'unit.dart';
 
 /// A page that displays a Google Maps map.
 class MapPage extends StatefulWidget {
@@ -8,6 +10,7 @@ class MapPage extends StatefulWidget {
     super.key,
     this.centre = MapPage.scasCentre,
     required this.events,
+    required this.units,
   });
 
   // Approximate geometric centre of the SCAS area.
@@ -22,6 +25,9 @@ class MapPage extends StatefulWidget {
   /// The [Event]s that will be displayed on the map.
   final List<Event> events;
 
+  /// The [Unit]s that are currently in the SCAS fleet.
+  final List<Unit> units;
+
   @override
   State<MapPage> createState() => _MapPageState();
 }
@@ -35,6 +41,7 @@ class _MapPageState extends State<MapPage> {
     setState(() {
       _markers.clear();
 
+      // Add event markers
       widget.events.asMap().forEach((int index, Event event) {
         String id = event.id.toString();
         _markers.add(
@@ -42,6 +49,21 @@ class _MapPageState extends State<MapPage> {
             markerId: MarkerId(id),
             position: LatLng(event.lat, event.lng),
             infoWindow: InfoWindow(title: id, snippet: event.address),
+          ),
+        );
+      });
+
+      // Add unit markers
+      widget.units.asMap().forEach((int index, Unit unit) {
+        _markers.add(
+          Marker(
+            markerId: MarkerId(unit.callsign),
+            position: LatLng(unit.location.latitude, unit.location.longitude),
+            flat: true,
+            infoWindow: InfoWindow(
+              title: unit.callsign,
+              snippet: unit.location.toString(),
+            ),
           ),
         );
       });

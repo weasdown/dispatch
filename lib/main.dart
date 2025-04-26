@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'event.dart';
 import 'map.dart';
+import 'unit.dart';
 
 void main() {
   runApp(MyApp());
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue[700]!),
       ),
-      home: MapPage(events: defaultEvents),
+      home: MapPage(events: defaultEvents, units: defaultUnits),
     );
   }
 }
