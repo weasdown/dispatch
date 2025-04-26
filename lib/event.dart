@@ -36,11 +36,14 @@ class Event {
   }
 
   /// Gets a [Marker] for showing this [Event] on a map.
-  Marker get mapMarker => Marker(
-    markerId: MarkerId(id.toString()),
-    position: LatLng(lat, lng),
-    infoWindow: InfoWindow(title: id.toString(), snippet: address),
-  );
+  Marker get mapMarker {
+    final String id = this.id.toString();
+    return Marker(
+      markerId: MarkerId(id),
+      position: LatLng(lat, lng),
+      infoWindow: InfoWindow(title: 'Event $id', snippet: address),
+    );
+  }
 }
 
 final List<Event> defaultEvents = [
