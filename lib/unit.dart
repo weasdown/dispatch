@@ -29,7 +29,10 @@ class Unit {
     markerId: MarkerId(callsign),
     position: LatLng(location.latitude, location.longitude),
     icon: markerIcon(_iconAsset),
-    infoWindow: InfoWindow(title: callsign, snippet: location.toString()),
+    infoWindow: InfoWindow(
+      title: '$callsign - ${vehicleType.name}',
+      snippet: location.toString(),
+    ),
   );
 
   /// The type of vehicle that this is.
@@ -66,4 +69,13 @@ final List<Unit> defaultUnits = [
   ),
 ];
 
-enum VehicleType { dca, rrv, helicopter, criticalCareCar }
+enum VehicleType {
+  dca('Double-Crewed Ambulance'),
+  rrv('Rapid Response Vehicle'),
+  helicopter('Air Ambulance Helicopter'),
+  criticalCareCar('Critical Care Car');
+
+  const VehicleType(this.name);
+
+  final String name;
+}
