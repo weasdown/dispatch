@@ -60,7 +60,10 @@ class Event {
     return Marker(
       markerId: MarkerId(id),
       position: LatLng(lat, lng),
-      infoWindow: InfoWindow(title: 'Event $id', snippet: address),
+      infoWindow: InfoWindow(
+        title: 'Event $id (cat ${category.number})',
+        snippet: address,
+      ),
     );
   }
 }
