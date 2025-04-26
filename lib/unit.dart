@@ -30,7 +30,7 @@ class Unit {
     position: LatLng(location.latitude, location.longitude),
     icon: markerIcon(_iconAsset),
     infoWindow: InfoWindow(
-      title: '$callsign - ${vehicleType.name}',
+      title: '$callsign (${vehicleType.name})',
       snippet: location.toString(),
     ),
   );
