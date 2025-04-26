@@ -5,11 +5,11 @@ import 'map.dart';
 import 'unit.dart';
 
 void main() {
-  runApp(MyApp(events: EventListModel(events: defaultEvents)));
+  runApp(NewCAD(events: EventListModel(events: defaultEvents)));
 }
 
-class MyApp extends StatelessWidget {
-  MyApp({super.key, EventListModel? events})
+class NewCAD extends StatelessWidget {
+  NewCAD({super.key, EventListModel? events})
     : events = events ?? EventListModel.blank();
 
   final EventListModel events;
