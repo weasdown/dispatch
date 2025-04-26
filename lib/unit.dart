@@ -2,7 +2,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 /// An ambulance vehicle, air ambulance or other resource.
 class Unit {
-  Unit({required this.callsign, required this.location});
+  Unit({
+    required this.callsign,
+    required this.location,
+    this.vehicleType = VehicleType.dca,
+  });
 
   /// A unique identifier for this resource.
   final String callsign;
@@ -17,6 +21,9 @@ class Unit {
     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     infoWindow: InfoWindow(title: callsign, snippet: location.toString()),
   );
+
+  /// The type of vehicle that this is.
+  final VehicleType vehicleType;
 }
 
 final List<Unit> defaultUnits = [
@@ -33,7 +40,19 @@ final List<Unit> defaultUnits = [
     location: LatLng(51.8296012219854, -1.3134667111590494),
   ),
   Unit(
+    callsign: 'NT431',
+    location: LatLng(51.397809576171085, -1.3230646597735394),
+  ),
+  Unit(
     callsign: 'NR154',
-    location: LatLng(51.89096056450592, -1.1499680791975175),
+    location: LatLng(51.66706110914126, -1.3082872829130447),
+    vehicleType: VehicleType.criticalCareCar,
+  ),
+  Unit(
+    callsign: 'NH58',
+    location: LatLng(51.61832936052779, -1.0854888181805424),
+    vehicleType: VehicleType.helicopter,
   ),
 ];
+
+enum VehicleType { dca, rrv, helicopter, criticalCareCar }
