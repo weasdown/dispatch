@@ -13,7 +13,7 @@ class MapPage extends StatefulWidget {
     required this.units,
   });
 
-  // Approximate geometric centre of the SCAS area.
+  /// Approximate geometric centre of the SCAS area.
   static const LatLng scasCentre = LatLng(
     51.453100204133726,
     -1.307710460160255,
