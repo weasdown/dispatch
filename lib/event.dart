@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
@@ -24,10 +25,16 @@ class Event {
   /// Longitude.
   double get lng => location.longitude;
 
+  // TODO: implement _locationFromAddress
   /// Returns the latitude and longitude of a given street [address].
   static LatLng _locationFromAddress(String address) {
-    // TODO: implement _locationFromAddress
-    return LatLng(0, 0);
+    // Value is >= 0.0 and < 0.6, plus 51.
+    double randomLat = 51 + Random().nextDouble() * 0.6;
+
+    // Value is >= 0.0 and < 0.6, plus -1.25.
+    double randomLng = -1.25 + Random().nextDouble() * 0.55;
+
+    return LatLng(randomLat, randomLng);
   }
 }
 
