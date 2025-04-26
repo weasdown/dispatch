@@ -48,7 +48,7 @@ class Event {
   /// Longitude.
   double get lng => location.longitude;
 
-  // TODO: implement _locationFromAddress
+  // TODO: implement _locationFromAddress - use Geocoding API (see https://developers.google.com/maps/documentation/geocoding/start)
   /// Returns the latitude and longitude of a given street [address].
   static LatLng _locationFromAddress(String address) {
     // Value is >= 0.0 and < 0.6, plus 51.
