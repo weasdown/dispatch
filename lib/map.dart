@@ -43,29 +43,12 @@ class _MapPageState extends State<MapPage> {
 
       // Add event markers
       widget.events.asMap().forEach((int index, Event event) {
-        String id = event.id.toString();
-        _markers.add(
-          Marker(
-            markerId: MarkerId(id),
-            position: LatLng(event.lat, event.lng),
-            infoWindow: InfoWindow(title: id, snippet: event.address),
-          ),
-        );
+        _markers.addAll(widget.events.map((Event event) => event.mapMarker));
       });
 
       // Add unit markers
       widget.units.asMap().forEach((int index, Unit unit) {
-        _markers.add(
-          Marker(
-            markerId: MarkerId(unit.callsign),
-            position: LatLng(unit.location.latitude, unit.location.longitude),
-            flat: true,
-            infoWindow: InfoWindow(
-              title: unit.callsign,
-              snippet: unit.location.toString(),
-            ),
-          ),
-        );
+        _markers.addAll(widget.units.map((Unit unit) => unit.mapMarker));
       });
     });
   }
