@@ -38,6 +38,15 @@ class Event {
   }
 }
 
+final List<Event> defaultEvents = [
+  Event(id: 423123, address: '1 Broad Street, Oxford'),
+  Event(id: 423124, address: '2 Wide Street, Oxford'),
+  Event(id: 423125, address: '3 Deep Street, Oxford'),
+  Event(id: 423126, address: '4 Long Street, Oxford'),
+  Event(id: 423127, address: '5 Tall Street, Oxford'),
+  Event(id: 423128, address: '6 Big Street, Oxford'),
+];
+
 /// Storage for all the events that units will respond to.
 class EventListModel extends ChangeNotifier {
   EventListModel({required List<Event> events}) {
