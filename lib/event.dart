@@ -8,24 +8,24 @@ import 'map.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
-  Event({required this.id, required this.category, required this.address})
+  Event._({required this.id, required this.category, required this.address})
     : location = _locationFromAddress(address);
 
   /// A [Category] one call.
-  Event.cat1({required this.id, required this.address, required this.location})
-    : category = Category.one;
+  Event.cat1({required int id, required String address})
+    : this._(id: id, category: Category.one, address: address);
 
   /// A [Category] two call.
-  Event.cat2({required this.id, required this.address, required this.location})
-    : category = Category.two;
+  Event.cat2({required int id, required String address})
+    : this._(id: id, category: Category.two, address: address);
 
   /// A [Category] three call.
-  Event.cat3({required this.id, required this.address, required this.location})
-    : category = Category.three;
+  Event.cat3({required int id, required String address})
+    : this._(id: id, category: Category.three, address: address);
 
   /// A [Category] four call.
-  Event.cat4({required this.id, required this.address, required this.location})
-    : category = Category.four;
+  Event.cat4({required int id, required String address})
+    : this._(id: id, category: Category.four, address: address);
 
   /// A unique numerical identifier.
   final int id;
@@ -80,12 +80,12 @@ class Event {
 }
 
 final List<Event> defaultEvents = [
-  Event(id: 423123, category: Category.one, address: '1 Broad Street, Oxford'),
-  Event(id: 423124, category: Category.two, address: '2 Wide Street, Oxford'),
-  Event(id: 423125, category: Category.three, address: '3 Deep Street, Oxford'),
-  Event(id: 423126, category: Category.four, address: '4 Long Street, Oxford'),
-  Event(id: 423127, category: Category.three, address: '5 Tall Street, Oxford'),
-  Event(id: 423128, category: Category.two, address: '6 Big Street, Oxford'),
+  Event.cat1(id: 423123, address: '1 Broad Street, Oxford'),
+  Event.cat2(id: 423124, address: '2 Wide Street, Oxford'),
+  Event.cat3(id: 423125, address: '3 Deep Street, Oxford'),
+  Event.cat4(id: 423126, address: '4 Long Street, Oxford'),
+  Event.cat3(id: 423127, address: '5 Tall Street, Oxford'),
+  Event.cat2(id: 423128, address: '6 Big Street, Oxford'),
 ];
 
 /// Storage for all the events that units will respond to.
