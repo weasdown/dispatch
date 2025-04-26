@@ -9,6 +9,14 @@ class Unit {
 
   /// The current latitude and longitude of this unit.
   LatLng location;
+
+  /// Gets a [Marker] for showing this [Unit] on a map.
+  Marker get mapMarker => Marker(
+    markerId: MarkerId(callsign),
+    position: LatLng(location.latitude, location.longitude),
+    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    infoWindow: InfoWindow(title: callsign, snippet: location.toString()),
+  );
 }
 
 final List<Unit> defaultUnits = [
