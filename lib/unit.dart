@@ -15,8 +15,8 @@ class Unit {
 
   /// Path to the image used as this [Event]'s icon.
   String get _iconAsset => switch (vehicleType) {
-    VehicleType.dca => 'assets/images/dca.jpg',
-    VehicleType.rrv => 'assets/images/rrv.jpg',
+    VehicleType.dca => 'assets/images/dca.png',
+    VehicleType.rrv => 'assets/images/rrv.png',
     VehicleType.helicopter => 'assets/images/tvaa.jpg',
     VehicleType.criticalCareCar => 'assets/images/hems-car.png',
   };
