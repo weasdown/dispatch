@@ -2,14 +2,12 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
   Event({required this.id, required this.address})
-    : location = _locationFromAddress(address) {
-    debugPrint('Lat/lng for event $id: $lat, $lng');
-  }
+    : location = _locationFromAddress(address);
 
   final int id;
 
@@ -36,6 +34,13 @@ class Event {
 
     return LatLng(randomLat, randomLng);
   }
+
+  /// Gets a [Marker] for showing this [Event] on a map.
+  Marker get mapMarker => Marker(
+    markerId: MarkerId(id.toString()),
+    position: LatLng(lat, lng),
+    infoWindow: InfoWindow(title: id.toString(), snippet: address),
+  );
 }
 
 final List<Event> defaultEvents = [
