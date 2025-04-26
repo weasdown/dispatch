@@ -123,12 +123,14 @@ class EventListModel extends ChangeNotifier {
 
 /// The category assigned to an [Event].
 enum Category {
-  one('1'),
-  two('2'),
-  three('3'),
-  four('4');
+  one('1', Colors.purple),
+  two('2', Colors.red),
+  three('3', Colors.yellow),
+  four('4', Colors.green);
 
-  const Category(this.number);
+  const Category(this.number, this.colour);
 
   final String number;
+
+  final Color colour;
 }
