@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'map.dart';
+
 /// An emergency event that the ambulance service has become aware of.
 class Event {
   Event({required this.id, required this.category, required this.address})
@@ -33,6 +35,10 @@ class Event {
 
   final Category category;
 
+  // TODO vary the icon based on the category of event.
+  /// Path to the image used as this [Event]'s icon.
+  String? get _iconAsset => null;
+
   /// Latitude.
   double get lat => location.latitude;
 
@@ -57,9 +63,14 @@ class Event {
   /// Gets a [Marker] for showing this [Event] on a map.
   Marker get mapMarker {
     final String id = this.id.toString();
+
     return Marker(
       markerId: MarkerId(id),
       position: LatLng(lat, lng),
+      icon:
+          (_iconAsset != null)
+              ? markerIcon(_iconAsset!)
+              : BitmapDescriptor.defaultMarker,
       infoWindow: InfoWindow(
         title: 'Event $id (cat ${category.number})',
         snippet: address,
