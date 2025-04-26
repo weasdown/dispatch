@@ -87,3 +87,15 @@ class EventListModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+/// The category assigned to an [Event].
+enum Category {
+  one('1'),
+  two('2'),
+  three('3'),
+  four('4');
+
+  const Category(this.number);
+
+  final String number;
+}
