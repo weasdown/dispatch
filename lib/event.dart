@@ -6,7 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../api/maps/geocoding.dart';
 import 'map.dart';
-import 'noc.dart';
+import 'noc.dart' as n;
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
@@ -153,7 +153,7 @@ class Event {
   }
 
   /// Nature of Call.
-  NOC? noc;
+  n.NOC? noc;
 }
 
 List<Future<Event>> get futureDefaultEvents => [
@@ -231,7 +231,10 @@ enum Category {
 
   const Category(this.number, this.colour);
 
-  final String number;
-
   final Color colour;
+
+  List<n.NOC> get nocs =>
+      List<n.NOC>.from(n.nocs.where((n.NOC noc) => noc.category == this));
+
+  final String number;
 }
