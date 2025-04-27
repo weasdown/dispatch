@@ -25,6 +25,7 @@ class NewCAD extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'New CAD',
+      // TODO to create Theme, see https://docs.flutter.dev/cookbook/design/themes#create-an-app-theme
       theme: ThemeData(
         // This is the theme of your application.
         //
