@@ -4,7 +4,12 @@ import 'event.dart';
 import 'map.dart';
 import 'unit.dart';
 
-void main() {
+void main() async {
+  List<Event> defaultEvents = [];
+  for (Future<Event> futureEvent in futureDefaultEvents) {
+    defaultEvents.add(await futureEvent);
+  }
+
   runApp(NewCAD(events: EventListModel(events: defaultEvents)));
 }
 
