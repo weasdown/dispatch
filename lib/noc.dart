@@ -62,7 +62,8 @@ final class Cat2NOC extends NOC {
   const Cat2NOC._({required description}) : super(Category.two, description);
 
   const Cat2NOC.allergicReaction() : this._(description: 'Allergic Reaction');
-  const Cat2NOC.bleedingSpecify() : super.withSpecify(Category.two, 'Bleeding');
+  const Cat2NOC.bleedingSpecify()
+    : super.withSpecify(Category.two, 'Bleeding (Specify...)');
   const Cat2NOC.c2BreathingProblems()
     : this._(description: 'C2 Breathing Problems');
   const Cat2NOC.breathingProblemUnder5yrs()
@@ -113,7 +114,8 @@ final class Cat3NOC extends NOC {
     : this._(description: 'Death Expected <18');
   const Cat3NOC.deathUnexpectedAllAges()
     : this._(description: 'Death Unexpected all ages');
-  const Cat3NOC.c3ETHANE() : super.withSpecify(Category.three, 'C3 ETHANE');
+  const Cat3NOC.c3ETHANE()
+    : super.withSpecify(Category.three, 'C3 ETHANE (Specify...)');
   const Cat3NOC.fallInjuriesUnknown()
     : this._(description: 'Fall, Injuries unknown');
   const Cat3NOC.headache() : this._(description: 'Headache');
@@ -123,16 +125,34 @@ final class Cat3NOC extends NOC {
   const Cat3NOC.suicide() : this._(description: 'Suicide');
 }
 
-// TODO implement constructors for Cat4NOC.
 final class Cat4NOC extends NOC {
   const Cat4NOC._({required description}) : super(Category.four, description);
 
-  const Cat4NOC._withSpecify({required description})
-    : super.withSpecify(Category.four, description);
+  const Cat4NOC.animalInsectsBitesOrStingsMinor()
+    : this._(description: 'Animal/Insects Bites or Stings (minor)');
+  const Cat4NOC.assaultDomestic() : this._(description: 'Assault/Domestic');
+  const Cat4NOC.deathExpectedOver18()
+    : this._(description: 'Death Expected >18');
+  const Cat4NOC.fallsNonInjury() : this._(description: 'Falls, Non-Injury');
+  const Cat4NOC.fireRequestToStandby()
+    : this._(description: 'Fire Request to Standby');
+  const Cat4NOC.hcpOrIFTLevel3Or4()
+    : this._(description: 'HCP or IFT Level 3 or 4');
+  const Cat4NOC.informationOnly() : this._(description: 'Information Only');
+  const Cat4NOC.majorIncidentStandby()
+    : this._(description: 'Major Incident Standby');
+  const Cat4NOC.medicalMinor()
+    : super.withSpecify(Category.four, 'Medical Minor (Specify...)');
+  const Cat4NOC.mentalHealth() : this._(description: 'Mental Health');
+  const Cat4NOC.minorBleeding() : this._(description: 'Minor Bleeding');
+  const Cat4NOC.nauseaVomiting() : this._(description: 'Nausea/Vomiting');
+  const Cat4NOC.social() : this._(description: 'Social');
+  const Cat4NOC.trauma()
+    : super.withSpecify(Category.four, 'Trauma (specify...)');
 }
 
 /// Full list of all the available Nature of Call statuses.
-List<NOC> nocs = [
+const List<NOC> nocs = [
   ...catOneNOCs,
   ...catTwoNOCs,
   ...catThreeNOCs,
@@ -203,21 +223,20 @@ const List<Cat3NOC> catThreeNOCs = [
   Cat3NOC.suicide(),
 ];
 
-// FIXME fix catFourNOCs
 /// [Category] 4 nature of calls.
 const List<Cat4NOC> catFourNOCs = [
-  // NOC(Category.four, 'Animal/Insects Bites or Stings (minor)'),
-  // NOC(Category.four, 'Assault/Domestic'),
-  // NOC(Category.four, 'Death Expected >18'),
-  // NOC(Category.four, 'Falls, Non-Injury'),
-  // NOC(Category.four, 'Fire Request to Standby'),
-  // NOC(Category.four, 'HCP or IFT Level 3 or 4'),
-  // NOC(Category.four, 'Information Only'),
-  // NOC(Category.four, 'Major Incident Standby'),
-  // NOC(Category.four, 'Medical Minor (Specify...)'),
-  // NOC(Category.four, 'Mental Health'),
-  // NOC(Category.four, 'Minor Bleeding'),
-  // NOC(Category.four, 'Nausea/Vomiting'),
-  // NOC(Category.four, 'Social'),
-  // NOC(Category.four, 'Trauma (specify...)'),
+  Cat4NOC.animalInsectsBitesOrStingsMinor(),
+  Cat4NOC.assaultDomestic(),
+  Cat4NOC.deathExpectedOver18(),
+  Cat4NOC.fallsNonInjury(),
+  Cat4NOC.fireRequestToStandby(),
+  Cat4NOC.hcpOrIFTLevel3Or4(),
+  Cat4NOC.informationOnly(),
+  Cat4NOC.majorIncidentStandby(),
+  Cat4NOC.medicalMinor(),
+  Cat4NOC.mentalHealth(),
+  Cat4NOC.minorBleeding(),
+  Cat4NOC.nauseaVomiting(),
+  Cat4NOC.social(),
+  Cat4NOC.trauma(),
 ];
