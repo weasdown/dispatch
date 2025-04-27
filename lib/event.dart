@@ -40,9 +40,6 @@ class Event {
   }) : category = Category.four,
        location = _locationFromAddress(address);
 
-  /// A unique numerical identifier.
-  final int id;
-
   /// The street address of the emergency.
   final String address;
 
@@ -63,14 +60,17 @@ class Event {
   /// Path to the image used as this [Event]'s icon.
   String? get _iconAsset => null;
 
+  /// A unique numerical identifier.
+  final int id;
+
   /// Latitude.
   double get lat => location.latitude;
 
-  /// The latitude and longitude of the emergency.
-  final LatLng location;
-
   /// Longitude.
   double get lng => location.longitude;
+
+  /// The latitude and longitude of the emergency.
+  final LatLng location;
 
   // TODO: implement _locationFromAddress - use Geocoding API (see https://developers.google.com/maps/documentation/geocoding/start)
   /// Returns the latitude and longitude of a given street [address].
