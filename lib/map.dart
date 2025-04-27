@@ -81,6 +81,7 @@ class _MapPageState extends State<MapPage> {
           ),
         ],
       ),
+      // endDrawer: NavigationDrawer(children: [Text('Event details')]),
       body: GoogleMap(
         onMapCreated: _onMapCreated,
         initialCameraPosition: CameraPosition(target: widget.centre, zoom: 9),

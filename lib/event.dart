@@ -1,60 +1,105 @@
 import 'dart:collection';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_google_maps_webservices/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../api/maps/geocoding.dart';
 import 'map.dart';
 import 'noc.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
-  Event({
+  /// Private constructor
+  Event._({
     required this.id,
+    required this.category,
     required this.address,
-    this.noc,
     required this.callerLocationUncertainty,
-  }) : location = _locationFromAddress(address);
+  });
+
+  /// Private 'factory'
+  static Future<Event> _create({
+    required int id,
+    required Category category,
+    required String address,
+    required num callerLocationUncertainty,
+  }) async {
+    // Call the private constructor
+    Event event = Event._(
+      id: id,
+      category: category,
+      address: address,
+      callerLocationUncertainty: callerLocationUncertainty,
+    );
+
+    // Get precise location from address.
+    event.location = await event._locationFromAddress();
+
+    // Return the event.
+    return event;
+  }
 
   /// A [Category] one call.
-  Event.cat1({
-    required this.id,
-    required this.address,
-    required this.callerLocationUncertainty,
-  }) : category = Category.one,
-       location = _locationFromAddress(address);
+  static Future<Event> cat1({
+    required int id,
+    required String address,
+    required num callerLocationUncertainty,
+  }) async => await Event._create(
+    id: id,
+    category: Category.one,
+    address: address,
+    callerLocationUncertainty: callerLocationUncertainty,
+  );
 
   /// A [Category] two call.
-  Event.cat2({
-    required this.id,
-    required this.address,
-    required this.callerLocationUncertainty,
-  }) : category = Category.two,
-       location = _locationFromAddress(address);
+  static Future<Event> cat2({
+    required int id,
+    required String address,
+    required num callerLocationUncertainty,
+  }) async => await Event._create(
+    id: id,
+    category: Category.two,
+    address: address,
+    callerLocationUncertainty: callerLocationUncertainty,
+  );
 
   /// A [Category] three call.
-  Event.cat3({
-    required this.id,
-    required this.address,
-    required this.callerLocationUncertainty,
-  }) : category = Category.three,
-       location = _locationFromAddress(address);
+  static Future<Event> cat3({
+    required int id,
+    required String address,
+    required num callerLocationUncertainty,
+  }) async => await Event._create(
+    id: id,
+    category: Category.three,
+    address: address,
+    callerLocationUncertainty: callerLocationUncertainty,
+  );
 
   /// A [Category] four call.
-  Event.cat4({
-    required this.id,
-    required this.address,
-    required this.callerLocationUncertainty,
-  }) : category = Category.four,
-       location = _locationFromAddress(address);
+  static Future<Event> cat4({
+    required int id,
+    required String address,
+    required num callerLocationUncertainty,
+  }) async => await Event._create(
+    id: id,
+    category: Category.four,
+    address: address,
+    callerLocationUncertainty: callerLocationUncertainty,
+  );
 
   /// The street address of the emergency.
-  final String address;
+  String address;
+
+  // String get assignedUnitsText =>
+  //     assignedUnits.isEmpty
+  //         ? 'Assigned: None'
+  //         : 'Assigned: ${assignedUnits.map((Unit unit) => unit.callsign).join('\n')}';
 
   Circle get callerLocationCircle => Circle(
     circleId: CircleId(id.toString()),
     fillColor: Colors.orange.shade200.withAlpha(100),
-    center: location,
+    center: LatLng(location.lat, location.lng),
     radius: callerLocationUncertainty * 1000,
     strokeWidth: 0,
   );
@@ -62,8 +107,7 @@ class Event {
   /// The radius within which the caller could be, in km.
   num callerLocationUncertainty;
 
-  // FIXME once set to non-null, do not allow setting back to null.
-  Category? category;
+  final Category category;
 
   // TODO vary the icon based on the category of event.
   /// Path to the image used as this [Event]'s icon.
@@ -73,31 +117,27 @@ class Event {
   final int id;
 
   /// Latitude.
-  double get lat => location.latitude;
+  double get lat => location.lat;
 
   /// Longitude.
-  double get lng => location.longitude;
+  double get lng => location.lng;
 
   /// The latitude and longitude of the emergency.
-  final LatLng location;
+  late Location location;
 
   // TODO: implement _locationFromAddress - use Geocoding API (see https://developers.google.com/maps/documentation/geocoding/start)
   /// Returns the latitude and longitude of a given street [address].
-  static LatLng _locationFromAddress(String address) {
-    // Value is >= 0.0 and < 0.6, plus 51.
-    double randomLat = 51 + Random().nextDouble() * 0.6;
+  Future<Location> _locationFromAddress() async {
+    GeocodingResponse info = await geocoding.searchByAddress(address);
+    GeocodingResult result = info.results[0];
+    Location location = result.geometry.location;
 
-    // Value is >= 0.0 and < 0.6, plus -1.25.
-    double randomLng = -1.25 + Random().nextDouble() * 0.55;
-
-    return LatLng(randomLat, randomLng);
+    return location;
   }
 
   /// Gets a [Marker] for showing this [Event] on a map.
   Marker get mapMarker {
     final String id = this.id.toString();
-    final String categoryText =
-        (category != null) ? ' (cat ${category!.number})' : '';
 
     return Marker(
       markerId: MarkerId(id),
@@ -106,7 +146,10 @@ class Event {
           (_iconAsset != null)
               ? markerIcon(_iconAsset!)
               : BitmapDescriptor.defaultMarker,
-      infoWindow: InfoWindow(title: 'Event $id$categoryText', snippet: address),
+      infoWindow: InfoWindow(
+        title: 'Event $id (cat ${category.number})',
+        snippet: address,
+      ),
     );
   }
 
@@ -114,7 +157,7 @@ class Event {
   NOC? noc;
 }
 
-final List<Event> defaultEvents = [
+List<Future<Event>> get futureDefaultEvents => [
   Event.cat1(
     id: 423123,
     address: '1 Broad Street, Oxford',
@@ -122,27 +165,27 @@ final List<Event> defaultEvents = [
   ),
   Event.cat2(
     id: 423124,
-    address: '2 Wide Street, Oxford',
+    address: 'Sainsbury\'s Kidlington',
     callerLocationUncertainty: 0.03,
   ),
   Event.cat3(
     id: 423125,
-    address: '3 Deep Street, Oxford',
+    address: '47 Hamble Drive Abingdon',
     callerLocationUncertainty: 1,
   ),
   Event.cat4(
     id: 423126,
-    address: '4 Long Street, Oxford',
+    address: '25 Old Union Way, Thame',
     callerLocationUncertainty: 5,
   ),
   Event.cat3(
     id: 423127,
-    address: '5 Tall Street, Oxford',
+    address: '6 The Greenway, Oxfordshire',
     callerLocationUncertainty: 0.1,
   ),
   Event.cat2(
     id: 423128,
-    address: '6 Big Street, Oxford',
+    address: 'Thatcham Station',
     callerLocationUncertainty: 0.5,
   ),
 ];
