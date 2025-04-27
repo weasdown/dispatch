@@ -233,8 +233,12 @@ enum Category {
 
   final Color colour;
 
-  List<n.NOC> get nocs =>
-      List<n.NOC>.from(n.nocs.where((n.NOC noc) => noc.category == this));
+  List<n.NOC> get nocs => switch (this) {
+    Category.one => n.catOneNOCs,
+    Category.two => n.catTwoNOCs,
+    Category.three => n.catThreeNOCs,
+    Category.four => n.catFourNOCs,
+  };
 
   final String number;
 }
