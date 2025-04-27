@@ -8,17 +8,13 @@ class NOC {
 
   final String description;
 
-  static List<NOC> get cat1 =>
-      nocs.where((NOC noc) => noc.category == Category.one).toList();
+  static List<NOC> get cat1 => Category.one.nocs;
 
-  static List<NOC> get cat2 =>
-      nocs.where((NOC noc) => noc.category == Category.two).toList();
+  static List<NOC> get cat2 => Category.two.nocs;
 
-  static List<NOC> get cat3 =>
-      nocs.where((NOC noc) => noc.category == Category.three).toList();
+  static List<NOC> get cat3 => Category.three.nocs;
 
-  static List<NOC> get cat4 =>
-      nocs.where((NOC noc) => noc.category == Category.four).toList();
+  static List<NOC> get cat4 => Category.four.nocs;
 }
 
 /// Full list of all the available Nature of Call statuses.
