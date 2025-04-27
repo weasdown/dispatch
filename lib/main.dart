@@ -1,10 +1,17 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Key;
 
+import 'api/env.dart';
 import 'event.dart';
 import 'map.dart';
 import 'unit.dart';
 
 void main() async {
+  for (final Key key in Env.keys) {
+    if (key().isEmpty) {
+      throw Exception('Value for Key ${key.name} is not defined.');
+    }
+  }
+
   List<Event> defaultEvents = [];
   for (Future<Event> futureEvent in futureDefaultEvents) {
     defaultEvents.add(await futureEvent);
