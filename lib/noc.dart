@@ -61,11 +61,8 @@ final class Cat1NOC extends NOC {
 final class Cat2NOC extends NOC {
   const Cat2NOC._({required description}) : super(Category.two, description);
 
-  const Cat2NOC._withSpecify({required description})
-    : super.withSpecify(Category.two, description);
-
   const Cat2NOC.allergicReaction() : this._(description: 'Allergic Reaction');
-  const Cat2NOC.bleedingSpecify() : this._withSpecify(description: 'Bleeding');
+  const Cat2NOC.bleedingSpecify() : super.withSpecify(Category.two, 'Bleeding');
   const Cat2NOC.c2BreathingProblems()
     : this._(description: 'C2 Breathing Problems');
   const Cat2NOC.breathingProblemUnder5yrs()
@@ -104,12 +101,26 @@ final class Cat2NOC extends NOC {
   const Cat2NOC.unconscious() : this._(description: 'Unconscious');
 }
 
-// TODO implement constructors for Cat3NOC.
 final class Cat3NOC extends NOC {
   const Cat3NOC._({required description}) : super(Category.three, description);
 
-  const Cat3NOC._withSpecify({required description})
-    : super.withSpecify(Category.three, description);
+  const Cat3NOC.abdominalFlankPain()
+    : this._(description: 'Abdominal/Flank Pain');
+  const Cat3NOC.alcoholRelated() : this._(description: 'Alcohol Related');
+  const Cat3NOC.concernForWelfare()
+    : this._(description: 'Concern for Welfare');
+  const Cat3NOC.deathExpectedUnder18()
+    : this._(description: 'Death Expected <18');
+  const Cat3NOC.deathUnexpectedAllAges()
+    : this._(description: 'Death Unexpected all ages');
+  const Cat3NOC.c3ETHANE() : super.withSpecify(Category.three, 'C3 ETHANE');
+  const Cat3NOC.fallInjuriesUnknown()
+    : this._(description: 'Fall, Injuries unknown');
+  const Cat3NOC.headache() : this._(description: 'Headache');
+  const Cat3NOC.heatColdExposure() : this._(description: 'Heat/Cold Exposure');
+  const Cat3NOC.overdose() : this._(description: 'Overdose');
+  const Cat3NOC.section136() : this._(description: 'Section 136');
+  const Cat3NOC.suicide() : this._(description: 'Suicide');
 }
 
 // TODO implement constructors for Cat4NOC.
@@ -176,26 +187,25 @@ const List<Cat2NOC> catTwoNOCs = [
   Cat2NOC.unconscious(),
 ];
 
-// FIXME fix catThreeNOCs
 /// [Category] 3 nature of calls.
-const List<NOC> catThreeNOCs = [
-  // NOC(Category.three, 'Abdominal/Flank Pain'),
-  // NOC(Category.three, 'Alcohol Related'),
-  // NOC(Category.three, 'Concern for Welfare'),
-  // NOC(Category.three, 'Death Expected <18'),
-  // NOC(Category.three, 'Death Unexpected all ages'),
-  // NOC(Category.three, 'C3 ETHANE (Specify...)'),
-  // NOC(Category.three, 'Fall, Injuries unknown'),
-  // NOC(Category.three, 'Headache'),
-  // NOC(Category.three, 'Heat/Cold Exposure'),
-  // NOC(Category.three, 'Overdose'),
-  // NOC(Category.three, 'Section 136'),
-  // NOC(Category.three, 'Suicide'),
+const List<Cat3NOC> catThreeNOCs = [
+  Cat3NOC.abdominalFlankPain(),
+  Cat3NOC.alcoholRelated(),
+  Cat3NOC.concernForWelfare(),
+  Cat3NOC.deathExpectedUnder18(),
+  Cat3NOC.deathUnexpectedAllAges(),
+  Cat3NOC.c3ETHANE(),
+  Cat3NOC.fallInjuriesUnknown(),
+  Cat3NOC.headache(),
+  Cat3NOC.heatColdExposure(),
+  Cat3NOC.overdose(),
+  Cat3NOC.section136(),
+  Cat3NOC.suicide(),
 ];
 
 // FIXME fix catFourNOCs
 /// [Category] 4 nature of calls.
-const List<NOC> catFourNOCs = [
+const List<Cat4NOC> catFourNOCs = [
   // NOC(Category.four, 'Animal/Insects Bites or Stings (minor)'),
   // NOC(Category.four, 'Assault/Domestic'),
   // NOC(Category.four, 'Death Expected >18'),
