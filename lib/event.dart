@@ -2,19 +2,33 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_google_maps_webservices/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../api/maps/geocoding.dart';
 import 'map.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
+  static Future<GeocodingResponse> addressInfo(String address, int id) async {
+    GeocodingResponse info = await geocoding.searchByAddress(address);
+    debugPrint('addressInfo info for Event $id: $info');
+    return info;
+  }
+
   /// A [Category] one call.
   Event.cat1({
     required this.id,
     required this.address,
     required this.callerLocationUncertainty,
   }) : category = Category.one,
-       location = _locationFromAddress(address);
+       location = _locationFromAddress(address)
+  // TODO move body into Event._() constructor instead.
+  {
+    // TODO remove testAddress
+    final String testAddress = "1600 Amphitheatre Parkway, Mountain View, CA";
+    Event.addressInfo(testAddress, id);
+  }
 
   /// A [Category] two call.
   Event.cat2({
