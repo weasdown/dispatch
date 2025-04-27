@@ -85,6 +85,12 @@ class _MapPageState extends State<MapPage> {
         onMapCreated: _onMapCreated,
         initialCameraPosition: CameraPosition(target: widget.centre, zoom: 9),
         markers: _markers,
+        circles:
+            (showEvents)
+                ? widget.events
+                    .map((Event event) => event.callerLocationCircle)
+                    .toSet()
+                : {},
       ),
     );
   }
