@@ -60,7 +60,8 @@ class Event {
   /// The radius within which the caller could be, in km.
   num callerLocationUncertainty;
 
-  final Category category;
+  // FIXME once set to non-null, do not allow setting back to null.
+  Category? category;
 
   // TODO vary the icon based on the category of event.
   /// Path to the image used as this [Event]'s icon.
@@ -93,6 +94,8 @@ class Event {
   /// Gets a [Marker] for showing this [Event] on a map.
   Marker get mapMarker {
     final String id = this.id.toString();
+    final String categoryText =
+        (category != null) ? ' (cat ${category!.number})' : '';
 
     return Marker(
       markerId: MarkerId(id),
@@ -101,10 +104,7 @@ class Event {
           (_iconAsset != null)
               ? markerIcon(_iconAsset!)
               : BitmapDescriptor.defaultMarker,
-      infoWindow: InfoWindow(
-        title: 'Event $id (cat ${category.number})',
-        snippet: address,
-      ),
+      infoWindow: InfoWindow(title: 'Event $id$categoryText', snippet: address),
     );
   }
 }
