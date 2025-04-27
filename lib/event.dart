@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'map.dart';
+import 'noc.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
   Event({
     required this.id,
     required this.address,
+    this.noc,
     required this.callerLocationUncertainty,
   }) : location = _locationFromAddress(address);
 
@@ -107,6 +109,9 @@ class Event {
       infoWindow: InfoWindow(title: 'Event $id$categoryText', snippet: address),
     );
   }
+
+  /// Nature of Call.
+  NOC? noc;
 }
 
 final List<Event> defaultEvents = [
