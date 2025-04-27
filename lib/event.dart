@@ -8,6 +8,12 @@ import 'map.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
+  Event({
+    required this.id,
+    required this.address,
+    required this.callerLocationUncertainty,
+  }) : location = _locationFromAddress(address);
+
   /// A [Category] one call.
   Event.cat1({
     required this.id,
