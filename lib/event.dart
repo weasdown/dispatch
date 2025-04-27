@@ -125,7 +125,6 @@ class Event {
   /// The latitude and longitude of the emergency.
   late Location location;
 
-  // TODO: implement _locationFromAddress - use Geocoding API (see https://developers.google.com/maps/documentation/geocoding/start)
   /// Returns the latitude and longitude of a given street [address].
   Future<Location> _locationFromAddress() async {
     GeocodingResponse info = await geocoding.searchByAddress(address);
