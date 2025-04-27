@@ -8,30 +8,54 @@ import 'map.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
-  Event._({required this.id, required this.category, required this.address})
-    : location = _locationFromAddress(address);
-
   /// A [Category] one call.
-  Event.cat1({required int id, required String address})
-    : this._(id: id, category: Category.one, address: address);
+  Event.cat1({
+    required this.id,
+    required this.address,
+    required this.callerLocationUncertainty,
+  }) : category = Category.one,
+       location = _locationFromAddress(address);
 
   /// A [Category] two call.
-  Event.cat2({required int id, required String address})
-    : this._(id: id, category: Category.two, address: address);
+  Event.cat2({
+    required this.id,
+    required this.address,
+    required this.callerLocationUncertainty,
+  }) : category = Category.two,
+       location = _locationFromAddress(address);
 
   /// A [Category] three call.
-  Event.cat3({required int id, required String address})
-    : this._(id: id, category: Category.three, address: address);
+  Event.cat3({
+    required this.id,
+    required this.address,
+    required this.callerLocationUncertainty,
+  }) : category = Category.three,
+       location = _locationFromAddress(address);
 
   /// A [Category] four call.
-  Event.cat4({required int id, required String address})
-    : this._(id: id, category: Category.four, address: address);
+  Event.cat4({
+    required this.id,
+    required this.address,
+    required this.callerLocationUncertainty,
+  }) : category = Category.four,
+       location = _locationFromAddress(address);
 
   /// A unique numerical identifier.
   final int id;
 
   /// The street address of the emergency.
   final String address;
+
+  Circle get callerLocationCircle => Circle(
+    circleId: CircleId(id.toString()),
+    fillColor: Colors.orange.shade200.withAlpha(100),
+    center: location,
+    radius: callerLocationUncertainty * 1000,
+    strokeWidth: 0,
+  );
+
+  /// The radius within which the caller could be, in km.
+  num callerLocationUncertainty;
 
   final Category category;
 
@@ -80,12 +104,36 @@ class Event {
 }
 
 final List<Event> defaultEvents = [
-  Event.cat1(id: 423123, address: '1 Broad Street, Oxford'),
-  Event.cat2(id: 423124, address: '2 Wide Street, Oxford'),
-  Event.cat3(id: 423125, address: '3 Deep Street, Oxford'),
-  Event.cat4(id: 423126, address: '4 Long Street, Oxford'),
-  Event.cat3(id: 423127, address: '5 Tall Street, Oxford'),
-  Event.cat2(id: 423128, address: '6 Big Street, Oxford'),
+  Event.cat1(
+    id: 423123,
+    address: '1 Broad Street, Oxford',
+    callerLocationUncertainty: 1,
+  ),
+  Event.cat2(
+    id: 423124,
+    address: '2 Wide Street, Oxford',
+    callerLocationUncertainty: 0.03,
+  ),
+  Event.cat3(
+    id: 423125,
+    address: '3 Deep Street, Oxford',
+    callerLocationUncertainty: 1,
+  ),
+  Event.cat4(
+    id: 423126,
+    address: '4 Long Street, Oxford',
+    callerLocationUncertainty: 5,
+  ),
+  Event.cat3(
+    id: 423127,
+    address: '5 Tall Street, Oxford',
+    callerLocationUncertainty: 0.1,
+  ),
+  Event.cat2(
+    id: 423128,
+    address: '6 Big Street, Oxford',
+    callerLocationUncertainty: 0.5,
+  ),
 ];
 
 /// Storage for all the events that units will respond to.
