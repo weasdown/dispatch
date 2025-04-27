@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'map.dart';
 import 'noc.dart';
+import 'unit.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
@@ -50,6 +51,9 @@ class Event {
 
   /// The street address of the emergency.
   final String address;
+
+  /// The ambulances and other units that are working on this event.
+  Set<Unit> assignedUnits = {};
 
   Circle get callerLocationCircle => Circle(
     circleId: CircleId(id.toString()),
