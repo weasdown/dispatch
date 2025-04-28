@@ -1,4 +1,4 @@
-import 'event.dart';
+import 'logic/event.dart';
 
 /// Nature of Call.
 abstract class NOC {

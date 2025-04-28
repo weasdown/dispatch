@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_google_maps_webservices/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../api/maps/geocoding.dart';
-import 'map.dart';
-import 'noc.dart' as n;
+import '../../api/maps/geocoding.dart';
+import '../map.dart';
+import '../noc.dart' as n;
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
@@ -128,7 +128,13 @@ class Event {
   /// Returns the latitude and longitude of a given street [address].
   Future<Location> _locationFromAddress() async {
     GeocodingResponse info = await geocoding.searchByAddress(address);
-    GeocodingResult result = info.results[0];
+    GeocodingResult result;
+    try {
+      result = info.results[0];
+    } on RangeError {
+      rethrow;
+    }
+
     Location location = result.geometry.location;
 
     return location;

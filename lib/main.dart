@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'event.dart';
+import 'logic/event.dart';
+import 'logic/unit.dart';
 import 'map.dart';
-import 'unit.dart';
 
 void main() async {
   List<Event> defaultEvents = [];
