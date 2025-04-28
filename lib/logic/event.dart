@@ -5,8 +5,8 @@ import 'package:flutter_google_maps_webservices/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../api/maps/geocoding.dart';
+import '../logic/noc.dart' as n;
 import '../map.dart';
-import '../noc.dart' as n;
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
