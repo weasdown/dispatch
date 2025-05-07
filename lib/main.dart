@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' hide Key;
 
 import 'api/env.dart';
-import 'event.dart';
+import 'domain/models/event.dart';
 import 'map.dart';
 import 'unit.dart';
 
