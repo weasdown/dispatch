@@ -102,6 +102,17 @@ class Event {
   /// The street address of the emergency.
   String address;
 
+  /// Sets this event's [Event.noc] if it's not already set.
+  void addNOC(NOC noc) {
+    if (_noc == null) {
+      _noc = noc;
+    } else {
+      throw Exception(
+        'An Event\'s NOC can only be set once but was already set.',
+      );
+    }
+  }
+
   // String get assignedUnitsText =>
   //     assignedUnits.isEmpty
   //         ? 'Assigned: None'
@@ -164,7 +175,10 @@ class Event {
   // }
 
   /// Nature of Call.
-  NOC? noc;
+  NOC? _noc;
+
+  /// Nature of Call.
+  NOC? get noc => _noc;
 
   Status status;
 }
