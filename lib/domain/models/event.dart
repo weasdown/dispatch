@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 // import '../../../api/maps/geocoding.dart';
 // import '../../map.dart';
-import '../../noc.dart' as n;
+import 'noc.dart' as n;
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {

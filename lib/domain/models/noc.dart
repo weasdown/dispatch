@@ -1,4 +1,4 @@
-import 'domain/models/event.dart';
+import 'event.dart';
 
 /// Nature of Call.
 abstract class NOC {
