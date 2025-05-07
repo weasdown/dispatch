@@ -32,12 +32,12 @@ class HomeViewModel extends ChangeNotifier {
       (Event event) => Card(
         color: event.category.colour,
         child: ListTile(
-          leading: Text(
+          leading: SelectableText(
             event.category.toString(),
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          title: Text(event.address),
-          subtitle: Text(event.noc?.description ?? 'No NOC assigned'),
+          title: SelectableText('${event.id} - ${event.address}'),
+          subtitle: SelectableText(event.status.toString()),
         ),
       ),
     ),
