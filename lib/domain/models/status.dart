@@ -11,6 +11,9 @@ interface class Status {
 
   /// Creates an emergency ambulance [Status].
   const factory Status.nhs999(Category category) = PathwaysDisposition._nhs999;
+
+  @override
+  String toString() => description;
 }
 
 base class PathwaysDisposition extends Status {
