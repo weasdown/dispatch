@@ -3,6 +3,8 @@ import 'event.dart';
 interface class Status {
   const Status(this.category, this.description);
 
+  const Status.preAlert() : category = null, description = 'Pre-Alert';
+
   final Category? category;
 
   final String description;
