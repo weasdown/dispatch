@@ -26,7 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ListenableBuilder(
               listenable: widget.viewModel,
               builder: (context, _) {
-                print('Number of events: ${widget.viewModel.events.length}');
+                debugPrint(
+                  'Number of events: ${widget.viewModel.events.length}',
+                );
                 return ListView.builder(
                   shrinkWrap: true,
                   itemCount: widget.viewModel.events.length,
