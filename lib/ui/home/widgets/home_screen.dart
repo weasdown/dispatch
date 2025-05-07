@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
-import '../../../domain/models/event.dart';
 import '../view_models/home_viewmodel.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -32,26 +30,16 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: Column(
           children: [
-            Text('Home'),
-            Gap(30),
             ListenableBuilder(
               listenable: widget.viewModel,
               builder: (context, _) {
                 debugPrint(
                   'Number of events: ${widget.viewModel.events.length}',
                 );
-                return ListView.builder(
+                return ListView(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   shrinkWrap: true,
-                  itemCount: widget.viewModel.events.length,
-                  itemBuilder: (_, index) {
-                    Event event = widget.viewModel.events[index];
-                    return Card(
-                      child: ListTile(
-                        title: Text(event.address),
-                        subtitle: Text(event.noc?.description ?? 'No NOC'),
-                      ),
-                    );
-                  },
+                  children: widget.viewModel.eventTiles,
                 );
               },
             ),
