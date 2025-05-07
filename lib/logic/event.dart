@@ -99,7 +99,7 @@ class Event {
   Circle get callerLocationCircle => Circle(
     circleId: CircleId(id.toString()),
     fillColor: Colors.orange.shade200.withAlpha(100),
-    center: LatLng(location.lat, location.lng),
+    center: LatLng(location!.lat, location!.lng),
     radius: callerLocationUncertainty * 1000,
     strokeWidth: 0,
   );
@@ -117,13 +117,13 @@ class Event {
   final int id;
 
   /// Latitude.
-  double get lat => location.lat;
+  double get lat => location!.lat;
 
   /// Longitude.
-  double get lng => location.lng;
+  double get lng => location!.lng;
 
   /// The latitude and longitude of the emergency.
-  late Location location;
+  Location? location;
 
   /// Returns the latitude and longitude of a given street [address].
   Future<Location> _locationFromAddress() async {
@@ -132,7 +132,9 @@ class Event {
     try {
       result = info.results[0];
     } on RangeError {
-      rethrow;
+      throw Exception(
+        'No results were found when searching for address "$address".',
+      );
     }
 
     Location location = result.geometry.location;
@@ -199,6 +201,7 @@ List<Future<Event>> get futureDefaultEvents => [
 class EventListModel extends ChangeNotifier {
   EventListModel({required List<Event> events}) {
     _events.addAll(events);
+    print('Events in EventListModel: $_events');
   }
 
   EventListModel.blank();
