@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'logic/event.dart';
-import 'logic/unit.dart';
-import 'map.dart';
+import 'presentation/event_table.dart';
+// import 'logic/unit.dart';
+// import 'map.dart';
 
 void main() async {
   List<Event> defaultEvents = [];
@@ -15,9 +16,9 @@ void main() async {
 
 class NewCAD extends StatelessWidget {
   NewCAD({super.key, EventListModel? events})
-    : events = events ?? EventListModel.blank();
+    : eventModel = events ?? EventListModel.blank();
 
-  final EventListModel events;
+  final EventListModel eventModel;
 
   // This widget is the root of your application.
   @override
@@ -44,7 +45,11 @@ class NewCAD extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue[700]!),
       ),
-      home: MapPage(events: events.events, units: defaultUnits),
+      // home: MapPage(events: eventModel.events, units: defaultUnits),
+      home: Scaffold(
+        appBar: AppBar(title: Text('EventTable')),
+        body: Center(child: EventTable(events: eventModel.events)),
+      ),
     );
   }
 }
