@@ -164,39 +164,6 @@ class Event {
   n.NOC? noc;
 }
 
-// List<Future<Event>> get futureDefaultEvents => [
-//   Event.cat1(
-//     id: 423123,
-//     address: '1 Broad Street, Oxford',
-//     callerLocationUncertainty: 1,
-//   ),
-//   Event.cat2(
-//     id: 423124,
-//     address: 'Sainsbury\'s Kidlington',
-//     callerLocationUncertainty: 0.03,
-//   ),
-//   Event.cat3(
-//     id: 423125,
-//     address: '47 Hamble Drive Abingdon',
-//     callerLocationUncertainty: 1,
-//   ),
-//   Event.cat4(
-//     id: 423126,
-//     address: '25 Old Union Way, Thame',
-//     callerLocationUncertainty: 5,
-//   ),
-//   Event.cat3(
-//     id: 423127,
-//     address: '6 The Greenway, Oxfordshire',
-//     callerLocationUncertainty: 0.1,
-//   ),
-//   Event.cat2(
-//     id: 423128,
-//     address: 'Thatcham Station',
-//     callerLocationUncertainty: 0.5,
-//   ),
-// ];
-
 /// Storage for all the events that units will respond to.
 class EventListModel extends ChangeNotifier {
   EventListModel({required List<Event> events}) {
