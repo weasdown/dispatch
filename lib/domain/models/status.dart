@@ -3,7 +3,7 @@ import 'event.dart';
 interface class Status {
   const Status(this.category, this.description);
 
-  final Category category;
+  final Category? category;
 
   final String description;
 
@@ -40,7 +40,7 @@ abstract class NOC extends Status {
 
   @override
   String toString() {
-    final String catNumber = category.number;
+    final String catNumber = category!.number;
     final String specifyText = specify ? ' (specify...)' : '';
     return 'CAT $catNumber - $description$specifyText C$catNumber';
   }
