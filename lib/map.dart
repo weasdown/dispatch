@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'domain/models/event.dart';
-import 'unit.dart';
+import 'domain/models/unit.dart';
 
 /// A page that displays a Google Maps map.
 class MapPage extends StatefulWidget {
@@ -39,7 +39,8 @@ class _MapPageState extends State<MapPage> {
   bool showUnits = true;
 
   Set<Marker> get _markers => {
-    ...(showEvents) ? widget.events.map((Event event) => event.mapMarker) : {},
+    // FIXME fix event markers
+    // ...(showEvents) ? widget.events.map((Event event) => event.mapMarker) : {},
     ...(showUnits) ? widget.units.map((Unit unit) => unit.mapMarker) : {},
   };
 
@@ -86,12 +87,13 @@ class _MapPageState extends State<MapPage> {
         onMapCreated: _onMapCreated,
         initialCameraPosition: CameraPosition(target: widget.centre, zoom: 9),
         markers: _markers,
-        circles:
-            (showEvents)
-                ? widget.events
-                    .map((Event event) => event.callerLocationCircle)
-                    .toSet()
-                : {},
+        // FIXME fix event caller uncertainty circles
+        // circles:
+        //     (showEvents)
+        //         ? widget.events
+        //             .map((Event event) => event.callerLocationCircle)
+        //             .toSet()
+        //         : {},
       ),
     );
   }
