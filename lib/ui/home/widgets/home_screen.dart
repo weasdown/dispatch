@@ -17,7 +17,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Home')),
+      appBar: AppBar(
+        title: Text(
+          'Events',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+      ),
+      drawer: NavigationDrawer(
+        children: [
+          DrawerHeader(child: Text('Drawer Header')),
+          Container(color: Colors.grey, child: Text('First item')),
+        ],
+      ),
       body: Center(
         child: Column(
           children: [
