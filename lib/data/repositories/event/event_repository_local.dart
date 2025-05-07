@@ -53,4 +53,7 @@ class EventRepositoryLocal implements EventRepository {
     }
     return Result.ok(event);
   }
+
+  @override
+  Future<Result<List<Event>>> get allEvents => eventsList;
 }
