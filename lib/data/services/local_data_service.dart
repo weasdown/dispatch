@@ -20,6 +20,7 @@ class LocalDataService {
       address: '47 Hamble Drive Abingdon',
       category: Category.three,
     ),
+    Event(id: 423129, category: Category.one, address: 'Carfax Tower, Oxford'),
     Event(
       id: 423126,
       address: '25 Old Union Way, Thame',
