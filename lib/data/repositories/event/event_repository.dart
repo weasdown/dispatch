@@ -3,6 +3,6 @@ import '../../../utils/result.dart';
 
 /// Data source for events.
 abstract class EventRepository {
-  /// Get events by ID.
-  Future<Result<List<Event>>> getByID(String id);
+  /// Get an event by its ID.
+  Future<Result<Event>> eventByID(int id);
 }
