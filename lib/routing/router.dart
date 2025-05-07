@@ -7,11 +7,13 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../data/repositories/auth/auth_repository.dart';
+import '../ui/home/view_models/home_viewmodel.dart';
+import '../ui/home/widgets/home_screen.dart';
 import 'routes.dart';
 
 /// Top go_router entry point.
 ///
-/// Listens to changes in [AuthTokenRepository] to redirect the user
+/// Listens to changes in `AuthTokenRepository` to redirect the user
 /// to /login when the user logs out.
 GoRouter router(AuthRepository authRepository) => GoRouter(
   initialLocation: Routes.home,
@@ -32,13 +34,8 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
     GoRoute(
       path: Routes.home,
       builder: (context, state) {
-        // TODO implement home route.
-        throw UnimplementedError('Home route is not yet implemented.');
-        // final viewModel = HomeViewModel(
-        //   bookingRepository: context.read(),
-        //   userRepository: context.read(),
-        // );
-        // return HomeScreen(viewModel: viewModel);
+        final viewModel = HomeViewModel(eventRepository: context.read());
+        return HomeScreen(viewModel: viewModel);
       },
       routes: [
         GoRoute(
