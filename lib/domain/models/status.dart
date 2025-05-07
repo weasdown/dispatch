@@ -1,5 +1,50 @@
 import 'event.dart';
-import 'status.dart';
+
+sealed class Status {
+  const Status(this.category, this.description);
+
+  final Category category;
+
+  final String description;
+
+  /// Creates an emergency ambulance [Status].
+  const factory Status.nhs999(Category category) = PathwaysDisposition._nhs999;
+}
+
+base class PathwaysDisposition extends Status {
+  const PathwaysDisposition._(super.category, super.description);
+
+  const PathwaysDisposition._nhs999(Category category)
+    : this._(category, 'NHS999');
+}
+
+/// Nature of Call.
+abstract class NOC extends Status {
+  const NOC(super.category, super.description) : specify = false;
+
+  const NOC.withSpecify(super.category, super.description) : specify = true;
+
+  // TODO implement detail attribute for "(specify...)" NOCs.
+  // /// The extra details provided in response to a "Specify..." prompt.
+  // final String detail;
+
+  final bool specify;
+
+  static List<NOC> get cat1 => catOneNOCs;
+
+  static List<NOC> get cat2 => catTwoNOCs;
+
+  static List<NOC> get cat3 => catThreeNOCs;
+
+  static List<NOC> get cat4 => catFourNOCs;
+
+  @override
+  String toString() {
+    final String catNumber = category.number;
+    final String specifyText = specify ? ' (specify...)' : '';
+    return 'CAT $catNumber - $description$specifyText C$catNumber';
+  }
+}
 
 final class Cat1NOC extends NOC {
   const Cat1NOC._({required description}) : super(Category.one, description);
