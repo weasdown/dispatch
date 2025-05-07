@@ -1,6 +1,6 @@
 import 'event.dart';
 
-sealed class Status {
+interface class Status {
   const Status(this.category, this.description);
 
   final Category category;

@@ -1,12 +1,14 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+
 // import 'package:flutter_google_maps_webservices/geocoding.dart';
 // import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // import '../../../api/maps/geocoding.dart';
 // import '../../map.dart';
 import 'noc.dart' as n;
+import 'status.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
@@ -16,7 +18,8 @@ class Event {
     // required this.location,
     required this.category,
     // required this.callerLocationUncertainty,
-  });
+    Status? status,
+  }) : status = status ?? Status.preAlert();
 
   // /// Private constructor
   // Event._({
@@ -161,7 +164,9 @@ class Event {
   // }
 
   /// Nature of Call.
-  n.NOC? noc;
+  NOC? noc;
+
+  Status status;
 }
 
 /// Storage for all the events that units will respond to.
@@ -208,7 +213,7 @@ enum Category {
 
   final Color colour;
 
-  List<n.NOC> get nocs => switch (this) {
+  List<NOC> get nocs => switch (this) {
     Category.one => n.catOneNOCs,
     Category.two => n.catTwoNOCs,
     Category.three => n.catThreeNOCs,
