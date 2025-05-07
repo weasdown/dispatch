@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
 import '../../../domain/models/event.dart';
@@ -26,6 +26,22 @@ class HomeViewModel extends ChangeNotifier {
   // late Command1<void, int> deleteBooking;
 
   List<Event> get events => _events;
+
+  List<Widget> get eventTiles => List<Widget>.from(
+    _events.map(
+      (Event event) => Card(
+        color: event.category.colour,
+        child: ListTile(
+          leading: Text(
+            event.category.toString(),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          title: Text(event.address),
+          subtitle: Text(event.noc?.description ?? 'No NOC assigned'),
+        ),
+      ),
+    ),
+  );
 
   // User? get user => _user;
 
