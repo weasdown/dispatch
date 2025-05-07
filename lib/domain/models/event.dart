@@ -216,4 +216,7 @@ enum Category {
   };
 
   final String number;
+
+  @override
+  String toString() => 'C$number';
 }
