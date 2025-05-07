@@ -1,92 +1,100 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_google_maps_webservices/geocoding.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:flutter_google_maps_webservices/geocoding.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../../api/maps/geocoding.dart';
-import '../../map.dart';
+// import '../../../api/maps/geocoding.dart';
+// import '../../map.dart';
 import '../../noc.dart' as n;
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
-  /// Private constructor
-  Event._({
+  Event({
     required this.id,
-    required this.category,
     required this.address,
-    required this.callerLocationUncertainty,
+    // required this.location,
+    required this.category,
+    // required this.callerLocationUncertainty,
   });
 
-  /// Private 'factory'
-  static Future<Event> _create({
-    required int id,
-    required Category category,
-    required String address,
-    required num callerLocationUncertainty,
-  }) async {
-    // Call the private constructor
-    Event event = Event._(
-      id: id,
-      category: category,
-      address: address,
-      callerLocationUncertainty: callerLocationUncertainty,
-    );
+  // /// Private constructor
+  // Event._({
+  //   required this.id,
+  //   required this.category,
+  //   required this.address,
+  //   // required this.callerLocationUncertainty,
+  // });
 
-    // Get precise location from address.
-    event.location = await event._locationFromAddress();
-
-    // Return the event.
-    return event;
-  }
-
-  /// A [Category] one call.
-  static Future<Event> cat1({
-    required int id,
-    required String address,
-    required num callerLocationUncertainty,
-  }) async => await Event._create(
-    id: id,
-    category: Category.one,
-    address: address,
-    callerLocationUncertainty: callerLocationUncertainty,
-  );
-
-  /// A [Category] two call.
-  static Future<Event> cat2({
-    required int id,
-    required String address,
-    required num callerLocationUncertainty,
-  }) async => await Event._create(
-    id: id,
-    category: Category.two,
-    address: address,
-    callerLocationUncertainty: callerLocationUncertainty,
-  );
-
-  /// A [Category] three call.
-  static Future<Event> cat3({
-    required int id,
-    required String address,
-    required num callerLocationUncertainty,
-  }) async => await Event._create(
-    id: id,
-    category: Category.three,
-    address: address,
-    callerLocationUncertainty: callerLocationUncertainty,
-  );
-
-  /// A [Category] four call.
-  static Future<Event> cat4({
-    required int id,
-    required String address,
-    required num callerLocationUncertainty,
-  }) async => await Event._create(
-    id: id,
-    category: Category.four,
-    address: address,
-    callerLocationUncertainty: callerLocationUncertainty,
-  );
+  // /// Private 'factory'
+  // static Future<Event> _create({
+  //   required int id,
+  //   required Category category,
+  //   required String address,
+  //   required num callerLocationUncertainty,
+  // }) async {
+  //   // Call the private constructor
+  //   Event event = Event._(
+  //     id: id,
+  //     category: category,
+  //     address: address,
+  //     callerLocationUncertainty: callerLocationUncertainty,
+  //   );
+  //
+  //   // Get precise location from address.
+  //   event.location = await event._locationFromAddress();
+  //
+  //   // Return the event.
+  //   return event;
+  // }
+  //
+  // /// A [Category] one call.
+  // static Future<Event> cat1({
+  //   required int id,
+  //   required String address,
+  //   required num callerLocationUncertainty,
+  // }) async => await Event._create(
+  //   id: id,
+  //   category: Category.one,
+  //   address: address,
+  //   callerLocationUncertainty: callerLocationUncertainty,
+  // );
+  //
+  // /// A [Category] two call.
+  // static Future<Event> cat2({
+  //   required int id,
+  //   required String address,
+  //   required num callerLocationUncertainty,
+  // }) async => await Event._create(
+  //   id: id,
+  //   category: Category.two,
+  //   address: address,
+  //   callerLocationUncertainty: callerLocationUncertainty,
+  // );
+  //
+  // /// A [Category] three call.
+  // static Future<Event> cat3({
+  //   required int id,
+  //   required String address,
+  //   required num callerLocationUncertainty,
+  // }) async => await Event._create(
+  //   id: id,
+  //   category: Category.three,
+  //   address: address,
+  //   callerLocationUncertainty: callerLocationUncertainty,
+  // );
+  //
+  // /// A [Category] four call.
+  // static Future<Event> cat4({
+  //   required int id,
+  //   required String address,
+  //   required num callerLocationUncertainty,
+  // }) async => await Event._create(
+  //   id: id,
+  //   category: Category.four,
+  //   address: address,
+  //   callerLocationUncertainty: callerLocationUncertainty,
+  // );
 
   /// The street address of the emergency.
   String address;
@@ -96,98 +104,98 @@ class Event {
   //         ? 'Assigned: None'
   //         : 'Assigned: ${assignedUnits.map((Unit unit) => unit.callsign).join('\n')}';
 
-  Circle get callerLocationCircle => Circle(
-    circleId: CircleId(id.toString()),
-    fillColor: Colors.orange.shade200.withAlpha(100),
-    center: LatLng(location.lat, location.lng),
-    radius: callerLocationUncertainty * 1000,
-    strokeWidth: 0,
-  );
+  // Circle get callerLocationCircle => Circle(
+  //   circleId: CircleId(id.toString()),
+  //   fillColor: Colors.orange.shade200.withAlpha(100),
+  //   center: LatLng(location.lat, location.lng),
+  //   radius: callerLocationUncertainty * 1000,
+  //   strokeWidth: 0,
+  // );
 
-  /// The radius within which the caller could be, in km.
-  num callerLocationUncertainty;
+  // /// The radius within which the caller could be, in km.
+  // num callerLocationUncertainty;
 
   final Category category;
 
-  // TODO vary the icon based on the category of event.
-  /// Path to the image used as this [Event]'s icon.
-  String? get _iconAsset => null;
+  // // TODO vary the icon based on the category of event.
+  // /// Path to the image used as this [Event]'s icon.
+  // String? get _iconAsset => null;
 
   /// A unique numerical identifier.
   final int id;
 
-  /// Latitude.
-  double get lat => location.lat;
+  // /// Latitude.
+  // double get lat => location.lat;
+  //
+  // /// Longitude.
+  // double get lng => location.lng;
+  //
+  // /// The latitude and longitude of the emergency.
+  // late Location location;
 
-  /// Longitude.
-  double get lng => location.lng;
+  // /// Returns the latitude and longitude of a given street [address].
+  // Future<Location> _locationFromAddress() async {
+  //   GeocodingResponse info = await geocoding.searchByAddress(address);
+  //   GeocodingResult result = info.results[0];
+  //   Location location = result.geometry.location;
+  //
+  //   return location;
+  // }
 
-  /// The latitude and longitude of the emergency.
-  late Location location;
-
-  /// Returns the latitude and longitude of a given street [address].
-  Future<Location> _locationFromAddress() async {
-    GeocodingResponse info = await geocoding.searchByAddress(address);
-    GeocodingResult result = info.results[0];
-    Location location = result.geometry.location;
-
-    return location;
-  }
-
-  /// Gets a [Marker] for showing this [Event] on a map.
-  Marker get mapMarker {
-    final String id = this.id.toString();
-
-    return Marker(
-      markerId: MarkerId(id),
-      position: LatLng(lat, lng),
-      icon:
-          (_iconAsset != null)
-              ? markerIcon(_iconAsset!)
-              : BitmapDescriptor.defaultMarker,
-      infoWindow: InfoWindow(
-        title: 'Event $id (cat ${category.number})',
-        snippet: address,
-      ),
-    );
-  }
+  // /// Gets a [Marker] for showing this [Event] on a map.
+  // Marker get mapMarker {
+  //   final String id = this.id.toString();
+  //
+  //   return Marker(
+  //     markerId: MarkerId(id),
+  //     position: LatLng(lat, lng),
+  //     icon:
+  //         (_iconAsset != null)
+  //             ? markerIcon(_iconAsset!)
+  //             : BitmapDescriptor.defaultMarker,
+  //     infoWindow: InfoWindow(
+  //       title: 'Event $id (cat ${category.number})',
+  //       snippet: address,
+  //     ),
+  //   );
+  // }
 
   /// Nature of Call.
   n.NOC? noc;
 }
 
-List<Future<Event>> get futureDefaultEvents => [
-  Event.cat1(
-    id: 423123,
-    address: '1 Broad Street, Oxford',
-    callerLocationUncertainty: 1,
-  ),
-  Event.cat2(
-    id: 423124,
-    address: 'Sainsbury\'s Kidlington',
-    callerLocationUncertainty: 0.03,
-  ),
-  Event.cat3(
-    id: 423125,
-    address: '47 Hamble Drive Abingdon',
-    callerLocationUncertainty: 1,
-  ),
-  Event.cat4(
-    id: 423126,
-    address: '25 Old Union Way, Thame',
-    callerLocationUncertainty: 5,
-  ),
-  Event.cat3(
-    id: 423127,
-    address: '6 The Greenway, Oxfordshire',
-    callerLocationUncertainty: 0.1,
-  ),
-  Event.cat2(
-    id: 423128,
-    address: 'Thatcham Station',
-    callerLocationUncertainty: 0.5,
-  ),
-];
+// List<Future<Event>> get futureDefaultEvents => [
+//   Event.cat1(
+//     id: 423123,
+//     address: '1 Broad Street, Oxford',
+//     callerLocationUncertainty: 1,
+//   ),
+//   Event.cat2(
+//     id: 423124,
+//     address: 'Sainsbury\'s Kidlington',
+//     callerLocationUncertainty: 0.03,
+//   ),
+//   Event.cat3(
+//     id: 423125,
+//     address: '47 Hamble Drive Abingdon',
+//     callerLocationUncertainty: 1,
+//   ),
+//   Event.cat4(
+//     id: 423126,
+//     address: '25 Old Union Way, Thame',
+//     callerLocationUncertainty: 5,
+//   ),
+//   Event.cat3(
+//     id: 423127,
+//     address: '6 The Greenway, Oxfordshire',
+//     callerLocationUncertainty: 0.1,
+//   ),
+//   Event.cat2(
+//     id: 423128,
+//     address: 'Thatcham Station',
+//     callerLocationUncertainty: 0.5,
+//   ),
+// ];
 
 /// Storage for all the events that units will respond to.
 class EventListModel extends ChangeNotifier {
