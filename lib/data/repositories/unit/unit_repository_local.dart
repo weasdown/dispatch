@@ -12,8 +12,11 @@ class UnitRepositoryLocal implements UnitRepository {
   final LocalDataService _localDataService;
 
   @override
-  // TODO: implement allUnits
-  Future<Result<List<Unit>>> get allUnits => throw UnimplementedError();
+  Future<Result<List<Unit>>> get allUnits {
+    List<Unit> units = _localDataService.units;
+    _units.addAll(units);
+    return Future(() => Result.ok(units));
+  }
 
   @override
   Future<Result<Unit>> unitByCallsign(String callsign) {
