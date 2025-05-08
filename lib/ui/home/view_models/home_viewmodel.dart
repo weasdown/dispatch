@@ -25,23 +25,22 @@ class HomeViewModel extends ChangeNotifier {
   // late Command0 load;
   // late Command1<void, int> deleteBooking;
 
-  List<Event> get events => _events;
-
-  List<Widget> get eventTiles => List<Widget>.from(
-    _events.map(
-      (Event event) => Card(
-        color: event.category.colour,
-        child: ListTile(
-          leading: SelectableText(
-            event.category.toString(),
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          title: SelectableText('${event.id} - ${event.address}'),
-          subtitle: SelectableText(event.status.toString()),
-        ),
+  Widget eventTile(Event singleEvent) => Card(
+    color: singleEvent.category.colour,
+    child: ListTile(
+      leading: SelectableText(
+        singleEvent.category.toString(),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
       ),
+      title: SelectableText('${singleEvent.id} - ${singleEvent.address}'),
+      subtitle: SelectableText(singleEvent.status.toString()),
     ),
   );
+
+  List<Event> get events => _events;
+
+  List<Widget> get eventTiles =>
+      List<Widget>.from(_events.map((Event event) => eventTile(event)));
 
   // User? get user => _user;
 
