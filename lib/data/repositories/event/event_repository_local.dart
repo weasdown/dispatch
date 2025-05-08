@@ -1,4 +1,5 @@
 import '../../../domain/models/event.dart';
+import '../../../domain/models/status.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
 import 'event_repository.dart';
@@ -30,19 +31,8 @@ class EventRepositoryLocal implements EventRepository {
     return Result.ok(_events);
   }
 
-  Future<void> _createDefaultEvent() async {
-    // Create a default event the first time.
-    if (_events.isEmpty) {
-      Event firstEvent = _localDataService.events.first;
-
-      _events.add(
-        Event(
-          id: _sequentialId++,
-          category: firstEvent.category,
-          address: firstEvent.address,
-        ),
-      );
-    }
+  Future<void> createEvent({required String address, required NOC noc}) async {
+    _events.add(Event.withNOC(id: _sequentialId++, address: address, noc: noc));
   }
 
   @override
