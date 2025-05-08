@@ -133,7 +133,8 @@ class Event {
   void addNOC(NOC noc) {
     if (_noc == null) {
       _noc = noc;
-      status = noc;
+      status = Status.nhs999(noc.category);
+      category = noc.category;
     } else {
       throw Exception(
         'An Event\'s NOC can only be set once but was already set.',
