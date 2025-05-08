@@ -3,7 +3,10 @@ import 'event.dart';
 interface class Status {
   const Status(this.category, this.description);
 
-  const Status.preAlert() : category = null, description = 'Pre-Alert';
+  /// Creates an emergency ambulance [Status].
+  const factory Status.nhs999(Category category) = PathwaysDisposition._nhs999;
+
+  const Status.preAlert() : category = null, description = _preAlert;
 
   @override
   bool operator ==(Object other) =>
@@ -15,11 +18,10 @@ interface class Status {
 
   final String description;
 
-  /// Creates an emergency ambulance [Status].
-  const factory Status.nhs999(Category category) = PathwaysDisposition._nhs999;
   @override
   int get hashCode => Object.hash(category, description);
 
+  static const String _preAlert = 'Pre-Alert';
 
   @override
   String toString() => description;
@@ -57,7 +59,7 @@ abstract class NOC extends Status {
 
   @override
   String toString() {
-    final String catNumber = category!.number;
+    final String catNumber = category.number;
     final String specifyText = specify ? ' (specify...)' : '';
     return 'CAT $catNumber - $description$specifyText C$catNumber';
   }
