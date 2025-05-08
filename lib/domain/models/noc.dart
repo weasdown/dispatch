@@ -1,36 +1,5 @@
 import 'event.dart';
-
-/// Nature of Call.
-abstract class NOC {
-  const NOC(this.category, this.description) : specify = false;
-
-  const NOC.withSpecify(this.category, this.description) : specify = true;
-
-  final Category category;
-
-  final String description;
-
-  // TODO implement detail attribute for "(specify...)" NOCs.
-  // /// The extra details provided in response to a "Specify..." prompt.
-  // final String detail;
-
-  final bool specify;
-
-  static List<NOC> get cat1 => catOneNOCs;
-
-  static List<NOC> get cat2 => catTwoNOCs;
-
-  static List<NOC> get cat3 => catThreeNOCs;
-
-  static List<NOC> get cat4 => catFourNOCs;
-
-  @override
-  String toString() {
-    final String catNumber = category.number;
-    final String specifyText = specify ? ' (specify...)' : '';
-    return 'CAT $catNumber - $description$specifyText C$catNumber';
-  }
-}
+import 'status.dart';
 
 final class Cat1NOC extends NOC {
   const Cat1NOC._({required description}) : super(Category.one, description);
@@ -142,13 +111,12 @@ final class Cat4NOC extends NOC {
   const Cat4NOC.majorIncidentStandby()
     : this._(description: 'Major Incident Standby');
   const Cat4NOC.medicalMinor()
-    : super.withSpecify(Category.four, 'Medical Minor (Specify...)');
+    : super.withSpecify(Category.four, 'Medical Minor');
   const Cat4NOC.mentalHealth() : this._(description: 'Mental Health');
   const Cat4NOC.minorBleeding() : this._(description: 'Minor Bleeding');
   const Cat4NOC.nauseaVomiting() : this._(description: 'Nausea/Vomiting');
   const Cat4NOC.social() : this._(description: 'Social');
-  const Cat4NOC.trauma()
-    : super.withSpecify(Category.four, 'Trauma (specify...)');
+  const Cat4NOC.trauma() : super.withSpecify(Category.four, 'Trauma');
 }
 
 /// Full list of all the available Nature of Call statuses.
