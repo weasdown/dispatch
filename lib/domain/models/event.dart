@@ -37,16 +37,15 @@ class Event {
         category: Category.none,
       );
 
-  Event({
-    required this.id,
-    required this.address,
-    required this.category,
-    Status? status,
-  }) : status = status ?? Status.preAlert();
-
-  Event.withNOC({required this.id, required this.address, required NOC noc})
-    : category = noc.category,
-      status = noc;
+  factory Event.withNOC({
+    required int id,
+    required String address,
+    required NOC noc,
+  }) {
+    Event newEvent = Event.preAlert(id: id, address: address);
+    newEvent.addNOC(noc);
+    return newEvent;
+  }
 
   // /// Private constructor
   // Event._({
