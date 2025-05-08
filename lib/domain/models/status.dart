@@ -33,6 +33,9 @@ abstract class NOC extends Status {
   // /// The extra details provided in response to a "Specify..." prompt.
   // final String detail;
 
+  @override
+  Category get category => super.category!;
+
   final bool specify;
 
   static List<NOC> get cat1 => catOneNOCs;
