@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
 import '../../../domain/models/event/event.dart';
+import '../../../ui/event/view_models/special_situation_viewmodel.dart';
+import '../../../ui/event/widgets/special_situation_button.dart';
 import '../../../utils/result.dart';
 
 class HomeViewModel extends ChangeNotifier {
@@ -25,17 +27,34 @@ class HomeViewModel extends ChangeNotifier {
   // late Command0 load;
   // late Command1<void, int> deleteBooking;
 
-  Widget eventTile(Event singleEvent) => Card(
-    color: singleEvent.category.colour,
-    child: ListTile(
-      leading: SelectableText(
-        singleEvent.category.toString(),
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+  Widget eventTile(Event event) {
+    List<Widget> alertWidgets = [];
+    if (event.specialSituation != null) {
+      // TODO add special situation button to alertWidgets
+      alertWidgets.add(
+        // FIXME probably shouldn't be creating a new SpecialSituationViewModel here.
+        SpecialSituationButton(
+          viewModel: SpecialSituationViewModel(event.specialSituation!),
+        ),
+      );
+    }
+
+    return Card(
+      color: event.category.colour,
+      child: ListTile(
+        leading: SelectableText(
+          event.category.toString(),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        title: SelectableText('${event.id} - ${event.address}'),
+        subtitle: SelectableText(event.status.toString()),
+        trailing:
+            alertWidgets.isNotEmpty
+                ? Row(mainAxisSize: MainAxisSize.min, children: alertWidgets)
+                : null,
       ),
-      title: SelectableText('${singleEvent.id} - ${singleEvent.address}'),
-      subtitle: SelectableText(singleEvent.status.toString()),
-    ),
-  );
+    );
+  }
 
   List<Event> get events => _events;
 
