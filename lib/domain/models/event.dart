@@ -221,7 +221,8 @@ enum Category {
   one('1', Colors.purple),
   two('2', Colors.red),
   three('3', Colors.yellow),
-  four('4', Colors.green);
+  four('4', Colors.green),
+  none('0', Colors.grey);
 
   const Category(this.number, this.colour);
 
@@ -232,10 +233,14 @@ enum Category {
     Category.two => n.catTwoNOCs,
     Category.three => n.catThreeNOCs,
     Category.four => n.catFourNOCs,
+    Category.none => List.empty(),
   };
 
   final String number;
 
   @override
-  String toString() => 'C$number';
+  String toString() => switch (this) {
+    Category.none => '',
+    _ => 'C$number',
+  };
 }
