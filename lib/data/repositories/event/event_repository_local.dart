@@ -9,9 +9,9 @@ class EventRepositoryLocal implements EventRepository {
   EventRepositoryLocal({required LocalDataService localDataService})
     : _localDataService = localDataService;
 
-  // Only create default booking once
+  // Only create default event once.
   bool _isInitialized = false;
-  // Used to generate IDs for bookings
+  // Used to generate IDs for events.
   int _sequentialId = 0;
 
   final _events = List<Event>.empty(growable: true);
