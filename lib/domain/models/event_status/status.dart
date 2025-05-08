@@ -1,4 +1,4 @@
-import 'event.dart';
+import '../event.dart';
 
 interface class Status {
   const Status(this.category, this.description);

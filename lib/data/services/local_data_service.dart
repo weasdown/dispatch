@@ -5,7 +5,7 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../domain/models/event.dart';
-import '../../domain/models/noc.dart';
+import '../../domain/models/event_status/noc.dart';
 import '../../domain/models/unit.dart';
 import '../../domain/models/user/user.dart';
 

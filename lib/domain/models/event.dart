@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 // import '../../../api/maps/geocoding.dart';
 // import '../../map.dart';
-import 'status.dart';
+import 'event_status/status.dart';
 import 'unit.dart';
 
 /// An emergency event that the ambulance service has become aware of.

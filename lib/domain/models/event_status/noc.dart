@@ -1,4 +1,4 @@
-import 'event.dart';
+import '../event.dart';
 import 'status.dart';
 
 final class Cat1NOC extends NOC {
