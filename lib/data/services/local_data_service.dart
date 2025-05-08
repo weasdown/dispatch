@@ -7,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../domain/models/event.dart';
 import '../../domain/models/noc.dart';
 import '../../domain/models/unit.dart';
-import '../../domain/models/user/user.dart';
+import '../../domain/models/person/user.dart';
 
 class LocalDataService {
   List<Event> get events => _defaultEvents;
