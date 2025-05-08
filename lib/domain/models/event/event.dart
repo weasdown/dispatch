@@ -45,8 +45,13 @@ class Event {
     required int id,
     required String address,
     required NOC noc,
+    SpecialSituation? specialSituation,
   }) {
-    Event newEvent = Event.preAlert(id: id, address: address);
+    Event newEvent = Event.preAlert(
+      id: id,
+      address: address,
+      specialSituation: specialSituation,
+    );
     newEvent.addNOC(noc);
     return newEvent;
   }
