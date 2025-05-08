@@ -111,13 +111,12 @@ final class Cat4NOC extends NOC {
   const Cat4NOC.majorIncidentStandby()
     : this._(description: 'Major Incident Standby');
   const Cat4NOC.medicalMinor()
-    : super.withSpecify(Category.four, 'Medical Minor (Specify...)');
+    : super.withSpecify(Category.four, 'Medical Minor');
   const Cat4NOC.mentalHealth() : this._(description: 'Mental Health');
   const Cat4NOC.minorBleeding() : this._(description: 'Minor Bleeding');
   const Cat4NOC.nauseaVomiting() : this._(description: 'Nausea/Vomiting');
   const Cat4NOC.social() : this._(description: 'Social');
-  const Cat4NOC.trauma()
-    : super.withSpecify(Category.four, 'Trauma (specify...)');
+  const Cat4NOC.trauma() : super.withSpecify(Category.four, 'Trauma');
 }
 
 /// Full list of all the available Nature of Call statuses.
