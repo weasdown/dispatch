@@ -19,8 +19,19 @@ class UnitRepositoryLocal implements UnitRepository {
   }
 
   @override
-  Future<Result<Unit>> unitByCallsign(String callsign) {
-    // TODO: implement unitByCallsign
-    throw UnimplementedError();
+  Future<Result<Unit>> unitByCallsign(String callsign) async {
+    Unit? unit =
+        _localDataService.units
+            .where((Unit unit) => unit.callsign == callsign)
+            .firstOrNull;
+
+    return switch (unit) {
+      Unit _ => Future(() => Result<Unit>.ok(unit)),
+      null => Future(
+        () => Result<Unit>.error(
+          Exception('Unit not found for callsign $callsign.'),
+        ),
+      ),
+    };
   }
 }
