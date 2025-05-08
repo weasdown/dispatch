@@ -133,6 +133,7 @@ class Event {
   void addNOC(NOC noc) {
     if (_noc == null) {
       _noc = noc;
+      status = noc;
     } else {
       throw Exception(
         'An Event\'s NOC can only be set once but was already set.',
