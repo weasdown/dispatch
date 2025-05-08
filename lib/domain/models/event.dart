@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 // import '../../map.dart';
 import 'noc.dart' as n;
 import 'status.dart';
+import 'unit.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
@@ -140,6 +141,9 @@ class Event {
       );
     }
   }
+
+  /// The ambulances and other units assigned to this event.
+  List<Unit> assignedUnits = List.empty(growable: true);
 
   // String get assignedUnitsText =>
   //     assignedUnits.isEmpty
