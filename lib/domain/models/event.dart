@@ -12,14 +12,41 @@ import 'status.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
+  Event._({
+    required this.id,
+    required this.address,
+    required this.status,
+    required this.category,
+  }) {
+    debugPrint('Pre-Alert found. Category: $category');
+    if (status == Status.preAlert()) {
+      debugPrint('Pre-Alert found. Category: $category');
+      assert(category == Category.none);
+    }
+
+    if (category == Category.none) {
+      assert(_noc == null);
+    }
+  }
+
+  Event.preAlert({required int id, required String address})
+    : this._(
+        id: id,
+        address: address,
+        status: Status.preAlert(),
+        category: Category.none,
+      );
+
   Event({
     required this.id,
     required this.address,
-    // required this.location,
     required this.category,
-    // required this.callerLocationUncertainty,
     Status? status,
   }) : status = status ?? Status.preAlert();
+
+  Event.withNOC({required this.id, required this.address, required NOC noc})
+    : category = noc.category,
+      status = noc;
 
   // /// Private constructor
   // Event._({
