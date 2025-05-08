@@ -23,7 +23,7 @@ class EventRepositoryLocal implements EventRepository {
   Future<Result<List<Event>>> get eventsList async {
     // Initialize the repository with a default event.
     if (!_isInitialized) {
-      await _createDefaultEvent();
+      _events.addAll(_localDataService.events);
       _isInitialized = true;
     }
 
