@@ -9,14 +9,17 @@ class SpecialSituationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return TextButton(
+      style: ButtonStyle(
+        shape: WidgetStateProperty.all<OutlinedBorder>(
+          RoundedRectangleBorder(),
+        ),
+        backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
+      ),
       onPressed: () => viewModel.openDialog(context),
       child: Padding(
         padding: EdgeInsets.all(8.0),
-        child: Container(
-          color: Colors.red,
-          child: Text('SS', style: TextStyle(color: Colors.white)),
-        ),
+        child: Text('SS', style: TextStyle(color: Colors.red)),
       ),
     );
   }
