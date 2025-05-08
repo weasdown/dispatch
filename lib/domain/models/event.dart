@@ -18,9 +18,7 @@ class Event {
     required this.status,
     required this.category,
   }) {
-    debugPrint('Pre-Alert found. Category: $category');
     if (status == Status.preAlert()) {
-      debugPrint('Pre-Alert found. Category: $category');
       assert(category == Category.none);
     }
 
