@@ -158,7 +158,7 @@ class Event {
   // /// The radius within which the caller could be, in km.
   // num callerLocationUncertainty;
 
-  final Category category;
+  Category category;
 
   // // TODO vary the icon based on the category of event.
   // /// Path to the image used as this [Event]'s icon.
