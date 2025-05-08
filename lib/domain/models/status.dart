@@ -5,12 +5,21 @@ interface class Status {
 
   const Status.preAlert() : category = null, description = 'Pre-Alert';
 
+  @override
+  bool operator ==(Object other) =>
+      other is Status &&
+      (other.category == category) &&
+      (other.description == description);
+
   final Category? category;
 
   final String description;
 
   /// Creates an emergency ambulance [Status].
   const factory Status.nhs999(Category category) = PathwaysDisposition._nhs999;
+  @override
+  int get hashCode => Object.hash(category, description);
+
 
   @override
   String toString() => description;
