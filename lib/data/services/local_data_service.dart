@@ -5,34 +5,12 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../domain/models/event.dart';
+import '../../domain/models/noc.dart';
 import '../../domain/models/unit.dart';
 import '../../domain/models/user/user.dart';
 
 class LocalDataService {
-  List<Event> get events => [
-    Event(
-      id: 423124,
-      category: Category.two,
-      address: 'Sainsbury\'s Kidlington',
-    ),
-    Event(
-      id: 423125,
-      address: '47 Hamble Drive Abingdon',
-      category: Category.three,
-    ),
-    Event(id: 423129, category: Category.one, address: 'Carfax Tower, Oxford'),
-    Event(
-      id: 423126,
-      address: '25 Old Union Way, Thame',
-      category: Category.four,
-    ),
-    Event(
-      id: 423127,
-      address: '6 The Greenway, Oxfordshire',
-      category: Category.three,
-    ),
-    Event(id: 423128, address: 'Thatcham Station', category: Category.two),
-  ];
+  List<Event> get events => _defaultEvents;
 
   List<Unit> get units => _defaultUnits;
 
@@ -74,5 +52,36 @@ final List<Unit> _defaultUnits = [
     callsign: 'NH58',
     location: LatLng(51.61832936052779, -1.0854888181805424),
     vehicleType: VehicleType.helicopter,
+  ),
+];
+
+/// A default list of events.
+final List<Event> _defaultEvents = [
+  Event.preAlert(id: 423124, address: 'Sainsbury\'s Kidlington'),
+  Event.preAlert(id: 423125, address: '47 Hamble Drive Abingdon'),
+  Event.withNOC(
+    id: 423129,
+    address: 'Carfax Tower, Oxford',
+    noc: Cat2NOC.c2Stabbing(),
+  ),
+  Event.withNOC(
+    id: 423126,
+    address: '25 Old Union Way, Thame',
+    noc: Cat4NOC.medicalMinor(),
+  ),
+  Event.withNOC(
+    id: 423127,
+    address: '6 The Greenway, Oxfordshire',
+    noc: Cat1NOC.c1ArrestPeriArrest(),
+  ),
+  Event.withNOC(
+    id: 423128,
+    address: 'Thatcham Station',
+    noc: Cat4NOC.mentalHealth(),
+  ),
+  Event.withNOC(
+    id: 423130,
+    address: 'Next, Westgate Shopping Centre, Oxford',
+    noc: Cat3NOC.fallInjuriesUnknown(),
   ),
 ];
