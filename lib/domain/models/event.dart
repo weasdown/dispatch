@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 // import '../../../api/maps/geocoding.dart';
 // import '../../map.dart';
-import 'noc.dart' as n;
 import 'status.dart';
 import 'unit.dart';
 
@@ -261,10 +260,10 @@ enum Category {
   final Color colour;
 
   List<NOC> get nocs => switch (this) {
-    Category.one => n.catOneNOCs,
-    Category.two => n.catTwoNOCs,
-    Category.three => n.catThreeNOCs,
-    Category.four => n.catFourNOCs,
+    Category.one => catOneNOCs,
+    Category.two => catTwoNOCs,
+    Category.three => catThreeNOCs,
+    Category.four => catFourNOCs,
     Category.none => List.empty(),
   };
 
