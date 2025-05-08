@@ -1,4 +1,4 @@
-import '../../../domain/models/event.dart';
+import '../../../domain/models/event/event.dart';
 import '../../../utils/result.dart';
 
 /// Data source for events.

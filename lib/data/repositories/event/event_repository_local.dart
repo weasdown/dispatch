@@ -1,5 +1,5 @@
-import '../../../domain/models/event.dart';
-import '../../../domain/models/event_status/status.dart';
+import '../../../domain/models/event/event.dart';
+import '../../../domain/models/event/event_status/status.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
 import 'event_repository.dart';

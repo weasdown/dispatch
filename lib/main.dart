@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'api/env.dart';
 import 'config/dependencies.dart';
 // import 'data/services/local_data_service.dart';
-import 'domain/models/event.dart';
+import 'domain/models/event/event.dart';
 // import 'domain/models/unit.dart';
 // import 'map.dart';
 import 'routing/router.dart';
