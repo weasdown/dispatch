@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:dispatch/domain/models/event/special_situation.dart';
 import 'package:flutter/material.dart';
 
 // import 'package:flutter_google_maps_webservices/geocoding.dart';
@@ -17,6 +18,7 @@ class Event {
     required this.address,
     required this.status,
     required this.category,
+    this.specialSituation,
   }) {
     if (status == Status.preAlert()) {
       assert(category == Category.none);
@@ -27,13 +29,17 @@ class Event {
     }
   }
 
-  Event.preAlert({required int id, required String address})
-    : this._(
-        id: id,
-        address: address,
-        status: Status.preAlert(),
-        category: Category.none,
-      );
+  Event.preAlert({
+    required int id,
+    required String address,
+    SpecialSituation? specialSituation,
+  }) : this._(
+         id: id,
+         address: address,
+         status: Status.preAlert(),
+         category: Category.none,
+         specialSituation: specialSituation,
+       );
 
   factory Event.withNOC({
     required int id,
@@ -208,6 +214,9 @@ class Event {
 
   /// Nature of Call.
   NOC? get noc => _noc;
+
+  /// Extra information that identifies something significant about the event's address or patient.
+  SpecialSituation? specialSituation;
 
   Status status;
 }
