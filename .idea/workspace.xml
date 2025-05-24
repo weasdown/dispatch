@@ -5,11 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c252403d-4856-460b-a2ed-df4ef769e839" name="Changes" comment="chore: update IDE files">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/analysis_options.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/bin/server.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/dart_test.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/mono_pkg.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/public/64.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/public/dashland.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/public/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/pubspec.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/test/docker_test.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/test/server_test.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/test/test_definitions.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/tool/docker_test_script.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dispatch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dispatch.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/main_dart.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/main_dart.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_05_2025_10_39_[Changes]/shelved.patch" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,11 +84,15 @@
     "git-widget-placeholder": "10-add-server-package",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/weasd/dev/non-OH/dispatch",
+    "last_opened_file_path": "C:/Users/weasd/dev/non-OH/dispatch/server",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\weasd\dev\non-OH\dispatch\server" />
+      <recent name="C:\Users\weasd\dev\non-OH\dispatch\app" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\weasd\dev\non-OH\dispatch" />
       <recent name="C:\Users\weasd\dev\non-OH\dispatch\app" />
@@ -163,7 +180,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748080711493</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="chore: update IDE files">
+      <option name="closed" value="true" />
+      <created>1748080927048</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1748080927048</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

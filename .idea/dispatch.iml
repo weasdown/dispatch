@@ -8,6 +8,10 @@
       <excludeFolder url="file://$MODULE_DIR$/app/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/app/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/app/doc/api" />
+      <excludeFolder url="file://$MODULE_DIR$/app/linux/flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/app/macos/Flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/app/windows/flutter/ephemeral" />
       <excludeFolder url="file://$MODULE_DIR$/server/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/server/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/server/build" />
