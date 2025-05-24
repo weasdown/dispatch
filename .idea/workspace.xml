@@ -4,26 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c252403d-4856-460b-a2ed-df4ef769e839" name="Changes" comment="chore: update IDE files">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/analysis_options.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/bin/server.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/dart_test.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/mono_pkg.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/public/64.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/public/dashland.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/public/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/pubspec.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/test/docker_test.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/test/server_test.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/test/test_definitions.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/tool/docker_test_script.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dispatch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dispatch.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_05_2025_10_39_[Changes]/shelved.patch" beforeDir="false" />
-    </list>
+    <list default="true" id="c252403d-4856-460b-a2ed-df4ef769e839" name="Changes" comment="feat: add template server from compass_app" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -91,6 +72,7 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\weasd\dev\non-OH\dispatch\server" />
+      <recent name="C:\Users\weasd\dev\non-OH\dispatch" />
       <recent name="C:\Users\weasd\dev\non-OH\dispatch\app" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -188,7 +170,23 @@
       <option name="project" value="LOCAL" />
       <updated>1748080927048</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="feat: add .gitignores">
+      <option name="closed" value="true" />
+      <created>1748081196062</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1748081196062</updated>
+    </task>
+    <task id="LOCAL-00012" summary="feat: add template server from compass_app">
+      <option name="closed" value="true" />
+      <created>1748081332668</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1748081332668</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -213,6 +211,8 @@
     <MESSAGE value="feat: add remaining UnitStatus options" />
     <MESSAGE value="refactor: move app code to new app folder" />
     <MESSAGE value="chore: update IDE files" />
-    <option name="LAST_COMMIT_MESSAGE" value="chore: update IDE files" />
+    <MESSAGE value="feat: add .gitignores" />
+    <MESSAGE value="feat: add template server from compass_app" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add template server from compass_app" />
   </component>
 </project>
