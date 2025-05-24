@@ -1,6 +1,6 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../map.dart';
+import '../../../map.dart';
 
 /// An ambulance vehicle, air ambulance or other resource.
 class Unit {
