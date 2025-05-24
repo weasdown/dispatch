@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 // import '../../../api/maps/geocoding.dart';
 // import '../../map.dart';
 import 'status.dart';
-import 'unit.dart';
+import 'unit/unit.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {

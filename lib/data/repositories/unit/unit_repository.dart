@@ -1,4 +1,4 @@
-import '../../../domain/models/unit.dart';
+import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
 
 /// Data source for units.

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'domain/models/event.dart';
-import 'domain/models/unit.dart';
+import 'domain/models/unit/unit.dart';
 
 /// A page that displays a Google Maps map.
 class MapPage extends StatefulWidget {
