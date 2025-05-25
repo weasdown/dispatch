@@ -48,4 +48,6 @@ enum VehicleType {
   const VehicleType(this.name);
 
   final String name;
+
+  Map<String, dynamic> get toJson => {'vehicleType': name};
 }
