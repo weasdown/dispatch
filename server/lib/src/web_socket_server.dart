@@ -24,6 +24,13 @@ class WebSocketServer {
   factory WebSocketServer.run({String? host, int? port}) =>
       WebSocketServer._(host: host, port: port).._serve();
 
+  /// Adds an item to its respective list.
+  Future<Result<void>> add<T>(T item) => switch (T) {
+    Unit _ => Future(() => Result.ok(_units.add(item as Unit))),
+    Event _ => Future(() => Result.ok(_events.add(item as Event))),
+    _ => throw TypeError(),
+  };
+
   static final Handler coreHandler = webSocketHandler((webSocket, _) {
     webSocket.stream.listen((message) async {
       print('Received message: $message');
