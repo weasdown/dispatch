@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dispatch/domain/models/event.dart';
 import 'package:dispatch/domain/models/unit/unit.dart';
 import 'package:dispatch/utils/result.dart';
+import 'package:server/default_data.dart';
 import 'package:shelf/shelf.dart' show Handler;
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
@@ -13,8 +14,8 @@ class WebSocketServer {
   WebSocketServer._({String? host, int? port})
     : host = host ?? _defaultHost,
       _port = port ?? _defaultPort,
-      _events = [],
-      _units = [];
+      _events = defaultEvents,
+      _units = defaultUnits;
 
   /// Creates a server without immediately running it.
   WebSocketServer.pending({String? host, int? port})
