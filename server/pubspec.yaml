@@ -9,6 +9,7 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
+  dispatch: ^0.1.0+1
   shelf: ^1.4.2
   shelf_web_socket: ^3.0.0
   # path: ^1.8.0
