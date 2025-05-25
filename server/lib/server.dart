@@ -4,5 +4,3 @@
 library;
 
 export 'src/web_socket_server.dart';
-
-// TODO: Export any libraries intended for clients of this package.
