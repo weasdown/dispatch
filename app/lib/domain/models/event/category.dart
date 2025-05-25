@@ -20,6 +20,8 @@ enum Category {
 
   final String number;
 
+  String toJson() => name;
+
   @override
   String toString() => switch (this) {
     Category.none => '',
