@@ -13,7 +13,8 @@ enum UnitStatus {
   ah('AH', 'At Hospital'),
   ho('HO', 'Handover'),
   vc('VC', 'Vehicle Clear'),
-  os('OS', 'Out of Service');
+  os('OS', 'Out of Service'),
+  pd('PD', 'Pre-Duty');
 
   const UnitStatus(this.abbreviation, this.name);
 
