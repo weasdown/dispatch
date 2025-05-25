@@ -6,6 +6,8 @@
 // import '../../../api/maps/geocoding.dart';
 // import '../../map.dart';
 // import 'package:flutter/foundation.dart';
+import 'package:latlng/latlng.dart';
+
 import '../status.dart';
 import '../unit/unit.dart';
 import 'category.dart';
@@ -160,21 +162,11 @@ class Event {
 
   Category category;
 
-  // // TODO vary the icon based on the category of event.
-  // /// Path to the image used as this [Event]'s icon.
-  // String? get _iconAsset => null;
-
   /// A unique numerical identifier.
   final int id;
 
-  // /// Latitude.
-  // double get lat => location.lat;
-  //
-  // /// Longitude.
-  // double get lng => location.lng;
-  //
-  // /// The latitude and longitude of the emergency.
-  // late Location location;
+  /// The latitude and longitude of the emergency.
+  late LatLng location;
 
   // /// Returns the latitude and longitude of a given street [address].
   // Future<Location> _locationFromAddress() async {
@@ -183,23 +175,6 @@ class Event {
   //   Location location = result.geometry.location;
   //
   //   return location;
-  // }
-
-  // /// Gets a [Marker] for showing this [Event] on a map.
-  // Marker get mapMarker {
-  //   final String id = this.id.toString();
-  //
-  //   return Marker(
-  //     markerId: MarkerId(id),
-  //     position: LatLng(lat, lng),
-  //     icon: (_iconAsset != null)
-  //         ? markerIcon(_iconAsset!)
-  //         : BitmapDescriptor.defaultMarker,
-  //     infoWindow: InfoWindow(
-  //       title: 'Event $id (cat ${category.number})',
-  //       snippet: address,
-  //     ),
-  //   );
   // }
 
   /// Nature of Call.
