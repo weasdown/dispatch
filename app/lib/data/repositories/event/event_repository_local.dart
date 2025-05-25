@@ -1,4 +1,4 @@
-import '../../../domain/models/event.dart';
+import '../../../domain/models/event/event.dart';
 import '../../../domain/models/status.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';

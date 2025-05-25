@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
-import '../../../domain/models/event.dart';
+import '../../../domain/models/event/category_colour.dart';
+import '../../../domain/models/event/event.dart';
 import '../../../utils/result.dart';
 
 class HomeViewModel extends ChangeNotifier {

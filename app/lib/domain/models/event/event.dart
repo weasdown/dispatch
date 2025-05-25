@@ -1,14 +1,14 @@
-import 'dart:collection';
-
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
 // import 'package:flutter_google_maps_webservices/geocoding.dart';
 // import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // import '../../../api/maps/geocoding.dart';
 // import '../../map.dart';
-import 'status.dart';
-import 'unit/unit.dart';
+// import 'package:flutter/foundation.dart';
+import '../status.dart';
+import '../unit/unit.dart';
+import 'category.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
@@ -192,10 +192,9 @@ class Event {
   //   return Marker(
   //     markerId: MarkerId(id),
   //     position: LatLng(lat, lng),
-  //     icon:
-  //         (_iconAsset != null)
-  //             ? markerIcon(_iconAsset!)
-  //             : BitmapDescriptor.defaultMarker,
+  //     icon: (_iconAsset != null)
+  //         ? markerIcon(_iconAsset!)
+  //         : BitmapDescriptor.defaultMarker,
   //     infoWindow: InfoWindow(
   //       title: 'Event $id (cat ${category.number})',
   //       snippet: address,
@@ -210,66 +209,4 @@ class Event {
   NOC? get noc => _noc;
 
   Status status;
-}
-
-/// Storage for all the events that units will respond to.
-class EventListModel extends ChangeNotifier {
-  EventListModel({required List<Event> events}) {
-    _events.addAll(events);
-  }
-
-  EventListModel.blank();
-
-  /// Internal, private state of the event list.
-  final List<Event> _events = [];
-
-  /// An unmodifiable view of the events in the event list.
-  UnmodifiableListView<Event> get events => UnmodifiableListView(_events);
-
-  /// The current total number of events.
-  int get numEvents => _events.length;
-
-  /// Adds [event] to event list. This and [removeAll] are the only ways to
-  /// modify the event list from the outside.
-  void add(Event event) {
-    _events.add(event);
-    // This call tells the widgets that are listening to this model to rebuild.
-    notifyListeners();
-  }
-
-  /// Removes all events from the event list.
-  void removeAll() {
-    _events.clear();
-    // This call tells the widgets that are listening to this model to rebuild.
-    notifyListeners();
-  }
-}
-
-/// The category assigned to an [Event].
-enum Category {
-  one('1', Colors.purple),
-  two('2', Colors.red),
-  three('3', Colors.yellow),
-  four('4', Colors.green),
-  none('0', Colors.grey);
-
-  const Category(this.number, this.colour);
-
-  final Color colour;
-
-  List<NOC> get nocs => switch (this) {
-    Category.one => catOneNOCs,
-    Category.two => catTwoNOCs,
-    Category.three => catThreeNOCs,
-    Category.four => catFourNOCs,
-    Category.none => List.empty(),
-  };
-
-  final String number;
-
-  @override
-  String toString() => switch (this) {
-    Category.none => '',
-    _ => 'C$number',
-  };
 }

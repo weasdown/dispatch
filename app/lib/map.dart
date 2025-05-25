@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'domain/models/event.dart';
+import 'domain/models/event/event.dart';
 import 'domain/models/unit/unit.dart';
 
 /// A page that displays a Google Maps map.
@@ -41,7 +41,14 @@ class _MapPageState extends State<MapPage> {
   Set<Marker> get _markers => {
     // FIXME fix event markers
     // ...(showEvents) ? widget.events.map((Event event) => event.mapMarker) : {},
-    ...(showUnits) ? widget.units.map((Unit unit) => unit.mapMarker) : {},
+    ...(showUnits)
+        ? widget.units.map(
+            (Unit unit) =>
+                // FIXME fix Marker
+                Marker(markerId: MarkerId('PLACEHOLDER ID')),
+            // unit.mapMarker
+          )
+        : {},
   };
 
   Future<void> _onMapCreated(GoogleMapController controller) async {

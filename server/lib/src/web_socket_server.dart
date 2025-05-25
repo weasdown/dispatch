@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dispatch/domain/models/event.dart';
+import 'package:dispatch/data/services/local_data_service.dart';
+import 'package:dispatch/domain/models/event/event.dart';
 import 'package:dispatch/domain/models/unit/unit.dart';
 import 'package:dispatch/utils/result.dart';
-import 'package:server/default_data.dart';
 import 'package:shelf/shelf.dart' show Handler;
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
@@ -14,8 +14,10 @@ class WebSocketServer {
   WebSocketServer._({String? host, int? port})
     : host = host ?? _defaultHost,
       _port = port ?? _defaultPort,
-      _events = defaultEvents,
-      _units = defaultUnits;
+      _localDataService = LocalDataService() {
+    _events = _localDataService.events;
+    _units = _localDataService.units;
+  }
 
   /// Creates a server without immediately running it.
   WebSocketServer.pending({String? host, int? port})
@@ -51,9 +53,11 @@ class WebSocketServer {
 
   static const int _defaultPort = 8080;
 
-  List<Event> _events;
+  List<Event> _events = [];
 
   final String host;
+
+  LocalDataService _localDataService;
 
   // @Deprecated('messageFromJSON is pending removal.')
   static Map<String, dynamic> messageFromJSON(String message) {
@@ -70,10 +74,12 @@ class WebSocketServer {
   Future<HttpServer> _serve() async =>
       shelf_io.serve(coreHandler, host, _port).then((HttpServer server) {
         print('Serving at ws://${server.address.host}:${server.port}');
+        print('\t- Current units: $_units');
+        print('\t- Current events: $_events');
         return server;
       });
 
-  List<Unit> _units;
+  List<Unit> _units = [];
 
   /// Gets all the [Unit]s currently connected to (but not necessarily logged in to) this server.
   Future<Result<List<Unit>>> get units async => Future(() => Result.ok(_units));
