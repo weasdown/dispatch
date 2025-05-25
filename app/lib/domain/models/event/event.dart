@@ -185,6 +185,15 @@ class Event {
 
   Status status;
 
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'category': category.toJson(),
+    'address': address,
+    'assignedUnits': List<String>.from(
+      assignedUnits.map((Unit assignedUnit) => assignedUnit.callsign),
+    ),
+  };
+
   @override
   String toString() => 'Event $id';
 }
