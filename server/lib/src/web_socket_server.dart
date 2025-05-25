@@ -43,7 +43,7 @@ class WebSocketServer {
 
   final String host;
 
-  @Deprecated('messageFromJSON is pending removal.')
+  // @Deprecated('messageFromJSON is pending removal.')
   static Map<String, dynamic> messageFromJSON(String message) {
     try {
       return jsonDecode(message);
