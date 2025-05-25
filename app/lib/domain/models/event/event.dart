@@ -209,4 +209,7 @@ class Event {
   NOC? get noc => _noc;
 
   Status status;
+
+  @override
+  String toString() => 'Event $id';
 }

@@ -37,6 +37,9 @@ class Unit {
   //   ),
   // );
 
+  @override
+  String toString() => callsign;
+
   /// The type of vehicle that this is.
   final VehicleType vehicleType;
 }
