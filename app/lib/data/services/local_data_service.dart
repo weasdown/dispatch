@@ -10,9 +10,15 @@ import '../../domain/models/unit/unit.dart';
 import '../../domain/models/user/user.dart';
 
 class LocalDataService {
-  List<Event> get events => _defaultEvents;
+  LocalDataService() : _events = _defaultEvents, _units = _defaultUnits;
 
-  List<Unit> get units => _defaultUnits;
+  final List<Event> _events;
+
+  List<Event> get events => _events;
+
+  final List<Unit> _units;
+
+  List<Unit> get units => _units;
 
   User get user {
     return const User(
