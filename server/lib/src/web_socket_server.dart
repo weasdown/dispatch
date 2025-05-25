@@ -22,15 +22,6 @@ class WebSocketServer {
   factory WebSocketServer.run({String? host, int? port}) =>
       WebSocketServer._(host: host, port: port).._serve();
 
-  @Deprecated('messageFromJSON is pending removal.')
-  static Map<String, dynamic> messageFromJSON(String message) {
-    try {
-      return jsonDecode(message);
-    } on FormatException {
-      throw ArgumentError('message is not a valid JSON.');
-    }
-  }
-
   static final Handler coreHandler = webSocketHandler((webSocket, _) {
     webSocket.stream.listen((message) async {
       print('Received message: $message');
@@ -50,14 +41,18 @@ class WebSocketServer {
 
   static const int _defaultPort = 8080;
 
-  /// Gets all the [Unit]s currently connected to (but not necessarily logged in to) this server.
-  Future<Result<List<Unit>>> get units async => Future(() => Result.ok(_units));
-
   final String host;
 
-  final int _port;
+  @Deprecated('messageFromJSON is pending removal.')
+  static Map<String, dynamic> messageFromJSON(String message) {
+    try {
+      return jsonDecode(message);
+    } on FormatException {
+      throw ArgumentError('message is not a valid JSON.');
+    }
+  }
 
-  List<Unit> _units;
+  final int _port;
 
   // FIXME refactor so server is higher-level than dart:io's HttpServer. Currently crashes when run on web because HttpServer isn't supported on web.
   Future<HttpServer> _serve() async =>
@@ -65,4 +60,9 @@ class WebSocketServer {
         print('Serving at ws://${server.address.host}:${server.port}');
         return server;
       });
+
+  List<Unit> _units;
+
+  /// Gets all the [Unit]s currently connected to (but not necessarily logged in to) this server.
+  Future<Result<List<Unit>>> get units async => Future(() => Result.ok(_units));
 }
