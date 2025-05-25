@@ -3,6 +3,6 @@
 /// More dartdocs go here.
 library;
 
-export 'src/server_base.dart';
+export 'src/web_socket_server.dart';
 
 // TODO: Export any libraries intended for clients of this package.
