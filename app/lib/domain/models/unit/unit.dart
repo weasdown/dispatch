@@ -14,6 +14,12 @@ class Unit {
   /// The current latitude and longitude of this unit.
   LatLng location;
 
+  Map<String, dynamic> toJson() => {
+    'callsign': callsign,
+    'vehicleType': vehicleType.toString(),
+    'location': location.toString(),
+  };
+
   @override
   String toString() => callsign;
 
