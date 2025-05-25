@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dispatch/domain/models/event.dart';
 import 'package:dispatch/domain/models/unit/unit.dart';
 import 'package:dispatch/utils/result.dart';
 import 'package:shelf/shelf.dart' show Handler;
@@ -12,6 +13,7 @@ class WebSocketServer {
   WebSocketServer._({String? host, int? port})
     : host = host ?? _defaultHost,
       _port = port ?? _defaultPort,
+      _events = [],
       _units = [];
 
   /// Creates a server without immediately running it.
@@ -40,6 +42,8 @@ class WebSocketServer {
   static const String _defaultHost = 'localhost';
 
   static const int _defaultPort = 8080;
+
+  List<Event> _events;
 
   final String host;
 
