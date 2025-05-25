@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dispatch/domain/models/unit/unit.dart';
+import 'package:dispatch/utils/result.dart';
 import 'package:shelf/shelf.dart' show Handler;
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
@@ -48,6 +49,9 @@ class WebSocketServer {
   static const String _defaultHost = 'localhost';
 
   static const int _defaultPort = 8080;
+
+  /// Gets all the [Unit]s currently connected to (but not necessarily logged in to) this server.
+  Future<Result<List<Unit>>> get units async => Future(() => Result.ok(_units));
 
   final String host;
 
