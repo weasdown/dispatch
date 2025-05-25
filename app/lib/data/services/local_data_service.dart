@@ -64,7 +64,7 @@ final List<Unit> _defaultUnits = [
     vehicleType: VehicleType.criticalCareCar,
   ),
   Unit(
-    callsign: 'NH58',
+    callsign: '0024',
     location: LatLng(
       Angle.degree(51.61832936052779),
       Angle.degree(-1.0854888181805424),
