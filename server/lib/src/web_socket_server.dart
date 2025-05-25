@@ -16,7 +16,7 @@ class WebSocketServer {
     : this._(host: host, port: port);
 
   /// Creates a server and immediately runs it.
-  factory WebSocketServer({String? host, int? port}) =>
+  factory WebSocketServer.run({String? host, int? port}) =>
       WebSocketServer._(host: host, port: port).._serve();
 
   @Deprecated('messageFromJSON is pending removal.')

@@ -8,7 +8,7 @@ void main() {
     });
 
     test('First Test', () {
-      WebSocketServer server = WebSocketServer();
+      WebSocketServer server = WebSocketServer.run();
       print(server);
     });
   });
