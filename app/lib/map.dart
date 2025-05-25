@@ -41,14 +41,7 @@ class _MapPageState extends State<MapPage> {
   Set<Marker> get _markers => {
     // FIXME fix event markers
     // ...(showEvents) ? widget.events.map((Event event) => event.mapMarker) : {},
-    ...(showUnits)
-        ? widget.units.map(
-            (Unit unit) =>
-                // FIXME fix Marker
-                Marker(markerId: MarkerId('PLACEHOLDER ID')),
-            // unit.mapMarker
-          )
-        : {},
+    ...(showUnits) ? widget.units.map((Unit unit) => unit.mapMarker) : {},
   };
 
   Future<void> _onMapCreated(GoogleMapController controller) async {
