@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dispatch/domain/models/unit/unit.dart';
 import 'package:shelf/shelf.dart' show Handler;
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
@@ -9,7 +10,8 @@ import 'package:shelf_web_socket/shelf_web_socket.dart';
 class WebSocketServer {
   WebSocketServer._({String? host, int? port})
     : host = host ?? _defaultHost,
-      _port = port ?? _defaultPort;
+      _port = port ?? _defaultPort,
+      _units = [];
 
   /// Creates a server without immediately running it.
   WebSocketServer.pending({String? host, int? port})
@@ -50,6 +52,8 @@ class WebSocketServer {
   final String host;
 
   final int _port;
+
+  List<Unit> _units;
 
   // FIXME refactor so server is higher-level than dart:io's HttpServer. Currently crashes when run on web because HttpServer isn't supported on web.
   Future<HttpServer> _serve() async =>
