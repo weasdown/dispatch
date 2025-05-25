@@ -10,6 +10,28 @@ class Unit {
     this.vehicleType = VehicleType.dca,
   });
 
+  factory Unit.fromJson(Map<String, dynamic> json) {
+    return switch (json) {
+      {
+        'callsign': String callsign,
+        'location': List<double> location,
+        'vehicleType': Map<String, String> vehicleType,
+      } =>
+        Unit(
+          callsign: callsign,
+          location: LatLng(location[0], location[1]),
+          vehicleType:
+              VehicleType.values
+                  .where(
+                    (VehicleType type) =>
+                        type.name == vehicleType['vehicleType'],
+                  )
+                  .first,
+        ),
+      _ => throw const FormatException('Failed to load unit.'),
+    };
+  }
+
   /// A unique identifier for this resource.
   final String callsign;
 
