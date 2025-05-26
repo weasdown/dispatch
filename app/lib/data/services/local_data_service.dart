@@ -40,6 +40,10 @@ final List<Unit> _defaultUnits = [
     ),
   ),
   Unit(
+    callsign: 'NA402',
+    location: LatLng(Angle.degree(51.605), Angle.degree(-1.238)),
+  ),
+  Unit(
     callsign: 'NA283',
     location: LatLng(
       Angle.degree(51.616072911907786),
@@ -54,12 +58,12 @@ final List<Unit> _defaultUnits = [
     ),
   ),
   Unit(
-    callsign: 'NT431',
+    callsign: 'NF159',
     location: LatLng(
-      Angle.degree(51.397809576171085),
-      Angle.degree(-1.3230646597735394),
+      Angle.degree(51.62832936052779),
+      Angle.degree(-1.1854888181805424),
     ),
-    vehicleType: VehicleType.rrv,
+    vehicleType: VehicleType.communityFirstResponder,
   ),
   Unit(
     callsign: 'NR154',
@@ -68,6 +72,14 @@ final List<Unit> _defaultUnits = [
       Angle.degree(-1.3082872829130447),
     ),
     vehicleType: VehicleType.criticalCareCar,
+  ),
+  Unit(
+    callsign: 'NT431',
+    location: LatLng(
+      Angle.degree(51.397809576171085),
+      Angle.degree(-1.3230646597735394),
+    ),
+    vehicleType: VehicleType.rrv,
   ),
   Unit(
     callsign: '0024',
@@ -87,25 +99,31 @@ final List<Event> _defaultEvents = [
     id: 423129,
     address: 'Carfax Tower, Oxford',
     noc: Cat2NOC.c2Stabbing(),
-  ),
+  )..assignedUnits = [_defaultUnits[2]],
   Event.withNOC(
     id: 423126,
     address: '25 Old Union Way, Thame',
     noc: Cat4NOC.medicalMinor(),
-  ),
+  )..assignedUnits = [_defaultUnits[1]],
   Event.withNOC(
-    id: 423127,
-    address: '6 The Greenway, Oxfordshire',
-    noc: Cat1NOC.c1ArrestPeriArrest(),
-  ),
+      id: 423127,
+      address: '6 The Greenway, Oxfordshire',
+      noc: Cat1NOC.c1ArrestPeriArrest(),
+    )
+    ..assignedUnits = [
+      _defaultUnits[0],
+      _defaultUnits[4],
+      _defaultUnits[6],
+      _defaultUnits[7],
+    ],
   Event.withNOC(
     id: 423128,
     address: 'Thatcham Station',
     noc: Cat4NOC.mentalHealth(),
-  ),
+  )..assignedUnits = [_defaultUnits[5]],
   Event.withNOC(
     id: 423130,
     address: 'Next, Westgate Shopping Centre, Oxford',
     noc: Cat3NOC.fallInjuriesUnknown(),
-  ),
+  )..assignedUnits = [_defaultUnits[3]],
 ];
