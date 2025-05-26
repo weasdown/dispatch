@@ -12,6 +12,34 @@ class Unit {
     UnitStatus? status,
   }) : _status = status ?? UnitStatus.pd;
 
+  factory Unit.fromJson(Map<String, dynamic> json) => switch (json) {
+    {
+      'callsign': String callsign,
+      'location': [double latitude, double longitude],
+      'vehicleType': String vehicleType,
+      'status': String status,
+    } =>
+      () {
+        VehicleType unitVehicleType = VehicleType.values
+            .where(
+              (VehicleType vehicleTypeOption) =>
+                  vehicleTypeOption.name == vehicleType,
+            )
+            .first;
+        UnitStatus unitStatus = UnitStatus.values
+            .where((UnitStatus statusOption) => statusOption.name == status)
+            .first;
+
+        return Unit(
+          callsign: callsign,
+          location: LatLng(Angle.degree(latitude), Angle.degree(longitude)),
+          vehicleType: unitVehicleType,
+          status: unitStatus,
+        );
+      }(),
+    _ => throw const FormatException('Failed to load unit.'),
+  };
+
   /// A unique identifier for this resource.
   final String callsign;
 
@@ -38,8 +66,9 @@ class Unit {
 
   Map<String, dynamic> toJson() => {
     'callsign': callsign,
-    'vehicleType': vehicleType.toString(),
     'location': [location.latitude.degrees, location.longitude.degrees],
+    'vehicleType': vehicleType.name,
+    'status': status.name,
   };
 
   @override
