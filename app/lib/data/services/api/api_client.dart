@@ -20,7 +20,13 @@ class ApiClient {
 
   final int _port;
 
-  Stream get stream => channel!.stream;
+  Stream<Object> get stream {
+    if (channel == null) {
+      connect();
+    }
+
+    return channel!.stream.cast<Object>(); //.asBroadcastStream();
+  }
 
   void get requestEvents => channel!.sink.add('events');
 
