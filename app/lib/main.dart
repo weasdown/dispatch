@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' hide Key;
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'api/env.dart';
@@ -7,7 +7,7 @@ import 'domain/models/event/event_list_model.dart';
 import 'routing/router.dart';
 
 void main() async {
-  for (final Key key in Env.keys) {
+  for (final EnvKey key in Env.keys) {
     if (key().isEmpty) {
       throw Exception('Value for Key ${key.name} is not defined.');
     }
