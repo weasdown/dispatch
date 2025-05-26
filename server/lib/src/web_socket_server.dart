@@ -34,18 +34,29 @@ class WebSocketServer {
     _ => throw TypeError(),
   };
 
-  static final Handler coreHandler = webSocketHandler((webSocket, _) {
+  Handler get coreHandler => webSocketHandler((webSocket, _) {
     webSocket.stream.listen((message) async {
       print('Received message: $message');
 
-      Map<String, dynamic> messageJSON = messageFromJSON(message);
-      print('Message JSON: $messageJSON');
+      final String key;
+      final List response;
 
-      // TODO implement response.
-      final String response = 'A placeholder response';
+      switch (message) {
+        case 'units':
+          response = _units;
+          key = message;
+        case 'events':
+          response = _events;
+          key = message;
+        case _:
+          response = message;
+          key = 'error';
+      }
 
       // Send the response back to the sender.
-      webSocket.sink.add(json.encode({'response': response}));
+      Map<String, dynamic> messageToReply = {key: response};
+      webSocket.sink.add(json.encode(messageToReply));
+      print('Replied with: $messageToReply');
     });
   });
 
@@ -73,14 +84,16 @@ class WebSocketServer {
   // FIXME refactor so server is higher-level than dart:io's HttpServer. Currently crashes when run on web because HttpServer isn't supported on web.
   Future<HttpServer> _serve() async =>
       shelf_io.serve(coreHandler, host, _port).then((HttpServer server) {
-        print('Serving at ws://${server.address.host}:${server.port}');
-        print('\t- Current units: $_units');
-        print('\t- Current events: $_events');
+        print(
+          'Serving at ws://${server.address.host}:${server.port}\n'
+          '\t- Current units: $_units\n'
+          '\t- Current events: $_events\n',
+        );
         return server;
       });
 
   List<Unit> _units = [];
 
   /// Gets all the [Unit]s currently connected to (but not necessarily logged in to) this server.
-  Future<Result<List<Unit>>> get units async => Future(() => Result.ok(_units));
+  Result<List<Unit>> get units => Result.ok(_units);
 }
