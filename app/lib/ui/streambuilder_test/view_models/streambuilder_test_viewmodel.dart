@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/repositories/event/event_repository.dart';
+import '../../../data/repositories/event/event_repository_remote.dart';
 import '../../../domain/models/event/category_colour.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../utils/result.dart';
@@ -8,12 +8,12 @@ import '../../../utils/result.dart';
 // TODO remove this file and streambuilder_test_screen.dart
 
 class StreamBuilderTestViewModel extends ChangeNotifier {
-  StreamBuilderTestViewModel({required EventRepository eventRepository})
+  StreamBuilderTestViewModel({required EventRepositoryRemote eventRepository})
     : _eventRepository = eventRepository {
     _load();
   }
 
-  final EventRepository _eventRepository;
+  final EventRepositoryRemote _eventRepository;
 
   List<Event> _events = [];
 
