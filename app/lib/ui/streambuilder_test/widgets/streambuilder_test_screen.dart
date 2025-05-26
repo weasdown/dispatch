@@ -17,9 +17,16 @@ class StreamBuilderTestScreen extends StatefulWidget {
 }
 
 class _StreamBuilderTestScreenState extends State<StreamBuilderTestScreen> {
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   widget.viewModel.requestEvents;
+  // }
+
   @override
   Widget build(BuildContext context) {
-    // TODO move this StreamBuilder test to a new Widget and revert to the Home widget.
+    // TODO remove hardcoded client, channel, request.
     ApiClient client = ApiClient(host: 'localhost', port: 8080);
     WebSocketChannel channel = client.connect();
     // client.requestUnits;
@@ -40,16 +47,22 @@ class _StreamBuilderTestScreenState extends State<StreamBuilderTestScreen> {
       ),
       body: Center(
         child: StreamBuilder(
+          // stream: widget.viewModel.eventStream,
           stream: channel.stream,
-          builder: (context, snapshot) => switch (snapshot.connectionState) {
-            ConnectionState.none => Text('None'),
-            ConnectionState.waiting => CircularProgressIndicator(),
-            ConnectionState.active => Text(
-              'Active\n\n'
-              '${snapshot.data}',
-              textAlign: TextAlign.center,
-            ),
-            ConnectionState.done => Text('Done'),
+          builder: (context, snapshot) {
+            // debugPrint('snapshot.data: ${snapshot.data}');
+            debugPrint('snapshot.connectionState: ${snapshot.connectionState}');
+
+            return switch (snapshot.connectionState) {
+              ConnectionState.none => Text('None'),
+              ConnectionState.waiting => CircularProgressIndicator(),
+              ConnectionState.active => Text(
+                'Active\n\n'
+                '${snapshot.data}',
+                textAlign: TextAlign.center,
+              ),
+              ConnectionState.done => Text('Done'),
+            };
           },
         ),
       ),
