@@ -33,6 +33,18 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         // );
       },
     ),
+    // // TODO add GoRoute for events
+    // GoRoute(
+    //   path: Routes.events,
+    //   builder: (context, state) =>
+    //       HomeScreen(viewModel: EventsViewModel(/* */)),
+    // ),
+    // // TODO add GoRoute for units
+    // GoRoute(
+    //   path: Routes.units,
+    //   builder: (context, state) =>
+    //       UnitsScreen(viewModel: UnitsViewModel(/* */)),
+    // ),
     GoRoute(
       path: Routes.home,
       builder: (context, state) {
