@@ -9,7 +9,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../data/repositories/auth/auth_repository.dart';
-import '../data/services/api/api_client.dart';
 import '../ui/home/view_models/home_viewmodel.dart';
 import '../ui/home/widgets/home_screen.dart';
 import '../ui/streambuilder_test/view_models/streambuilder_test_viewmodel.dart';
@@ -53,9 +52,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
       builder: (context, state) {
         return StreamBuilderTestScreen(
           viewModel: StreamBuilderTestViewModel(
-            eventRepository: EventRepositoryRemote(
-              apiClient: ApiClient(host: '', port: null),
-            ),
+            eventRepository: EventRepositoryRemote(apiClient: context.read()),
           ),
         );
       },
