@@ -10,6 +10,8 @@ extension UnitMapMarker on Unit {
     VehicleType.rrv => 'assets/images/rrv.png',
     VehicleType.helicopter => 'assets/images/tvaa.jpg',
     VehicleType.criticalCareCar => 'assets/images/hems-car.png',
+    // FIXME: give the CFR a unique image.
+    VehicleType.communityFirstResponder => 'assets/images/rrv.png',
   };
 
   /// Gets a [Marker] for showing this [Unit] on a map.
