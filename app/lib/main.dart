@@ -12,14 +12,19 @@ void main() async {
       throw Exception('Value for Key ${key.name} is not defined.');
     }
   }
-
+  // // TODO remove hardcoded events and model.
   // List<Event> defaultEvents = [];
   // for (Future<Event> futureEvent in futureDefaultEvents) {
   //   defaultEvents.add(await futureEvent);
   // }
-
+  //
   // runApp(NewCAD(events: EventListModel(events: LocalDataService().events)));
-  runApp(MultiProvider(providers: providersLocal, child: NewCAD()));
+
+  // Run with remote data sources.
+  runApp(MultiProvider(providers: providersRemote, child: NewCAD()));
+
+  // // Run with local data sources.
+  // runApp(MultiProvider(providers: providersLocal, child: NewCAD()));
 }
 
 class NewCAD extends StatelessWidget {
