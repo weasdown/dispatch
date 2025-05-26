@@ -17,7 +17,7 @@ class Unit {
   Map<String, dynamic> toJson() => {
     'callsign': callsign,
     'vehicleType': vehicleType.toString(),
-    'location': location.toString(),
+    'location': [location.latitude.degrees, location.longitude.degrees],
   };
 
   @override
