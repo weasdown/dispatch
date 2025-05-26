@@ -2,16 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:dispatch/data/repositories/event/event_repository_remote.dart';
+import 'package:dispatch/ui/streambuilder_test/widgets/streambuilder_test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../data/repositories/auth/auth_repository.dart';
 import '../data/services/api/api_client.dart';
-// import '../ui/home/view_models/home_viewmodel.dart';
-// import '../ui/home/widgets/home_screen.dart';
 import '../ui/home/view_models/home_viewmodel.dart';
 import '../ui/home/widgets/home_screen.dart';
+import '../ui/streambuilder_test/view_models/streambuilder_test_viewmodel.dart';
 import 'routes.dart';
 
 /// Top go_router entry point.
@@ -19,7 +20,8 @@ import 'routes.dart';
 /// Listens to changes in `AuthTokenRepository` to redirect the user
 /// to /login when the user logs out.
 GoRouter router(AuthRepository authRepository) => GoRouter(
-  initialLocation: Routes.home,
+  // initialLocation: Routes.home,
+  initialLocation: Routes.streamBuilderTest,
   debugLogDiagnostics: true,
   redirect: _redirect,
   refreshListenable: authRepository,
@@ -46,6 +48,18 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
     //   builder: (context, state) =>
     //       UnitsScreen(viewModel: UnitsViewModel(/* */)),
     // ),
+    GoRoute(
+      path: Routes.streamBuilderTest,
+      builder: (context, state) {
+        return StreamBuilderTestScreen(
+          viewModel: StreamBuilderTestViewModel(
+            eventRepository: EventRepositoryRemote(
+              apiClient: ApiClient(host: '', port: null),
+            ),
+          ),
+        );
+      },
+    ),
     GoRoute(
       path: Routes.home,
       builder: (context, state) {
