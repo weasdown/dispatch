@@ -3,11 +3,11 @@
 // found in the LICENSE file.
 
 abstract final class Routes {
-  static const home = '/';
-  static const login = '/login';
-  static const events = '/$eventsRelative';
-  static const eventsRelative = 'events';
-  static const units = '/$unitsRelative';
-  static const unitsRelative = 'units';
-  static const streamBuilderTest = 'streamBuilderTest';
+  static const String home = '/';
+  static const String login = '/login';
+  static const String events = '/$eventsRelative';
+  static const String eventsRelative = 'events';
+  static const String units = '/$unitsRelative';
+  static const String unitsRelative = 'units';
+  static const String streamBuilderTest = 'streamBuilderTest';
 }
