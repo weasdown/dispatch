@@ -9,5 +9,5 @@ abstract final class Routes {
   static const String eventsRelative = 'events';
   static const String units = '/$unitsRelative';
   static const String unitsRelative = 'units';
-  static const String streamBuilderTest = 'streamBuilderTest';
+  static const String streamBuilderTest = '/streamBuilderTest';
 }
