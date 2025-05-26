@@ -2,13 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../data/repositories/auth/auth_repository.dart';
-import '../ui/home/view_models/home_viewmodel.dart';
-import '../ui/home/widgets/home_screen.dart';
+import '../data/services/api/api_client.dart';
+// import '../ui/home/view_models/home_viewmodel.dart';
+// import '../ui/home/widgets/home_screen.dart';
 import 'routes.dart';
 
 /// Top go_router entry point.
@@ -34,8 +36,33 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
     GoRoute(
       path: Routes.home,
       builder: (context, state) {
-        final viewModel = HomeViewModel(eventRepository: context.read());
-        return HomeScreen(viewModel: viewModel);
+        ApiClient client = ApiClient(host: 'localhost', port: 8080);
+        WebSocketChannel channel = client.connect();
+        // client.requestUnits;
+        client.requestEvents;
+
+        return Scaffold(
+          appBar: AppBar(title: Text('StreamBuilder test')),
+          body: Center(
+            child: StreamBuilder(
+              stream: channel.stream,
+              builder: (context, snapshot) =>
+                  switch (snapshot.connectionState) {
+                    ConnectionState.none => Text('None'),
+                    ConnectionState.waiting => CircularProgressIndicator(),
+                    ConnectionState.active => Text(
+                      'Active\n\n'
+                      '${snapshot.data}',
+                      textAlign: TextAlign.center,
+                    ),
+                    ConnectionState.done => Text('Done'),
+                  },
+            ),
+          ),
+        );
+
+        // final viewModel = HomeViewModel(eventRepository: context.read());
+        // return HomeScreen(viewModel: viewModel);
       },
       routes: [
         GoRoute(
