@@ -18,6 +18,11 @@ class Unit {
   void dispatchTo(Event event) {
     _assignedEvent = event;
     _status = UnitStatus.dp;
+
+    // Add this to the Event's assignedUnits if not already in there.
+    if (!event.assignedUnits.contains(this)) {
+      event.addUnit(this);
+    }
   }
 
   Event? _assignedEvent;
