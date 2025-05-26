@@ -73,6 +73,7 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
+  // // TODO remove example method
   // Future<Result<void>> _deleteBooking(int id) async {
   //   try {
   //     final resultDelete = await _eventRepository.delete(id);
