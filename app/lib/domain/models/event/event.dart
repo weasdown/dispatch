@@ -28,6 +28,14 @@ class Event {
   Event.preAlert({required int id, required String address})
     : this._(id: id, address: address, status: EventStatus.preAlert());
 
+  factory Event.fromJson(Map<String, dynamic> json) {
+    return switch (json) {
+      {'id': int id, 'address': String address, 'status': EventStatus status} =>
+        Event._(id: id, address: address, status: status),
+      _ => throw const FormatException('Failed to load album.'),
+    };
+  }
+
   factory Event.withNOC({
     required int id,
     required String address,
