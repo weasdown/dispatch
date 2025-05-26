@@ -1,14 +1,14 @@
-import 'package:dispatch/data/services/api/api_client.dart';
+import 'dart:async';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/status.dart';
 import '../../../utils/result.dart';
 import '../../defaults.dart';
-import '../repository.dart';
+import '../../services/api/api_client.dart';
 import 'event_repository.dart';
 
 /// Local implementation of EventRepository
-class EventRepositoryRemote extends EventRepository with RemoteRepository {
+class EventRepositoryRemote extends EventRepository {
   EventRepositoryRemote({required ApiClient apiClient})
     : _apiClient = apiClient;
 
@@ -16,9 +16,6 @@ class EventRepositoryRemote extends EventRepository with RemoteRepository {
   Future<Result<List<Event>>> get allEvents => eventsList;
 
   final ApiClient _apiClient;
-
-  @override
-  ApiClient get apiClient => _apiClient;
 
   Future<void> createEvent({required String address, required NOC noc}) async {
     _events.add(Event.withNOC(id: _sequentialId++, address: address, noc: noc));
@@ -37,6 +34,28 @@ class EventRepositoryRemote extends EventRepository with RemoteRepository {
   }
 
   final _events = List<Event>.empty(growable: true);
+
+  /// Gets the `Event`s from the [apiClient] as a
+  Stream<Event> get eventsStream {
+    return _apiClient.stream.cast<Event>();
+
+    // // TODO remove broken StreamTransformer
+    // StreamTransformer<Object, Event> streamTransformer =
+    //     StreamTransformer<Object, Event>(
+    //       (Stream<Object> objectStream, bool cancelOnError) =>
+    //           // objectStream.listen((Object object) {
+    //           //       if (object is Event) {
+    //           //         return object as Event;
+    //           //       } else {}
+    //           //     })
+    //           //     as StreamSubscription<Event>,
+    //           objectStream
+    //               .where((Object object) => object is Event)
+    //               .cast<Event>()
+    //               .listen((Event event) => _events.add(event)),
+    //     );
+    // return streamTransformer.bind(_apiClient.stream);
+  }
 
   Future<Result<List<Event>>> get eventsList async {
     // Initialize the repository default events.
