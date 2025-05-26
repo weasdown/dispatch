@@ -9,14 +9,16 @@ import '../data/services/api/api_client.dart';
 import '../data/services/local_data_service.dart';
 
 /// Shared providers for all configurations.
-List<SingleChildWidget> _sharedProviders = [];
+List<SingleChildWidget> _sharedProviders = [
+  // Remove dev provider.
+  ChangeNotifierProvider.value(value: AuthRepositoryDev() as AuthRepository),
+];
 
 /// Configure dependencies for local data.
 /// This dependency list uses repositories that provide local data.
 /// The user is always logged in.
 List<SingleChildWidget> get providersLocal {
   return [
-    ChangeNotifierProvider.value(value: AuthRepositoryDev() as AuthRepository),
     Provider.value(value: LocalDataService()),
     Provider(
       create: (context) =>
