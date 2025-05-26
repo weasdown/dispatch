@@ -28,13 +28,23 @@ class Event {
   Event.preAlert({required int id, required String address})
     : this._(id: id, address: address, status: EventStatus.preAlert());
 
-  factory Event.fromJson(Map<String, dynamic> json) {
-    return switch (json) {
-      {'id': int id, 'address': String address, 'status': EventStatus status} =>
-        Event._(id: id, address: address, status: status),
-      _ => throw const FormatException('Failed to load album.'),
-    };
-  }
+  factory Event.fromJson(Map<String, dynamic> json) => switch (json) {
+    {
+      'id': int id,
+      'status': Map<String, dynamic> status,
+      'address': String address,
+      'assignedCallsigns': List<dynamic> assignedCallsigns,
+    } =>
+      () {
+        return Event._(
+            id: id,
+            address: address,
+            status: EventStatus.fromJson(status),
+          ) // FIXME fix setting of assignedCallsigns/assignedUnits
+          ..assignedCallsigns = List<String>.from(assignedCallsigns);
+      }(),
+    _ => throw const FormatException('Failed to load event.'),
+  };
 
   factory Event.withNOC({
     required int id,
@@ -140,6 +150,10 @@ class Event {
     }
   }
 
+  // TODO keep this is sync with assignedUnits, converting assignedUnits to a getter that pulls Units from the server based on these callsigns.
+  /// The callsigns of the ambulances and other units assigned to this event.
+  List<String> assignedCallsigns = List.empty(growable: true);
+
   /// The ambulances and other units assigned to this event.
   List<Unit> assignedUnits = List.empty(growable: true);
 
@@ -186,12 +200,13 @@ class Event {
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'category': category.toJson(),
-    'noc': noc,
+    'status': status.toJson(),
     'address': address,
-    'assignedUnits': List<String>.from(
-      assignedUnits.map((Unit assignedUnit) => assignedUnit.callsign),
-    ),
+    'assignedCallsigns': assignedCallsigns,
+    // TODO remove assignedUnits map to get callsigns
+    // List<String>.from(
+    //   assignedUnits.map((Unit assignedUnit) => assignedUnit.callsign),
+    // ),
   };
 
   @override
