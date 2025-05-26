@@ -1,16 +1,19 @@
 import 'event/category.dart';
 
-interface class Status {
-  const Status(this.category, this.description);
+interface class EventStatus {
+  const EventStatus(this.category, this.description);
 
-  /// Creates an emergency ambulance [Status].
-  const factory Status.nhs999(Category category) = PathwaysDisposition._nhs999;
+  /// Creates an emergency ambulance [EventStatus].
+  const factory EventStatus.nhs999(Category category) =
+      PathwaysDisposition._nhs999;
 
-  const Status.preAlert() : category = Category.none, description = _preAlert;
+  const EventStatus.preAlert()
+    : category = Category.none,
+      description = _preAlert;
 
   @override
   bool operator ==(Object other) =>
-      other is Status &&
+      other is EventStatus &&
       (other.category == category) &&
       (other.description == description);
 
@@ -27,7 +30,7 @@ interface class Status {
   String toString() => description;
 }
 
-base class PathwaysDisposition extends Status {
+base class PathwaysDisposition extends EventStatus {
   const PathwaysDisposition._(super.category, super.description);
 
   const PathwaysDisposition._nhs999(Category category)
@@ -35,7 +38,7 @@ base class PathwaysDisposition extends Status {
 }
 
 /// Nature of Call.
-abstract class NOC extends Status {
+abstract class NOC extends EventStatus {
   const NOC(super.category, super.description) : specify = false;
 
   const NOC.withSpecify(super.category, super.description) : specify = true;

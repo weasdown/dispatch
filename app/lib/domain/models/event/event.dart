@@ -16,7 +16,7 @@ import 'category.dart';
 class Event {
   Event._({required this.id, required this.address, required this.status})
     : category = status.category {
-    if (status == Status.preAlert()) {
+    if (status == EventStatus.preAlert()) {
       assert(category == Category.none);
     }
 
@@ -26,12 +26,7 @@ class Event {
   }
 
   Event.preAlert({required int id, required String address})
-    : this._(
-        id: id,
-        address: address,
-        status: Status.preAlert(),
-        category: Category.none,
-      );
+    : this._(id: id, address: address, status: EventStatus.preAlert());
 
   factory Event.withNOC({
     required int id,
@@ -128,7 +123,7 @@ class Event {
   void addNOC(NOC noc) {
     if (_noc == null) {
       _noc = noc;
-      status = Status.nhs999(noc.category);
+      status = EventStatus.nhs999(noc.category);
       category = noc.category;
     } else {
       throw Exception(
@@ -179,7 +174,7 @@ class Event {
   /// Nature of Call.
   NOC? get noc => _noc;
 
-  Status status;
+  EventStatus status;
 
   Map<String, dynamic> toJson() => {
     'id': id,
