@@ -21,6 +21,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/server/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/server/build" />
+      <excludeFolder url="file://$MODULE_DIR$/server/bin" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Flutter Plugins" level="project" />
