@@ -6,7 +6,7 @@ import '../../../../../utils/result.dart';
 class ApiClient {
   ApiClient({String? host, int? port})
     : _host = host ?? 'localhost',
-      _port = port ?? 5678;
+      _port = port ?? 8080;
 
   WebSocketChannel? _channel;
 
@@ -21,6 +21,25 @@ class ApiClient {
     await channel.ready;
 
     return channel;
+  }
+
+  Future<Result<List<Event>>> get events async {
+    List<Event> events = [];
+    return Future(() => Result.ok(events));
+    // return channel.stream.cast<Map<String, dynamic>>().listen((
+    //     Map<String, dynamic> json,
+    //     ) {
+    //   switch (json) {
+    //     case {'events': List<Event> events, 'units': List<Unit> units}:
+    //       ;
+    //     case _:
+    //       throw const FormatException('Failed to load album.');
+    //   }
+    //   ;
+    //
+    //   // channel.sink.add('received!');
+    //   // channel.sink.close(status.goingAway);
+    // });
   }
 
   final String _host;
