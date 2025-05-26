@@ -55,8 +55,9 @@ class WebSocketServer {
 
       // Send the response back to the sender.
       Map<String, dynamic> messageToReply = {key: response};
-      webSocket.sink.add(json.encode(messageToReply));
-      print('Replied with: $messageToReply');
+      String messageJSON = json.encode(messageToReply);
+      webSocket.sink.add(messageJSON);
+      print('Replied with: $messageJSON');
     });
   });
 
