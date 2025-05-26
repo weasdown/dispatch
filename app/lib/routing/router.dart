@@ -36,6 +36,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
     GoRoute(
       path: Routes.home,
       builder: (context, state) {
+        // TODO move this StreamBuilder test to a new Widget and revert to the Home widget.
         ApiClient client = ApiClient(host: 'localhost', port: 8080);
         WebSocketChannel channel = client.connect();
         // client.requestUnits;
