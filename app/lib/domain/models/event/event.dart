@@ -14,12 +14,8 @@ import 'category.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
-  Event._({
-    required this.id,
-    required this.address,
-    required this.status,
-    required this.category,
-  }) {
+  Event._({required this.id, required this.address, required this.status})
+    : category = status.category {
     if (status == Status.preAlert()) {
       assert(category == Category.none);
     }
