@@ -29,6 +29,8 @@ class StreamBuilderTestViewModel extends ChangeNotifier {
     ),
   );
 
+  // Stream<Event> get eventStream => _eventRepository.eventsStream;
+
   List<Event> get events => _events;
 
   List<Widget> get eventTiles =>
@@ -61,4 +63,6 @@ class StreamBuilderTestViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // void requestEvents() => _eventRepository.apiClient.requestEvents;
 }
