@@ -1,5 +1,8 @@
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../../../../../domain/models/event/event.dart';
+import '../../../../../utils/result.dart';
+
 class ApiClient {
   ApiClient({String? host, int? port})
     : _host = host ?? 'localhost',
@@ -11,14 +14,22 @@ class ApiClient {
 
   Uri get _channelUri => Uri(scheme: 'ws', host: _host, port: _port);
 
-  WebSocketChannel connect() {
-    _channel = WebSocketChannel.connect(_channelUri);
-    return channel!;
+  Future<WebSocketChannel> connect() async {
+    final channel = WebSocketChannel.connect(_channelUri);
+    _channel = channel;
+
+    await channel.ready;
+
+    return channel;
   }
 
   final String _host;
 
+  String get host => _host;
+
   final int _port;
+
+  int get port => _port;
 
   Stream<Object> get stream {
     if (channel == null) {
