@@ -137,6 +137,13 @@ class Event {
   /// The street address of the emergency.
   String address;
 
+  Future<void> addUnitCallsign(String unitCallsign, ApiClient apiClient) async {
+    if (!_assignedCallsigns.contains(unitCallsign)) {
+      _assignedCallsigns.add(unitCallsign);
+      _assignedUnits.add(Unit.fromCallsign(unitCallsign, apiClient));
+    }
+  }
+
   /// Sets this event's [Event.noc] if it's not already set.
   void addNOC(NOC noc) {
     if (_noc == null) {
