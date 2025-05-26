@@ -1,22 +1,24 @@
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class ApiClient {
-  ApiClient({required this.host, required this.port});
+  ApiClient({String? host, int? port})
+    : _host = host ?? 'localhost',
+      _port = port ?? 8080;
 
   WebSocketChannel? _channel;
 
   WebSocketChannel? get channel => _channel;
 
-  Uri get _channelUri => Uri(scheme: 'ws', host: host, port: port);
+  Uri get _channelUri => Uri(scheme: 'ws', host: _host, port: _port);
 
   WebSocketChannel connect() {
     _channel = WebSocketChannel.connect(_channelUri);
     return channel!;
   }
 
-  final String host;
+  final String _host;
 
-  final int port;
+  final int _port;
 
   Stream get stream => channel!.stream;
 
