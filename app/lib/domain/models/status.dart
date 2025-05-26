@@ -6,7 +6,7 @@ interface class Status {
   /// Creates an emergency ambulance [Status].
   const factory Status.nhs999(Category category) = PathwaysDisposition._nhs999;
 
-  const Status.preAlert() : category = null, description = _preAlert;
+  const Status.preAlert() : category = Category.none, description = _preAlert;
 
   @override
   bool operator ==(Object other) =>
@@ -14,7 +14,7 @@ interface class Status {
       (other.category == category) &&
       (other.description == description);
 
-  final Category? category;
+  final Category category;
 
   final String description;
 
@@ -43,9 +43,6 @@ abstract class NOC extends Status {
   // TODO implement detail attribute for "(specify...)" NOCs.
   // /// The extra details provided in response to a "Specify..." prompt.
   // final String detail;
-
-  @override
-  Category get category => super.category!;
 
   final bool specify;
 
