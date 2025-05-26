@@ -24,7 +24,7 @@ enum Category {
 
   @override
   String toString() => switch (this) {
-    Category.none => '',
+    Category.none => 'Pre-Alert',
     _ => 'C$number',
   };
 }
