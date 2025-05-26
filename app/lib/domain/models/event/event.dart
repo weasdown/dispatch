@@ -150,6 +150,24 @@ class Event {
     }
   }
 
+  void addUnit(Unit unit) {
+    if (!_assignedUnits.contains(unit)) {
+      _assignedUnits.add(unit);
+    }
+  }
+
+  /// Assigns a unit
+  void dispatchUnit(Unit unit) {
+    _assignedUnits.add(unit);
+    unit.dispatchTo(this);
+  }
+
+  void dispatchUnits(List<Unit> units) {
+    for (Unit unit in units) {
+      dispatchUnit(unit);
+    }
+  }
+
   // TODO keep this is sync with assignedUnits, converting assignedUnits to a getter that pulls Units from the server based on these callsigns.
   /// The callsigns of the ambulances and other units assigned to this event.
   List<String> assignedCallsigns = List.empty(growable: true);
