@@ -14,27 +14,27 @@ final class Defaults {
       id: 423129,
       address: 'Carfax Tower, Oxford',
       noc: Cat2NOC.c2Stabbing(),
-    )..assignedUnits = [units[2]],
+    )..dispatchUnit(units[2]),
     Event.withNOC(
       id: 423126,
       address: '25 Old Union Way, Thame',
       noc: Cat4NOC.medicalMinor(),
-    )..assignedUnits = [units[1]],
+    )..dispatchUnit(units[1]),
     Event.withNOC(
       id: 423127,
       address: '6 The Greenway, Oxfordshire',
       noc: Cat1NOC.c1ArrestPeriArrest(),
-    )..assignedUnits = [units[0], units[4], units[6], units[7]],
+    )..dispatchUnits([units[0], units[4], units[6], units[7]]),
     Event.withNOC(
       id: 423128,
       address: 'Thatcham Station',
       noc: Cat4NOC.mentalHealth(),
-    )..assignedUnits = [units[5]],
+    )..dispatchUnit(units[5]),
     Event.withNOC(
       id: 423130,
       address: 'Next, Westgate Shopping Centre, Oxford',
       noc: Cat3NOC.fallInjuriesUnknown(),
-    )..assignedUnits = [units[3]],
+    )..dispatchUnit(units[3]),
   ];
 
   /// A default list of units.
