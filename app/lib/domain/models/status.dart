@@ -57,6 +57,8 @@ abstract class NOC extends Status {
 
   static List<NOC> get cat4 => catFourNOCs;
 
+  String toJson() => toString();
+
   @override
   String toString() {
     final String catNumber = category.number;

@@ -188,6 +188,7 @@ class Event {
   Map<String, dynamic> toJson() => {
     'id': id,
     'category': category.toJson(),
+    'noc': noc,
     'address': address,
     'assignedUnits': List<String>.from(
       assignedUnits.map((Unit assignedUnit) => assignedUnit.callsign),
