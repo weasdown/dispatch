@@ -3,7 +3,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class ApiClient {
   ApiClient({String? host, int? port})
     : _host = host ?? 'localhost',
-      _port = port ?? 8080;
+      _port = port ?? 5678;
 
   WebSocketChannel? _channel;
 
