@@ -154,8 +154,10 @@ class Event {
   /// The callsigns of the ambulances and other units assigned to this event.
   List<String> assignedCallsigns = List.empty(growable: true);
 
+  final List<Unit> _assignedUnits = List.empty(growable: true);
+
   /// The ambulances and other units assigned to this event.
-  List<Unit> assignedUnits = List.empty(growable: true);
+  List<Unit> get assignedUnits => _assignedUnits;
 
   // String get assignedUnitsText =>
   //     assignedUnits.isEmpty
