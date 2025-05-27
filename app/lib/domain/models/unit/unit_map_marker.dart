@@ -2,6 +2,7 @@ import 'package:dispatch/domain/models/unit/unit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../map.dart';
+import 'vehicle_type.dart';
 
 extension UnitMapMarker on Unit {
   /// Path to the image used as this [Event]'s icon.

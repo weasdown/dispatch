@@ -3,6 +3,7 @@ import 'package:latlng/latlng.dart';
 import '../domain/models/event/event.dart';
 import '../domain/models/noc.dart';
 import '../domain/models/unit/unit.dart';
+import '../domain/models/unit/vehicle_type.dart';
 
 /// Class to store default event and unit data.
 final class Defaults {
