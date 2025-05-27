@@ -131,7 +131,7 @@ class Event {
   /// The street address of the emergency.
   String address;
 
-  Future<void> addUnitCallsign(String unitCallsign, ApiClient apiClient) async {
+  Future<void> addUnitCallsign(String unitCallsign) async {
     if (!_assignedCallsigns.contains(unitCallsign)) {
       _assignedCallsigns.add(unitCallsign);
       _assignedUnits.add(UnitCallsignCallback(unitCallsign));
