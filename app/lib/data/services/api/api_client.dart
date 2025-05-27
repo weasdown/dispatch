@@ -46,6 +46,12 @@ class ApiClient {
 
   String get host => _host;
 
+  Future<void> _nullCheckChannel() async {
+    if (channel == null) {
+      _channel = await connect();
+    }
+  }
+
   final int _port;
 
   int get port => _port;
@@ -59,16 +65,12 @@ class ApiClient {
   }
 
   Future<void> get requestEvents async {
-    if (channel == null) {
-      _channel = await connect();
-    }
+    await _nullCheckChannel();
     channel!.sink.add('events');
   }
 
   Future<void> get requestUnits async {
-    if (channel == null) {
-      _channel = await connect();
-    }
+    await _nullCheckChannel();
     channel!.sink.add('units');
   }
 }
