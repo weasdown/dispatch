@@ -1,6 +1,5 @@
 import 'package:latlng/latlng.dart';
 
-import '../../../data/services/api/api_client.dart';
 import '../status.dart';
 import '../unit/unit.dart';
 import '../unit/unit_callback.dart';
@@ -30,12 +29,15 @@ class Event {
       'assignedCallsigns': List<dynamic> assignedCallsigns,
     } =>
       () {
-        return Event._(
-            id: id,
-            address: address,
-            status: EventStatus.fromJson(status),
-          ) // FIXME fix setting of assignedCallsigns/assignedUnits
-          ..assignedCallsigns = List<String>.from(assignedCallsigns);
+        Event event = Event._(
+          id: id,
+          address: address,
+          status: EventStatus.fromJson(status),
+        );
+        for (String callsign in assignedCallsigns) {
+          event.addUnitCallsign(callsign);
+        }
+        return event;
       }(),
     _ => throw const FormatException('Failed to load event.'),
   };
