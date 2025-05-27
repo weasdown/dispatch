@@ -42,6 +42,7 @@ dependencies:
   gap: ^3.0.1
   latlng: ^2.0.7
   web_socket_channel: ^3.0.3
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_test:

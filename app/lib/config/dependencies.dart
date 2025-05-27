@@ -5,6 +5,7 @@ import '../data/repositories/auth/auth_repository.dart';
 import '../data/repositories/auth/auth_repository_dev.dart';
 import '../data/repositories/event/event_repository.dart';
 import '../data/repositories/event/event_repository_local.dart';
+import '../data/repositories/event/event_repository_remote.dart';
 import '../data/services/api/api_client.dart';
 import '../data/services/local_data_service.dart';
 
@@ -31,5 +32,13 @@ List<SingleChildWidget> get providersLocal {
 /// Configure dependencies for remote data.
 /// This dependency list uses repositories that connect to a remote server.
 List<SingleChildWidget> get providersRemote {
-  return [Provider(create: (context) => ApiClient()), ..._sharedProviders];
+  return [
+    Provider.value(value: ApiClient()),
+    Provider(
+      create: (context) =>
+          EventRepositoryRemote(apiClient: context.read<ApiClient>())
+              as EventRepository,
+    ),
+    ..._sharedProviders,
+  ];
 }

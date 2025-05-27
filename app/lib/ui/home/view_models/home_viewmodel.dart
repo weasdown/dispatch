@@ -3,21 +3,25 @@ import 'package:flutter/material.dart';
 import '../../../data/repositories/event/event_repository.dart';
 import '../../../domain/models/event/category_colour.dart';
 import '../../../domain/models/event/event.dart';
-import '../../../utils/result.dart';
+// import '../../../utils/result.dart';
 
 class HomeViewModel extends ChangeNotifier {
   HomeViewModel({
     required EventRepository eventRepository,
     // required UserRepository userRepository,
-  }) : _eventRepository = eventRepository {
-    _load();
-  }
+    required BuildContext context,
+  })
+  // : _eventRepository = eventRepository;
+  // {
+  //   _load(context);
+  // }
   //      _userRepository = userRepository {
   //   load = Command0(_load)..execute();
   //   deleteBooking = Command1(_deleteBooking);
   // }
+  ;
 
-  final EventRepository _eventRepository;
+  // final EventRepository _eventRepository;
   // final UserRepository _userRepository;
   // final _log = Logger('HomeViewModel');
   List<Event> _events = [];
@@ -45,33 +49,33 @@ class HomeViewModel extends ChangeNotifier {
 
   // User? get user => _user;
 
-  Future<Result> _load() async {
-    try {
-      final result = await _eventRepository.allEvents;
-      switch (result) {
-        case Ok<List<Event>>():
-          _events = result.value;
-          // _log.fine('Loaded bookings');
-          return Result.ok(_events);
-        case Error<List<Event>>():
-          // _log.warning('Failed to load bookings', result.error);
-          return result;
-      }
-
-      // final userResult = await _userRepository.getUser();
-      // switch (userResult) {
-      //   case Ok<User>():
-      //     _user = userResult.value;
-      //     _log.fine('Loaded user');
-      //   case Error<User>():
-      //   // _log.warning('Failed to load user', userResult.error);
-      // }
-      //
-      // return userResult;
-    } finally {
-      notifyListeners();
-    }
-  }
+  // Future<Result> _load(BuildContext context) async {
+  //   try {
+  //     final result = await _eventRepository.allEvents();
+  //     switch (result) {
+  //       case Ok<List<Event>>():
+  //         _events = result.value;
+  //         // _log.fine('Loaded bookings');
+  //         return Result.ok(_events);
+  //       case Error<List<Event>>():
+  //         // _log.warning('Failed to load bookings', result.error);
+  //         return result;
+  //     }
+  //
+  //     // final userResult = await _userRepository.getUser();
+  //     // switch (userResult) {
+  //     //   case Ok<User>():
+  //     //     _user = userResult.value;
+  //     //     _log.fine('Loaded user');
+  //     //   case Error<User>():
+  //     //   // _log.warning('Failed to load user', userResult.error);
+  //     // }
+  //     //
+  //     // return userResult;
+  //   } finally {
+  //     notifyListeners();
+  //   }
+  // }
 
   // // TODO remove example method
   // Future<Result<void>> _deleteBooking(int id) async {

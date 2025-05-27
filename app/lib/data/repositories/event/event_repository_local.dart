@@ -11,7 +11,7 @@ class EventRepositoryLocal extends EventRepository with LocalRepository {
     : _localDataService = localDataService;
 
   @override
-  Future<Result<List<Event>>> get allEvents => eventsList;
+  Future<Result<List<Event>>> allEvents() => eventsList;
 
   // TODO implement allEvents getter (may need to be a List<Event> from a provider rather than a Stream)
   // /// Get a continuous stream of all the events.
@@ -52,4 +52,10 @@ class EventRepositoryLocal extends EventRepository with LocalRepository {
 
   // Used to generate IDs for events.
   int _sequentialId = 0;
+
+  @override
+  EventUpdateCallback updateEvents(List<Event> apiEvents) {
+    // TODO: implement updateEvents
+    throw UnimplementedError();
+  }
 }
