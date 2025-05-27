@@ -1,15 +1,9 @@
-// import 'package:flutter/material.dart';
-
-// import 'package:flutter_google_maps_webservices/geocoding.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-// import '../../../api/maps/geocoding.dart';
-// import '../../map.dart';
-// import 'package:flutter/foundation.dart';
 import 'package:latlng/latlng.dart';
 
+import '../../../data/services/api/api_client.dart';
 import '../status.dart';
 import '../unit/unit.dart';
+import '../unit/unit_callback.dart';
 import 'category.dart';
 
 /// An emergency event that the ambulance service has become aware of.
@@ -140,7 +134,7 @@ class Event {
   Future<void> addUnitCallsign(String unitCallsign, ApiClient apiClient) async {
     if (!_assignedCallsigns.contains(unitCallsign)) {
       _assignedCallsigns.add(unitCallsign);
-      _assignedUnits.add(Unit.fromCallsign(unitCallsign, apiClient));
+      _assignedUnits.add(UnitCallsignCallback(unitCallsign));
     }
   }
 
@@ -158,14 +152,14 @@ class Event {
   }
 
   void addUnit(Unit unit) {
-    if (!_assignedUnits.contains(unit)) {
-      _assignedUnits.add(unit);
+    if (!assignedCallsigns.contains(unit.callsign)) {
+      _assignedCallsigns.add(unit.callsign);
     }
   }
 
   /// Assigns a unit
   void dispatchUnit(Unit unit) {
-    _assignedUnits.add(unit);
+    addUnit(unit);
     unit.dispatchTo(this);
   }
 
@@ -175,14 +169,18 @@ class Event {
     }
   }
 
+  final List<String> _assignedCallsigns = List.empty(growable: true);
+
   // TODO keep this is sync with assignedUnits, converting assignedUnits to a getter that pulls Units from the server based on these callsigns.
   /// The callsigns of the ambulances and other units assigned to this event.
-  List<String> assignedCallsigns = List.empty(growable: true);
+  List<String> get assignedCallsigns => _assignedCallsigns;
 
-  final List<Unit> _assignedUnits = List.empty(growable: true);
+  final List<UnitCallback> _assignedUnits = List.empty(growable: true);
 
   /// The ambulances and other units assigned to this event.
-  List<Unit> get assignedUnits => _assignedUnits;
+  List<UnitCallback> get assignedUnits => List<UnitCallsignCallback>.from(
+    _assignedCallsigns.map((String callsign) => UnitCallsignCallback(callsign)),
+  );
 
   // String get assignedUnitsText =>
   //     assignedUnits.isEmpty
