@@ -178,9 +178,12 @@ class Event {
   final List<UnitCallback> _assignedUnits = List.empty(growable: true);
 
   /// The ambulances and other units assigned to this event.
-  List<UnitCallback> get assignedUnits => List<UnitCallsignCallback>.from(
-    _assignedCallsigns.map((String callsign) => UnitCallsignCallback(callsign)),
-  );
+  List<UnitCallback> get assignedUnitCallbacks =>
+      List<UnitCallsignCallback>.from(
+        _assignedCallsigns.map(
+          (String callsign) => UnitCallsignCallback(callsign),
+        ),
+      );
 
   // String get assignedUnitsText =>
   //     assignedUnits.isEmpty
