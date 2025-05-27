@@ -51,7 +51,7 @@ class Unit {
     _status = UnitStatus.dp;
 
     // Add this to the Event's assignedUnits if not already in there.
-    if (!event.assignedUnits.contains(this)) {
+    if (!event.assignedCallsigns.contains(callsign)) {
       event.addUnit(this);
     }
   }
