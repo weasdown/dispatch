@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../data/services/api/api_client.dart';
@@ -26,11 +27,7 @@ class _StreamBuilderTestScreenState extends State<StreamBuilderTestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO remove hardcoded client, channel, request.
-    ApiClient client = ApiClient(host: 'localhost', port: 8080);
-    WebSocketChannel channel = client.connect();
-    // client.requestUnits;
-    client.requestEvents;
+    ApiClient client = context.read<ApiClient>();
 
     return Scaffold(
       appBar: AppBar(
