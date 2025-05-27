@@ -5,6 +5,8 @@ import 'package:dispatch/data/services/local_data_service.dart';
 import 'package:dispatch/domain/models/event/event.dart';
 import 'package:dispatch/domain/models/unit/unit.dart';
 import 'package:dispatch/utils/result.dart';
+import 'package:intl/intl.dart' show DateFormat;
+import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart' show Handler;
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
@@ -35,8 +37,8 @@ class WebSocketServer {
   };
 
   Handler get coreHandler => webSocketHandler((webSocket, _) {
-    webSocket.stream.listen((message) async {
-      print('Received message: $message');
+    webSocket.stream.asBroadcastStream().listen((message) async {
+      print('\n$_formattedTimestamp: Received message "$message"');
 
       final String key;
       final List response;
@@ -44,12 +46,18 @@ class WebSocketServer {
       switch (message) {
         case 'units':
           response = _units;
-          key = message;
+          key = message.toString();
         case 'events':
           response = _events;
-          key = message;
+          key = message.toString();
         case _:
-          response = message;
+          response = [
+            ArgumentError.value(
+              message,
+              'message',
+              'must be "events" or "units"',
+            ),
+          ];
           key = 'error';
       }
 
@@ -57,7 +65,7 @@ class WebSocketServer {
       Map<String, dynamic> messageToReply = {key: response};
       String messageJSON = json.encode(messageToReply);
       webSocket.sink.add(messageJSON);
-      print('Replied with: $messageJSON');
+      print('$_formattedTimestamp: Replied with "$messageJSON"');
     });
   });
 
@@ -67,9 +75,18 @@ class WebSocketServer {
 
   List<Event> _events = [];
 
+  String get _formattedTimestamp {
+    final DateTime timestamp = DateTime.timestamp();
+    final DateFormat formatter = DateFormat('yyyy/MM/dd').add_Hms();
+    final String formattedTimestamp = formatter.format(timestamp);
+    return formattedTimestamp;
+  }
+
   final String host;
 
   LocalDataService _localDataService;
+
+  final _log = Logger('WebSocketServer');
 
   // @Deprecated('messageFromJSON is pending removal.')
   static Map<String, dynamic> messageFromJSON(String message) {
