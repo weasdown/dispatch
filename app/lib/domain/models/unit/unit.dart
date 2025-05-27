@@ -1,7 +1,7 @@
 import 'package:latlng/latlng.dart';
 
-import '../../../data/defaults.dart';
-import '../../../data/services/api/api_client.dart';
+import '../../../data/repositories/unit/unit_repository.dart';
+import '../../../domain/models/unit/unit_callback.dart';
 import '../event/event.dart';
 import 'unit_status.dart';
 import 'vehicle_type.dart';
@@ -42,6 +42,15 @@ class Unit {
       }(),
     _ => throw const FormatException('Failed to load unit.'),
   };
+
+  /// Gets a [Unit] from the server's list of [Unit]s based on its [Unit.callsign].
+  static Future<Unit> fromCallsignCallback(
+    UnitRepository unitRepository,
+    String callsign,
+  ) async {
+    UnitCallsignCallback callback = UnitCallsignCallback(callsign);
+    return await callback(unitRepository);
+  }
 
   /// A unique identifier for this resource.
   final String callsign;
