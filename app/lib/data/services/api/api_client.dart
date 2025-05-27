@@ -58,7 +58,17 @@ class ApiClient {
     return channel!.stream.cast<Object>(); //.asBroadcastStream();
   }
 
-  void get requestEvents => channel!.sink.add('events');
+  Future<void> get requestEvents async {
+    if (channel == null) {
+      _channel = await connect();
+    }
+    channel!.sink.add('events');
+  }
 
-  void get requestUnits => channel!.sink.add('units');
+  Future<void> get requestUnits async {
+    if (channel == null) {
+      _channel = await connect();
+    }
+    channel!.sink.add('units');
+  }
 }
