@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../../../../domain/models/unit/unit.dart';
 import '../../../data/repositories/unit/unit_repository.dart';
 import '../../../utils/result.dart';
@@ -8,7 +5,7 @@ import '../../../utils/result.dart';
 abstract class UnitCallback {
   UnitCallback();
 
-  Future<Unit> call(BuildContext context);
+  Future<Unit> call(UnitRepository unitRepository);
 }
 
 class UnitCallsignCallback extends UnitCallback {
@@ -17,8 +14,7 @@ class UnitCallsignCallback extends UnitCallback {
   final String _callsign;
 
   @override
-  Future<Unit> call(BuildContext context) async {
-    UnitRepository unitRepository = context.read<UnitRepository>();
+  Future<Unit> call(UnitRepository unitRepository) async {
     Result<List<Unit>> unitsResult = await unitRepository.allUnits;
 
     return switch (unitsResult) {
@@ -29,4 +25,12 @@ class UnitCallsignCallback extends UnitCallback {
       Error<List<Unit>>() => Future.error(unitsResult.error),
     };
   }
+}
+
+extension FromCallback on Unit {
+  /// Gets a [Unit] from the server's list of [Unit]s based on its [Unit.callsign].
+  static Future<Unit> fromCallsignCallback(
+    UnitRepository unitRepository,
+    String callsign,
+  ) async => await UnitCallsignCallback(callsign).call(unitRepository);
 }

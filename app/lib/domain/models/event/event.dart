@@ -1,5 +1,6 @@
 import 'package:latlng/latlng.dart';
 
+import '../../../data/repositories/unit/unit_repository.dart';
 import '../status.dart';
 import '../unit/unit.dart';
 import '../unit/unit_callback.dart';
@@ -137,7 +138,7 @@ class Event {
   void addUnitCallsign(String unitCallsign) {
     if (!_assignedCallsigns.contains(unitCallsign)) {
       _assignedCallsigns.add(unitCallsign);
-      _assignedUnits.add(UnitCallsignCallback(unitCallsign));
+      _assignedUnitCallbacks.add(UnitCallsignCallback(unitCallsign));
     }
   }
 
@@ -178,10 +179,10 @@ class Event {
   /// The callsigns of the ambulances and other units assigned to this event.
   List<String> get assignedCallsigns => _assignedCallsigns;
 
-  final List<UnitCallback> _assignedUnits = List.empty(growable: true);
+  final List<UnitCallback> _assignedUnitCallbacks = List.empty(growable: true);
 
   /// The ambulances and other units assigned to this event.
-  List<UnitCallback> get assignedUnitCallbacks =>
+  List<UnitCallsignCallback> get assignedUnitCallbacks =>
       List<UnitCallsignCallback>.from(
         _assignedCallsigns.map(
           (String callsign) => UnitCallsignCallback(callsign),
