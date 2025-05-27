@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:latlng/latlng.dart';
 
+import '../../../data/repositories/unit/unit_repository.dart';
 import '../../../domain/models/unit/unit_callback.dart';
 import '../event/event.dart';
 import 'unit_status.dart';
@@ -45,9 +45,9 @@ class Unit {
 
   /// Gets a [Unit] from the server's list of [Unit]s based on its [Unit.callsign].
   static Future<Unit> fromCallsignCallback(
-    BuildContext context,
+    UnitRepository unitRepository,
     String callsign,
-  ) async => await UnitCallsignCallback(callsign).call(context);
+  ) async => await UnitCallsignCallback(callsign).call(unitRepository);
 
   /// A unique identifier for this resource.
   final String callsign;
