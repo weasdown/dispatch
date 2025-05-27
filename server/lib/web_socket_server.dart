@@ -102,11 +102,12 @@ class WebSocketServer {
   // FIXME refactor so server is higher-level than dart:io's HttpServer. Currently crashes when run on web because HttpServer isn't supported on web.
   Future<HttpServer> _serve() async =>
       shelf_io.serve(coreHandler, host, _port).then((HttpServer server) {
-        print(
-          'Serving at ws://${server.address.host}:${server.port}\n'
-          '\t- Current units: $_units\n'
-          '\t- Current events: $_events\n',
-        );
+        final String logMessage =
+            'Serving at ws://${server.address.host}:${server.port}\n'
+            '\t- Current units: $_units\n'
+            '\t- Current events: $_events\n';
+        _log.info(logMessage);
+        print(logMessage);
         return server;
       });
 
