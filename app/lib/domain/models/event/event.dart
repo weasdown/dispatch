@@ -189,6 +189,16 @@ class Event {
         ),
       );
 
+  Future<List<Unit>> assignedUnits(UnitRepository unitRepository) async {
+    List<Future<Unit>> futureUnits = List<Future<Unit>>.from(
+      assignedUnitCallbacks.map(
+        (UnitCallsignCallback callback) async =>
+            await callback.call(unitRepository),
+      ),
+    );
+    return Future.wait(futureUnits);
+  }
+
   // String get assignedUnitsText =>
   //     assignedUnits.isEmpty
   //         ? 'Assigned: None'
