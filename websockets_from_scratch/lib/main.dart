@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+
+import 'utils.dart';
+import 'websocket_ui.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,42 +35,73 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(),
+      home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+class MyHomePage extends StatefulWidget {
+  MyHomePage({super.key});
+
+  final Uri _channelUri = Uri(scheme: 'ws', host: 'localhost', port: 8080);
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  WebSocketChannel? _channel;
+
+  Future<WebSocketChannel> connect() async {
+    final channel = WebSocketChannel.connect(widget._channelUri);
+    _channel = channel;
+
+    await channel.ready;
+
+    return channel;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Future future = Future.delayed(Duration(seconds: 2), () => true);
+    final Future<WebSocketChannel> future = Future<WebSocketChannel>.delayed(
+      Duration(seconds: 1),
+      connect,
+    );
 
     return Scaffold(
-      appBar: AppBar(title: Text('MyHomePage')),
+      appBar: AppBar(title: Text('WebSocket example')),
       body: Center(
-        child: FutureBuilder(
-          future: future,
-          builder: (context, snapshot) {
-            return switch (snapshot.connectionState) {
-              ConnectionState.done =>
-                (snapshot.hasData)
-                    ? Text(snapshot.data.toString())
-                    : Text(snapshot.error.toString()),
-              _ => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Loading...',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 50),
-                  CircularProgressIndicator(),
-                ],
-              ),
-            };
-          },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          child: FutureBuilder<WebSocketChannel>(
+            future: future,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  _channel = snapshot.data as WebSocketChannel;
+
+                  return WebsocketUi(channel: _channel!);
+                } else {
+                  return text(
+                    context,
+                    'Error!\n\n${snapshot.error.toString()}',
+                  );
+                }
+              } else {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Loading...',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 50),
+                    CircularProgressIndicator(),
+                  ],
+                );
+              }
+            },
+          ),
         ),
       ),
     );
