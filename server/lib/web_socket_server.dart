@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dispatch/data/services/local_data_service.dart';
 import 'package:dispatch/domain/models/event/event.dart';
-import 'package:dispatch/domain/models/noc.dart';
+// import 'package:dispatch/domain/models/noc.dart';
 import 'package:dispatch/domain/models/unit/unit.dart';
 import 'package:dispatch/utils/result.dart';
 import 'package:intl/intl.dart';
@@ -63,13 +63,13 @@ class WebSocketServer {
           // key = message.toString();
 
           List<Event> events = Assets.events;
-          events.add(
-            Event.withNOC(
-              id: 1234,
-              address: 'TEST-001, Test St, Testfordshire',
-              noc: Cat4NOC.nauseaVomiting(),
-            ),
-          );
+          // events.add(
+          //   Event.withNOC(
+          //     id: 1234,
+          //     address: 'TEST-001, Test St, Testfordshire',
+          //     noc: Cat4NOC.nauseaVomiting(),
+          //   ),
+          // );
 
           response = events;
         case _:

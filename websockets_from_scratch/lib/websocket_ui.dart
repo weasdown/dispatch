@@ -12,7 +12,10 @@ class WebsocketUi extends StatefulWidget {
 
   Widget onDone(BuildContext context, AsyncSnapshot<String> snapshot) {
     if (snapshot.hasData) {
-      return text(context, 'Got stream data:\n\n${snapshot.data}');
+      return text(
+        context,
+        'Connection to WebSocket closed. Final data:\n\n${snapshot.data}',
+      );
     } else {
       return errorText(context, snapshot);
     }
@@ -38,6 +41,7 @@ class _WebsocketUiState extends State<WebsocketUi> {
 
     return Text(
       'Got data from stream:\n$_dataJson',
+      style: Theme.of(context).textTheme.bodyLarge,
       textAlign: TextAlign.center,
     );
   }
