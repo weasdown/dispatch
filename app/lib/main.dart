@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' hide Key;
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'api/env.dart';
@@ -7,19 +7,24 @@ import 'domain/models/event/event_list_model.dart';
 import 'routing/router.dart';
 
 void main() async {
-  for (final Key key in Env.keys) {
+  for (final EnvKey key in Env.keys) {
     if (key().isEmpty) {
       throw Exception('Value for Key ${key.name} is not defined.');
     }
   }
-
+  // // TODO remove hardcoded events and model.
   // List<Event> defaultEvents = [];
   // for (Future<Event> futureEvent in futureDefaultEvents) {
   //   defaultEvents.add(await futureEvent);
   // }
-
+  //
   // runApp(NewCAD(events: EventListModel(events: LocalDataService().events)));
-  runApp(MultiProvider(providers: providersLocal, child: NewCAD()));
+
+  // Run with remote data sources.
+  runApp(MultiProvider(providers: providersRemote, child: NewCAD()));
+
+  // // Run with local data sources.
+  // runApp(MultiProvider(providers: providersLocal, child: NewCAD()));
 }
 
 class NewCAD extends StatelessWidget {

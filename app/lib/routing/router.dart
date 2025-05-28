@@ -2,15 +2,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:dispatch/data/repositories/event/event_repository_remote.dart';
+import 'package:dispatch/ui/streambuilder_test/widgets/streambuilder_test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../data/repositories/auth/auth_repository.dart';
-import '../data/services/api/api_client.dart';
 // import '../ui/home/view_models/home_viewmodel.dart';
 // import '../ui/home/widgets/home_screen.dart';
+import '../ui/streambuilder_test/view_models/streambuilder_test_viewmodel.dart';
 import 'routes.dart';
 
 /// Top go_router entry point.
@@ -18,7 +19,8 @@ import 'routes.dart';
 /// Listens to changes in `AuthTokenRepository` to redirect the user
 /// to /login when the user logs out.
 GoRouter router(AuthRepository authRepository) => GoRouter(
-  initialLocation: Routes.home,
+  // initialLocation: Routes.home,
+  initialLocation: Routes.streamBuilderTest,
   debugLogDiagnostics: true,
   redirect: _redirect,
   refreshListenable: authRepository,
@@ -33,138 +35,138 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         // );
       },
     ),
+    // // TODO add GoRoute for events
+    // GoRoute(
+    //   path: Routes.events,
+    //   builder: (context, state) =>
+    //       HomeScreen(viewModel: EventsViewModel(/* */)),
+    // ),
+    // // TODO add GoRoute for units
+    // GoRoute(
+    //   path: Routes.units,
+    //   builder: (context, state) =>
+    //       UnitsScreen(viewModel: UnitsViewModel(/* */)),
+    // ),
     GoRoute(
-      path: Routes.home,
+      path: Routes.streamBuilderTest,
       builder: (context, state) {
-        // TODO move this StreamBuilder test to a new Widget and revert to the Home widget.
-        ApiClient client = ApiClient(host: 'localhost', port: 8080);
-        WebSocketChannel channel = client.connect();
-        // client.requestUnits;
-        client.requestEvents;
-
-        return Scaffold(
-          appBar: AppBar(title: Text('StreamBuilder test')),
-          body: Center(
-            child: StreamBuilder(
-              stream: channel.stream,
-              builder: (context, snapshot) =>
-                  switch (snapshot.connectionState) {
-                    ConnectionState.none => Text('None'),
-                    ConnectionState.waiting => CircularProgressIndicator(),
-                    ConnectionState.active => Text(
-                      'Active\n\n'
-                      '${snapshot.data}',
-                      textAlign: TextAlign.center,
-                    ),
-                    ConnectionState.done => Text('Done'),
-                  },
-            ),
+        return StreamBuilderTestScreen(
+          viewModel: StreamBuilderTestViewModel(
+            eventRepository: EventRepositoryRemote(apiClient: context.read()),
+            context: context,
           ),
         );
-
-        // final viewModel = HomeViewModel(eventRepository: context.read());
-        // return HomeScreen(viewModel: viewModel);
       },
-      routes: [
-        GoRoute(
-          path: Routes.eventsRelative,
-          builder: (context, state) {
-            // TODO implement events relative route.
-            throw UnimplementedError(
-              'Events relative route is not yet implemented.',
-            );
-            // final viewModel = SearchFormViewModel(
-            //   continentRepository: context.read(),
-            //   itineraryConfigRepository: context.read(),
-            // );
-            // return SearchFormScreen(viewModel: viewModel);
-          },
-        ),
-        GoRoute(
-          path: Routes.unitsRelative,
-          builder: (context, state) {
-            // TODO implement units relative route.
-            throw UnimplementedError(
-              'Units relative route is not yet implemented.',
-            );
-            // final viewModel = SearchFormViewModel(
-            //   continentRepository: context.read(),
-            //   itineraryConfigRepository: context.read(),
-            // );
-            // return SearchFormScreen(viewModel: viewModel);
-          },
-        ),
-        // GoRoute(
-        //   path: Routes.searchRelative,
-        //   builder: (context, state) {
-        //     // TODO implement search relative route.
-        //     throw UnimplementedError('Search relative route is not yet implemented.');
-        //     // final viewModel = SearchFormViewModel(
-        //     //   continentRepository: context.read(),
-        //     //   itineraryConfigRepository: context.read(),
-        //     // );
-        //     // return SearchFormScreen(viewModel: viewModel);
-        //   },
-        // ),
-        // GoRoute(
-        //   path: Routes.resultsRelative,
-        //   builder: (context, state) {
-        //     final viewModel = ResultsViewModel(
-        //       destinationRepository: context.read(),
-        //       itineraryConfigRepository: context.read(),
-        //     );
-        //     return ResultsScreen(viewModel: viewModel);
-        //   },
-        // ),
-        // GoRoute(
-        //   path: Routes.activitiesRelative,
-        //   builder: (context, state) {
-        //     final viewModel = ActivitiesViewModel(
-        //       activityRepository: context.read(),
-        //       itineraryConfigRepository: context.read(),
-        //     );
-        //     return ActivitiesScreen(viewModel: viewModel);
-        //   },
-        // ),
-        // GoRoute(
-        //   path: Routes.bookingRelative,
-        //   builder: (context, state) {
-        //     final viewModel = BookingViewModel(
-        //       itineraryConfigRepository: context.read(),
-        //       createBookingUseCase: context.read(),
-        //       shareBookingUseCase: context.read(),
-        //       bookingRepository: context.read(),
-        //     );
-        //
-        //     // When opening the booking screen directly
-        //     // create a new booking from the stored ItineraryConfig.
-        //     viewModel.createBooking.execute();
-        //
-        //     return BookingScreen(viewModel: viewModel);
-        //   },
-        //   routes: [
-        //     GoRoute(
-        //       path: ':id',
-        //       builder: (context, state) {
-        //         final id = int.parse(state.pathParameters['id']!);
-        //         final viewModel = BookingViewModel(
-        //           itineraryConfigRepository: context.read(),
-        //           createBookingUseCase: context.read(),
-        //           shareBookingUseCase: context.read(),
-        //           bookingRepository: context.read(),
-        //         );
-        //
-        //         // When opening the booking screen with an existing id
-        //         // load and display that booking.
-        //         viewModel.loadBooking.execute(id);
-        //
-        //         return BookingScreen(viewModel: viewModel);
-        //       },
-        //     ),
-        //   ],
-        // ),
-      ],
     ),
+    // GoRoute(
+    //   path: Routes.home,
+    //   builder: (context, state) {
+    //     final viewModel = HomeViewModel(
+    //       eventRepository: context.read(),
+    //       context: context,
+    //     );
+    //     return HomeScreen(viewModel: viewModel);
+    //   },
+    //   routes: [
+    //     GoRoute(
+    //       path: Routes.eventsRelative,
+    //       builder: (context, state) {
+    //         // TODO implement events relative route.
+    //         throw UnimplementedError(
+    //           'Events relative route is not yet implemented.',
+    //         );
+    //         // final viewModel = SearchFormViewModel(
+    //         //   continentRepository: context.read(),
+    //         //   itineraryConfigRepository: context.read(),
+    //         // );
+    //         // return SearchFormScreen(viewModel: viewModel);
+    //       },
+    //     ),
+    //     GoRoute(
+    //       path: Routes.unitsRelative,
+    //       builder: (context, state) {
+    //         // TODO implement units relative route.
+    //         throw UnimplementedError(
+    //           'Units relative route is not yet implemented.',
+    //         );
+    //         // final viewModel = SearchFormViewModel(
+    //         //   continentRepository: context.read(),
+    //         //   itineraryConfigRepository: context.read(),
+    //         // );
+    //         // return SearchFormScreen(viewModel: viewModel);
+    //       },
+    //     ),
+    //     // GoRoute(
+    //     //   path: Routes.searchRelative,
+    //     //   builder: (context, state) {
+    //     //     // TODO implement search relative route.
+    //     //     throw UnimplementedError('Search relative route is not yet implemented.');
+    //     //     // final viewModel = SearchFormViewModel(
+    //     //     //   continentRepository: context.read(),
+    //     //     //   itineraryConfigRepository: context.read(),
+    //     //     // );
+    //     //     // return SearchFormScreen(viewModel: viewModel);
+    //     //   },
+    //     // ),
+    //     // GoRoute(
+    //     //   path: Routes.resultsRelative,
+    //     //   builder: (context, state) {
+    //     //     final viewModel = ResultsViewModel(
+    //     //       destinationRepository: context.read(),
+    //     //       itineraryConfigRepository: context.read(),
+    //     //     );
+    //     //     return ResultsScreen(viewModel: viewModel);
+    //     //   },
+    //     // ),
+    //     // GoRoute(
+    //     //   path: Routes.activitiesRelative,
+    //     //   builder: (context, state) {
+    //     //     final viewModel = ActivitiesViewModel(
+    //     //       activityRepository: context.read(),
+    //     //       itineraryConfigRepository: context.read(),
+    //     //     );
+    //     //     return ActivitiesScreen(viewModel: viewModel);
+    //     //   },
+    //     // ),
+    //     // GoRoute(
+    //     //   path: Routes.bookingRelative,
+    //     //   builder: (context, state) {
+    //     //     final viewModel = BookingViewModel(
+    //     //       itineraryConfigRepository: context.read(),
+    //     //       createBookingUseCase: context.read(),
+    //     //       shareBookingUseCase: context.read(),
+    //     //       bookingRepository: context.read(),
+    //     //     );
+    //     //
+    //     //     // When opening the booking screen directly
+    //     //     // create a new booking from the stored ItineraryConfig.
+    //     //     viewModel.createBooking.execute();
+    //     //
+    //     //     return BookingScreen(viewModel: viewModel);
+    //     //   },
+    //     //   routes: [
+    //     //     GoRoute(
+    //     //       path: ':id',
+    //     //       builder: (context, state) {
+    //     //         final id = int.parse(state.pathParameters['id']!);
+    //     //         final viewModel = BookingViewModel(
+    //     //           itineraryConfigRepository: context.read(),
+    //     //           createBookingUseCase: context.read(),
+    //     //           shareBookingUseCase: context.read(),
+    //     //           bookingRepository: context.read(),
+    //     //         );
+    //     //
+    //     //         // When opening the booking screen with an existing id
+    //     //         // load and display that booking.
+    //     //         viewModel.loadBooking.execute(id);
+    //     //
+    //     //         return BookingScreen(viewModel: viewModel);
+    //     //       },
+    //     //     ),
+    //     //   ],
+    //     // ),
+    //   ],
+    // ),
   ],
 );
 

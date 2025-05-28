@@ -1,15 +1,9 @@
-// import 'package:flutter/material.dart';
-
-// import 'package:flutter_google_maps_webservices/geocoding.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-// import '../../../api/maps/geocoding.dart';
-// import '../../map.dart';
-// import 'package:flutter/foundation.dart';
 import 'package:latlng/latlng.dart';
 
+import '../../../data/repositories/unit/unit_repository.dart';
 import '../status.dart';
 import '../unit/unit.dart';
+import '../unit/unit_callback.dart';
 import 'category.dart';
 
 /// An emergency event that the ambulance service has become aware of.
@@ -28,13 +22,26 @@ class Event {
   Event.preAlert({required int id, required String address})
     : this._(id: id, address: address, status: EventStatus.preAlert());
 
-  factory Event.fromJson(Map<String, dynamic> json) {
-    return switch (json) {
-      {'id': int id, 'address': String address, 'status': EventStatus status} =>
-        Event._(id: id, address: address, status: status),
-      _ => throw const FormatException('Failed to load album.'),
-    };
-  }
+  factory Event.fromJson(Map<String, dynamic> json) => switch (json) {
+    {
+      'id': int id,
+      'status': Map<String, dynamic> status,
+      'address': String address,
+      'assignedCallsigns': List<dynamic> assignedCallsigns,
+    } =>
+      () {
+        Event event = Event._(
+          id: id,
+          address: address,
+          status: EventStatus.fromJson(status),
+        );
+        for (String callsign in assignedCallsigns) {
+          event.addUnitCallsign(callsign);
+        }
+        return event;
+      }(),
+    _ => throw const FormatException('Failed to load event.'),
+  };
 
   factory Event.withNOC({
     required int id,
@@ -127,6 +134,14 @@ class Event {
   /// The street address of the emergency.
   String address;
 
+  /// Adds a [Unit.callsign] to [assignedCallsigns].
+  void addUnitCallsign(String unitCallsign) {
+    if (!_assignedCallsigns.contains(unitCallsign)) {
+      _assignedCallsigns.add(unitCallsign);
+      _assignedUnitCallbacks.add(UnitCallsignCallback(unitCallsign));
+    }
+  }
+
   /// Sets this event's [Event.noc] if it's not already set.
   void addNOC(NOC noc) {
     if (_noc == null) {
@@ -140,8 +155,49 @@ class Event {
     }
   }
 
+  void addUnit(Unit unit) {
+    if (!assignedCallsigns.contains(unit.callsign)) {
+      _assignedCallsigns.add(unit.callsign);
+    }
+  }
+
+  /// Assigns a unit
+  void dispatchUnit(Unit unit) {
+    addUnit(unit);
+    unit.dispatchTo(this);
+  }
+
+  void dispatchUnits(List<Unit> units) {
+    for (Unit unit in units) {
+      dispatchUnit(unit);
+    }
+  }
+
+  final List<String> _assignedCallsigns = List.empty(growable: true);
+
+  // TODO keep this is sync with assignedUnits, converting assignedUnits to a getter that pulls Units from the server based on these callsigns.
+  /// The callsigns of the ambulances and other units assigned to this event.
+  List<String> get assignedCallsigns => _assignedCallsigns;
+
+  final List<UnitCallback> _assignedUnitCallbacks = List.empty(growable: true);
+
   /// The ambulances and other units assigned to this event.
-  List<Unit> assignedUnits = List.empty(growable: true);
+  List<UnitCallsignCallback> get assignedUnitCallbacks =>
+      List<UnitCallsignCallback>.from(
+        _assignedCallsigns.map(
+          (String callsign) => UnitCallsignCallback(callsign),
+        ),
+      );
+
+  Future<List<Unit>> assignedUnits(UnitRepository unitRepository) async {
+    List<Future<Unit>> futureUnits = List<Future<Unit>>.from(
+      assignedUnitCallbacks.map(
+        (UnitCallsignCallback callback) async =>
+            await callback.call(unitRepository),
+      ),
+    );
+    return Future.wait(futureUnits);
+  }
 
   // String get assignedUnitsText =>
   //     assignedUnits.isEmpty
@@ -186,12 +242,13 @@ class Event {
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'category': category.toJson(),
-    'noc': noc,
+    'status': status.toJson(),
     'address': address,
-    'assignedUnits': List<String>.from(
-      assignedUnits.map((Unit assignedUnit) => assignedUnit.callsign),
-    ),
+    'assignedCallsigns': assignedCallsigns,
+    // TODO remove assignedUnits map to get callsigns
+    // List<String>.from(
+    //   assignedUnits.map((Unit assignedUnit) => assignedUnit.callsign),
+    // ),
   };
 
   @override

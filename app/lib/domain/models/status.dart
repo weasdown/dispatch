@@ -3,6 +3,17 @@ import 'event/category.dart';
 interface class EventStatus {
   const EventStatus(this.category, this.description);
 
+  factory EventStatus.fromJson(Map<String, dynamic> json) {
+    final String categoryName = json['category'];
+    Category category = Category.values
+        .where((Category category) => category.name == categoryName)
+        .first;
+
+    final String description = json['description'];
+
+    return EventStatus(category, description);
+  }
+
   /// Creates an emergency ambulance [EventStatus].
   const factory EventStatus.nhs999(Category category) =
       PathwaysDisposition._nhs999;
@@ -25,6 +36,11 @@ interface class EventStatus {
   int get hashCode => Object.hash(category, description);
 
   static const String _preAlert = 'Pre-Alert';
+
+  Map<String, dynamic> toJson() => {
+    'category': category.toJson(),
+    'description': description,
+  };
 
   @override
   String toString() => description;
@@ -56,8 +72,6 @@ abstract class NOC extends EventStatus {
   static List<NOC> get cat3 => catThreeNOCs;
 
   static List<NOC> get cat4 => catFourNOCs;
-
-  String toJson() => toString();
 
   @override
   String toString() {

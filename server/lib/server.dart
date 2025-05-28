@@ -3,4 +3,4 @@
 /// More dartdocs go here.
 library;
 
-export 'src/web_socket_server.dart';
+export 'web_socket_server.dart';
