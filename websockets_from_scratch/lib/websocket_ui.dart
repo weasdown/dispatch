@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dispatch/domain/models/event/event.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -39,11 +40,28 @@ class _WebsocketUiState extends State<WebsocketUi> {
       print('_dataJson: $_dataJson');
     }
 
-    return Text(
-      'Got data from stream:\n$_dataJson',
-      style: Theme.of(context).textTheme.bodyLarge,
-      textAlign: TextAlign.center,
-    );
+    return ListView(shrinkWrap: true, children: buildEventTiles(_dataJson!));
+  }
+
+  List<Widget> buildEventTiles(Map<String, dynamic> eventJson) {
+    List<Map<String, dynamic>> eventsList = eventJson['events']
+        .cast<Map<String, dynamic>>();
+
+    List<Widget> widgets = [];
+    for (Map<String, dynamic> eventEntry in eventsList) {
+      Event event = Event.fromJson(eventEntry);
+      widgets.add(
+        Card(
+          child: ListTile(
+            title: Text(event.address),
+            subtitle: Text(event.category.toString()),
+            trailing: Text(event.assignedCallsigns.join(', ')),
+          ),
+        ),
+      );
+    }
+
+    return widgets;
   }
 
   @override

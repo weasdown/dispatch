@@ -18,6 +18,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 version: 0.1.0+1
 
+resolution: workspace
+
 environment:
   sdk: ^3.8.0
 
@@ -35,6 +37,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   web_socket_channel: ^3.0.3
+  dispatch: ^0.1.0
 
 dev_dependencies:
   flutter_test:
