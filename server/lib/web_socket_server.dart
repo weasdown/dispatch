@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dispatch/data/services/local_data_service.dart';
 import 'package:dispatch/domain/models/event/event.dart';
 import 'package:dispatch/domain/models/noc.dart';
+// import 'package:dispatch/domain/models/noc.dart';
 import 'package:dispatch/domain/models/unit/unit.dart';
 import 'package:dispatch/utils/result.dart';
 import 'package:intl/intl.dart';
@@ -47,6 +49,8 @@ class WebSocketServer {
       final List response;
       // final Response response;
 
+      List<Event> events = Assets.events;
+
       switch (message) {
         case 'units':
           // // TODO consider replacing with WebSocketServer._units
@@ -62,15 +66,6 @@ class WebSocketServer {
           // response = Assets.events;
           // key = message.toString();
 
-          List<Event> events = Assets.events;
-          events.add(
-            Event.withNOC(
-              id: 1234,
-              address: 'TEST-001, Test St, Testfordshire',
-              noc: Cat4NOC.nauseaVomiting(),
-            ),
-          );
-
           response = events;
         case _:
           response = [
@@ -85,13 +80,45 @@ class WebSocketServer {
         // response = Response.badRequest();
       }
 
-      // Map<String, dynamic> responseJson = {'statusCode': response.statusCode};
-
       // Send the response back to the sender.
       // webSocket.sink.add(json.encode(response));
       Map<String, dynamic> messageToReply = {key: response};
       String messageJSON = json.encode(messageToReply);
       webSocket.sink.add(messageJSON);
+
+      Future<void> sendTestEvents() async {
+        List<Event> testEvents = List.generate(5, (_) {
+          int randomInt = Random().nextInt(1000);
+          final Event testEvent = Event.withNOC(
+            id: randomInt,
+            address: '$randomInt Test St, Testfordshire',
+            noc: Cat4NOC.nauseaVomiting(),
+          );
+          return testEvent;
+        });
+
+        Future<void> testEventFuture(Event testEvent) => Future.delayed(
+          Duration(seconds: 1, milliseconds: Random().nextInt(500)),
+          () {
+            events.add(testEvent);
+
+            Map<String, dynamic> messageToReply = {'events': events};
+            messageJSON = json.encode(messageToReply);
+            webSocket.sink.add(messageJSON);
+            print('Sent event ${testEvent.id}');
+          },
+        );
+
+        for (Event testEvent in testEvents) {
+          await testEventFuture(testEvent).then((_) async {
+            // Wait 1 second before sending the next event.
+            print('Waiting');
+            await Future.delayed(Duration(seconds: 1));
+          });
+        }
+      }
+
+      await sendTestEvents();
 
       print('$_formattedTimestamp: Replied with "$messageJSON"');
     });
