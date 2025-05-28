@@ -16,6 +16,12 @@
       <excludeFolder url="file://$MODULE_DIR$/app/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/app/build" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/package_test/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/package_test/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/package_test/build" />
+      <excludeFolder url="file://$MODULE_DIR$/websockets_from_scratch/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/websockets_from_scratch/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/websockets_from_scratch/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
