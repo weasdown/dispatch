@@ -5,3 +5,6 @@ Widget text(BuildContext context, String message) => Text(
   style: Theme.of(context).textTheme.headlineSmall,
   textAlign: TextAlign.center,
 );
+
+Widget errorText(BuildContext context, AsyncSnapshot snapshot) =>
+    text(context, 'Error!\n\n${snapshot.error.toString()}');

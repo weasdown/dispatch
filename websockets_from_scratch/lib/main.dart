@@ -82,17 +82,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   return WebsocketUi(channel: _channel!);
                 } else {
-                  return text(
-                    context,
-                    'Error!\n\n${snapshot.error.toString()}',
-                  );
+                  return errorText(context, snapshot);
                 }
               } else {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Loading...',
+                      'Connecting to WebSocketChannel...',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 50),
