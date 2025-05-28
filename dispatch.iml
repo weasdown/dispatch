@@ -22,6 +22,20 @@
       <excludeFolder url="file://$MODULE_DIR$/websockets_from_scratch/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/websockets_from_scratch/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/websockets_from_scratch/build" />
+      <excludeFolder url="file://$MODULE_DIR$/app/android/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/app/android/app/.cxx" />
+      <excludeFolder url="file://$MODULE_DIR$/app/doc/api" />
+      <excludeFolder url="file://$MODULE_DIR$/app/ios/Flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/app/lib/api/keys" />
+      <excludeFolder url="file://$MODULE_DIR$/app/linux/flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/app/macos/Flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/app/windows/flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/server/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/websockets_from_scratch/.idea/libraries" />
+      <excludeFolder url="file://$MODULE_DIR$/websockets_from_scratch/ios/Flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/websockets_from_scratch/linux/flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/websockets_from_scratch/macos/Flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/websockets_from_scratch/windows/flutter/ephemeral" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
