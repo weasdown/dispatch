@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import 'api.dart';
 import 'utils.dart';
 import 'websocket_ui.dart';
 
@@ -35,15 +37,17 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: MyHomePage(),
+      home: MyHomePage(apiClient: WebSocketApiClient()),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({super.key});
+  MyHomePage({super.key, required this.apiClient});
 
-  final Uri _channelUri = Uri(scheme: 'ws', host: 'localhost', port: 8080);
+  final WebSocketApiClient apiClient;
+
+  // final Uri _channelUri = Uri(scheme: 'ws', host: 'localhost', port: 8080);
 
   final Duration connectionTimeout = Duration(seconds: 20);
 
@@ -52,23 +56,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  WebSocketChannel? _channel;
+  late WebSocketChannel? _channel;
 
-  Future<WebSocketChannel> connect() async {
-    final channel = WebSocketChannel.connect(widget._channelUri);
-    _channel = channel;
-
-    await channel.ready;
-
-    return channel;
-  }
+  // Future<WebSocketChannel> connect() async {
+  //   final WebSocketChannel channel = WebSocketChannel.connect(
+  //     widget.apiClient.channelUri,
+  //   );
+  //   _channel = channel;
+  //
+  //   await channel.ready;
+  //
+  //   return channel;
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final Future<WebSocketChannel> future = Future<WebSocketChannel>.delayed(
-      Duration(seconds: 1),
-      connect,
-    ).timeout(widget.connectionTimeout);
+    _channel = widget.apiClient.channel;
 
     return Scaffold(
       appBar: AppBar(title: Text('WebSocket example')),
@@ -76,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: FutureBuilder<WebSocketChannel>(
-            future: future,
+            future: widget.apiClient.connect(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
@@ -84,7 +87,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   return WebsocketUi(channel: _channel!);
                 } else {
-                  return errorText(context, snapshot);
+                  return Column(
+                    children: [
+                      errorText(context, snapshot),
+                      SizedBox(height: 30),
+                      refreshButton(onPressed: () => setState(() {})),
+                    ],
+                  );
                 }
               } else {
                 return Column(
