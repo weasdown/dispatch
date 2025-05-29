@@ -5,13 +5,13 @@ import 'dart:math';
 import 'package:dispatch/data/services/local_data_service.dart';
 import 'package:dispatch/domain/models/event/event.dart';
 import 'package:dispatch/domain/models/noc.dart';
-// import 'package:dispatch/domain/models/noc.dart';
 import 'package:dispatch/domain/models/unit/unit.dart';
 import 'package:dispatch/utils/result.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
-import 'package:shelf/shelf.dart' show Handler;
+import 'package:shelf/shelf.dart' show Handler, Pipeline, logRequests;
 import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
 import 'config/assets.dart';
@@ -41,7 +41,7 @@ class WebSocketServer {
     _ => throw TypeError(),
   };
 
-  static Handler get wsHandler => webSocketHandler((webSocket, _) {
+  static Handler get eventsWebsocketHandler => webSocketHandler((webSocket, _) {
     webSocket.stream.asBroadcastStream().listen((message) async {
       print('\n$_formattedTimestamp: Received message "$message"');
 
@@ -52,13 +52,13 @@ class WebSocketServer {
       List<Event> events = Assets.events;
 
       switch (message) {
-        case 'units':
-          // // TODO consider replacing with WebSocketServer._units
-          // // response = _units;
-          // response = Assets.units;
-          // key = message.toString();
-
-          response = Assets.units;
+        // case 'units':
+        //   // // TODO consider replacing with WebSocketServer._units
+        //   // // response = _units;
+        //   // response = Assets.units;
+        //   // key = message.toString();
+        //
+        //   response = Assets.units;
 
         case 'events':
           // // TODO consider replacing with WebSocketServer._events
@@ -67,12 +67,13 @@ class WebSocketServer {
           // key = message.toString();
 
           response = events;
+
         case _:
           response = [
             ArgumentError.value(
               message,
               'message',
-              'must be "events" or "units"',
+              'must be "events"', // or "units"',
             ),
           ];
         // key = 'error';
@@ -124,9 +125,6 @@ class WebSocketServer {
     });
   });
 
-  Handler get coreHandler => wsHandler;
-  // _handler;
-
   static const String _defaultHost = 'localhost';
 
   static const int _defaultPort = 8080;
@@ -139,6 +137,18 @@ class WebSocketServer {
     final String formattedTimestamp = formatter.format(timestamp);
     return formattedTimestamp;
   }
+
+  // A pipeline that handles and logs requests.
+  Handler get _handler => Pipeline()
+      .addMiddleware(logRequests())
+      // .addMiddleware(() => wsHandler) // FIXME
+      // TODO add auth handler once authRequests() implemented.
+      // .addMiddleware(authRequests())
+      // .addMiddleware((innerHandler) {
+      //   print('Received request: $innerHandler');
+      //   return _router.call;
+      // })
+      .addHandler(_router.call);
 
   // // Configure a pipeline that logs requests.
   // Handler get _handler =>
@@ -161,6 +171,19 @@ class WebSocketServer {
 
   final int _port;
 
+  // Configure routes.
+  final Router _router = Router()
+    // ..get('/', eventHandler)
+    ..get('/events', eventsWebsocketHandler);
+  // ..mount('/', EventsApi().router.call)
+  // ..mount('/events', EventsApi().handler)
+  // ..mount('/', WebSocketServer.wsHandler);
+  // TODO enable units API once implemented.
+  // ..mount('/units', UnitsApi().router.call);
+  // ..mount('/units', UnitsApi().handler);
+  // TODO enable login API once implemented.
+  // ..mount('/login', LoginApi().router.call);
+
   // // Configure routes.
   // final Router _router = Router()..mount('/events', EventsApi().router.call);
   // // TODO enable login API once implemented.
@@ -168,7 +191,8 @@ class WebSocketServer {
 
   // FIXME refactor so server is higher-level than dart:io's HttpServer. Currently crashes when run on web because HttpServer isn't supported on web.
   Future<HttpServer> _serve() async =>
-      shelf_io.serve(coreHandler, host, _port).then((HttpServer server) {
+      // shelf_io.serve(coreHandler, host, _port).then((HttpServer server) {
+      shelf_io.serve(_handler, host, _port).then((HttpServer server) {
         final String logMessage =
             'Serving at ws://${server.address.host}:$_port\n'
             '\t- Current units: $_units\n'

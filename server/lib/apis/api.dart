@@ -1,5 +1,5 @@
-import 'package:shelf_router/shelf_router.dart';
+import 'package:shelf/shelf.dart';
 
 abstract class Api {
-  Router get router;
+  Future<Response> handler(Request request);
 }

@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: MyHomePage(apiClient: WebSocketApiClient()),
+      home: MyHomePage(apiClient: WebSocketApiClient.events()),
     );
   }
 }
@@ -58,17 +58,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late WebSocketChannel? _channel;
 
-  // Future<WebSocketChannel> connect() async {
-  //   final WebSocketChannel channel = WebSocketChannel.connect(
-  //     widget.apiClient.channelUri,
-  //   );
-  //   _channel = channel;
-  //
-  //   await channel.ready;
-  //
-  //   return channel;
-  // }
-
   @override
   Widget build(BuildContext context) {
     _channel = widget.apiClient.channel;
@@ -85,7 +74,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (snapshot.hasData) {
                   _channel = snapshot.data as WebSocketChannel;
 
-                  return WebsocketUi(channel: _channel!);
+                  return WebsocketUi(
+                    // apiClient: widget.apiClient,
+                    channel: _channel!,
+                  );
                 } else {
                   return Column(
                     children: [

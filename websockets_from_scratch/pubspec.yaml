@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   web_socket_channel: ^3.0.3
   dispatch: ^0.1.0
+  material_symbols_icons: ^4.2815.1
 
 dev_dependencies:
   flutter_test:
