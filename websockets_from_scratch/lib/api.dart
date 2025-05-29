@@ -32,6 +32,8 @@ class WebSocketApiClient {
 
   final int _port;
 
+  void requestEvents() => channel!.sink.add('events');
+
   Stream<String> get stream =>
       (_stream != null) ? _stream! : channel!.stream.cast<String>();
   Stream<String>? _stream;
