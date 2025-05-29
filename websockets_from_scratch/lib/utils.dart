@@ -8,3 +8,14 @@ Widget text(BuildContext context, String message) => Text(
 
 Widget errorText(BuildContext context, AsyncSnapshot snapshot) =>
     text(context, 'Error!\n\n${snapshot.error.toString()}');
+
+Widget refreshButton({void Function()? onPressed}) => ElevatedButton.icon(
+  icon: Icon(Icons.refresh),
+  onPressed: () {
+    print('Refreshing...');
+    if (onPressed != null) {
+      onPressed();
+    }
+  },
+  label: Text('Refresh'),
+);
