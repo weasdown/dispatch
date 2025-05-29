@@ -45,6 +45,8 @@ class MyHomePage extends StatefulWidget {
 
   final Uri _channelUri = Uri(scheme: 'ws', host: 'localhost', port: 8080);
 
+  final Duration connectionTimeout = Duration(seconds: 20);
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -66,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final Future<WebSocketChannel> future = Future<WebSocketChannel>.delayed(
       Duration(seconds: 1),
       connect,
-    );
+    ).timeout(widget.connectionTimeout);
 
     return Scaffold(
       appBar: AppBar(title: Text('WebSocket example')),
