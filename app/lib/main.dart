@@ -5,13 +5,36 @@ import 'api/env.dart';
 import 'config/dependencies.dart';
 import 'domain/models/event/event_list_model.dart';
 import 'routing/router.dart';
+import 'package:window_manager_plus/window_manager_plus.dart';
 
-void main() async {
+void initialiseMultiWindow(List<String> args) async {}
+
+void main(List<String> args) async {
   for (final Key key in Env.keys) {
     if (key().isEmpty) {
       throw Exception('Value for Key ${key.name} is not defined.');
     }
   }
+
+  WidgetsFlutterBinding.ensureInitialized();
+  // await the initialization of the plugin.
+  // Here is an example of how to use ensureInitialized in the main function:
+  await WindowManagerPlus.ensureInitialized(
+    args.isEmpty ? 0 : int.tryParse(args[0]) ?? 0,
+  );
+
+  // Now you can use the plugin, such as WindowManagerPlus.current
+  WindowOptions windowOptions = WindowOptions(
+    size: Size(800, 600),
+    center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.hidden,
+  );
+  WindowManagerPlus.current.waitUntilReadyToShow(windowOptions, () async {
+    await WindowManagerPlus.current.show();
+    await WindowManagerPlus.current.focus();
+  });
 
   runApp(MultiProvider(providers: providersLocal, child: NewCAD()));
 }
