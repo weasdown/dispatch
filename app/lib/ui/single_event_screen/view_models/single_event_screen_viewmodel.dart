@@ -13,7 +13,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   }
 
   final EventRepository _eventRepository;
-  final _log = Logger('SingleEventScreenViewModel');
+  final Logger _log = Logger('SingleEventScreenViewModel');
 
   late Command0 load;
 
