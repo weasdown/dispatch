@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/status.dart';
 import '../../../utils/result.dart';
@@ -47,7 +49,8 @@ class EventRepositoryLocal implements EventRepository {
   @override
   Future<Result<List<Event>>> get allEvents => eventsList;
 
+  /// Gets a [Result.ok] holding a random event from `_events`.
   @override
-  // TODO: implement selectedEvent
-  Future<Result<Event?>> get selectedEvent => throw UnimplementedError();
+  Future<Result<Event?>> get selectedEvent async =>
+      Result.ok(_events[Random().nextInt(_events.length)]);
 }
