@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:logging/logging.dart';
 
 import '../../../domain/models/event/event.dart';
@@ -27,10 +28,63 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
 
           if (event != null) {
             _log.fine('There is a selected event');
-            return Table(
+
+            final Widget overview = Center(
+              child: Table(
+                children: [
+                  TableRow(
+                    children: [
+                      Text(
+                        (event.noc != null)
+                            ? '${event.category.toString()}: ${event.noc!.description}'
+                            : 'No NOC',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+
+            final Widget patientDetails = DecoratedBox(
+              decoration: BoxDecoration(border: Border.all()),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Patient details...\n\nTBC',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+
+            final Widget buttons = Column(
               children: [
-                TableRow(children: [Text('ID'), Text(event.id.toString())]),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.red),
+                  ),
+                  onPressed: () => debugPrint('Find AED'),
+                  child: Text(
+                    'Find AED',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium!.copyWith(color: Colors.white),
+                  ),
+                ),
               ],
+            );
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  overview,
+                  const Gap(30),
+                  buttons,
+                  const Gap(50),
+                  patientDetails,
+                ],
+              ),
             );
           } else {
             _log.warning('There is no selected event');
