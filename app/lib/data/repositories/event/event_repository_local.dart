@@ -46,4 +46,8 @@ class EventRepositoryLocal implements EventRepository {
 
   @override
   Future<Result<List<Event>>> get allEvents => eventsList;
+
+  @override
+  // TODO: implement selectedEvent
+  Future<Result<Event?>> get selectedEvent => throw UnimplementedError();
 }

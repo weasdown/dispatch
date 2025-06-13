@@ -7,4 +7,8 @@ abstract class EventRepository {
 
   /// Get an event by its ID.
   Future<Result<Event>> eventByID(int id);
+
+  Event? _selectedEvent;
+
+  Future<Result<Event?>> get selectedEvent async => Result.ok(_selectedEvent);
 }
