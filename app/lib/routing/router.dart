@@ -11,6 +11,8 @@ import '../data/repositories/auth/auth_repository.dart';
 import '../data/services/api/api_client.dart';
 // import '../ui/home/view_models/home_viewmodel.dart';
 // import '../ui/home/widgets/home_screen.dart';
+import '../ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
+import '../ui/single_event_screen/widgets/single_event_screen.dart';
 import 'routes.dart';
 
 /// Top go_router entry point.
@@ -66,6 +68,14 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         // return HomeScreen(viewModel: viewModel);
       },
       routes: [
+        GoRoute(
+          path: Routes.singleEvent,
+          builder: (context, state) {
+            final SingleEventScreenViewModel viewModel =
+                SingleEventScreenViewModel(eventRepository: context.read());
+            return SingleEventScreen(viewModel: viewModel);
+          },
+        ),
         GoRoute(
           path: Routes.eventsRelative,
           builder: (context, state) {
