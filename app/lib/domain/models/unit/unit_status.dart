@@ -3,20 +3,28 @@ library;
 
 /// Possible statuses for a [Unit] to show its current activity.
 enum UnitStatus {
+  pd('PD', 'Pre-Duty'),
   ab('AB', 'Available Base'),
-  ra('RA', 'Returning Available'),
-  dp('DP', 'Dispatched'),
   ds('DS', 'Dispatched to Standby'),
+  av('AV', 'Available - Voice'),
+  af('AF', 'Available - Foot'),
+  am('AM', 'Available - MDT'),
+  ra('RA', 'Available - Returning'),
+  sb('SB', 'Available - Standby'),
+  ms('MS', 'Mobile - Standby'),
+  dp('DP', 'Dispatched'),
   mo('MO', 'Mobile'),
-  ms('MS', 'Mobile to Standby'),
   as('AS', 'At Scene'),
-  wp('WP', 'With Patient'),
   ls('LS', 'Left Scene'),
   ah('AH', 'At Hospital'),
   ho('HO', 'Handover'),
   vc('VC', 'Vehicle Clear'),
-  os('OS', 'Out of Service'),
-  pd('PD', 'Pre-Duty');
+  rt('RT', 'Request Transport'),
+  nt('NT', 'No Transport Required'),
+  rv('RV', 'At Scene - RV Point'),
+  wp('WP', 'With Patient'),
+  ak('AK', 'Acknowledgement'),
+  os('OS', 'Out of Service');
 
   const UnitStatus(this.abbreviation, this.name);
 
