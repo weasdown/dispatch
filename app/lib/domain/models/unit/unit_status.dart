@@ -34,6 +34,40 @@ enum UnitStatus {
 
   final String name;
 
+  /// Gets the colour to display in the [Unit]'s row of the unit screen.
+  Color get backgroundColour => switch (this) {
+    UnitStatus.pd => Colors.grey,
+
+    UnitStatus.ab => Colors.orange,
+
+    UnitStatus.ds ||
+    UnitStatus.av ||
+    UnitStatus.af ||
+    UnitStatus.am ||
+    UnitStatus.sb ||
+    UnitStatus.ms => Colors.lightGreenAccent,
+
+    UnitStatus.ra => Colors.green.shade900,
+
+    UnitStatus.dp ||
+    UnitStatus.as ||
+    UnitStatus.ls ||
+    UnitStatus.ah ||
+    UnitStatus.ho ||
+    UnitStatus.nt ||
+    UnitStatus.rv ||
+    UnitStatus.wp ||
+    UnitStatus.ak => Colors.red,
+
+    UnitStatus.mo => Colors.pinkAccent,
+
+    UnitStatus.vc => Colors.lightBlueAccent.shade200,
+
+    UnitStatus.rt => Colors.red.shade900,
+
+    UnitStatus.os => Colors.black,
+  };
+
   /// White text = Are doing, Grey text = Awaiting, Black text = Have actioned.
   Color get fontColour => switch (this) {
     /// White: Are doing
