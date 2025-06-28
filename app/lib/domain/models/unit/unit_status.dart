@@ -1,6 +1,8 @@
 /// @docImport 'unit.dart';
 library;
 
+import 'package:flutter/material.dart';
+
 /// Possible statuses for a [Unit] to show its current activity.
 enum UnitStatus {
   pd('PD', 'Pre-Duty'),
@@ -31,4 +33,35 @@ enum UnitStatus {
   final String abbreviation;
 
   final String name;
+
+  /// White text = Are doing, Grey text = Awaiting, Black text = Have actioned.
+  Color get fontColour => switch (this) {
+    /// White: Are doing
+    UnitStatus.pd ||
+    UnitStatus.ds ||
+    UnitStatus.av ||
+    UnitStatus.af ||
+    UnitStatus.am ||
+    UnitStatus.ra ||
+    UnitStatus.ms ||
+    UnitStatus.mo ||
+    UnitStatus.rt ||
+    UnitStatus.os => Colors.white,
+
+    /// Grey: Awaiting
+    UnitStatus.ds || UnitStatus.dp => Colors.grey,
+
+    /// Black: Have actioned
+    UnitStatus.ab ||
+    UnitStatus.sb ||
+    UnitStatus.as ||
+    UnitStatus.ls ||
+    UnitStatus.ah ||
+    UnitStatus.ho ||
+    UnitStatus.vc ||
+    UnitStatus.nt ||
+    UnitStatus.rv ||
+    UnitStatus.wp ||
+    UnitStatus.ak => Colors.black,
+  };
 }
