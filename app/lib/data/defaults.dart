@@ -9,30 +9,30 @@ import '../domain/models/unit/vehicle_type.dart';
 abstract final class Defaults {
   /// A default list of events.
   static final List<Event> events = [
-    Event.preAlert(id: 423124, address: 'Sainsbury\'s Kidlington'),
-    Event.preAlert(id: 423125, address: '47 Hamble Drive Abingdon'),
+    Event.preAlert(id: 423124.toString(), address: 'Sainsbury\'s Kidlington'),
+    Event.preAlert(id: 423125.toString(), address: '47 Hamble Drive Abingdon'),
     Event.withNOC(
-      id: 423129,
+      id: 423129.toString(),
       address: 'Carfax Tower, Oxford',
       noc: Cat2NOC.c2Stabbing(),
     )..dispatchUnit(units[2]),
     Event.withNOC(
-      id: 423126,
+      id: 423126.toString(),
       address: '25 Old Union Way, Thame',
       noc: Cat4NOC.medicalMinor(),
     )..dispatchUnit(units[1]),
     Event.withNOC(
-      id: 423127,
+      id: 423127.toString(),
       address: '6 The Greenway, Oxfordshire',
       noc: Cat1NOC.c1ArrestPeriArrest(),
     )..dispatchUnits([units[0], units[4], units[6], units[7]]),
     Event.withNOC(
-      id: 423128,
+      id: 423128.toString(),
       address: 'Thatcham Station',
       noc: Cat4NOC.mentalHealth(),
     )..dispatchUnit(units[5]),
     Event.withNOC(
-      id: 423130,
+      id: 423130.toString(),
       address: 'Next, Westgate Shopping Centre, Oxford',
       noc: Cat3NOC.fallInjuriesUnknown(),
     )..dispatchUnit(units[3]),

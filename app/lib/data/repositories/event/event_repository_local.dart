@@ -18,11 +18,17 @@ class EventRepositoryLocal extends EventRepository with LocalRepository {
   // Stream<Event> get allEvents;
 
   Future<void> createEvent({required String address, required NOC noc}) async {
-    _events.add(Event.withNOC(id: _sequentialId++, address: address, noc: noc));
+    _events.add(
+      Event.withNOC(
+        id: (_sequentialId++).toString(),
+        address: address,
+        noc: noc,
+      ),
+    );
   }
 
   @override
-  Future<Result<Event>> eventByID(int id) async {
+  Future<Result<Event>> eventByID(String id) async {
     final event = _events.where((event) => event.id == id).firstOrNull;
     if (event == null) {
       return Result.error(Exception('Booking not found'));

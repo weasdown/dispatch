@@ -19,12 +19,12 @@ class Event {
     }
   }
 
-  Event.preAlert({required int id, required String address})
+  Event.preAlert({required String id, required String address})
     : this._(id: id, address: address, status: EventStatus.preAlert());
 
   factory Event.fromJson(Map<String, dynamic> json) => switch (json) {
     {
-      'id': int id,
+      'id': String id,
       'status': Map<String, dynamic> status,
       'address': String address,
       'assignedCallsigns': List<dynamic> assignedCallsigns,
@@ -44,7 +44,7 @@ class Event {
   };
 
   factory Event.withNOC({
-    required int id,
+    required String id,
     required String address,
     required NOC noc,
   }) {
@@ -218,7 +218,7 @@ class Event {
   Category category;
 
   /// A unique numerical identifier.
-  final int id;
+  final String id;
 
   /// The latitude and longitude of the emergency.
   late LatLng location;

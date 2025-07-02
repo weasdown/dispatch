@@ -7,5 +7,5 @@ abstract class EventRepository extends Repository {
   Future<Result<List<Event>>> get allEvents;
 
   /// Get an event by its ID.
-  Future<Result<Event>> eventByID(int id);
+  Future<Result<Event>> eventByID(String id);
 }

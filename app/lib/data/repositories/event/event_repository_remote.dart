@@ -18,11 +18,17 @@ class EventRepositoryRemote extends EventRepository {
   final ApiClient _apiClient;
 
   Future<void> createEvent({required String address, required NOC noc}) async {
-    _events.add(Event.withNOC(id: _sequentialId++, address: address, noc: noc));
+    _events.add(
+      Event.withNOC(
+        id: (_sequentialId++).toString(),
+        address: address,
+        noc: noc,
+      ),
+    );
   }
 
   @override
-  Future<Result<Event>> eventByID(int id) async {
+  Future<Result<Event>> eventByID(String id) async {
     // // TODO get events from apiClient and use the result to update _events.
     // apiClient.requestEvents;
 
