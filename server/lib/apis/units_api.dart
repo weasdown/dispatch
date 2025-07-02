@@ -8,7 +8,7 @@ import 'package:shelf/shelf.dart';
 import 'api.dart';
 
 /// Implements a simple units API.
-final class UnitsApi extends Api {
+final class UnitApi extends Api {
   @override
   // TODO: implement endpoints
   List<Endpoint> get endpoints => [_rootEndpoint];

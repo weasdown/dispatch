@@ -8,7 +8,7 @@ import 'package:shelf/shelf.dart';
 import 'api.dart';
 
 /// Implements a simple events API.
-final class EventsApi extends Api {
+final class EventApi extends Api {
   @override
   List<Endpoint> get endpoints => [_rootEndpoint, _getEventById];
 
