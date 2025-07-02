@@ -12,6 +12,8 @@ class Endpoint {
   void addToRouter({required Router router}) =>
       router.add(method.verb, route, handler);
 
+  String get fullRoute => '$parentRoute$route';
+
   final Function handler;
 
   final HTTPMethod method;
