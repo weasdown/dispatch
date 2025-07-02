@@ -1,2 +1,4 @@
 /// A generic API.
-abstract class Api {}
+abstract class Api {
+  String get baseRoute;
+}
