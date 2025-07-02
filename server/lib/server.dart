@@ -4,4 +4,4 @@
 library;
 
 export 'server/http_dispatch_server.dart';
-export 'web_socket_server.dart';
+export 'server/web_socket_server.dart';
