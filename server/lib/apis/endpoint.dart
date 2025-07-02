@@ -9,8 +9,26 @@ class Endpoint {
     required this.handler,
   }) : parentRoute = parentRoute ?? '';
 
-  void addToRouter({required Router router}) =>
-      router.add(method.verb, route, handler);
+  /// Adds this [Endpoint] to the routes accessible to a [Router].
+  void addToRouter({required Router router}) => switch (method) {
+    HTTPMethod.get => router.get(fullRoute, handler),
+    HTTPMethod.post => router.post(fullRoute, handler),
+
+    // TODO: Handle this case.
+    HTTPMethod.head => throw UnimplementedError(),
+    // TODO: Handle this case.
+    HTTPMethod.put => throw UnimplementedError(),
+    // TODO: Handle this case.
+    HTTPMethod.delete => throw UnimplementedError(),
+    // TODO: Handle this case.
+    HTTPMethod.connect => throw UnimplementedError(),
+    // TODO: Handle this case.
+    HTTPMethod.options => throw UnimplementedError(),
+    // TODO: Handle this case.
+    HTTPMethod.trace => throw UnimplementedError(),
+    // TODO: Handle this case.
+    HTTPMethod.patch => throw UnimplementedError(),
+  };
 
   String get fullRoute => '$parentRoute$route';
 
