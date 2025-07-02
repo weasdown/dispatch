@@ -84,7 +84,7 @@ class WebSocketServer {
 
   final String host;
 
-  LocalDataService _localDataService;
+  final LocalDataService _localDataService;
 
   final _log = Logger('WebSocketServer');
 
