@@ -6,7 +6,7 @@ import '../domain/models/unit/unit.dart';
 import '../domain/models/unit/vehicle_type.dart';
 
 /// Class to store default event and unit data.
-final class Defaults {
+abstract final class Defaults {
   /// A default list of events.
   static final List<Event> events = [
     Event.preAlert(id: 423124, address: 'Sainsbury\'s Kidlington'),
