@@ -8,6 +8,9 @@ import 'api.dart';
 
 /// Implements a simple events API.
 final class EventsApi extends Api {
+  @override
+  List<Endpoint> get endpoints => [_rootEndpoint];
+
   final List<Event> _events = [];
 
   // Root endpoint that returns a JSON of all currently stored events.
@@ -21,7 +24,4 @@ final class EventsApi extends Api {
       );
     },
   );
-
-  @override
-  List<Endpoint> get endpoints => [_rootEndpoint];
 }
