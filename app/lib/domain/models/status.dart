@@ -68,7 +68,8 @@ abstract class NOC extends EventStatus {
 }
 
 final class Cat1NOC extends NOC {
-  const Cat1NOC._({required description}) : super(Category.one, description);
+  const Cat1NOC._({required String description})
+    : super(Category.one, description);
 
   const Cat1NOC.c1ArrestPeriArrest()
     : this._(description: 'C1 Arrest/Peri Arrest');
@@ -94,7 +95,8 @@ final class Cat1NOC extends NOC {
 }
 
 final class Cat2NOC extends NOC {
-  const Cat2NOC._({required description}) : super(Category.two, description);
+  const Cat2NOC._({required String description})
+    : super(Category.two, description);
 
   const Cat2NOC.allergicReaction() : this._(description: 'Allergic Reaction');
   const Cat2NOC.bleedingSpecify()
@@ -138,7 +140,8 @@ final class Cat2NOC extends NOC {
 }
 
 final class Cat3NOC extends NOC {
-  const Cat3NOC._({required description}) : super(Category.three, description);
+  const Cat3NOC._({required String description})
+    : super(Category.three, description);
 
   const Cat3NOC.abdominalFlankPain()
     : this._(description: 'Abdominal/Flank Pain');
@@ -161,7 +164,8 @@ final class Cat3NOC extends NOC {
 }
 
 final class Cat4NOC extends NOC {
-  const Cat4NOC._({required description}) : super(Category.four, description);
+  const Cat4NOC._({required String description})
+    : super(Category.four, description);
 
   const Cat4NOC.animalInsectsBitesOrStingsMinor()
     : this._(description: 'Animal/Insects Bites or Stings (minor)');
