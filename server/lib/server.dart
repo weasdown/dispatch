@@ -3,4 +3,5 @@
 /// More dartdocs go here.
 library;
 
+export 'server/http_dispatch_server.dart';
 export 'web_socket_server.dart';
