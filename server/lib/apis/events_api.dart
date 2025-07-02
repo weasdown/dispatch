@@ -17,7 +17,7 @@ final class EventsApi extends Api {
   // Root endpoint that returns a JSON of all currently stored events.
   Endpoint get _rootEndpoint => Endpoint(
     method: HTTPMethod.get,
-    path: '/',
+    route: '/',
     handler: (Request request) {
       return Response.ok(
         json.encode(_events),

@@ -5,7 +5,7 @@ import 'package:shelf_router/shelf_router.dart';
 class Endpoint {
   const Endpoint({
     required this.method,
-    required this.path,
+    required this.route,
     required this.handler,
   });
 
@@ -16,10 +16,7 @@ class Endpoint {
 
   final HTTPMethod method;
 
-  final String path;
-
-  /// Alias for [path].
-  String get route => path;
+  final String route;
 }
 
 /// Valid HTTP methods - see [Mozilla guidance](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods).
