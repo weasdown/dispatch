@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dispatch/data/defaults.dart';
 import 'package:dispatch/domain/models/event/event.dart';
 import 'package:server/apis/endpoint.dart';
 import 'package:shelf/shelf.dart';
@@ -11,7 +12,7 @@ final class EventsApi extends Api {
   @override
   List<Endpoint> get endpoints => [_rootEndpoint];
 
-  final List<Event> _events = [];
+  final List<Event> _events = Defaults.events;
 
   // Root endpoint that returns a JSON of all currently stored events.
   Endpoint get _rootEndpoint => Endpoint(
