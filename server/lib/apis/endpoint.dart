@@ -1,4 +1,5 @@
 import 'package:shelf/shelf.dart';
+import 'package:shelf_router/shelf_router.dart';
 
 /// A generic API endpoint
 class Endpoint {
@@ -7,6 +8,9 @@ class Endpoint {
     required this.path,
     required this.handler,
   });
+
+  void addToRouter({required Router router}) =>
+      router.add(method.verb, route, handler);
 
   final Handler handler;
 
