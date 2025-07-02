@@ -10,7 +10,6 @@ import 'api.dart';
 /// Implements a simple units API.
 final class UnitApi extends Api {
   @override
-  // TODO: implement endpoints
   List<Endpoint> get endpoints => [_rootEndpoint];
 
   // Root endpoint that returns a JSON of all currently stored events.
