@@ -25,6 +25,7 @@ final class EventApi extends Api with HttpApi {
     parentRoute: baseRoute,
     route: '/<id>',
     handler: (Request request, String id) {
+      print('\nRunning EventApi._getEventById');
       final Event? event = _localDataService.events
           .where((Event event) => event.id == id)
           .firstOrNull;
@@ -48,6 +49,7 @@ final class EventApi extends Api with HttpApi {
     parentRoute: baseRoute,
     route: '/',
     handler: (Request request) {
+      print('\nRunning EventApi._rootEndpoint');
       return Response.ok(
         json.encode(_localDataService.events),
         headers: {'Content-Type': 'application/json'},

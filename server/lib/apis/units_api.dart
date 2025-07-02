@@ -22,6 +22,7 @@ final class UnitApi extends Api with HttpApi {
     parentRoute: baseRoute,
     route: '/',
     handler: (Request request) {
+      print('\nRunning UnitApi._rootEndpoint');
       return Response.ok(
         json.encode(_units),
         headers: {'Content-Type': 'application/json'},
