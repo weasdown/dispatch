@@ -14,7 +14,7 @@ import 'package:shelf_web_socket/shelf_web_socket.dart';
 /// A server that provides a WebSocket connection.
 class WebSocketServer {
   WebSocketServer._({String? host, int? port})
-    : host = host ?? _defaultHost,
+    : _host = host ?? _defaultHost,
       _port = port ?? _defaultPort,
       _localDataService = LocalDataService() {
     _events = _localDataService.events;
@@ -82,7 +82,7 @@ class WebSocketServer {
     return formattedTimestamp;
   }
 
-  final String host;
+  final String _host;
 
   final LocalDataService _localDataService;
 
@@ -101,7 +101,7 @@ class WebSocketServer {
 
   // FIXME refactor so server is higher-level than dart:io's HttpServer. Currently crashes when run on web because HttpServer isn't supported on web.
   Future<HttpServer> _serve() async =>
-      shelf_io.serve(coreHandler, host, _port).then((HttpServer server) {
+      shelf_io.serve(coreHandler, _host, _port).then((HttpServer server) {
         final String logMessage =
             'Serving at ws://${server.address.host}:${server.port}\n'
             '\t- Current units: $_units\n'
