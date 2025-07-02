@@ -86,7 +86,7 @@ class WebSocketServer {
 
   final LocalDataService _localDataService;
 
-  final _log = Logger('WebSocketServer');
+  final Logger _log = Logger('WebSocketServer');
 
   // @Deprecated('messageFromJSON is pending removal.')
   static Map<String, dynamic> messageFromJSON(String message) {
