@@ -1,9 +1,14 @@
 /// @docImport: '../server.dart';
 library;
 
-import 'package:server/server/dispatch_server.dart';
+import 'package:dispatch/data/services/local_data_service.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
+
+import '../apis/endpoint.dart';
+import '../apis/events_api.dart';
+import '../apis/units_api.dart';
+import 'dispatch_server.dart';
 
 /// HTTP-based equivalent of the [WebSocketServer].
 final class HttpDispatchServer extends DispatchServer {
@@ -12,31 +17,35 @@ final class HttpDispatchServer extends DispatchServer {
     required super.port,
     required Handler eventHandler,
     required Handler unitHandler,
-  }) : super(scheme: 'http', handler: _router.call);
+  }) : _localDataService = LocalDataService(),
+       super(scheme: 'http');
 
-  factory HttpDispatchServer.run({String? host, int? port}) =>
-      HttpDispatchServer._(
-        host: host,
-        port: port,
-        eventHandler: _mockEventHandler,
-        unitHandler: _mockUnitHandler,
-      )..serve();
+  factory HttpDispatchServer.run({
+    String? host,
+    int? port,
+    required LocalDataService localDataService,
+  }) => HttpDispatchServer._(
+    host: host,
+    port: port,
+    eventHandler: EventApi(localDataService: localDataService).router.call,
+    unitHandler: UnitApi().router.call,
+  )..serve();
 
-  static Handler get _eventHandler => _mockEventHandler;
+  @override
+  Handler get handler => _router.call;
 
-  static Router get _router => Router()
-    ..get('/event', _eventHandler)
-    ..mount('/unit', _unitHandler);
+  final LocalDataService _localDataService;
 
-  static final Handler _unitHandler = _mockUnitHandler;
+  Router get _router {
+    final Router router = Router();
+
+    final EventApi eventApi = EventApi(localDataService: _localDataService);
+    final UnitApi unitApi = UnitApi();
+
+    for (Endpoint endpoint in [...eventApi.endpoints, ...unitApi.endpoints]) {
+      endpoint.addToRouter(router: router);
+    }
+
+    return router;
+  }
 }
-
-Handler get _mockEventHandler => (Request request) {
-  // TODO implement _mockEventHandler
-  return Future.value(Response.ok([true]));
-};
-
-Handler get _mockUnitHandler => (Request request) {
-  // TODO implement _mockUnitHandler
-  return Future.value(Response.ok([true]));
-};
