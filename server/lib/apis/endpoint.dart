@@ -13,6 +13,9 @@ class Endpoint {
   final HTTPMethod method;
 
   final String path;
+
+  /// Alias for [path].
+  String get route => path;
 }
 
 /// Valid HTTP methods - see [Mozilla guidance](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods).
