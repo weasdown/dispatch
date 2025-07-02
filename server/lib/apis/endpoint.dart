@@ -1,4 +1,3 @@
-import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 /// A generic API endpoint
@@ -12,7 +11,7 @@ class Endpoint {
   void addToRouter({required Router router}) =>
       router.add(method.verb, route, handler);
 
-  final Handler handler;
+  final Function handler;
 
   final HTTPMethod method;
 
