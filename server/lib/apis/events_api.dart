@@ -14,10 +14,10 @@ final class EventApi extends Api with HttpApi {
     : _localDataService = localDataService;
 
   @override
-  List<Endpoint> get endpoints => [_rootEndpoint, _getEventById];
+  List<Endpoint> get endpoints => [rootEndpoint, getEventById];
 
   /// Gets an event by its id.
-  Endpoint get _getEventById => Endpoint(
+  Endpoint get getEventById => Endpoint(
     method: HTTPMethod.get,
     route: '/<id>',
     handler: (Request request, String id) {
@@ -39,7 +39,7 @@ final class EventApi extends Api with HttpApi {
   final LocalDataService _localDataService;
 
   // Root endpoint that returns a JSON of all currently stored events.
-  Endpoint get _rootEndpoint => Endpoint(
+  Endpoint get rootEndpoint => Endpoint(
     method: HTTPMethod.get,
     route: '/',
     handler: (Request request) {
