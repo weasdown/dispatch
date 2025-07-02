@@ -43,7 +43,7 @@ abstract class DispatchServer {
   Future<HttpServer> serve() async =>
       await shelf_io.serve(_handler, _host, _port).then((HttpServer server) {
         final String logMessage =
-            'Serving at ws://${server.address.host}:${server.port}\n'
+            'Serving at $scheme://${server.address.host}:${server.port}\n'
             '\t- Current units: $units\n'
             '\t- Current events: $events\n';
         _log.info(logMessage);
