@@ -8,22 +8,17 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 
 abstract class DispatchServer {
-  DispatchServer({
-    String? scheme,
-    String? host,
-    int? port,
-    required Handler handler,
-  }) : _handler = handler,
-       _scheme = scheme ?? 'http',
-       _host = host ?? defaultHost,
-       _port = port ?? defaultPort,
-       _localDataService = LocalDataService();
+  DispatchServer({String? scheme, String? host, int? port})
+    : _scheme = scheme ?? 'http',
+      _host = host ?? defaultHost,
+      _port = port ?? defaultPort,
+      _localDataService = LocalDataService();
 
   static const String defaultHost = 'localhost';
 
   static const int defaultPort = 8080;
 
-  final Handler _handler;
+  Handler get handler;
 
   List<Event> get events => _localDataService.events;
 
@@ -41,7 +36,7 @@ abstract class DispatchServer {
 
   // FIXME refactor so server is higher-level than dart:io's HttpServer. Currently crashes when run on web because HttpServer isn't supported on web.
   Future<HttpServer> serve() async =>
-      await shelf_io.serve(_handler, _host, _port).then((HttpServer server) {
+      await shelf_io.serve(handler, _host, _port).then((HttpServer server) {
         final String logMessage =
             'Serving at $scheme://${server.address.host}:${server.port}\n'
             '\t- Current units: $units\n'
