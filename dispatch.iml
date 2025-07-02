@@ -16,6 +16,7 @@
       <excludeFolder url="file://$MODULE_DIR$/app/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/app/build" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/server/bin" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
