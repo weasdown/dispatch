@@ -6,9 +6,10 @@ import 'package:server/apis/endpoint.dart';
 import 'package:shelf/shelf.dart';
 
 import 'api.dart';
+import 'http_api.dart';
 
 /// Implements a simple events API.
-final class EventApi extends Api {
+final class EventApi extends Api with HttpApi {
   @override
   List<Endpoint> get endpoints => [_rootEndpoint, _getEventById];
 

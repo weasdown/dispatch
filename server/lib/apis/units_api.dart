@@ -6,9 +6,10 @@ import 'package:server/apis/endpoint.dart';
 import 'package:shelf/shelf.dart';
 
 import 'api.dart';
+import 'http_api.dart';
 
 /// Implements a simple units API.
-final class UnitApi extends Api {
+final class UnitApi extends Api with HttpApi {
   @override
   List<Endpoint> get endpoints => [_rootEndpoint];
 
