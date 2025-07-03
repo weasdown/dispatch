@@ -13,6 +13,14 @@ final class EventApi extends Api with HttpApi {
   EventApi({required LocalDataService localDataService})
     : _localDataService = localDataService;
 
+  Handler get _allEvents => (Request request) {
+    print('\nRunning EventApi._rootEndpoint');
+    return Response.ok(
+      json.encode(_localDataService.events),
+      headers: {'Content-Type': 'application/json'},
+    );
+  }
+
   @override
   String get baseRoute => '/event';
 
