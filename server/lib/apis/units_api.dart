@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:dispatch/data/defaults.dart';
 import 'package:dispatch/domain/models/unit/unit.dart';
-import 'package:server/apis/endpoint.dart';
 import 'package:shelf/shelf.dart';
 
 import 'api.dart';
+import 'endpoint.dart';
 import 'http_api.dart';
 
 /// Implements a simple units API.
