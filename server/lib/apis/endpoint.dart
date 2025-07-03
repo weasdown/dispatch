@@ -30,6 +30,27 @@ class Endpoint {
     HTTPMethod.patch => throw UnimplementedError(),
   };
 
+  /// Returns a duplicate of this endpoint.
+  Endpoint copy() => Endpoint(
+    parentRoute: parentRoute,
+    method: method,
+    route: route,
+    handler: handler,
+  );
+
+  // Returns a duplicate of this endpoint but with one or more of its attributes changed.
+  Endpoint copyWith({
+    String? parentRoute,
+    HTTPMethod? method,
+    String? route,
+    Function? handler,
+  }) => Endpoint(
+    parentRoute: parentRoute ?? this.parentRoute,
+    method: method ?? this.method,
+    route: route ?? this.route,
+    handler: handler ?? this.handler,
+  );
+
   String get fullRoute => '$parentRoute$route';
 
   final Function handler;
