@@ -7,9 +7,10 @@ import 'package:dispatch/domain/models/unit/unit.dart';
 import 'package:dispatch/utils/result.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:logging/logging.dart';
-import 'package:shelf/shelf.dart' show Handler;
+import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 /// A server that provides a WebSocket connection.
 class WebSocketServer {
@@ -36,7 +37,7 @@ class WebSocketServer {
     _ => throw TypeError(),
   };
 
-  Handler get coreHandler => webSocketHandler((webSocket, _) {
+  Handler get coreHandler => webSocketHandler((WebSocketChannel webSocket, _) {
     webSocket.stream.asBroadcastStream().listen((message) async {
       print('\n$_formattedTimestamp: Received message "$message"');
 
