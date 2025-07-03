@@ -56,12 +56,6 @@ final class EventApi extends Api with HttpApi {
     method: HTTPMethod.get,
     parentRoute: baseRoute,
     route: '/',
-    handler: (Request request) {
-      print('\nRunning EventApi._rootEndpoint');
-      return Response.ok(
-        json.encode(_localDataService.events),
-        headers: {'Content-Type': 'application/json'},
-      );
-    },
+    handler: _allEvents,
   );
 }
