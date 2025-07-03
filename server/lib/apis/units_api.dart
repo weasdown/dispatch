@@ -11,7 +11,7 @@ import 'http_api.dart';
 /// Implements a simple units API.
 final class UnitApi extends Api with HttpApi {
   @override
-  String get baseRoute => '/unit';
+  String get baseRoute => '/units';
 
   @override
   List<Endpoint> get endpoints => [_rootEndpoint];
