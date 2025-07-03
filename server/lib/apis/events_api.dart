@@ -12,7 +12,7 @@ import 'http_api.dart';
 final class EventApi extends Api with HttpApi {
   EventApi({required this.localDataService});
 
-  Handler get _allEvents => (Request request) {
+  Handler get _getAllEvents => (Request request) {
     print('\nRunning EventApi._rootEndpoint');
     return Response.ok(
       json.encode(localDataService.events),
@@ -55,6 +55,6 @@ final class EventApi extends Api with HttpApi {
     method: HTTPMethod.get,
     parentRoute: baseRoute,
     route: '/',
-    handler: _allEvents,
+    handler: _getAllEvents,
   );
 }
