@@ -28,7 +28,7 @@ final class HttpDispatchServer extends DispatchServer {
     host: host,
     port: port,
     eventHandler: EventApi(localDataService: localDataService).router.call,
-    unitHandler: UnitApi().router.call,
+    unitHandler: UnitApi(localDataService: localDataService).router.call,
   )..serve();
 
   @override
