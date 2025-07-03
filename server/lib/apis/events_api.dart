@@ -10,13 +10,12 @@ import 'http_api.dart';
 
 /// Implements a simple events API.
 final class EventApi extends Api with HttpApi {
-  EventApi({required LocalDataService localDataService})
-    : _localDataService = localDataService;
+  EventApi({required this.localDataService});
 
   Handler get _allEvents => (Request request) {
     print('\nRunning EventApi._rootEndpoint');
     return Response.ok(
-      json.encode(_localDataService.events),
+      json.encode(localDataService.events),
       headers: {'Content-Type': 'application/json'},
     );
   };
@@ -34,7 +33,7 @@ final class EventApi extends Api with HttpApi {
     route: '/<id>',
     handler: (Request request, String id) {
       print('\nRunning EventApi._getEventById');
-      final Event? event = _localDataService.events
+      final Event? event = localDataService.events
           .where((Event event) => event.id == id)
           .firstOrNull;
 
@@ -49,7 +48,7 @@ final class EventApi extends Api with HttpApi {
     },
   );
 
-  final LocalDataService _localDataService;
+  final LocalDataService localDataService;
 
   // Root endpoint that returns a JSON of all currently stored events.
   Endpoint get rootEndpoint => Endpoint(
