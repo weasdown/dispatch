@@ -46,10 +46,6 @@ final class HttpDispatchServer extends DispatchServer {
       endpoint.addToRouter(router: router);
     }
 
-    // router.get('/events', eventApiHandler);
-    // // router.get('/event/', eventApiHandler);
-    // router.get('/unit', unitApiHandler);
-
     return router;
   }
 }
