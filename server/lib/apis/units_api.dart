@@ -41,15 +41,16 @@ final class UnitApi extends Api with HttpApi {
     },
   );
 
+  // FIXME fix UnitApi.getUnitByVehicleType
   /// Gets a unit by its [Unit.vehicleType].
   Endpoint get getUnitByVehicleType => Endpoint(
     method: HTTPMethod.get,
     parentRoute: baseRoute,
     route: '/<vehicleType>',
-    handler: (Request request, VehicleType vehicleType) {
+    handler: (Request request, String vehicleType) {
       print('\nRunning UnitApi.getUnitByVehicleType');
       final Unit? unit = localDataService.units
-          .where((Unit unit) => unit.vehicleType == vehicleType)
+          .where((Unit unit) => unit.vehicleType.name == vehicleType)
           .firstOrNull;
 
       if (unit == null) {
