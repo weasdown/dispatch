@@ -16,7 +16,29 @@ final class UnitApi extends Api with HttpApi {
   String get baseRoute => '/units';
 
   @override
-  List<Endpoint> get endpoints => [_rootEndpoint];
+  List<Endpoint> get endpoints => [_rootEndpoint, getUnitByCallsign];
+
+  /// Gets a unit by its callsign.
+  Endpoint get getUnitByCallsign => Endpoint(
+    method: HTTPMethod.get,
+    parentRoute: baseRoute,
+    route: '/<callsign>',
+    handler: (Request request, String callsign) {
+      print('\nRunning UnitApi.getUnitByCallsign');
+      final Unit? unit = localDataService.units
+          .where((Unit unit) => unit.callsign == callsign)
+          .firstOrNull;
+
+      if (unit == null) {
+        return Response.notFound('No event found with callsign $callsign');
+      }
+
+      return Response.ok(
+        json.encode(unit),
+        headers: {'Content-Type': 'application/json'},
+      );
+    },
+  );
 
   final LocalDataService localDataService;
 
