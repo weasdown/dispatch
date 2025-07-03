@@ -19,7 +19,7 @@ final class EventApi extends Api with HttpApi {
       json.encode(_localDataService.events),
       headers: {'Content-Type': 'application/json'},
     );
-  }
+  };
 
   @override
   String get baseRoute => '/event';
