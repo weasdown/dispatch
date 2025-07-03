@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dispatch/data/services/local_data_service.dart';
 import 'package:dispatch/domain/models/unit/unit.dart';
+import 'package:dispatch/domain/models/unit/vehicle_type.dart';
 import 'package:shelf/shelf.dart';
 
 import 'api.dart';
@@ -37,6 +38,27 @@ final class UnitApi extends Api with HttpApi {
         json.encode(unit),
         headers: {'Content-Type': 'application/json'},
       );
+    },
+  );
+
+  /// Gets a unit by its [Unit.vehicleType].
+  Endpoint get getUnitByVehicleType => Endpoint(
+    method: HTTPMethod.get,
+    parentRoute: baseRoute,
+    route: '/<vehicleType>',
+    handler: (Request request, VehicleType vehicleType) {
+      print('\nRunning UnitApi.getUnitByVehicleType');
+      final Unit? unit = localDataService.units
+          .where((Unit unit) => unit.vehicleType == vehicleType)
+          .firstOrNull;
+
+      if (unit == null) {
+        return Response.notFound(
+          'No event found with vehicleType $vehicleType',
+        );
+      }
+
+      return respondOkJSON(unit);
     },
   );
 
