@@ -40,7 +40,7 @@ final class HttpDispatchServer extends DispatchServer {
     final Router router = Router();
 
     final EventApi eventApi = EventApi(localDataService: _localDataService);
-    final UnitApi unitApi = UnitApi();
+    final UnitApi unitApi = UnitApi(localDataService: _localDataService);
 
     for (Endpoint endpoint in [...eventApi.endpoints, ...unitApi.endpoints]) {
       endpoint.addToRouter(router: router);
