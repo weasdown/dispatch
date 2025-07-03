@@ -31,7 +31,7 @@ final class UnitApi extends Api with HttpApi {
           .firstOrNull;
 
       if (unit == null) {
-        return Response.notFound('No event found with callsign $callsign');
+        return Response.notFound('No unit found with callsign $callsign');
       }
 
       return Response.ok(
@@ -53,9 +53,7 @@ final class UnitApi extends Api with HttpApi {
           .firstOrNull;
 
       if (unit == null) {
-        return Response.notFound(
-          'No event found with vehicleType $vehicleType',
-        );
+        return Response.notFound('No unit found with vehicleType $vehicleType');
       }
 
       return respondOkJSON(unit);
