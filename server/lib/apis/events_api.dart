@@ -21,7 +21,7 @@ final class EventApi extends Api with HttpApi {
   };
 
   @override
-  String get baseRoute => '/event';
+  String get baseRoute => '/events';
 
   @override
   List<Endpoint> get endpoints => [rootEndpoint, getEventById];
