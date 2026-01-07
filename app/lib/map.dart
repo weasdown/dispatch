@@ -56,7 +56,7 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     final Switch showEventsSwitch = Switch(
       value: showEvents,
-      activeColor: Colors.green,
+      activeThumbColor: Colors.green,
       onChanged: (bool value) {
         setState(() => showEvents = value);
       },
@@ -64,7 +64,7 @@ class _MapPageState extends State<MapPage> {
 
     final Switch showUnitsSwitch = Switch(
       value: showUnits,
-      activeColor: Colors.green,
+      activeThumbColor: Colors.green,
       onChanged: (bool value) {
         setState(() => showUnits = value);
       },
