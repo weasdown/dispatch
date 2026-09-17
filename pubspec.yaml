@@ -9,7 +9,7 @@ workspace:
   - server
 
 environment:
-  sdk: ^3.8.0
+  sdk: ^3.13.3
 
 # Add regular dependencies here.
   # path: ^1.8.0
