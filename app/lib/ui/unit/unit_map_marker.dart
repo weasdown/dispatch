@@ -17,10 +17,7 @@ extension UnitMapMarker on Unit {
     markerId: MarkerId(callsign),
     position: LatLng(location.latitude.degrees, location.longitude.degrees),
     icon: _markerIcon(_iconAsset),
-    infoWindow: InfoWindow(
-      title: '$callsign (${vehicleType.name})',
-      snippet: '${location.latitude.degrees}, ${location.longitude.degrees}',
-    ),
+    infoWindow: InfoWindow(title: callsign, snippet: vehicleType.name),
   );
 
   AssetMapBitmap _markerIcon(String asset) => AssetMapBitmap(asset, height: 40);
