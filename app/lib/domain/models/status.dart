@@ -51,6 +51,8 @@ abstract class NOC extends EventStatus {
   // /// The extra details provided in response to a "Specify..." prompt.
   // final String detail;
 
+  // TODO remove specify attribute.
+  /// True if an extra description of the incident needs to be provided, false otherwise.
   final bool specify;
 
   static List<NOC> get cat1 => catOneNOCs;
