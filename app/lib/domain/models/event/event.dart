@@ -1,11 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// import 'package:flutter_google_maps_webservices/geocoding.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-// import '../../../api/maps/geocoding.dart';
-// import '../../map.dart';
-// import 'package:flutter/foundation.dart';
 import 'package:latlng/latlng.dart';
 
 import '../status.dart';
@@ -183,7 +175,7 @@ class Event {
   String get idLastFour => id.substring(id.length - 4);
 
   /// The latitude and longitude of the emergency.
-  late LatLng location;
+  LatLng? location;
 
   // /// Returns the latitude and longitude of a given street [address].
   // Future<Location> _locationFromAddress() async {
