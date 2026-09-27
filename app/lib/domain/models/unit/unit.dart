@@ -23,6 +23,7 @@ class Unit {
   @override
   String toString() => callsign;
 
+  // TODO add a separate unitType attribute, or make subclasses of Unit (and make Unit sealed), for storing type, e.g. OpsComm, as opposed to the vehicle they happen to be in.
   /// The type of vehicle that this is.
   final VehicleType vehicleType;
 }
