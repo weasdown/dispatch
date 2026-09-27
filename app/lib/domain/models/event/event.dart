@@ -26,23 +26,27 @@ class Event {
     }
   }
 
-  Event.preAlert({required int id, required String address})
-    : this._(id: id, address: address, status: EventStatus.preAlert());
+  Event.preAlert({required int idNum, required String address})
+    : this._(id: _id(idNum), address: address, status: EventStatus.preAlert());
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return switch (json) {
-      {'id': int id, 'address': String address, 'status': EventStatus status} =>
+      {
+        'id': String id,
+        'address': String address,
+        'status': EventStatus status,
+      } =>
         Event._(id: id, address: address, status: status),
       _ => throw const FormatException('Failed to load album.'),
     };
   }
 
   factory Event.withNOC({
-    required int id,
+    required int idNum,
     required String address,
     required NOC noc,
   }) {
-    Event newEvent = Event.preAlert(id: id, address: address);
+    Event newEvent = Event.preAlert(idNum: idNum, address: address);
     newEvent.addNOC(noc);
     return newEvent;
   }
@@ -162,8 +166,21 @@ class Event {
 
   Category category;
 
+  static String _id(int idNum) {
+    // Ensure the idNum is four digits by adding leading 0s if required.
+    final String idNumString = idNum.toString().padLeft(4, "0");
+
+    final DateTime now = DateTime.now();
+    // Ensure the month and day are two digits by adding leading 0 if required.
+    final String day = now.day.toString().padLeft(2, "0");
+    final String month = now.month.toString().padLeft(2, "0");
+    return 'S${now.year}$month$day$idNumString';
+  }
+
   /// A unique numerical identifier.
-  final int id;
+  final String id;
+
+  String get idLastFour => id.substring(id.length - 4);
 
   /// The latitude and longitude of the emergency.
   late LatLng location;
