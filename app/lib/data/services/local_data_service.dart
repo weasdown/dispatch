@@ -34,43 +34,30 @@ class LocalDataService {
 final List<Unit> _defaultUnits = [
   Unit(
     callsign: 'NA136',
-    location: LatLng(
-      Angle.degree(51.607539604000266),
-      Angle.degree(-1.237806756282358),
-    ),
+    location: LatLng.degree(51.607539604000266, -1.237806756282358),
   ),
-  Unit(
-    callsign: 'NA402',
-    location: LatLng(Angle.degree(51.605), Angle.degree(-1.238)),
-  ),
+  Unit(callsign: 'NA402', location: LatLng.degree(51.605, -1.238)),
   Unit(
     callsign: 'NA283',
-    location: LatLng(
-      Angle.degree(51.616072911907786),
-      Angle.degree(-1.2536017723108663),
-    ),
+    location: LatLng.degree(51.616072911907786, -1.2536017723108663),
   ),
   Unit(
     callsign: 'NA072',
-    location: LatLng(
-      Angle.degree(51.8296012219854),
-      Angle.degree(-1.3134667111590494),
-    ),
+    location: LatLng.degree(51.8296012219854, -1.3134667111590494),
   ),
   Unit(
     callsign: 'NF159',
-    location: LatLng(
-      Angle.degree(51.62832936052779),
-      Angle.degree(-1.1854888181805424),
-    ),
+    location: LatLng.degree(51.62832936052779, -1.1854888181805424),
     vehicleType: VehicleType.communityFirstResponder,
   ),
   Unit(
     callsign: 'NR154',
-    location: LatLng(
-      Angle.degree(51.66706110914126),
-      Angle.degree(-1.3082872829130447),
-    ),
+    location: LatLng.degree(51.66706110914126, -1.3082872829130447),
+    vehicleType: VehicleType.criticalCareCar,
+  ),
+  Unit(
+    callsign: 'ND027',
+    location: LatLng.degree(51.66182910219628, -0.9084334753014697),
     vehicleType: VehicleType.criticalCareCar,
   ),
   Unit(
@@ -83,30 +70,33 @@ final List<Unit> _defaultUnits = [
   ),
   Unit(
     callsign: '0024',
-    location: LatLng(
-      Angle.degree(51.61832936052779),
-      Angle.degree(-1.0854888181805424),
-    ),
+    location: LatLng.degree(51.61832936052779, -1.0854888181805424),
     vehicleType: VehicleType.helicopter,
   ),
 ];
 
 /// A default list of events.
 final List<Event> _defaultEvents = [
-  Event.preAlert(id: 423124, address: 'Sainsbury\'s Kidlington'),
-  Event.preAlert(id: 423125, address: '47 Hamble Drive Abingdon'),
+  Event.preAlert(idNum: 123, address: 'Sainsbury\'s Kidlington')
+    ..location = LatLng.degree(51.80902234666047, -1.2775596525947042),
+  Event.preAlert(idNum: 135, address: '47 Hamble Drive, Abingdon')
+    ..location = LatLng.degree(51.68256903771005, -1.2649875925459515),
   Event.withNOC(
-    id: 423129,
-    address: 'Carfax Tower, Oxford',
-    noc: Cat2NOC.c2Stabbing(),
-  )..assignedUnits = [_defaultUnits[2]],
+      idNum: 3129,
+      address: 'Carfax Tower, Oxford',
+      noc: Cat2NOC.c2Stabbing(),
+    )
+    ..assignedUnits = [_defaultUnits[2]]
+    ..location = LatLng.degree(51.752171158042344, -1.2581330894939455),
   Event.withNOC(
-    id: 423126,
-    address: '25 Old Union Way, Thame',
-    noc: Cat4NOC.medicalMinor(),
-  )..assignedUnits = [_defaultUnits[1]],
+      idNum: 3126,
+      address: '25 Old Union Way, Thame',
+      noc: Cat4NOC.medicalMinor(),
+    )
+    ..assignedUnits = [_defaultUnits[1]]
+    ..location = LatLng.degree(51.75068849682342, -0.9859928066375558),
   Event.withNOC(
-      id: 423127,
+      idNum: 3127,
       address: '6 The Greenway, Oxfordshire',
       noc: Cat1NOC.c1ArrestPeriArrest(),
     )
@@ -115,15 +105,20 @@ final List<Event> _defaultEvents = [
       _defaultUnits[4],
       _defaultUnits[6],
       _defaultUnits[7],
-    ],
+    ]
+    ..location = LatLng.degree(51.59799446397092, -1.3537030950825775),
   Event.withNOC(
-    id: 423128,
-    address: 'Thatcham Station',
-    noc: Cat4NOC.mentalHealth(),
-  )..assignedUnits = [_defaultUnits[5]],
+      idNum: 3128,
+      address: 'Thatcham Station',
+      noc: Cat4NOC.mentalHealth(),
+    )
+    ..assignedUnits = [_defaultUnits[5]]
+    ..location = LatLng.degree(51.393901, -1.242779),
   Event.withNOC(
-    id: 423130,
-    address: 'Next, Westgate Shopping Centre, Oxford',
-    noc: Cat3NOC.fallInjuriesUnknown(),
-  )..assignedUnits = [_defaultUnits[3]],
+      idNum: 3130,
+      address: 'Next, Westgate Shopping Centre, Oxford',
+      noc: Cat3NOC.fallInjuriesUnknown(),
+    )
+    ..assignedUnits = [_defaultUnits[3]]
+    ..location = LatLng.degree(51.748863260384894, -1.261667647754695),
 ];
