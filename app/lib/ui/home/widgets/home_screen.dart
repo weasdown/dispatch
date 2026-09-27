@@ -24,7 +24,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     SingleEventScreenViewModel placeholderViewModel =
-        SingleEventScreenViewModel(eventRepository: context.read());
+        SingleEventScreenViewModel(
+          eventRepository: context.read(),
+          unitRepository: context.read(),
+        );
     return SingleEventScreen(viewModel: placeholderViewModel);
 
     // // TODO remove commented code below to AllEventsScreen (not yet created)

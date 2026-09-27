@@ -1,19 +1,23 @@
+import 'package:dispatch/data/repositories/unit/unit_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/unit/unit.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
 
 class SingleEventScreenViewModel extends ChangeNotifier {
   SingleEventScreenViewModel({
     required this._eventRepository,
+    required this._unitRepository,
   }) {
     load = Command0(_load)..execute();
   }
 
   final EventRepository _eventRepository;
+  final UnitRepository _unitRepository;
   final Logger _log = Logger('SingleEventScreenViewModel');
 
   late Command0 load;
@@ -21,6 +25,8 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   Event? _event;
 
   Event? get event => _event;
+
+  Future<Result<List<Event>>> get events => _eventRepository.allEvents;
 
   Future<Result> _load() async {
     try {
@@ -38,4 +44,6 @@ class SingleEventScreenViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<Result<List<Unit>>> get units => _unitRepository.allUnits;
 }
