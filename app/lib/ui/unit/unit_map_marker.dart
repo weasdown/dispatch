@@ -1,7 +1,5 @@
 import 'package:dispatch/domain/models/unit/unit.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import '../../../map.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 
 extension UnitMapMarker on Unit {
   /// Path to the image used as this [Event]'s icon.
@@ -14,14 +12,16 @@ extension UnitMapMarker on Unit {
     VehicleType.communityFirstResponder => 'assets/images/rrv.png',
   };
 
-  /// Gets a [Marker] for showing this [Unit] on a map.
-  Marker get mapMarker => Marker(
+  /// Gets an [AdvancedMarker] for showing this [Unit] on a map.
+  AdvancedMarker get advancedMapMarker => AdvancedMarker(
     markerId: MarkerId(callsign),
     position: LatLng(location.latitude.degrees, location.longitude.degrees),
-    icon: markerIcon(_iconAsset),
+    icon: _markerIcon(_iconAsset),
     infoWindow: InfoWindow(
       title: '$callsign (${vehicleType.name})',
-      snippet: location.toString(),
+      snippet: '${location.latitude.degrees}, ${location.longitude.degrees}',
     ),
   );
+
+  AssetMapBitmap _markerIcon(String asset) => AssetMapBitmap(asset, height: 40);
 }
