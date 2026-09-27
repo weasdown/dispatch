@@ -7,9 +7,9 @@ import '../../../utils/result.dart';
 
 class HomeViewModel extends ChangeNotifier {
   HomeViewModel({
-    required EventRepository eventRepository,
+    required this._eventRepository,
     // required UserRepository userRepository,
-  }) : _eventRepository = eventRepository {
+  }) {
     _load();
   }
   //      _userRepository = userRepository {

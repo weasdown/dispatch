@@ -7,8 +7,9 @@ import '../../../utils/command.dart';
 import '../../../utils/result.dart';
 
 class SingleEventScreenViewModel extends ChangeNotifier {
-  SingleEventScreenViewModel({required EventRepository eventRepository})
-    : _eventRepository = eventRepository {
+  SingleEventScreenViewModel({
+    required this._eventRepository,
+  }) {
     load = Command0(_load)..execute();
   }
 

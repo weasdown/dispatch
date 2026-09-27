@@ -8,8 +8,7 @@ import 'event_repository.dart';
 
 /// Local implementation of EventRepository
 class EventRepositoryLocal implements EventRepository {
-  EventRepositoryLocal({required LocalDataService localDataService})
-    : _localDataService = localDataService;
+  EventRepositoryLocal({required this._localDataService});
 
   // Only create default event once.
   bool _isInitialized = false;
