@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:logging/logging.dart';
 
 import '../../../domain/models/event/event.dart';
+import '../../map/map.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 
 class SingleEventScreen extends StatefulWidget {
