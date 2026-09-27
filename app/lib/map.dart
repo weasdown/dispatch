@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'domain/models/event/event.dart';
-// import 'domain/models/event/event_map_marker.dart';
 import 'domain/models/unit/unit.dart';
-import 'domain/models/unit/unit_map_marker.dart';
+import 'ui/event/event_map_marker.dart';
+import 'ui/unit/unit_map_marker.dart';
 
 /// A page that displays a Google Maps map.
 class MapPage extends StatefulWidget {
@@ -35,22 +35,31 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  late GoogleMapController mapController;
+  late Key _mapKey;
+  late String _currentMapId;
+  CameraPosition _lastKnownPosition = const CameraPosition(
+    target: MapPage.scasCentre,
+    zoom: 9,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _currentMapId = 'light_map_id';
+    _mapKey = UniqueKey();
+  }
 
   bool showEvents = true;
   bool showUnits = true;
 
-  Set<Marker> get _markers => {
-    // // FIXME fix _iconAsset for event markers
-    // ...(showEvents) ? widget.events.map((Event event) => event.mapMarker) : {},
-    ...(showUnits) ? widget.units.map((Unit unit) => unit.mapMarker) : {},
+  Set<AdvancedMarker> get _markers => {
+    ...(showEvents)
+        ? widget.events.map((Event event) => event.advancedMapMarker)
+        : {},
+    ...(showUnits)
+        ? widget.units.map((Unit unit) => unit.advancedMapMarker)
+        : {},
   };
-
-  Future<void> _onMapCreated(GoogleMapController controller) async {
-    setState(() {
-      _markers.clear();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,19 +95,23 @@ class _MapPageState extends State<MapPage> {
       ),
       // endDrawer: NavigationDrawer(children: [Text('Event details')]),
       body: GoogleMap(
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: CameraPosition(target: widget.centre, zoom: 9),
+        key: _mapKey,
+        mapId: _currentMapId,
+        markerType: GoogleMapMarkerType.advancedMarker,
+        initialCameraPosition: _lastKnownPosition,
         markers: _markers,
-        // FIXME fix event caller uncertainty circles
-        // circles:
-        //     (showEvents)
-        //         ? widget.events
-        //             .map((Event event) => event.callerLocationCircle)
-        //             .toSet()
-        //         : {},
+        onCameraMove: (position) {
+          // Cache the position so the new map starts exactly here
+          _lastKnownPosition = position;
+        },
+        // // FIXME fix event caller uncertainty circles
+        // // circles:
+        // //     (showEvents)
+        // //         ? widget.events
+        // //             .map((Event event) => event.callerLocationCircle)
+        // //             .toSet()
+        // //         : {},
       ),
     );
   }
 }
-
-AssetMapBitmap markerIcon(String asset) => AssetMapBitmap(asset, height: 40);
