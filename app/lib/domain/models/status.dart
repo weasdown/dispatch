@@ -1,4 +1,6 @@
 import 'event/category.dart';
+import 'event/priority.dart';
+import 'noc.dart';
 
 interface class EventStatus {
   const EventStatus(this.category, this.description);
@@ -25,6 +27,8 @@ interface class EventStatus {
   int get hashCode => Object.hash(category, description);
 
   static const String _preAlert = 'Pre-Alert';
+
+  Priority get priority => category.priority;
 
   @override
   String toString() => description;
@@ -61,7 +65,7 @@ abstract class NOC extends EventStatus {
 
   @override
   String toString() {
-    final String catNumber = category.number;
+    final int catNumber = category.number;
     final String specifyText = specify ? ' (specify...)' : '';
     return 'CAT $catNumber - $description$specifyText C$catNumber';
   }
