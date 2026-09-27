@@ -11,6 +11,7 @@ import 'package:latlng/latlng.dart';
 import '../status.dart';
 import '../unit/unit.dart';
 import 'category.dart';
+import 'priority.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
@@ -181,6 +182,8 @@ class Event {
 
   /// Nature of Call.
   NOC? get noc => _noc;
+
+  Priority get priority => status.priority;
 
   EventStatus status;
 
