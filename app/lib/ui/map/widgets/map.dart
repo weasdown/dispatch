@@ -54,7 +54,16 @@ class _MapPageState extends State<MapPage> {
 
   Set<AdvancedMarker> get _markers => {
     ...(showEvents)
-        ? widget.events.map((Event event) => event.advancedMapMarker)
+        ? widget.events.map(
+            (Event event) => event.advancedMapMarker(
+              onTap: () {
+                debugPrint(
+                  'Triggered event map marker onTap for event ${event.idLastFour}',
+                );
+                widget.viewModel.setSelectedEvent(event);
+              },
+            ),
+          )
         : {},
     ...(showUnits)
         ? widget.units.map((Unit unit) => unit.advancedMapMarker)
