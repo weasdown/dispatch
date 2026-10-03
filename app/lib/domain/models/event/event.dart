@@ -43,6 +43,7 @@ class Event {
     return newEvent;
   }
 
+  // TODO remove commented chunks
   // /// Private constructor
   // Event._({
   //   required this.id,
