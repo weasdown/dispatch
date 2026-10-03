@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:latlng/latlng.dart';
+
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/status.dart';
 import '../../../utils/result.dart';
@@ -35,9 +37,18 @@ class EventRepositoryLocal implements EventRepository {
     return Result.ok(_events);
   }
 
-  Future<void> createEvent({required String address, required NOC noc}) async {
+  Future<void> createEvent({
+    required String address,
+    required LatLng location,
+    required NOC noc,
+  }) async {
     _events.add(
-      Event.withNOC(idNum: _sequentialId++, address: address, noc: noc),
+      Event.withNOC(
+        idNum: _sequentialId++,
+        address: address,
+        location: location,
+        noc: noc,
+      ),
     );
   }
 

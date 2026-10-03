@@ -7,8 +7,12 @@ import 'priority.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
-  Event._({required this.id, required this.address, required this.status})
-    : category = status.category {
+  Event._({
+    required this.id,
+    required this.address,
+    required this.location,
+    required this.status,
+  }) : category = status.category {
     if (status == EventStatus.preAlert()) {
       assert(category == Category.none);
     }
@@ -18,8 +22,16 @@ class Event {
     }
   }
 
-  Event.preAlert({required int idNum, required String address})
-    : this._(id: _id(idNum), address: address, status: EventStatus.preAlert());
+  Event.preAlert({
+    required int idNum,
+    required String address,
+    required LatLng location,
+  }) : this._(
+         id: _id(idNum),
+         address: address,
+         status: EventStatus.preAlert(),
+         location: location,
+       );
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return switch (json) {
@@ -27,8 +39,9 @@ class Event {
         'id': String id,
         'address': String address,
         'status': EventStatus status,
+        'location': LatLng location,
       } =>
-        Event._(id: id, address: address, status: status),
+        Event._(id: id, address: address, status: status, location: location),
       _ => throw const FormatException('Failed to load album.'),
     };
   }
@@ -36,9 +49,14 @@ class Event {
   factory Event.withNOC({
     required int idNum,
     required String address,
+    required LatLng location,
     required NOC noc,
   }) {
-    Event newEvent = Event.preAlert(idNum: idNum, address: address);
+    Event newEvent = Event.preAlert(
+      idNum: idNum,
+      address: address,
+      location: location,
+    );
     newEvent.addNOC(noc);
     return newEvent;
   }
@@ -176,7 +194,7 @@ class Event {
   String get idLastFour => id.substring(id.length - 4);
 
   /// The latitude and longitude of the emergency.
-  LatLng? location;
+  LatLng location;
 
   // /// Returns the latitude and longitude of a given street [address].
   // Future<Location> _locationFromAddress() async {

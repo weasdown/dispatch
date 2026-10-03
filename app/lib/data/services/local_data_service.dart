@@ -77,27 +77,32 @@ final List<Unit> _defaultUnits = [
 
 /// A default list of events.
 final List<Event> _defaultEvents = [
-  Event.preAlert(idNum: 123, address: 'Sainsbury\'s Kidlington')
-    ..location = LatLng.degree(51.80902234666047, -1.2775596525947042),
-  Event.preAlert(idNum: 135, address: '47 Hamble Drive, Abingdon')
-    ..location = LatLng.degree(51.68256903771005, -1.2649875925459515),
+  Event.preAlert(
+    idNum: 123,
+    address: 'Sainsbury\'s Kidlington',
+    location: LatLng.degree(51.80902234666047, -1.2775596525947042),
+  ),
+  Event.preAlert(
+    idNum: 135,
+    address: '47 Hamble Drive, Abingdon',
+    location: LatLng.degree(51.68256903771005, -1.2649875925459515),
+  ),
   Event.withNOC(
-      idNum: 3129,
-      address: 'Carfax Tower, Oxford',
-      noc: Cat2NOC.c2Stabbing(),
-    )
-    ..assignedUnits = [_defaultUnits[2]]
-    ..location = LatLng.degree(51.752171158042344, -1.2581330894939455),
+    idNum: 3129,
+    address: 'Carfax Tower, Oxford',
+    location: LatLng.degree(51.752171158042344, -1.2581330894939455),
+    noc: Cat2NOC.c2Stabbing(),
+  )..assignedUnits = [_defaultUnits[2]],
   Event.withNOC(
-      idNum: 3126,
-      address: '25 Old Union Way, Thame',
-      noc: Cat4NOC.medicalMinor(),
-    )
-    ..assignedUnits = [_defaultUnits[1]]
-    ..location = LatLng.degree(51.75068849682342, -0.9859928066375558),
+    idNum: 3126,
+    address: '25 Old Union Way, Thame',
+    location: LatLng.degree(51.75068849682342, -0.9859928066375558),
+    noc: Cat4NOC.medicalMinor(),
+  )..assignedUnits = [_defaultUnits[1]],
   Event.withNOC(
       idNum: 3127,
       address: '6 The Greenway, Oxfordshire',
+      location: LatLng.degree(51.59799446397092, -1.3537030950825775),
       noc: Cat1NOC.c1ArrestPeriArrest(),
     )
     ..assignedUnits = [
@@ -105,20 +110,17 @@ final List<Event> _defaultEvents = [
       _defaultUnits[4],
       _defaultUnits[6],
       _defaultUnits[7],
-    ]
-    ..location = LatLng.degree(51.59799446397092, -1.3537030950825775),
+    ],
   Event.withNOC(
-      idNum: 3128,
-      address: 'Thatcham Station',
-      noc: Cat4NOC.mentalHealth(),
-    )
-    ..assignedUnits = [_defaultUnits[5]]
-    ..location = LatLng.degree(51.393901, -1.242779),
+    idNum: 3128,
+    address: 'Thatcham Station',
+    location: LatLng.degree(51.393901, -1.242779),
+    noc: Cat4NOC.mentalHealth(),
+  )..assignedUnits = [_defaultUnits[5]],
   Event.withNOC(
-      idNum: 3130,
-      address: 'Next, Westgate Shopping Centre, Oxford',
-      noc: Cat3NOC.fallInjuriesUnknown(),
-    )
-    ..assignedUnits = [_defaultUnits[3]]
-    ..location = LatLng.degree(51.748863260384894, -1.261667647754695),
+    idNum: 3130,
+    address: 'Next, Westgate Shopping Centre, Oxford',
+    location: LatLng.degree(51.748863260384894, -1.261667647754695),
+    noc: Cat3NOC.fallInjuriesUnknown(),
+  )..assignedUnits = [_defaultUnits[3]],
 ];
