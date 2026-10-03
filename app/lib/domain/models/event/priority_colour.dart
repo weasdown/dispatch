@@ -9,15 +9,15 @@ import 'package:flutter/material.dart';
 extension PriorityColour on Priority {
   /// Defines the colour to be used for displaying events of this priority.
   Color get colour => switch (this) {
-    Priority.zero => Color(0x009A019A),
-    Priority.one => Color(0x00FE0000),
-    Priority.two => Color(0x00FFC000),
-    Priority.three => Color(0x0001B400),
-    Priority.four => Color(0x00FF01FA),
-    Priority.five => Color(0x00015A00),
-    Priority.six => Color(0x00699DFF),
-    Priority.seven => Color(0x001871FF),
-    Priority.eight => Color(0x0000467A),
-    Priority.nine => Color(0x00012060),
+    Priority.zero => Color(0xFF9A019A),
+    Priority.one => Color(0xFFFE0000),
+    Priority.two => Color(0xFFFFC000),
+    Priority.three => Color(0xFF01B400),
+    Priority.four => Color(0xFFFF01FA),
+    Priority.five => Color(0xFF015A00),
+    Priority.six => Color(0xFF699DFF),
+    Priority.seven => Color(0xFF1871FF),
+    Priority.eight => Color(0xFF00467A),
+    Priority.nine => Color(0xFF012060),
   };
 }
