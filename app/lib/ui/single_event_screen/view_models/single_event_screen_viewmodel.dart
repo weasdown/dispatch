@@ -46,4 +46,9 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   }
 
   Future<Result<List<Unit>>> get units => _unitRepository.allUnits;
+
+  void updateEvent(Event event) {
+    _event = event;
+    notifyListeners();
+  }
 }
