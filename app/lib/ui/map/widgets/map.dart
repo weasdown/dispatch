@@ -1,15 +1,20 @@
+import 'package:dispatch/ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../domain/models/event/event.dart';
-import '../../domain/models/unit/unit.dart';
-import '../event/event_map_marker.dart';
-import '../unit/unit_map_marker.dart';
+import '../../../domain/models/event/event.dart';
+import '../../../domain/models/unit/unit.dart';
+import '../../event/event_map_marker.dart';
+import '../../unit/unit_map_marker.dart';
+import '../view_models/map_view_model.dart';
 
 /// A page that displays a Google Maps map.
 class MapPage extends StatefulWidget {
+  // TODO get events and units from a MapViewModel (will need to create MapViewModel)
   const MapPage({
     super.key,
+    required this.viewModel,
+    required this.singleEventScreenViewModel,
     this.centre = MapPage.scasCentre,
     required this.events,
     required this.units,
@@ -29,6 +34,10 @@ class MapPage extends StatefulWidget {
 
   /// The [Unit]s that are currently in the SCAS fleet.
   final List<Unit> units;
+
+  final MapViewModel viewModel;
+
+  final SingleEventScreenViewModel singleEventScreenViewModel;
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -90,7 +99,6 @@ class _MapPageState extends State<MapPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New CAD'),
         elevation: 2,
         actions: [
           Row(
