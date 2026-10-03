@@ -27,7 +27,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Event')), // ${' ${event?.id}' ?? ''}
+      // appBar: AppBar(title: Text('Event'), toolbarHeight: 32),
       body: ListenableBuilder(
         listenable: widget.viewModel.load,
         builder: (context, child) {
