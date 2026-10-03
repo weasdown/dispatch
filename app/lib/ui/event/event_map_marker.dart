@@ -1,30 +1,35 @@
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 
 import '../../domain/models/event/event.dart';
 import '../../domain/models/event/priority_colour.dart';
 
-extension EventMapMarker on Event {
+class EventMapMarker extends StatelessWidget {
+  const EventMapMarker({super.key, required this._event});
+
+  final Event _event;
+
   /// Latitude.
-  double get lat => location!.latitude.degrees;
+  double get lat => _event.location.latitude.degrees;
 
   /// Longitude.
-  double get lng => location!.longitude.degrees;
+  double get lng => _event.location.longitude.degrees;
 
   /// Gets a [AdvancedMarker] for showing this [Event] on a map.
   AdvancedMarker advancedMapMarker({required void Function() onTap}) {
     final AdvancedMarker marker = AdvancedMarker(
-      markerId: MarkerId(id),
+      markerId: MarkerId(_event.id),
       position: LatLng(lat, lng),
       icon:
           // TODO if possible, set shape of marker to rectangle
           PinConfig(
-            backgroundColor: priority.colour,
-            borderColor: priority.colour,
-            glyph: TextGlyph(text: idLastFour),
+            backgroundColor: _event.priority.colour,
+            borderColor: _event.priority.colour,
+            glyph: TextGlyph(text: _event.idLastFour),
           ),
       infoWindow: InfoWindow(
-        title: noc?.description ?? status.description,
-        snippet: address,
+        title: _event.noc?.description ?? _event.status.description,
+        snippet: _event.address,
         onTap: onTap,
       ),
     );
@@ -32,5 +37,10 @@ extension EventMapMarker on Event {
     // final GestureDetector detector = GestureDetector(onDoubleTap: onDoubleTap);
 
     return marker;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
