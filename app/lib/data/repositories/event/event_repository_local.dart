@@ -59,8 +59,17 @@ class EventRepositoryLocal implements EventRepository {
     return newIDNum;
   }
 
+  Event? _selectedEvent;
+
   /// Gets a [Result.ok] holding a random event from `_events`.
   @override
-  Future<Result<Event?>> get selectedEvent async =>
-      Result.ok(_events[Random().nextInt(_events.length)]);
+  Future<Result<Event?>> get selectedEvent async {
+    _selectedEvent = _events[Random().nextInt(_events.length)];
+    return Result.ok(_selectedEvent);
+  }
+
+  @override
+  void setEvent(Event event) {
+    _selectedEvent = event;
+  }
 }
