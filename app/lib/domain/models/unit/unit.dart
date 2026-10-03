@@ -1,4 +1,4 @@
-import 'package:latlng/latlng.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 /// An ambulance vehicle, air ambulance or other resource.
 class Unit {
@@ -17,7 +17,7 @@ class Unit {
   Map<String, dynamic> toJson() => {
     'callsign': callsign,
     'vehicleType': vehicleType.toString(),
-    'location': [location.latitude.degrees, location.longitude.degrees],
+    'location': [location.latitude, location.longitude],
   };
 
   @override

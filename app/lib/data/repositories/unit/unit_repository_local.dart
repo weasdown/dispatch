@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:latlng/latlng.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
@@ -25,7 +25,7 @@ class UnitRepositoryLocal implements UnitRepository {
     required String callsign,
     required LatLng location,
   }) async {
-    _units.add(Unit(callsign: 'NA421', location: LatLng.degree(51.8, 1.2)));
+    _units.add(Unit(callsign: 'NA421', location: LatLng(51.8, 1.2)));
   }
 
   /// Gets a [Result.ok] holding a random unit from `_units`.

@@ -1,4 +1,4 @@
-import 'package:latlng/latlng.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';

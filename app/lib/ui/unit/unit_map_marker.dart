@@ -15,7 +15,7 @@ extension UnitMapMarker on Unit {
   /// Gets an [AdvancedMarker] for showing this [Unit] on a map.
   AdvancedMarker get advancedMapMarker => AdvancedMarker(
     markerId: MarkerId(callsign),
-    position: LatLng(location.latitude.degrees, location.longitude.degrees),
+    position: LatLng(location.latitude, location.longitude),
     icon: _markerIcon(_iconAsset),
     infoWindow: InfoWindow(title: callsign, snippet: vehicleType.name),
   );
