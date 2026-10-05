@@ -1,6 +1,7 @@
 import 'package:dispatch/ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_marker_widgets/google_maps_marker_widgets.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
@@ -51,6 +52,8 @@ class _MapPageState extends State<MapPage> {
     zoom: 9,
   );
 
+  final _markerWidgetsController = MarkerWidgetsController();
+
   @override
   void initState() {
     super.initState();
@@ -61,26 +64,101 @@ class _MapPageState extends State<MapPage> {
   bool showEvents = true;
   bool showUnits = true;
 
-  Set<AdvancedMarker> get _markers => {
-    ...(showEvents)
-        ? widget.events.map(
-            (Event event) => EventMapMarker(event: event).advancedMapMarker(
-              onTap: () {
-                debugPrint(
-                  'Triggered event map marker onTap for event ${event.idLastFour}',
-                );
-                widget.viewModel.setSelectedEvent(event);
-              },
-            ),
-          )
-        : {},
-    ...(showUnits)
-        ? widget.units.map((Unit unit) => unit.advancedMapMarker)
-        : {},
-  };
+  // Set<AdvancedMarker> get _markers => {
+  //   ...(showEvents)
+  //       ? widget.events.map(
+  //           (Event event) => EventMapMarker(event: event).advancedMapMarker(
+  //             onTap: () {
+  //               debugPrint(
+  //                 'Triggered event map marker onTap for event ${event.idLastFour}',
+  //               );
+  //               widget.viewModel.setSelectedEvent(event);
+  //             },
+  //           ),
+  //         )
+  //       : {},
+  //   ...(showUnits)
+  //       ? widget.units.map((Unit unit) => unit.advancedMapMarker)
+  //       : {},
+  // };
+
+  void setMarkers() {
+    // onDoubleTap(Event event) {
+    //   // debugPrint("Pressed!");
+    //   debugPrint(
+    //     'Triggered event map marker onTap for event ${event.idLastFour}',
+    //   );
+    //   widget.viewModel.setSelectedEvent(event);
+    // }
+    //
+    // final Iterable<EventMapMarker> eventMarkers = widget.events.map(
+    //   (Event event) => EventMapMarker(
+    //     event: event,
+    //     viewModel: widget.viewModel,
+    //     onDoubleTap: () => onDoubleTap(event),
+    //   ),
+    // );
+
+    // _markerWidgetsController.addMarkerWidget(
+    //   markerWidget: eventMarkers.first.markerWidget(onDoubleTap: onDoubleTap),
+    //   marker: eventMarkers.first.advancedMapMarker(),
+    // );
+
+    final flightMarkerId = MarkerId('flightMarker');
+    _markerWidgetsController.addMarkerWidget(
+      markerWidget: MarkerWidget(
+        markerId: flightMarkerId,
+        child: Text('some text'),
+        // SizedBox(
+        //   // onTap: () => print('Pressed once!'),
+        //   // onDoubleTap: () => print('Pressed twice!'),
+        //   height: 30,
+        //   // color: Colors.blue,
+        //   child: Text('some text'),
+        // ),
+      ),
+      marker: AdvancedMarker(
+        markerId: flightMarkerId,
+        anchor: Offset(0.5, 0.5),
+        // infoWindow: InfoWindow(
+        //   title: 'Cleared for takeoff!',
+        //   // onTap: () => print('InfoWindow pressed!'),
+        // ),
+        position: LatLng(
+          widget.events.first.location.latitude,
+          widget.events.first.location.longitude,
+        ),
+      ),
+    );
+
+    //   // // TODO re-enable adding of event markers.
+    //   // // Iterable<({Marker marker, MarkerWidget markerWidget})> newMarkers
+    //   // _markerWidgetsController.bulkAddMarkerWidget(
+    //   //   eventMarkers.map((EventMapMarker eventMarker) {
+    //   //     final Marker marker = eventMarker.advancedMapMarker();
+    //   //     final MarkerWidget markerWidget = eventMarker.markerWidget;
+    //   //
+    //   //     return (marker: marker, markerWidget: markerWidget);
+    //   //   }),
+    //   // );
+  }
 
   @override
   Widget build(BuildContext context) {
+    // final treeMarkerId = MarkerId('treeMarker');
+    // final treeMarkerWidget = MarkerWidget(
+    //   markerId: treeMarkerId,
+    //   child: Icon(Icons.park, color: Colors.green, size: 45),
+    // );
+    // final treeMarker = Marker(
+    //   markerId: treeMarkerId,
+    //   anchor: Offset(0.5, 0.5),
+    //   position: LatLng(
+    //     37,
+    //     -108,
+    //   ), // LatLng(51.73344408027582, -1.2396893772823594), // Iffley park
+    // );
+
     final Switch showEventsSwitch = Switch(
       value: showEvents,
       activeThumbColor: Colors.green,
@@ -97,6 +175,13 @@ class _MapPageState extends State<MapPage> {
       },
     );
 
+    // _markerWidgetsController.addMarkerWidget(
+    //   markerWidget: treeMarkerWidget,
+    //   marker: treeMarker,
+    // );
+
+    setMarkers();
+
     return Scaffold(
       appBar: AppBar(
         elevation: 2,
@@ -111,23 +196,34 @@ class _MapPageState extends State<MapPage> {
         ],
       ),
       // endDrawer: NavigationDrawer(children: [Text('Event details')]),
-      body: GoogleMap(
-        key: _mapKey,
-        mapId: _currentMapId,
-        markerType: GoogleMapMarkerType.advancedMarker,
-        initialCameraPosition: _lastKnownPosition,
-        markers: _markers,
-        onCameraMove: (position) {
-          // Cache the position so the new map starts exactly here
-          _lastKnownPosition = position;
-        },
-        // // FIXME fix event caller uncertainty circles
-        // // circles:
-        // //     (showEvents)
-        // //         ? widget.events
-        // //             .map((Event event) => event.callerLocationCircle)
-        // //             .toSet()
-        // //         : {},
+      body: MarkerWidgets(
+        markerWidgetsController: _markerWidgetsController,
+        builder: (context, markers) => GoogleMap(
+          key: _mapKey,
+          mapId: _currentMapId,
+          markerType: GoogleMapMarkerType.advancedMarker,
+          initialCameraPosition: _lastKnownPosition,
+          markers: markers,
+          onCameraMove: (position) {
+            // Cache the position so the new map starts exactly here
+            _lastKnownPosition = position;
+          },
+          // // FIXME fix event caller uncertainty circles
+          // // circles:
+          // //     (showEvents)
+          // //         ? widget.events
+          // //             .map((Event event) => event.callerLocationCircle)
+          // //             .toSet()
+          // //         : {},
+        ),
+
+        //     GoogleMap(
+        //   initialCameraPosition: CameraPosition(
+        //     target: LatLng(41.8, -99.65),
+        //     zoom: 4,
+        //   ),
+        //   markers: markers,
+        // ),
       ),
     );
   }
