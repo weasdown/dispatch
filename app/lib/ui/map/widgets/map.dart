@@ -59,106 +59,58 @@ class _MapPageState extends State<MapPage> {
     super.initState();
     _currentMapId = 'light_map_id';
     _mapKey = UniqueKey();
+
+    setMarkers();
   }
 
   bool showEvents = true;
   bool showUnits = true;
 
-  // Set<AdvancedMarker> get _markers => {
-  //   ...(showEvents)
-  //       ? widget.events.map(
-  //           (Event event) => EventMapMarker(event: event).advancedMapMarker(
-  //             onTap: () {
-  //               debugPrint(
-  //                 'Triggered event map marker onTap for event ${event.idLastFour}',
-  //               );
-  //               widget.viewModel.setSelectedEvent(event);
-  //             },
-  //           ),
-  //         )
-  //       : {},
-  //   ...(showUnits)
-  //       ? widget.units.map((Unit unit) => unit.advancedMapMarker)
-  //       : {},
-  // };
 
-  void setMarkers() {
-    // onDoubleTap(Event event) {
-    //   // debugPrint("Pressed!");
-    //   debugPrint(
-    //     'Triggered event map marker onTap for event ${event.idLastFour}',
-    //   );
-    //   widget.viewModel.setSelectedEvent(event);
-    // }
-    //
-    // final Iterable<EventMapMarker> eventMarkers = widget.events.map(
-    //   (Event event) => EventMapMarker(
-    //     event: event,
-    //     viewModel: widget.viewModel,
-    //     onDoubleTap: () => onDoubleTap(event),
-    //   ),
-    // );
+  Iterable<({Marker marker, MarkerWidget markerWidget})> eventMarkers() {
+    Iterable<EventMapMarker> eventMarkers = widget.events.map(
+          (Event event) =>
+          EventMapMarker(
+              viewModel: widget.singleEventScreenViewModel, event: event),
+    );
 
-    // _markerWidgetsController.addMarkerWidget(
-    //   markerWidget: eventMarkers.first.markerWidget(onDoubleTap: onDoubleTap),
-    //   marker: eventMarkers.first.advancedMapMarker(),
-    // );
-
-    final flightMarkerId = MarkerId('flightMarker');
-    _markerWidgetsController.addMarkerWidget(
-      markerWidget: MarkerWidget(
-        markerId: flightMarkerId,
-        child: Text('some text'),
-        // SizedBox(
-        //   // onTap: () => print('Pressed once!'),
-        //   // onDoubleTap: () => print('Pressed twice!'),
-        //   height: 30,
-        //   // color: Colors.blue,
-        //   child: Text('some text'),
-        // ),
-      ),
-      marker: AdvancedMarker(
-        markerId: flightMarkerId,
-        anchor: Offset(0.5, 0.5),
-        // infoWindow: InfoWindow(
-        //   title: 'Cleared for takeoff!',
-        //   // onTap: () => print('InfoWindow pressed!'),
-        // ),
-        position: LatLng(
-          widget.events.first.location.latitude,
-          widget.events.first.location.longitude,
-        ),
+    Iterable<({Marker marker, MarkerWidget markerWidget})> eventMapMarkers =
+    eventMarkers.map(
+          (EventMapMarker eventMarker) =>
+      (
+      marker: eventMarker.advancedMapMarker,
+      markerWidget: eventMarker.markerWidget,
       ),
     );
 
-    //   // // TODO re-enable adding of event markers.
-    //   // // Iterable<({Marker marker, MarkerWidget markerWidget})> newMarkers
-    //   // _markerWidgetsController.bulkAddMarkerWidget(
-    //   //   eventMarkers.map((EventMapMarker eventMarker) {
-    //   //     final Marker marker = eventMarker.advancedMapMarker();
-    //   //     final MarkerWidget markerWidget = eventMarker.markerWidget;
-    //   //
-    //   //     return (marker: marker, markerWidget: markerWidget);
-    //   //   }),
-    //   // );
+    return eventMapMarkers;
+  }
+
+  Iterable<({Marker marker, MarkerWidget markerWidget})> unitMarkers() {
+    Iterable<UnitMapMarker> unitMarkers = widget.units.map(
+          (Unit unit) => UnitMapMarker(viewModel: widget.viewModel, unit: unit),
+    );
+
+    Iterable<({Marker marker, MarkerWidget markerWidget})> unitMapMarkers =
+    unitMarkers.map(
+          (UnitMapMarker unitMarker) =>
+      (
+      marker: unitMarker.advancedMapMarker,
+      markerWidget: unitMarker.markerWidget,
+      ),
+    );
+
+    return unitMapMarkers;
+  }
+
+  void setMarkers() {
+    _markerWidgetsController.bulkAddMarkerWidget(eventMarkers());
+
+    _markerWidgetsController.bulkAddMarkerWidget(unitMarkers());
   }
 
   @override
   Widget build(BuildContext context) {
-    // final treeMarkerId = MarkerId('treeMarker');
-    // final treeMarkerWidget = MarkerWidget(
-    //   markerId: treeMarkerId,
-    //   child: Icon(Icons.park, color: Colors.green, size: 45),
-    // );
-    // final treeMarker = Marker(
-    //   markerId: treeMarkerId,
-    //   anchor: Offset(0.5, 0.5),
-    //   position: LatLng(
-    //     37,
-    //     -108,
-    //   ), // LatLng(51.73344408027582, -1.2396893772823594), // Iffley park
-    // );
-
     final Switch showEventsSwitch = Switch(
       value: showEvents,
       activeThumbColor: Colors.green,
@@ -174,13 +126,6 @@ class _MapPageState extends State<MapPage> {
         setState(() => showUnits = value);
       },
     );
-
-    // _markerWidgetsController.addMarkerWidget(
-    //   markerWidget: treeMarkerWidget,
-    //   marker: treeMarker,
-    // );
-
-    setMarkers();
 
     return Scaffold(
       appBar: AppBar(
@@ -216,14 +161,6 @@ class _MapPageState extends State<MapPage> {
           // //             .toSet()
           // //         : {},
         ),
-
-        //     GoogleMap(
-        //   initialCameraPosition: CameraPosition(
-        //     target: LatLng(41.8, -99.65),
-        //     zoom: 4,
-        //   ),
-        //   markers: markers,
-        // ),
       ),
     );
   }
