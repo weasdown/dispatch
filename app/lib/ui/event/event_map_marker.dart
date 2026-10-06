@@ -4,7 +4,7 @@ import 'package:google_maps_marker_widgets/google_maps_marker_widgets.dart';
 
 import '../../domain/models/event/event.dart';
 import '../../domain/models/event/priority_colour.dart';
-import '../map/view_models/map_view_model.dart';
+import '../single_event_screen/view_models/single_event_screen_viewmodel.dart';
 
 class EventMapMarker extends StatelessWidget {
   EventMapMarker({
@@ -24,7 +24,7 @@ class EventMapMarker extends StatelessWidget {
 
   final MarkerId markerId;
 
-  final MapViewModel _viewModel;
+  final SingleEventScreenViewModel _viewModel;
 
   void addToMap(MarkerWidgetsController markerWidgetsController) {
     markerWidgetsController.addMarkerWidget(
@@ -39,58 +39,34 @@ class EventMapMarker extends StatelessWidget {
 
   // TODO move onTap to markerWidget
   /// Gets a [AdvancedMarker] for showing this [Event] on a map.
-  AdvancedMarker advancedMapMarker(
-    // {void Function()? onTap}
-  ) {
-    // onTap =
-    //     onTap ??
-    //     () {
-    //       debugPrint(
-    //         'Triggered event map marker onTap for event ${_event.idLastFour}',
-    //       );
-    //       _viewModel.setSelectedEvent(_event);
-    //     };
+  AdvancedMarker get advancedMapMarker => AdvancedMarker(
+    markerId: markerId,
+    position: LatLng(lat, lng),
+    onTap: () {
+      debugPrint('Setting event to ${_event.idLastFour}');
+      _viewModel.updateEvent(_event);
+    },
 
-    final AdvancedMarker marker = AdvancedMarker(
-      markerId: MarkerId(_event.id),
-      position: LatLng(lat, lng),
-      // icon:
-      //     // TODO if possible, set shape of marker to rectangle
-      //     PinConfig(
-      //       backgroundColor: _event.priority.colour,
-      //       borderColor: _event.priority.colour,
-      //       glyph: TextGlyph(text: _event.idLastFour),
-      //     ),
-      // infoWindow: InfoWindow(
-      //   title: _event.noc?.description ?? _event.status.description,
+    // infoWindow: InfoWindow(
+    //   title: _event.noc?.description ?? _event.status.description,
       //   snippet: _event.address,
       //   // onTap: onTap,
       // ),
     );
 
-    // final GestureDetector detector = GestureDetector(onDoubleTap: onDoubleTap);
-
-    return marker;
-  }
 
   Widget get _body => Container(
     color: _event.priority.colour,
     height: 24,
     width: 36,
-    child: GestureDetector(
-      onDoubleTap: onDoubleTap,
+    child: Center(
       child: Text(
         _event.idLastFour,
-        style: TextStyle(fontSize: 12),
+        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,
       ),
     ),
   );
-  //     Icon(
-  //   IconData(0x00f803, fontFamily: 'MaterialIcons'),
-  //   color: Colors.green,
-  //   size: 30,
-  // );
 
   MarkerWidget get markerWidget => MarkerWidget(
     markerId: markerId,
