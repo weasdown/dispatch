@@ -7,14 +7,13 @@ import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../event/event_map_marker.dart';
 import '../../unit/unit_map_marker.dart';
-import '../view_models/map_view_model.dart';
 
 /// A page that displays a Google Maps map.
 class MapPage extends StatefulWidget {
   // TODO get events and units from a MapViewModel (will need to create MapViewModel)
   const MapPage({
     super.key,
-    required this.viewModel,
+    // required this.viewModel,
     required this.singleEventScreenViewModel,
     this.centre = MapPage.scasCentre,
     required this.events,
@@ -36,7 +35,7 @@ class MapPage extends StatefulWidget {
   /// The [Unit]s that are currently in the SCAS fleet.
   final List<Unit> units;
 
-  final MapViewModel viewModel;
+  // final MapViewModel viewModel;
 
   final SingleEventScreenViewModel singleEventScreenViewModel;
 
@@ -66,39 +65,40 @@ class _MapPageState extends State<MapPage> {
   bool showEvents = true;
   bool showUnits = true;
 
-
   Iterable<({Marker marker, MarkerWidget markerWidget})> eventMarkers() {
     Iterable<EventMapMarker> eventMarkers = widget.events.map(
-          (Event event) =>
-          EventMapMarker(
-              viewModel: widget.singleEventScreenViewModel, event: event),
+      (Event event) => EventMapMarker(
+        viewModel: widget.singleEventScreenViewModel,
+        event: event,
+      ),
     );
 
     Iterable<({Marker marker, MarkerWidget markerWidget})> eventMapMarkers =
-    eventMarkers.map(
-          (EventMapMarker eventMarker) =>
-      (
-      marker: eventMarker.advancedMapMarker,
-      markerWidget: eventMarker.markerWidget,
-      ),
-    );
+        eventMarkers.map(
+          (EventMapMarker eventMarker) => (
+            marker: eventMarker.advancedMapMarker,
+            markerWidget: eventMarker.markerWidget,
+          ),
+        );
 
     return eventMapMarkers;
   }
 
   Iterable<({Marker marker, MarkerWidget markerWidget})> unitMarkers() {
     Iterable<UnitMapMarker> unitMarkers = widget.units.map(
-          (Unit unit) => UnitMapMarker(viewModel: widget.viewModel, unit: unit),
+      (Unit unit) => UnitMapMarker(
+        viewModel: widget.singleEventScreenViewModel,
+        unit: unit,
+      ),
     );
 
     Iterable<({Marker marker, MarkerWidget markerWidget})> unitMapMarkers =
-    unitMarkers.map(
-          (UnitMapMarker unitMarker) =>
-      (
-      marker: unitMarker.advancedMapMarker,
-      markerWidget: unitMarker.markerWidget,
-      ),
-    );
+        unitMarkers.map(
+          (UnitMapMarker unitMarker) => (
+            marker: unitMarker.advancedMapMarker,
+            markerWidget: unitMarker.markerWidget,
+          ),
+        );
 
     return unitMapMarkers;
   }
