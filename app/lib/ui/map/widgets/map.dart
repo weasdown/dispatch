@@ -1,6 +1,7 @@
 import 'package:dispatch/ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_marker_widgets/google_maps_marker_widgets.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
@@ -51,33 +52,62 @@ class _MapPageState extends State<MapPage> {
     zoom: 9,
   );
 
+  final _markerWidgetsController = MarkerWidgetsController();
+
   @override
   void initState() {
     super.initState();
     _currentMapId = 'light_map_id';
     _mapKey = UniqueKey();
+
+    setMarkers();
   }
 
   bool showEvents = true;
   bool showUnits = true;
 
-  Set<AdvancedMarker> get _markers => {
-    ...(showEvents)
-        ? widget.events.map(
-            (Event event) => EventMapMarker(event: event).advancedMapMarker(
-              onTap: () {
-                debugPrint(
-                  'Triggered event map marker onTap for event ${event.idLastFour}',
-                );
-                widget.viewModel.setSelectedEvent(event);
-              },
-            ),
-          )
-        : {},
-    ...(showUnits)
-        ? widget.units.map((Unit unit) => unit.advancedMapMarker)
-        : {},
-  };
+
+  Iterable<({Marker marker, MarkerWidget markerWidget})> eventMarkers() {
+    Iterable<EventMapMarker> eventMarkers = widget.events.map(
+          (Event event) =>
+          EventMapMarker(
+              viewModel: widget.singleEventScreenViewModel, event: event),
+    );
+
+    Iterable<({Marker marker, MarkerWidget markerWidget})> eventMapMarkers =
+    eventMarkers.map(
+          (EventMapMarker eventMarker) =>
+      (
+      marker: eventMarker.advancedMapMarker,
+      markerWidget: eventMarker.markerWidget,
+      ),
+    );
+
+    return eventMapMarkers;
+  }
+
+  Iterable<({Marker marker, MarkerWidget markerWidget})> unitMarkers() {
+    Iterable<UnitMapMarker> unitMarkers = widget.units.map(
+          (Unit unit) => UnitMapMarker(viewModel: widget.viewModel, unit: unit),
+    );
+
+    Iterable<({Marker marker, MarkerWidget markerWidget})> unitMapMarkers =
+    unitMarkers.map(
+          (UnitMapMarker unitMarker) =>
+      (
+      marker: unitMarker.advancedMapMarker,
+      markerWidget: unitMarker.markerWidget,
+      ),
+    );
+
+    return unitMapMarkers;
+  }
+
+  void setMarkers() {
+    _markerWidgetsController.bulkAddMarkerWidget(eventMarkers());
+
+    _markerWidgetsController.bulkAddMarkerWidget(unitMarkers());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,23 +141,26 @@ class _MapPageState extends State<MapPage> {
         ],
       ),
       // endDrawer: NavigationDrawer(children: [Text('Event details')]),
-      body: GoogleMap(
-        key: _mapKey,
-        mapId: _currentMapId,
-        markerType: GoogleMapMarkerType.advancedMarker,
-        initialCameraPosition: _lastKnownPosition,
-        markers: _markers,
-        onCameraMove: (position) {
-          // Cache the position so the new map starts exactly here
-          _lastKnownPosition = position;
-        },
-        // // FIXME fix event caller uncertainty circles
-        // // circles:
-        // //     (showEvents)
-        // //         ? widget.events
-        // //             .map((Event event) => event.callerLocationCircle)
-        // //             .toSet()
-        // //         : {},
+      body: MarkerWidgets(
+        markerWidgetsController: _markerWidgetsController,
+        builder: (context, markers) => GoogleMap(
+          key: _mapKey,
+          mapId: _currentMapId,
+          markerType: GoogleMapMarkerType.advancedMarker,
+          initialCameraPosition: _lastKnownPosition,
+          markers: markers,
+          onCameraMove: (position) {
+            // Cache the position so the new map starts exactly here
+            _lastKnownPosition = position;
+          },
+          // // FIXME fix event caller uncertainty circles
+          // // circles:
+          // //     (showEvents)
+          // //         ? widget.events
+          // //             .map((Event event) => event.callerLocationCircle)
+          // //             .toSet()
+          // //         : {},
+        ),
       ),
     );
   }
