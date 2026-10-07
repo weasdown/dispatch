@@ -33,6 +33,8 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
         builder: (context, child) {
           Event? event = widget.viewModel.event;
 
+          // TODO move this if-else to _SingleEvent widget
+          // TODO consider invert if to have == null case first
           if (event != null) {
             _log.info('Event selected at ${event.address}');
 
@@ -228,5 +230,30 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
         },
       ),
     );
+  }
+}
+
+// TODO implement _SingleEvent
+class _SingleEvent extends StatelessWidget {
+  const _SingleEvent({super.key, required this.event});
+
+  final Event? event;
+
+  @override
+  Widget build(BuildContext context) {
+    final Logger log = Logger('_SingleEvent');
+
+    if (event != null) {
+      return const Placeholder();
+    } else {
+      log.warning('There is no selected event');
+      return Center(
+        child: Text(
+          'No event selected',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+      );
+    }
   }
 }
