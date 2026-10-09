@@ -5,24 +5,19 @@ import 'package:logging/logging.dart';
 import '../../../domain/models/event/event.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 
-class SingleEventScreen extends StatefulWidget {
+class SingleEventScreen extends StatelessWidget {
   const SingleEventScreen({super.key, required this.viewModel});
 
   final SingleEventScreenViewModel viewModel;
 
   @override
-  State<SingleEventScreen> createState() => _SingleEventScreenState();
-}
-
-class _SingleEventScreenState extends State<SingleEventScreen> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(title: Text('Event'), toolbarHeight: 32),
       body: ListenableBuilder(
-        listenable: widget.viewModel.load,
+        listenable: viewModel.load,
         builder: (context, child) {
-          Event? event = widget.viewModel.event;
+          Event? event = viewModel.event;
 
           return _SingleEvent(event: event);
 
