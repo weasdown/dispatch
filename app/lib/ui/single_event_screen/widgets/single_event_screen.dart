@@ -184,26 +184,23 @@ class _SingleEvent extends StatelessWidget {
 
     return (event == null)
         ? _NullEvent(event: event, log: log)
-        : Flexible(
-            flex: 1,
-            child: Center(
-              child: SizedBox.expand(
-                child: Align(
-                  alignment: AlignmentGeometry.center,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        _Overview(event: event),
-                        const Gap(30),
-                        _Location(event: event),
-                        const Gap(30),
-                        _Buttons(event: event),
-                        const Gap(50),
-                        _PatientDetails(event: event),
-                      ],
-                    ),
+        : Center(
+            child: SizedBox.expand(
+              child: Align(
+                alignment: AlignmentGeometry.center,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _Overview(event: event),
+                      const Gap(30),
+                      _Location(event: event),
+                      const Gap(30),
+                      _Buttons(event: event),
+                      const Gap(50),
+                      _PatientDetails(event: event),
+                    ],
                   ),
                 ),
               ),
