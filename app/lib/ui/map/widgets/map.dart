@@ -111,31 +111,32 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Switch showEventsSwitch = Switch(
-      value: showEvents,
-      activeThumbColor: Colors.green,
-      onChanged: (bool value) {
-        setState(() => showEvents = value);
-      },
-    );
-
-    final Switch showUnitsSwitch = Switch(
-      value: showUnits,
-      activeThumbColor: Colors.green,
-      onChanged: (bool value) {
-        setState(() => showUnits = value);
-      },
-    );
-
     return Scaffold(
       appBar: AppBar(
         elevation: 2,
         actions: [
           Row(
             children: [
-              Row(children: [Text('Show Events? '), showEventsSwitch]),
+              Row(
+                children: [
+                  Text('Show Events? '),
+                  _ShowEventsSwitch(
+                    showEvents: showEvents,
+                    onToggle: (bool value) =>
+                        setState(() => showEvents = value),
+                  ),
+                ],
+              ),
               SizedBox(width: 8),
-              Row(children: [Text('Show Units? '), showUnitsSwitch]),
+              Row(
+                children: [
+                  Text('Show Units? '),
+                  _ShowUnitsSwitch(
+                    showUnits: showUnits,
+                    onToggle: (bool value) => setState(() => showUnits = value),
+                  ),
+                ],
+              ),
             ],
           ),
         ],
@@ -162,6 +163,38 @@ class _MapPageState extends State<MapPage> {
           // //         : {},
         ),
       ),
+    );
+  }
+}
+
+class _ShowEventsSwitch extends StatelessWidget {
+  const _ShowEventsSwitch({required this.showEvents, required this.onToggle});
+
+  final ValueChanged<bool>? onToggle;
+  final bool showEvents;
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value: showEvents,
+      activeThumbColor: Colors.green,
+      onChanged: onToggle,
+    );
+  }
+}
+
+class _ShowUnitsSwitch extends StatelessWidget {
+  const _ShowUnitsSwitch({required this.showUnits, required this.onToggle});
+
+  final ValueChanged<bool>? onToggle;
+  final bool showUnits;
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value: showUnits,
+      activeThumbColor: Colors.green,
+      onChanged: onToggle,
     );
   }
 }
