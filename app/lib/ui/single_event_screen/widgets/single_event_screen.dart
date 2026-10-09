@@ -15,8 +15,6 @@ class SingleEventScreen extends StatefulWidget {
 }
 
 class _SingleEventScreenState extends State<SingleEventScreen> {
-  // final Logger _log = Logger('SingleEventScreen');
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
