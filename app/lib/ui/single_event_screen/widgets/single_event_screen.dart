@@ -184,35 +184,14 @@ class _SingleEvent extends StatelessWidget {
 
     return (event == null)
         ? _NullEvent(event: event, log: log)
-        : Center(
-            child: SizedBox.expand(
-              child: Align(
-                alignment: AlignmentGeometry.center,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      _Overview(event: event),
-                      const Gap(30),
-                      _Location(event: event),
-                      const Gap(30),
-                      _Buttons(event: event),
-                      const Gap(50),
-                      _PatientDetails(event: event),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ); // event != null
+        : _NonNullEvent(event: event!, log: log); // event != null
   }
 }
 
 class _Buttons extends StatelessWidget {
   const _Buttons({required this.event});
 
-  final Event? event;
+  final Event event;
 
   @override
   Widget build(BuildContext context) {
@@ -237,14 +216,47 @@ class _Buttons extends StatelessWidget {
 class _Location extends StatelessWidget {
   const _Location({required this.event});
 
-  final Event? event;
+  final Event event;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(event!.address, style: Theme.of(context).textTheme.headlineSmall),
+        Text(event.address, style: Theme.of(context).textTheme.headlineSmall),
       ],
+    );
+  }
+}
+
+class _NonNullEvent extends StatelessWidget {
+  const _NonNullEvent({required this.event, required this.log});
+
+  final Event event;
+  final Logger log;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox.expand(
+        child: Align(
+          alignment: AlignmentGeometry.center,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _Overview(event: event, log: log),
+                const Gap(30),
+                _Location(event: event),
+                const Gap(30),
+                _Buttons(event: event),
+                const Gap(50),
+                _PatientDetails(event: event),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -269,21 +281,23 @@ class _NullEvent extends StatelessWidget {
 }
 
 class _Overview extends StatelessWidget {
-  const _Overview({required this.event});
+  const _Overview({required this.event, required this.log});
 
-  final Event? event;
+  final Event event;
+  final Logger log;
 
   @override
   Widget build(BuildContext context) {
+    log.info('Selected event: ${event.idLastFour}');
     return Center(
       child: Table(
         children: [
           TableRow(
             children: [
               Text(
-                (event!.noc != null)
-                    ? '${event!.category.toString()}: ${event!.noc!.description}'
-                    : event!.status.toString(),
+                (event.noc != null)
+                    ? '${event.category.toString()}: ${event.noc!.description}'
+                    : event.status.toString(),
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
             ],
@@ -297,7 +311,7 @@ class _Overview extends StatelessWidget {
 class _PatientDetails extends StatelessWidget {
   const _PatientDetails({required this.event});
 
-  final Event? event;
+  final Event event;
 
   @override
   Widget build(BuildContext context) {
