@@ -23,6 +23,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
   redirect: _redirect,
   refreshListenable: authRepository,
   routes: [
+    // Login screen
     GoRoute(
       path: Routes.login,
       builder: (context, state) {
@@ -33,6 +34,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         // );
       },
     ),
+    // Home screen
     GoRoute(
       path: Routes.home,
       builder: (context, state) {
@@ -51,12 +53,12 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         GoRoute(
           path: Routes.singleEvent,
           builder: (context, state) {
-            final SingleEventScreenViewModel viewModel =
-                SingleEventScreenViewModel(
-                  eventRepository: context.read(),
-                  unitRepository: context.read(),
-                );
-            return SingleEventScreen(viewModel: viewModel);
+            return SingleEventScreen(
+              viewModel: SingleEventScreenViewModel(
+                eventRepository: context.read(),
+                unitRepository: context.read(),
+              ),
+            );
           },
         ),
         GoRoute(
