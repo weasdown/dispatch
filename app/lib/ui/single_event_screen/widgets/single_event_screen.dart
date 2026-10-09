@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:logging/logging.dart';
 
 import '../../../domain/models/event/event.dart';
@@ -31,59 +32,6 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
           // // TODO consider invert if to have == null case first
           // if (event != null) {
           //   _log.info('Event selected at ${event.address}');
-          //
-          //   final Widget overview = Center(
-          //     child: Table(
-          //       children: [
-          //         TableRow(
-          //           children: [
-          //             Text(
-          //               (event.noc != null)
-          //                   ? '${event.category.toString()}: ${event.noc!.description}'
-          //                   : event.status.toString(),
-          //               style: Theme.of(context).textTheme.headlineSmall,
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   );
-          //
-          //   final Widget patientDetails = DecoratedBox(
-          //     decoration: BoxDecoration(border: Border.all()),
-          //     child: Padding(
-          //       padding: const EdgeInsets.all(8.0),
-          //       child: Text(
-          //         'Patient details...\n\nTBC',
-          //         textAlign: TextAlign.center,
-          //       ),
-          //     ),
-          //   );
-          //
-          //   final Widget buttons = Column(
-          //     children: [
-          //       ElevatedButton(
-          //         style: ButtonStyle(
-          //           backgroundColor: WidgetStatePropertyAll(Colors.red),
-          //         ),
-          //         onPressed: () => debugPrint('Find AED'),
-          //         child: Text(
-          //           'Find AED',
-          //           style: Theme.of(context).textTheme.bodyMedium!
-          //               .copyWith(color: Colors.white),
-          //         ),
-          //       ),
-          //     ],
-          //   );
-          //
-          //   final Widget location = Row(
-          //     children: [
-          //       Text(
-          //         event.address,
-          //         style: Theme.of(context).textTheme.headlineSmall,
-          //       ),
-          //     ],
-          //   );
           //
           //   return Row(
           //     children: [
@@ -238,7 +186,81 @@ class _SingleEvent extends StatelessWidget {
     final Logger log = Logger('_SingleEvent');
 
     if (event != null) {
-      return const Placeholder();
+      final Widget overview = Center(
+        child: Table(
+          children: [
+            TableRow(
+              children: [
+                Text(
+                  (event!.noc != null)
+                      ? '${event!.category.toString()}: ${event!.noc!.description}'
+                      : event!.status.toString(),
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+
+      final Widget patientDetails = DecoratedBox(
+        decoration: BoxDecoration(border: Border.all()),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Patient details...\n\nTBC', textAlign: TextAlign.center),
+        ),
+      );
+
+      final Widget buttons = Column(
+        children: [
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(Colors.red),
+            ),
+            onPressed: () => debugPrint('Find AED'),
+            child: Text(
+              'Find AED',
+              style: Theme.of(context).textTheme.bodyMedium!
+                  .copyWith(color: Colors.white),
+            ),
+          ),
+        ],
+      );
+
+      final Widget location = Row(
+        children: [
+          Text(
+            event!.address,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+        ],
+      );
+
+      return Flexible(
+        flex: 1,
+        child: Center(
+          child: SizedBox.expand(
+            child: Align(
+              alignment: AlignmentGeometry.center,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    overview,
+                    const Gap(30),
+                    location,
+                    const Gap(30),
+                    buttons,
+                    const Gap(50),
+                    patientDetails,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
     } else {
       log.warning('There is no selected event');
       return Center(
