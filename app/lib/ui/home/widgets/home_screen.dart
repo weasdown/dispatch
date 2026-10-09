@@ -9,7 +9,7 @@ import '../../single_event_screen/view_models/single_event_screen_viewmodel.dart
 import '../../single_event_screen/widgets/single_event_screen.dart';
 import '../view_models/home_viewmodel.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({
     super.key,
     required this.homeViewModel,
@@ -21,18 +21,13 @@ class HomeScreen extends StatefulWidget {
   final SingleEventScreenViewModel singleEventScreenViewModel;
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final Logger log = Logger('HomeScreen');
-
-  @override
   Widget build(BuildContext context) {
+    final Logger log = Logger('HomeScreen');
+
     return FutureBuilder(
       future: Future.wait([
-        widget.singleEventScreenViewModel.events,
-        widget.singleEventScreenViewModel.units,
+        singleEventScreenViewModel.events,
+        singleEventScreenViewModel.units,
       ]),
       builder:
           (
@@ -64,8 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Flexible(
                     flex: 1,
                     child: MapPage(
-                      singleEventScreenViewModel:
-                          widget.singleEventScreenViewModel,
+                      singleEventScreenViewModel: singleEventScreenViewModel,
                       events: allEvents,
                       units: allUnits,
                     ),
@@ -74,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Flexible(
                     flex: 1,
                     child: SingleEventScreen(
-                      viewModel: widget.singleEventScreenViewModel,
+                      viewModel: singleEventScreenViewModel,
                     ),
                   ),
                 ],
