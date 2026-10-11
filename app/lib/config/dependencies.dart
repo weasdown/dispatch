@@ -5,6 +5,8 @@ import '../data/repositories/auth/auth_repository.dart';
 import '../data/repositories/auth/auth_repository_dev.dart';
 import '../data/repositories/event/event_repository.dart';
 import '../data/repositories/event/event_repository_local.dart';
+import '../data/repositories/unit/unit_repository.dart';
+import '../data/repositories/unit/unit_repository_local.dart';
 import '../data/services/local_data_service.dart';
 
 /// Configure dependencies for local data.
@@ -15,10 +17,16 @@ List<SingleChildWidget> get providersLocal {
     ChangeNotifierProvider.value(value: AuthRepositoryDev() as AuthRepository),
     Provider.value(value: LocalDataService()),
     Provider(
-      create:
-          (context) =>
-              EventRepositoryLocal(localDataService: context.read())
-                  as EventRepository,
+      // EventRepository Provider
+      create: (context) =>
+          EventRepositoryLocal(localDataService: context.read())
+              as EventRepository,
+    ),
+    Provider(
+      // UnitRepository Provider
+      create: (context) =>
+          UnitRepositoryLocal(localDataService: context.read())
+              as UnitRepository,
     ),
   ];
 }

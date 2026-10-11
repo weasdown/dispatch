@@ -5,6 +5,7 @@
 abstract final class Routes {
   static const home = '/';
   static const login = '/login';
+  static const singleEvent = '/event';
   static const events = '/$eventsRelative';
   static const eventsRelative = 'events';
   static const units = '/$unitsRelative';

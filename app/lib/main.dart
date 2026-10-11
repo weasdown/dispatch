@@ -1,13 +1,20 @@
-import 'package:flutter/material.dart' hide Key;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'api/env.dart';
 import 'config/dependencies.dart';
+import 'data/services/api/env.dart';
 import 'domain/models/event/event_list_model.dart';
 import 'routing/router.dart';
 
 void main() async {
-  for (final Key key in Env.keys) {
+  if (kIsWeb) {
+    WidgetsFlutterBinding.ensureInitialized();
+    BrowserContextMenu.disableContextMenu(); // Disable browser's default right click handling.
+  }
+
+  for (final EnvironmentKey key in Environment.keys) {
     if (key().isEmpty) {
       throw Exception('Value for Key ${key.name} is not defined.');
     }

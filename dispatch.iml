@@ -5,6 +5,9 @@
     <content url="file://$MODULE_DIR$/app">
       <sourceFolder url="file://$MODULE_DIR$/app/android/app/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/android/app/src/main/kotlin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/assets" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/app/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/app/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/app/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/app/android/.gradle" />
@@ -16,8 +19,15 @@
       <excludeFolder url="file://$MODULE_DIR$/app/linux/flutter/ephemeral" />
       <excludeFolder url="file://$MODULE_DIR$/app/macos/Flutter/ephemeral" />
       <excludeFolder url="file://$MODULE_DIR$/app/windows/flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/app/ios" />
+      <excludeFolder url="file://$MODULE_DIR$/app/linux" />
+      <excludeFolder url="file://$MODULE_DIR$/app/macos" />
+      <excludeFolder url="file://$MODULE_DIR$/app/web" />
+      <excludeFolder url="file://$MODULE_DIR$/app/windows" />
     </content>
     <content url="file://$MODULE_DIR$/server">
+      <sourceFolder url="file://$MODULE_DIR$/server/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/server/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/server/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/server/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/server/build" />

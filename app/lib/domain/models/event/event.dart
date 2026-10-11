@@ -1,21 +1,18 @@
-// import 'package:flutter/material.dart';
-
-// import 'package:flutter_google_maps_webservices/geocoding.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-// import '../../../api/maps/geocoding.dart';
-// import '../../map.dart';
-// import 'package:flutter/foundation.dart';
-import 'package:latlng/latlng.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../status.dart';
 import '../unit/unit.dart';
 import 'category.dart';
+import 'priority.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {
-  Event._({required this.id, required this.address, required this.status})
-    : category = status.category {
+  Event._({
+    required this.id,
+    required this.address,
+    required this.location,
+    required this.status,
+  }) : category = status.category {
     if (status == EventStatus.preAlert()) {
       assert(category == Category.none);
     }
@@ -25,27 +22,46 @@ class Event {
     }
   }
 
-  Event.preAlert({required int id, required String address})
-    : this._(id: id, address: address, status: EventStatus.preAlert());
+  Event.preAlert({
+    required int idNum,
+    required String address,
+    required LatLng location,
+  }) : this._(
+         id: _id(idNum),
+         address: address,
+         status: EventStatus.preAlert(),
+         location: location,
+       );
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return switch (json) {
-      {'id': int id, 'address': String address, 'status': EventStatus status} =>
-        Event._(id: id, address: address, status: status),
+      {
+        'id': String id,
+        'address': String address,
+        'status': EventStatus status,
+        'location': LatLng location,
+      } =>
+        Event._(id: id, address: address, status: status, location: location),
       _ => throw const FormatException('Failed to load album.'),
     };
   }
 
   factory Event.withNOC({
-    required int id,
+    required int idNum,
     required String address,
+    required LatLng location,
     required NOC noc,
   }) {
-    Event newEvent = Event.preAlert(id: id, address: address);
+    Event newEvent = Event.preAlert(
+      idNum: idNum,
+      address: address,
+      location: location,
+    );
     newEvent.addNOC(noc);
     return newEvent;
   }
 
+  // TODO remove commented chunks
   // /// Private constructor
   // Event._({
   //   required this.id,
@@ -161,11 +177,24 @@ class Event {
 
   Category category;
 
+  static String _id(int idNum) {
+    // Ensure the idNum is four digits by adding leading 0s if required.
+    final String idNumString = idNum.toString().padLeft(4, "0");
+
+    final DateTime now = DateTime.now();
+    // Ensure the month and day are two digits by adding leading 0 if required.
+    final String day = now.day.toString().padLeft(2, "0");
+    final String month = now.month.toString().padLeft(2, "0");
+    return 'S${now.year}$month$day$idNumString';
+  }
+
   /// A unique numerical identifier.
-  final int id;
+  final String id;
+
+  String get idLastFour => id.substring(id.length - 4);
 
   /// The latitude and longitude of the emergency.
-  late LatLng location;
+  LatLng location;
 
   // /// Returns the latitude and longitude of a given street [address].
   // Future<Location> _locationFromAddress() async {
@@ -181,6 +210,8 @@ class Event {
 
   /// Nature of Call.
   NOC? get noc => _noc;
+
+  Priority get priority => status.priority;
 
   EventStatus status;
 

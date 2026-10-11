@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
-import '../../../domain/models/event/category_colour.dart';
 import '../../../domain/models/event/event.dart';
+import '../../event/priority_colour.dart';
 import '../../../utils/result.dart';
 
 class HomeViewModel extends ChangeNotifier {
   HomeViewModel({
-    required EventRepository eventRepository,
+    required this._eventRepository,
     // required UserRepository userRepository,
-  }) : _eventRepository = eventRepository {
+  }) {
     _load();
   }
   //      _userRepository = userRepository {
@@ -27,7 +27,7 @@ class HomeViewModel extends ChangeNotifier {
   // late Command1<void, int> deleteBooking;
 
   Widget eventTile(Event singleEvent) => Card(
-    color: singleEvent.category.colour,
+    color: singleEvent.priority.backgroundColour,
     child: ListTile(
       leading: SelectableText(
         singleEvent.category.toString(),

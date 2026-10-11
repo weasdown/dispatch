@@ -1,14 +1,16 @@
+import '../noc.dart';
 import '../status.dart';
+import 'priority.dart';
 
 /// The category assigned to an [Event].
 enum Category {
-  one('1'),
-  two('2'),
-  three('3'),
-  four('4'),
-  none('0');
+  one(1, Priority.zero),
+  two(2, Priority.one),
+  three(3, Priority.two),
+  four(4, Priority.three),
+  none(0, Priority.four);
 
-  const Category(this.number);
+  const Category(this.number, this.priority);
 
   List<NOC> get nocs => switch (this) {
     Category.one => catOneNOCs,
@@ -18,7 +20,9 @@ enum Category {
     Category.none => List.empty(),
   };
 
-  final String number;
+  final int number;
+
+  final Priority priority;
 
   String toJson() => name;
 

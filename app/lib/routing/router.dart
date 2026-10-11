@@ -5,12 +5,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../data/repositories/auth/auth_repository.dart';
-import '../data/services/api/api_client.dart';
-// import '../ui/home/view_models/home_viewmodel.dart';
-// import '../ui/home/widgets/home_screen.dart';
+import '../ui/home/view_models/home_viewmodel.dart';
+import '../ui/home/widgets/home_screen.dart';
+import '../ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
+import '../ui/single_event_screen/widgets/single_event_screen.dart';
 import 'routes.dart';
 
 /// Top go_router entry point.
@@ -23,6 +23,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
   redirect: _redirect,
   refreshListenable: authRepository,
   routes: [
+    // Login screen
     GoRoute(
       path: Routes.login,
       builder: (context, state) {
@@ -33,39 +34,33 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         // );
       },
     ),
+    // Home screen
     GoRoute(
       path: Routes.home,
       builder: (context, state) {
-        // TODO move this StreamBuilder test to a new Widget and revert to the Home widget.
-        ApiClient client = ApiClient(host: 'localhost', port: 8080);
-        WebSocketChannel channel = client.connect();
-        // client.requestUnits;
-        client.requestEvents;
-
-        return Scaffold(
-          appBar: AppBar(title: Text('StreamBuilder test')),
-          body: Center(
-            child: StreamBuilder(
-              stream: channel.stream,
-              builder: (context, snapshot) =>
-                  switch (snapshot.connectionState) {
-                    ConnectionState.none => Text('None'),
-                    ConnectionState.waiting => CircularProgressIndicator(),
-                    ConnectionState.active => Text(
-                      'Active\n\n'
-                      '${snapshot.data}',
-                      textAlign: TextAlign.center,
-                    ),
-                    ConnectionState.done => Text('Done'),
-                  },
-            ),
+        final HomeViewModel homeViewModel = HomeViewModel(
+          eventRepository: context.read(),
+        );
+        return HomeScreen(
+          homeViewModel: homeViewModel,
+          singleEventScreenViewModel: SingleEventScreenViewModel(
+            eventRepository: context.read(),
+            unitRepository: context.read(),
           ),
         );
-
-        // final viewModel = HomeViewModel(eventRepository: context.read());
-        // return HomeScreen(viewModel: viewModel);
       },
       routes: [
+        GoRoute(
+          path: Routes.singleEvent,
+          builder: (context, state) {
+            return SingleEventScreen(
+              viewModel: SingleEventScreenViewModel(
+                eventRepository: context.read(),
+                unitRepository: context.read(),
+              ),
+            );
+          },
+        ),
         GoRoute(
           path: Routes.eventsRelative,
           builder: (context, state) {
