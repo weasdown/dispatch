@@ -154,6 +154,9 @@ class _MapPageState extends State<MapPage> {
             // Cache the position so the new map starts exactly here
             _lastKnownPosition = position;
           },
+          onTap: (LatLng latlng) => debugPrint('Tapped the map at $latlng'),
+          onLongPress: (LatLng latlng) =>
+              debugPrint('Long pressed / right clicked the map at $latlng'),
           // // FIXME fix event caller uncertainty circles
           // // circles:
           // //     (showEvents)
