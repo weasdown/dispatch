@@ -15,4 +15,9 @@ abstract class UnitRepository {
   Unit? _selectedUnit;
 
   Future<Result<Unit?>> get selectedUnit async => Result.ok(_selectedUnit);
+
+  Future<Result<bool>> updateUnit(Unit newUnit) async {
+    _selectedUnit = newUnit;
+    return Result.ok(true);
+  }
 }
