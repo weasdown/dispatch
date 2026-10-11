@@ -22,11 +22,14 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       body: ListenableBuilder(
         listenable: widget.viewModel.load,
         builder: (context, child) {
+          final Logger log = Logger('_SingleEventScreenState');
           return ListenableBuilder(
             listenable: widget.viewModel,
             builder: (context, _) {
               final Event? event = widget.viewModel.event;
-              return _SingleEvent(event: event);
+              return (event == null)
+                  ? _NullEvent(event: event, log: log)
+                  : _NonNullEvent(event: event, log: log); // event != null;
             },
           );
 
@@ -174,21 +177,6 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
         },
       ),
     );
-  }
-}
-
-class _SingleEvent extends StatelessWidget {
-  const _SingleEvent({required this.event});
-
-  final Event? event;
-
-  @override
-  Widget build(BuildContext context) {
-    final Logger log = Logger('_SingleEvent');
-
-    return (event == null)
-        ? _NullEvent(event: event, log: log)
-        : _NonNullEvent(event: event!, log: log); // event != null
   }
 }
 
