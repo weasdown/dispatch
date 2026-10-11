@@ -1,3 +1,4 @@
+import 'package:dispatch/domain/models/unit/unit_status.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 /// An ambulance vehicle, air ambulance or other resource.
@@ -26,6 +27,12 @@ class Unit {
   // TODO add a separate unitType attribute, or make subclasses of Unit (and make Unit sealed), for storing type, e.g. OpsComm, as opposed to the vehicle they happen to be in.
   /// The type of vehicle that this is.
   final VehicleType vehicleType;
+
+  UnitStatus _status = UnitStatus.pd;
+
+  UnitStatus get status => _status;
+
+  void updateStatus(UnitStatus status) => _status = status;
 }
 
 enum VehicleType {
