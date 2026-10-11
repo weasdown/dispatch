@@ -25,7 +25,7 @@ class LocalDataService {
 }
 
 final User _defaultUser = const User(
-  name: 'Sofie',
+  name: 'Sophie Williamson',
   esr: 12353248763,
   // For demo purposes we use a local asset
   picture: 'assets/user.jpg',
@@ -83,10 +83,10 @@ List<Event> get _defaultEvents {
         noc: Cat1NOC.c1ArrestPeriArrest(),
       )
       ..assignedUnits = [
-        _defaultUnits[0],
-        _defaultUnits[4],
-        _defaultUnits[6],
-        _defaultUnits[7],
+        _defaultUnits[0], // NA136
+        _defaultUnits[4], // NF159
+        _defaultUnits[6], // ND027
+        _defaultUnits[7], // NT431
       ],
     Event.preAlert(
       idNum: 123,
@@ -110,7 +110,6 @@ List<Event> get _defaultEvents {
       location: LatLng(51.75068849682342, -0.9859928066375558),
       noc: Cat4NOC.medicalMinor(),
     )..assignedUnits = [_defaultUnits[1]],
-
     Event.withNOC(
       idNum: 3128,
       address: 'Thatcham Station',
@@ -130,6 +129,22 @@ List<Event> get _defaultEvents {
       author: _defaultUser,
       message: 'CPR was already in progress before the call was started.',
     ),
+  );
+
+  defaults.first.addRemark(
+    Remark(author: _defaultUser, message: 'NA136 DP Didcot RC'),
+  );
+
+  defaults.first.addRemark(
+    Remark(author: _defaultUser, message: 'NF159 DP Smith\'s Wharf, Wantage'),
+  );
+
+  defaults.first.addRemark(
+    Remark(author: _defaultUser, message: 'ND027 DP Stokenchurch HEMS base'),
+  );
+
+  defaults.first.addRemark(
+    Remark(author: _defaultUser, message: 'NT431 DP Oxford City RC'),
   );
 
   return defaults;
