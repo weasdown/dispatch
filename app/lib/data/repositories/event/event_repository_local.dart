@@ -9,13 +9,12 @@ import '../../services/local_data_service.dart';
 import 'event_repository.dart';
 
 /// Local implementation of EventRepository
-class EventRepositoryLocal implements EventRepository {
+class EventRepositoryLocal extends EventRepository {
   EventRepositoryLocal({required this._localDataService}) : _currentIDNum = 100;
 
-  // Only create default event once.
-  bool _isInitialized = false;
-  // Used to generate IDs for events.
-  int _sequentialId = 0;
+  bool _isInitialized = false; // Only create default event once.
+
+  int _sequentialId = 0; // Used to generate IDs for events.
 
   final _events = List<Event>.empty(growable: true);
   final LocalDataService _localDataService;
@@ -77,10 +76,5 @@ class EventRepositoryLocal implements EventRepository {
   Future<Result<Event?>> get selectedEvent async {
     _selectedEvent = _events[Random().nextInt(_events.length)];
     return Result.ok(_selectedEvent);
-  }
-
-  @override
-  void setEvent(Event event) {
-    _selectedEvent = event;
   }
 }
