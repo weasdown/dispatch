@@ -1,3 +1,6 @@
+import 'dart:collection';
+
+import 'package:dispatch/domain/models/remark.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../status.dart';
@@ -156,6 +159,10 @@ class Event {
     }
   }
 
+  void addRemark(Remark remark) {
+    _remarks.add(remark);
+  }
+
   /// The ambulances and other units assigned to this event.
   List<Unit> assignedUnits = List.empty(growable: true);
 
@@ -212,6 +219,10 @@ class Event {
   NOC? get noc => _noc;
 
   Priority get priority => status.priority;
+
+  final List<Remark> _remarks = [];
+
+  UnmodifiableListView<Remark> get remarks => UnmodifiableListView(_remarks);
 
   EventStatus status;
 
