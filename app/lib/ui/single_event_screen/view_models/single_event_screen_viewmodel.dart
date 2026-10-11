@@ -49,6 +49,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
 
   void updateEvent(Event event) {
     _event = event;
+    _eventRepository.setEvent(event);
     notifyListeners();
   }
 }

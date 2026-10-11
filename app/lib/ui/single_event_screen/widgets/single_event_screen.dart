@@ -5,21 +5,30 @@ import 'package:logging/logging.dart';
 import '../../../domain/models/event/event.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 
-class SingleEventScreen extends StatelessWidget {
+class SingleEventScreen extends StatefulWidget {
   const SingleEventScreen({super.key, required this.viewModel});
 
   final SingleEventScreenViewModel viewModel;
 
   @override
+  State<SingleEventScreen> createState() => _SingleEventScreenState();
+}
+
+class _SingleEventScreenState extends State<SingleEventScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(title: Text('Event'), toolbarHeight: 32),
       body: ListenableBuilder(
-        listenable: viewModel.load,
+        listenable: widget.viewModel.load,
         builder: (context, child) {
-          Event? event = viewModel.event;
-
-          return _SingleEvent(event: event);
+          return ListenableBuilder(
+            listenable: widget.viewModel,
+            builder: (context, _) {
+              final Event? event = widget.viewModel.event;
+              return _SingleEvent(event: event);
+            },
+          );
 
           // // TODO move this if-else to _SingleEvent widget
           // // TODO consider invert if to have == null case first
@@ -283,7 +292,7 @@ class _Overview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log.info('Selected event: ${event.idLastFour}');
+    log.info('Selected event in _Overview: ${event.idLastFour}');
     return Center(
       child: Table(
         children: [
