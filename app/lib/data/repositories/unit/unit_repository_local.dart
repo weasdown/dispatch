@@ -8,7 +8,7 @@ import '../../services/local_data_service.dart';
 import 'unit_repository.dart';
 
 /// Local implementation of UnitRepository
-class UnitRepositoryLocal implements UnitRepository {
+class UnitRepositoryLocal extends UnitRepository {
   UnitRepositoryLocal({required this._localDataService});
 
   // Only create default unit once.
