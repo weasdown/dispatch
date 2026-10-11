@@ -4,7 +4,7 @@
 library;
 
 import 'package:dispatch/domain/models/event/priority.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 extension PriorityColour on Priority {
   /// Defines the colour to be used for displaying events of this priority.

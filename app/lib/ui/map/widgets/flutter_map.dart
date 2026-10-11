@@ -1,6 +1,6 @@
 import 'package:dispatch/ui/map/widgets/event_map_marker.dart';
 import 'package:dispatch/ui/map/widgets/unit_map_marker.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 import '../../../domain/models/event/event.dart';

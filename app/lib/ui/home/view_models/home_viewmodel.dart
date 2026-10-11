@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
 import '../../../domain/models/event/event.dart';
