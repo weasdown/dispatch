@@ -35,13 +35,17 @@ class EventMapMarker extends StatelessWidget {
     onSecondaryTap: () =>
         debugPrint('Secondary tapped event ${_event.idLastFour}'),
     child: Container(
-      color: _event.priority.colour,
+      color: _event.priority.backgroundColour,
       height: 24,
       width: 36,
       child: Center(
         child: Text(
           _event.idLastFour,
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: _event.priority.textColour,
+          ),
           textAlign: TextAlign.center,
         ),
       ),

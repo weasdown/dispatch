@@ -27,7 +27,7 @@ class HomeViewModel extends ChangeNotifier {
   // late Command1<void, int> deleteBooking;
 
   Widget eventTile(Event singleEvent) => Card(
-    color: singleEvent.priority.colour,
+    color: singleEvent.priority.backgroundColour,
     child: ListTile(
       leading: SelectableText(
         singleEvent.category.toString(),
