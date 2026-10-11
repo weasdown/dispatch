@@ -7,7 +7,7 @@ import 'domain/models/event/event_list_model.dart';
 import 'routing/router.dart';
 
 void main() async {
-  for (final Key key in Env.keys) {
+  for (final EnvironmentKey key in Environment.keys) {
     if (key().isEmpty) {
       throw Exception('Value for Key ${key.name} is not defined.');
     }

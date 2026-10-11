@@ -1,14 +1,14 @@
-final class Env {
+final class Environment {
   static String get googleMapsApiKey =>
       const String.fromEnvironment('GOOGLE_MAPS_API_KEY');
 
-  static List<Key> get keys => [
-    Key('googleMapsApiKey', () => googleMapsApiKey),
+  static List<EnvironmentKey> get keys => [
+    EnvironmentKey('googleMapsApiKey', () => googleMapsApiKey),
   ];
 }
 
-final class Key {
-  Key(this.name, this.value);
+final class EnvironmentKey {
+  EnvironmentKey(this.name, this.value);
 
   String call() => value();
 
