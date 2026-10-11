@@ -64,7 +64,7 @@ class HomeScreen extends StatelessWidget {
                       units: allUnits,
                     ),
                   ),
-                  VerticalDivider(),
+                  VerticalDivider(width: 3, thickness: 3),
                   Flexible(
                     flex: 1,
                     child: SingleEventScreen(
