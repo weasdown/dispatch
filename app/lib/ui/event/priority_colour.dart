@@ -24,7 +24,7 @@ extension PriorityColour on Priority {
   Color get textColour => switch (this) {
     Priority.zero => Colors.black,
     Priority.one => Colors.black,
-    Priority.two => Colors.white,
+    Priority.two => Colors.black,
     Priority.three => Colors.black,
     Priority.four => Colors.white,
     Priority.five => Colors.white,
