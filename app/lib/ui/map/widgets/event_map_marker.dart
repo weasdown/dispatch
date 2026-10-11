@@ -18,8 +18,12 @@ class EventMapMarker extends StatelessWidget {
 
   final Event _event;
 
-  fm.Marker get flutterMapMarker =>
-      fm.Marker(point: ll2.LatLng(lat, lng), child: _body);
+  fm.Marker get flutterMapMarker => fm.Marker(
+    point: ll2.LatLng(lat, lng),
+    height: 20,
+    width: 35,
+    child: _body,
+  );
 
   /// Latitude.
   double get lat => _event.location.latitude;
