@@ -1,12 +1,10 @@
 import 'package:dispatch/ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_marker_widgets/google_maps_marker_widgets.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
-import 'event_map_marker.dart';
-import 'unit_map_marker.dart';
+import 'flutter_map.dart';
 
 /// A page that displays a Google Maps map.
 class MapPage extends StatefulWidget {
@@ -20,7 +18,6 @@ class MapPage extends StatefulWidget {
     required this.units,
   });
 
-  /// Approximate geometric centre of the SCAS area.
   static const LatLng scasCentre = LatLng(
     51.453100204133726,
     -1.307710460160255,
@@ -44,70 +41,8 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  late Key _mapKey;
-  late String _currentMapId;
-  CameraPosition _lastKnownPosition = const CameraPosition(
-    target: MapPage.scasCentre,
-    zoom: 9,
-  );
-
-  final _markerWidgetsController = MarkerWidgetsController();
-
-  @override
-  void initState() {
-    super.initState();
-    _currentMapId = 'light_map_id';
-    _mapKey = UniqueKey();
-
-    setMarkers();
-  }
-
   bool showEvents = true;
   bool showUnits = true;
-
-  Iterable<({Marker marker, MarkerWidget markerWidget})> eventMarkers() {
-    Iterable<EventMapMarker> eventMarkers = widget.events.map(
-      (Event event) => EventMapMarker(
-        viewModel: widget.singleEventScreenViewModel,
-        event: event,
-      ),
-    );
-
-    Iterable<({Marker marker, MarkerWidget markerWidget})> eventMapMarkers =
-        eventMarkers.map(
-          (EventMapMarker eventMarker) => (
-            marker: eventMarker.advancedMapMarker,
-            markerWidget: eventMarker.markerWidget,
-          ),
-        );
-
-    return eventMapMarkers;
-  }
-
-  Iterable<({Marker marker, MarkerWidget markerWidget})> unitMarkers() {
-    Iterable<UnitMapMarker> unitMarkers = widget.units.map(
-      (Unit unit) => UnitMapMarker(
-        viewModel: widget.singleEventScreenViewModel,
-        unit: unit,
-      ),
-    );
-
-    Iterable<({Marker marker, MarkerWidget markerWidget})> unitMapMarkers =
-        unitMarkers.map(
-          (UnitMapMarker unitMarker) => (
-            marker: unitMarker.advancedMapMarker,
-            markerWidget: unitMarker.markerWidget,
-          ),
-        );
-
-    return unitMapMarkers;
-  }
-
-  void setMarkers() {
-    _markerWidgetsController.bulkAddMarkerWidget(eventMarkers());
-
-    _markerWidgetsController.bulkAddMarkerWidget(unitMarkers());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,30 +77,17 @@ class _MapPageState extends State<MapPage> {
         ],
       ),
       // endDrawer: NavigationDrawer(children: [Text('Event details')]),
-      body: MarkerWidgets(
-        markerWidgetsController: _markerWidgetsController,
-        builder: (context, markers) => GoogleMap(
-          key: _mapKey,
-          mapId: _currentMapId,
-          markerType: GoogleMapMarkerType.advancedMarker,
-          initialCameraPosition: _lastKnownPosition,
-          markers: markers,
-          onCameraMove: (position) {
-            // Cache the position so the new map starts exactly here
-            _lastKnownPosition = position;
-          },
-          onTap: (LatLng latlng) => debugPrint('Tapped the map at $latlng'),
-          onLongPress: (LatLng latlng) =>
-              debugPrint('Long pressed / right clicked the map at $latlng'),
-          // // FIXME fix event caller uncertainty circles
-          // // circles:
-          // //     (showEvents)
-          // //         ? widget.events
-          // //             .map((Event event) => event.callerLocationCircle)
-          // //             .toSet()
-          // //         : {},
-        ),
+
+      body: FlutterMapPage(
+        events: showEvents ? widget.events : [],
+        units: showUnits ? widget.units : [],
+        singleEventScreenViewModel: widget.singleEventScreenViewModel,
       ),
+      // body: GoogleMapsPage(
+      //   singleEventScreenViewModel: widget.singleEventScreenViewModel,
+      //   events: widget.events,
+      //   units: widget.units,
+      // ),
     );
   }
 }

@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:gap/gap.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' hide Marker;
 import 'package:google_maps_marker_widgets/google_maps_marker_widgets.dart';
+import 'package:latlong2/latlong.dart' as ll2;
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
-import '../../single_event_screen/view_models/single_event_screen_viewmodel.dart';
 
 class UnitMapMarker extends StatelessWidget {
-  UnitMapMarker({
-    super.key,
-    required this._unit,
-    required this._viewModel,
-    this.onDoubleTap,
-  }) : markerId = MarkerId(_unit.callsign);
+  const UnitMapMarker({super.key, required this._unit});
+
+  final double height = 60;
 
   final Unit _unit;
+
+  final double width = 52;
+
+  Marker flutterMapMarker(BuildContext context) => Marker(
+    point: ll2.LatLng(lat, lng),
+    height: height,
+    width: width,
+    child: _body(context),
+  );
 
   /// Latitude.
   double get lat => _unit.location.latitude;
@@ -22,10 +30,77 @@ class UnitMapMarker extends StatelessWidget {
   /// Longitude.
   double get lng => _unit.location.longitude;
 
-  final MarkerId markerId;
+  // // FIXME change _viewModel to correct class and use for setting selected unit
+  // final SingleEventScreenViewModel _viewModel;
 
-  // FIXME change _viewModel to correct class and use for setting selected unit
-  final SingleEventScreenViewModel _viewModel;
+  /// Path to the image used as this [Event]'s icon.
+  String get _iconAsset => switch (_unit.vehicleType) {
+    VehicleType.dca => 'assets/images/dca.png',
+    VehicleType.rrv => 'assets/images/rrv.png',
+    VehicleType.helicopter => 'assets/images/tvaa.jpg',
+    VehicleType.criticalCareCar => 'assets/images/hems-car.png',
+    // FIXME: give the CFR a unique image.
+    VehicleType.communityFirstResponder => 'assets/images/rrv.png',
+  };
+
+  Widget _body(BuildContext context) => GestureDetector(
+    onTap: _onTap,
+    onDoubleTap: _onDoubleTap,
+    child: Container(
+      // height: 100,
+      // width: 80,
+      color: Colors.blue,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Gap(4),
+          Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Text(
+                _unit.callsign,
+                style: Theme.of(context).textTheme.bodySmall!
+                    .copyWith(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+                softWrap: false,
+              ),
+            ),
+          ),
+
+          // Gap(4),
+          Image.asset(
+            _iconAsset,
+            height: 35,
+            // scale: 0.5,
+            width: 50,
+            // scale: 0.2,
+          ),
+        ],
+      ),
+    ),
+  );
+
+  void _onDoubleTap() {
+    debugPrint('Double tapped AdvancedMarker for ${_unit.callsign}');
+  }
+
+  void _onTap() {
+    debugPrint('Tapped AdvancedMarker for ${_unit.callsign}');
+    // _viewModel.updateUnit(_unit);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final String icon = _iconAsset;
+    debugPrint('Unit icon: $icon');
+    return _body(context);
+  }
+}
+
+class UnitGoogleMapsMarker extends UnitMapMarker {
+  UnitGoogleMapsMarker({super.key, required super.unit})
+    : markerId = MarkerId(unit.callsign);
 
   // void addToMap(MarkerWidgetsController markerWidgetsController) {
   //   markerWidgetsController.addMarkerWidget(
@@ -38,25 +113,12 @@ class UnitMapMarker extends StatelessWidget {
   //   );
   // }
 
-  /// Path to the image used as this [Event]'s icon.
-  String get _iconAsset => switch (_unit.vehicleType) {
-    VehicleType.dca => 'assets/images/dca.png',
-    VehicleType.rrv => 'assets/images/rrv.png',
-    VehicleType.helicopter => 'assets/images/tvaa.jpg',
-    VehicleType.criticalCareCar => 'assets/images/hems-car.png',
-    // FIXME: give the CFR a unique image.
-    VehicleType.communityFirstResponder => 'assets/images/rrv.png',
-  };
-
   // AssetMapBitmap _markerIcon(String asset) => AssetMapBitmap(asset, height: 40);
 
   // TODO move onTap to markerWidget
   /// Gets an [AdvancedMarker] for showing this [Unit] on a map.
   AdvancedMarker get advancedMapMarker => AdvancedMarker(
-    onTap: () {
-      debugPrint('Tapped AdvancedMarker for ${_unit.callsign}');
-      // _viewModel.updateUnit(_unit);
-    },
+    onTap: _onTap,
     markerId: markerId,
     position: LatLng(lat, lng),
     // infoWindow: InfoWindow(
@@ -65,15 +127,13 @@ class UnitMapMarker extends StatelessWidget {
     // ),
   );
 
-  Widget get _body => Image.asset(_iconAsset, width: 60);
+  final MarkerId markerId;
 
-  MarkerWidget get markerWidget =>
-      MarkerWidget(markerId: markerId, child: _body);
-
-  final void Function()? onDoubleTap;
+  MarkerWidget markerWidget(BuildContext context) =>
+      MarkerWidget(markerId: markerId, child: _body(context));
 
   @override
   Widget build(BuildContext context) {
-    return _body;
+    return const Placeholder();
   }
 }

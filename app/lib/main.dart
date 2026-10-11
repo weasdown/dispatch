@@ -7,6 +7,11 @@ import 'domain/models/event/event_list_model.dart';
 import 'routing/router.dart';
 
 void main() async {
+  if (kIsWeb) {
+    WidgetsFlutterBinding.ensureInitialized();
+    BrowserContextMenu.disableContextMenu(); // Disable browser's default right click handling.
+  }
+
   for (final EnvironmentKey key in Environment.keys) {
     if (key().isEmpty) {
       throw Exception('Value for Key ${key.name} is not defined.');

@@ -3,8 +3,8 @@ import 'package:logging/logging.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
-import '../../../ui/map/widgets/map.dart';
 import '../../../utils/result.dart';
+import '../../map/widgets/map.dart';
 import '../../single_event_screen/view_models/single_event_screen_viewmodel.dart';
 import '../../single_event_screen/widgets/single_event_screen.dart';
 import '../view_models/home_viewmodel.dart';
