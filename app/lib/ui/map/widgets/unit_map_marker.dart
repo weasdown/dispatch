@@ -1,3 +1,4 @@
+import 'package:dispatch/ui/unit/unit_status_colour.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:gap/gap.dart';
@@ -49,19 +50,21 @@ class UnitMapMarker extends StatelessWidget {
     child: Container(
       // height: 100,
       // width: 80,
-      color: Colors.blue,
+      color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Gap(4),
           Container(
-            color: Colors.white,
+            color: _unit.status.backgroundColour,
             child: Padding(
               padding: const EdgeInsets.all(2.0),
               child: Text(
                 _unit.callsign,
-                style: Theme.of(context).textTheme.bodySmall!
-                    .copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: _unit.status.textColour,
+                ),
                 textAlign: TextAlign.center,
                 softWrap: false,
               ),
