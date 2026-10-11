@@ -39,24 +39,13 @@ class FlutterMapPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // List<Marker> _eventMarkers = ;
-
     return FlutterMap(
-      options: MapOptions(
-        initialCenter: MapPage.scasCentre,
-        // LatLng(
-        //   51.509364,
-        //   -0.128928,
-        // ), // Center the map over London, UK
-        initialZoom: 9,
-      ),
+      options: MapOptions(initialCenter: MapPage.scasCentre, initialZoom: 9),
       children: [
         // Base layer
         TileLayer(
-          // Bring your own tiles
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // For demonstration only
-          userAgentPackageName: 'com.weasdown.dispatch' /*'com.example.app'*/, // Add your app identifier
-          // And many more recommended properties!
+          userAgentPackageName: 'com.weasdown.dispatch',
         ),
 
         // Units layer
@@ -64,20 +53,6 @@ class FlutterMapPage extends StatelessWidget {
 
         // Events layer
         MarkerLayer(markers: eventMarkers),
-
-        RichAttributionWidget(
-          // Include a stylish prebuilt attribution widget that meets all requirements
-          attributions: [
-            TextSourceAttribution(
-              'OpenStreetMap contributors',
-              onTap: () => {
-                debugPrint('Pretending to launch openstreetmap URL'),
-                // launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-              }, // (external)
-            ),
-            // Also add images...
-          ],
-        ),
       ],
     );
   }
