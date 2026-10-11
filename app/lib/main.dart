@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Key;
 import 'package:provider/provider.dart';
 
-import 'api/env.dart';
 import 'config/dependencies.dart';
+import 'data/services/api/env.dart';
 import 'domain/models/event/event_list_model.dart';
 import 'routing/router.dart';
 
