@@ -5,8 +5,8 @@ import 'package:google_maps_marker_widgets/google_maps_marker_widgets.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
-import '../../event/event_map_marker.dart';
-import '../../unit/unit_map_marker.dart';
+import 'event_map_marker.dart';
+import 'unit_map_marker.dart';
 
 /// A page that displays a Google Maps map.
 class MapPage extends StatefulWidget {

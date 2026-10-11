@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_marker_widgets/google_maps_marker_widgets.dart';
 
-import '../../domain/models/event/event.dart';
-import '../../domain/models/event/priority_colour.dart';
-import '../single_event_screen/view_models/single_event_screen_viewmodel.dart';
+import '../../../domain/models/event/event.dart';
+import '../../../domain/models/event/priority_colour.dart';
+import '../../single_event_screen/view_models/single_event_screen_viewmodel.dart';
 
 class EventMapMarker extends StatelessWidget {
   EventMapMarker({
