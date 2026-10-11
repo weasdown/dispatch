@@ -3,7 +3,6 @@ import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
-import '../../map/map.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 import 'remarks_log.dart';
 
