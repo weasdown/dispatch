@@ -1,7 +1,8 @@
+import 'package:dispatch/domain/models/scas_locations.dart';
 import 'package:dispatch/ui/map/widgets/event_map_marker.dart';
 import 'package:dispatch/ui/map/widgets/unit_map_marker.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
@@ -14,6 +15,8 @@ class FlutterMapPage extends StatelessWidget {
     required this.events,
     required this.units,
     required this.singleEventScreenViewModel,
+    required this.showAmbulanceStations,
+    required this.showEOCs,
   });
 
   /// The [Event]s that will be displayed on the map.
@@ -32,6 +35,10 @@ class FlutterMapPage extends StatelessWidget {
         ).flutterMapMarker,
       )
       .toList();
+
+  final bool showAmbulanceStations;
+
+  final bool showEOCs;
 
   List<Marker> unitMarkers(BuildContext context) => units
       .map((Unit unit) => UnitMapMarker(unit: unit).flutterMapMarker(context))
@@ -53,6 +60,24 @@ class FlutterMapPage extends StatelessWidget {
 
         // Events layer
         MarkerLayer(markers: eventMarkers),
+
+        // EOCs layer
+        MarkerLayer(
+          markers: showEOCs
+              ? EmergencyOperationsCentre.values
+                    .map((EmergencyOperationsCentre eoc) => eoc.marker)
+                    .toList()
+              : [],
+        ),
+
+        // Ambulance Stations layer
+        MarkerLayer(
+          markers: showAmbulanceStations
+              ? AmbulanceStation.values
+                    .map((AmbulanceStation station) => station.marker)
+                    .toList()
+              : [],
+        ),
       ],
     );
   }
