@@ -7,6 +7,6 @@ class User {
   /// The user's name.
   final String name;
 
-  /// The user's picture URL.
+  /// The user's picture asset.
   final String picture;
 }

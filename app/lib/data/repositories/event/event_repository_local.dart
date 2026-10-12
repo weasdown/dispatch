@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../domain/models/event/event.dart';

@@ -1,5 +1,6 @@
 import 'package:dispatch/ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
-import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../domain/models/event/event.dart';
@@ -43,6 +44,8 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   bool showEvents = true;
   bool showUnits = true;
+  bool showEOCs = true;
+  bool showBases = true;
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +64,8 @@ class _MapPageState extends State<MapPage> {
                         setState(() => showEvents = value),
                   ),
                 ],
-              ),
-              SizedBox(width: 8),
+              ), // Show Events switch
+              Gap(8),
               Row(
                 children: [
                   Text('Show Units? '),
@@ -71,7 +74,27 @@ class _MapPageState extends State<MapPage> {
                     onToggle: (bool value) => setState(() => showUnits = value),
                   ),
                 ],
-              ),
+              ), // Show Units switch
+              Gap(8),
+              Row(
+                children: [
+                  Text('Show EOCs? '),
+                  _ShowEOCsSwitch(
+                    showEOCs: showEOCs,
+                    onToggle: (bool value) => setState(() => showEOCs = value),
+                  ),
+                ],
+              ), // Show EOCs switch
+              Gap(8),
+              Row(
+                children: [
+                  Text('Show bases? '),
+                  _ShowAmbulanceStationsSwitch(
+                    showBases: showBases,
+                    onToggle: (bool value) => setState(() => showBases = value),
+                  ),
+                ],
+              ), // Show EOCs switch
             ],
           ),
         ],
@@ -82,6 +105,8 @@ class _MapPageState extends State<MapPage> {
         events: showEvents ? widget.events : [],
         units: showUnits ? widget.units : [],
         singleEventScreenViewModel: widget.singleEventScreenViewModel,
+        showAmbulanceStations: showBases,
+        showEOCs: showEOCs,
       ),
       // body: GoogleMapsPage(
       //   singleEventScreenViewModel: widget.singleEventScreenViewModel,
@@ -118,6 +143,41 @@ class _ShowUnitsSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     return Switch(
       value: showUnits,
+      activeThumbColor: Colors.green,
+      onChanged: onToggle,
+    );
+  }
+}
+
+class _ShowEOCsSwitch extends StatelessWidget {
+  const _ShowEOCsSwitch({required this.showEOCs, required this.onToggle});
+
+  final ValueChanged<bool>? onToggle;
+  final bool showEOCs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value: showEOCs,
+      activeThumbColor: Colors.green,
+      onChanged: onToggle,
+    );
+  }
+}
+
+class _ShowAmbulanceStationsSwitch extends StatelessWidget {
+  const _ShowAmbulanceStationsSwitch({
+    required this.showBases,
+    required this.onToggle,
+  });
+
+  final ValueChanged<bool>? onToggle;
+  final bool showBases;
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value: showBases,
       activeThumbColor: Colors.green,
       onChanged: onToggle,
     );

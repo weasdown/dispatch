@@ -1,5 +1,5 @@
 import 'package:dispatch/ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_marker_widgets/google_maps_marker_widgets.dart';
 
@@ -8,7 +8,9 @@ import '../../../domain/models/unit/unit.dart';
 import 'event_map_marker.dart';
 import 'unit_map_marker.dart';
 
+// TODO remove this file entirely
 /// A page that displays a Google Maps map.
+@Deprecated('Use FlutterMap instead')
 class GoogleMapsPage extends StatefulWidget {
   // TODO get events and units from a MapViewModel (will need to create MapViewModel)
   const GoogleMapsPage({

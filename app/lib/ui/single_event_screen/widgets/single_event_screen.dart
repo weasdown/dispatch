@@ -1,5 +1,10 @@
-import 'package:flutter/material.dart';
+import 'dart:collection';
+
+import 'package:dispatch/domain/models/remark.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 
 import '../../../domain/models/event/event.dart';
@@ -22,11 +27,14 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       body: ListenableBuilder(
         listenable: widget.viewModel.load,
         builder: (context, child) {
+          final Logger log = Logger('_SingleEventScreenState');
           return ListenableBuilder(
             listenable: widget.viewModel,
             builder: (context, _) {
               final Event? event = widget.viewModel.event;
-              return _SingleEvent(event: event);
+              return (event == null)
+                  ? _NullEvent(event: event, log: log)
+                  : _NonNullEvent(event: event, log: log); // event != null;
             },
           );
 
@@ -177,21 +185,6 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
   }
 }
 
-class _SingleEvent extends StatelessWidget {
-  const _SingleEvent({required this.event});
-
-  final Event? event;
-
-  @override
-  Widget build(BuildContext context) {
-    final Logger log = Logger('_SingleEvent');
-
-    return (event == null)
-        ? _NullEvent(event: event, log: log)
-        : _NonNullEvent(event: event!, log: log); // event != null
-  }
-}
-
 class _Buttons extends StatelessWidget {
   const _Buttons({required this.event});
 
@@ -256,6 +249,8 @@ class _NonNullEvent extends StatelessWidget {
                 _Buttons(event: event),
                 const Gap(50),
                 _PatientDetails(event: event),
+                const Gap(50),
+                _RemarksLog(event: event),
               ],
             ),
           ),
@@ -324,6 +319,53 @@ class _PatientDetails extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text('Patient details...\n\nTBC', textAlign: TextAlign.center),
+      ),
+    );
+  }
+}
+
+class _RemarksLog extends StatelessWidget {
+  const _RemarksLog({required this.event});
+
+  final Event event;
+
+  List<DataCell> tableRow(Remark remark) {
+    return [
+      DataCell(Text(remark.author.name)),
+      DataCell(
+        Text(DateFormat.yMMMd('en_GB').add_Hms().format(remark.timestamp)),
+      ),
+      DataCell(Text(remark.message)),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    initializeDateFormatting('en_GB', null);
+    final UnmodifiableListView<Remark> remarks = event.remarks;
+    return SingleChildScrollView(
+      child: DataTable(
+        columns: [
+          DataColumn(
+            label: Text('Name'),
+            headingRowAlignment: MainAxisAlignment.start,
+            columnWidth: FractionColumnWidth(0.2),
+          ),
+          DataColumn(
+            label: Text('Time'),
+            headingRowAlignment: MainAxisAlignment.start,
+            columnWidth: FractionColumnWidth(0.2),
+          ),
+          DataColumn(
+            label: Text('Remark'),
+            headingRowAlignment: MainAxisAlignment.start,
+            columnWidth: FractionColumnWidth(0.6),
+          ),
+        ],
+        rows: remarks
+            .map((Remark remark) => DataRow(cells: tableRow(remark)))
+            .toList(),
+        dividerThickness: 1,
       ),
     );
   }
