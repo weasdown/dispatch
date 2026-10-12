@@ -1,13 +1,19 @@
 import 'dart:collection';
 
+import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:material_ui/material_ui.dart';
 
-final class SCASLocation {
+sealed class SCASLocation {
   const SCASLocation(this.name, this.latlng);
 
   final LatLng latlng;
 
+  Marker get marker;
+
   final String name;
+
+  Color get markerColour;
 }
 
 /// Where ambulances are based.
@@ -143,6 +149,15 @@ enum AmbulanceStation implements SCASLocation {
   final LatLng latlng;
 
   @override
+  Marker get marker => Marker(
+    point: latlng,
+    child: Icon(Icons.location_on, color: markerColour, size: 20),
+  );
+
+  @override
+  Color get markerColour => Colors.red;
+
+  @override
   final String name;
 
   final Node node;
@@ -163,6 +178,15 @@ enum EmergencyOperationsCentre implements SCASLocation {
 
   @override
   final LatLng latlng;
+
+  @override
+  Marker get marker => Marker(
+    point: latlng,
+    child: Icon(Icons.location_on, color: markerColour, size: 20),
+  );
+
+  @override
+  Color get markerColour => Colors.blue;
 
   @override
   final String name;
