@@ -8,7 +8,9 @@ import '../../../domain/models/unit/unit.dart';
 import 'event_map_marker.dart';
 import 'unit_map_marker.dart';
 
+// TODO remove this file entirely
 /// A page that displays a Google Maps map.
+@Deprecated('Use FlutterMap instead')
 class GoogleMapsPage extends StatefulWidget {
   // TODO get events and units from a MapViewModel (will need to create MapViewModel)
   const GoogleMapsPage({
