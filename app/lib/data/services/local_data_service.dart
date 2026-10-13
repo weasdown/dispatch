@@ -17,11 +17,11 @@ class LocalDataService {
 
   List<Event> get events => _events;
 
+  User getUser() => _defaultUser;
+
   final List<Unit> _units;
 
   List<Unit> get units => _units;
-
-  User get user => _defaultUser;
 }
 
 final User _defaultUser = const User(

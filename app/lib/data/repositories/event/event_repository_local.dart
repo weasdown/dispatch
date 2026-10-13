@@ -1,6 +1,7 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/remark.dart';
 import '../../../domain/models/status.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
@@ -9,6 +10,14 @@ import 'event_repository.dart';
 /// Local implementation of EventRepository
 class EventRepositoryLocal extends EventRepository {
   EventRepositoryLocal({required this._localDataService}) : _currentIDNum = 100;
+
+  @override
+  void addRemark(Remark remark) {
+    if (_selectedEvent == null) {
+      throw Exception('Attempted to add remark to null event in $runtimeType.');
+    }
+    _selectedEvent!.addRemark(remark);
+  }
 
   bool _isInitialized = false; // Only create default event once.
 
@@ -74,5 +83,11 @@ class EventRepositoryLocal extends EventRepository {
   Future<Result<Event?>> get selectedEvent async {
     _selectedEvent = _events[Random().nextInt(_events.length)];
     return Result.ok(_selectedEvent);
+  }
+
+  @override
+  Future<Result<bool>> setEvent(Event event) async {
+    _selectedEvent = event;
+    return const Result.ok(true);
   }
 }

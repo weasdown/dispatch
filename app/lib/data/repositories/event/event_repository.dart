@@ -1,9 +1,12 @@
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/remark.dart';
 import '../../../utils/result.dart';
 
 /// Data source for events.
 abstract class EventRepository {
   Future<Result<List<Event>>> get allEvents;
+
+  void addRemark(Remark remark);
 
   /// Get an event by its ID.
   Future<Result<Event>> eventByID(String id);
@@ -14,7 +17,5 @@ abstract class EventRepository {
 
   Future<Result<Event?>> get selectedEvent async => Result.ok(_selectedEvent);
 
-  void setEvent(Event event) {
-    _selectedEvent = event;
-  }
+  Future<Result<void>> setEvent(Event event);
 }

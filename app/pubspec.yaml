@@ -51,6 +51,7 @@ dependencies:
   intl: ^0.20.3
 
   material_ui: any
+  material_symbols_icons: ^4.2960.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
