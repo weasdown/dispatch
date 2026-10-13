@@ -1,10 +1,13 @@
 import 'package:dispatch/data/repositories/unit/unit_repository.dart';
+import 'package:dispatch/data/repositories/user/user_repository.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:logging/logging.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/remark.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../../domain/models/user/user.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
 
@@ -15,6 +18,18 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   }) {
     updateEvent = Command0(_updateEvent);
     load = Command0(_load)..execute();
+  }
+
+  Future<void> addRemark(UserRepository userRepository, String message) async {
+    final Result<User> userResult = await userRepository.getUser();
+
+    switch (userResult) {
+      case Ok<User> _:
+        final User user = userResult.value;
+        _eventRepository.addRemark(Remark(author: user, message: message));
+      case Error<User> _:
+        throw userResult.error;
+    }
   }
 
   final EventRepository _eventRepository;
