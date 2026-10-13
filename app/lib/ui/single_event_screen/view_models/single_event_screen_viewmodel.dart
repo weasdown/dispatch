@@ -13,6 +13,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     required this._eventRepository,
     required this._unitRepository,
   }) {
+    updateEvent = Command0(_updateEvent);
     load = Command0(_load)..execute();
   }
 
@@ -47,9 +48,16 @@ class SingleEventScreenViewModel extends ChangeNotifier {
 
   Future<Result<List<Unit>>> get units => _unitRepository.allUnits;
 
-  void updateEvent(Event event) {
-    _event = event;
-    _eventRepository.setEvent(event);
-    notifyListeners();
+  late final Command0 updateEvent;
+
+  Future<Result<void>> _updateEvent() async {
+    final result = await _eventRepository.setEvent(_event!);
+    switch (result) {
+      case Ok<void>():
+        _log.fine('Event updated');
+      case Error<void>():
+        _log.warning('Failed to update Event', result.error);
+    }
+    return result;
   }
 }

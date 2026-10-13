@@ -59,7 +59,7 @@ class EventMapMarker extends StatelessWidget {
   void _onDoubleTap() {
     debugPrint('Double tapped event ${_event.idLastFour}');
     debugPrint('Setting event to ${_event.idLastFour}');
-    _viewModel.updateEvent(_event);
+    _viewModel.updateEvent.execute();
   }
 
   @override
