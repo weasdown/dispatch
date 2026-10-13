@@ -30,7 +30,11 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
               final Event? event = widget.viewModel.event;
               return (event == null)
                   ? _NullEvent(event: event, log: log)
-                  : _NonNullEvent(event: event, log: log); // event != null;
+                  : _NonNullEvent(
+                      event: event,
+                      log: log,
+                      viewModel: widget.viewModel,
+                    ); // event != null;
             },
           );
 
@@ -222,10 +226,15 @@ class _Location extends StatelessWidget {
 }
 
 class _NonNullEvent extends StatelessWidget {
-  const _NonNullEvent({required this.event, required this.log});
+  const _NonNullEvent({
+    required this.event,
+    required this.log,
+    required this.viewModel,
+  });
 
   final Event event;
   final Logger log;
+  final SingleEventScreenViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -246,7 +255,9 @@ class _NonNullEvent extends StatelessWidget {
                 const Gap(50),
                 _PatientDetails(event: event),
                 const Gap(50),
-                Expanded(child: RemarksLog(event: event)),
+                Expanded(
+                  child: RemarksLog(event: event, viewModel: viewModel),
+                ),
               ],
             ),
           ),
