@@ -14,7 +14,5 @@ abstract class EventRepository {
 
   Future<Result<Event?>> get selectedEvent async => Result.ok(_selectedEvent);
 
-  void setEvent(Event event) {
-    _selectedEvent = event;
-  }
+  Future<Result<void>> setEvent(Event event);
 }

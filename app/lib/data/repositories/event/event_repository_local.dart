@@ -75,4 +75,10 @@ class EventRepositoryLocal extends EventRepository {
     _selectedEvent = _events[Random().nextInt(_events.length)];
     return Result.ok(_selectedEvent);
   }
+
+  @override
+  Future<Result<bool>> setEvent(Event event) async {
+    _selectedEvent = event;
+    return const Result.ok(true);
+  }
 }
