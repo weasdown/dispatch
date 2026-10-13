@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:material_ui/material_ui.dart';
 
 sealed class SCASLocation {
@@ -149,13 +150,22 @@ enum AmbulanceStation implements SCASLocation {
   final LatLng latlng;
 
   @override
-  Marker get marker => Marker(
-    point: latlng,
-    child: Icon(Icons.location_on, color: markerColour, size: 20),
-  );
+  Marker get marker {
+    final double height = 20;
+    final double width = 20;
+    return Marker(
+      height: height,
+      width: width,
+      point: latlng,
+      child: Container(
+        color: markerColour,
+        child: Icon(Symbols.ambulance, color: Colors.black, size: height - 4),
+      ),
+    );
+  }
 
   @override
-  Color get markerColour => Colors.red;
+  Color get markerColour => Colors.grey.shade200;
 
   @override
   final String name;
