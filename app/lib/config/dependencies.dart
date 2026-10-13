@@ -7,6 +7,8 @@ import '../data/repositories/event/event_repository.dart';
 import '../data/repositories/event/event_repository_local.dart';
 import '../data/repositories/unit/unit_repository.dart';
 import '../data/repositories/unit/unit_repository_local.dart';
+import '../data/repositories/user/user_repository.dart';
+import '../data/repositories/user/user_repository_local.dart';
 import '../data/services/local_data_service.dart';
 
 /// Configure dependencies for local data.
@@ -27,6 +29,12 @@ List<SingleChildWidget> get providersLocal {
       create: (context) =>
           UnitRepositoryLocal(localDataService: context.read())
               as UnitRepository,
+    ),
+    Provider(
+      // UserRepository Provider
+      create: (context) =>
+          UserRepositoryLocal(localDataService: context.read())
+              as UserRepository,
     ),
   ];
 }
