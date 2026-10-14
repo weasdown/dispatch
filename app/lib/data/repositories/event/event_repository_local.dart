@@ -81,7 +81,7 @@ class EventRepositoryLocal extends EventRepository {
   /// Gets a [Result.ok] holding a random event from `_events`.
   @override
   Future<Result<Event?>> get selectedEvent async {
-    _selectedEvent = _events[Random().nextInt(_events.length)];
+    _selectedEvent = _events.first; //_events[Random().nextInt(_events.length)];
     return Result.ok(_selectedEvent);
   }
 
