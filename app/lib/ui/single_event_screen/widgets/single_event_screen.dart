@@ -322,10 +322,15 @@ class _PatientDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(border: Border.all()),
+      decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text('Patient details...\n\nTBC', textAlign: TextAlign.center),
+
+        child: Table(
+          children: [
+            TableRow(children: [Text('Name'), Text('[pt name]')]),
+          ],
+        ),
       ),
     );
   }
