@@ -1,3 +1,4 @@
+import 'gp_practice.dart';
 import 'person.dart';
 
 final class Patient implements Person {
@@ -7,5 +8,10 @@ final class Patient implements Person {
   final String name;
 
   /// Person's age in integer years.
-  late final int? age;
+  int? age;
+
+  /// Person's date of birth, usually displayed in the dd/mm/yyyy format.
+  DateTime? dateOfBirth;
+
+  GPPractice? gpPractice;
 }
