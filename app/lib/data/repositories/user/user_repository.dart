@@ -1,4 +1,4 @@
-import '../../../domain/models/user/user.dart';
+import '../../../domain/models/person/user.dart';
 import '../../../utils/result.dart';
 
 /// Source for user data.

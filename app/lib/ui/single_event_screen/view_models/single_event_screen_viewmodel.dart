@@ -7,7 +7,7 @@ import '../../../data/repositories/user/user_repository.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/unit/unit.dart';
-import '../../../domain/models/user/user.dart';
+import '../../../domain/models/person/user.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
 

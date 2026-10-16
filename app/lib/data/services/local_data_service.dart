@@ -8,7 +8,7 @@ import '../../domain/models/event/event.dart';
 import '../../domain/models/event/noc.dart';
 import '../../domain/models/event/remark.dart';
 import '../../domain/models/unit/unit.dart';
-import '../../domain/models/user/user.dart';
+import '../../domain/models/person/user.dart';
 
 class LocalDataService {
   LocalDataService() : _events = _defaultEvents, _units = _defaultUnits;

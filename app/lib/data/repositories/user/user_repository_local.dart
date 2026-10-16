@@ -1,4 +1,4 @@
-import '../../../domain/models/user/user.dart';
+import '../../../domain/models/person/user.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
 import 'user_repository.dart';
