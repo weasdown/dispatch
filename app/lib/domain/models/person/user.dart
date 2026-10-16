@@ -11,5 +11,7 @@ class User implements Person {
   final String name;
 
   /// The user's picture asset.
-  final String picture;
+  final String? picture;
+
+  // TODO add Role role attribute that describes whether they are e.g. a dispatcher, call taker or clinician.
 }
