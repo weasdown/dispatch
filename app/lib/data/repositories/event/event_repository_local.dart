@@ -1,8 +1,8 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../domain/models/event/event.dart';
-import '../../../domain/models/remark.dart';
-import '../../../domain/models/status.dart';
+import '../../../domain/models/event/remark.dart';
+import '../../../domain/models/event/status.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
 import 'event_repository.dart';

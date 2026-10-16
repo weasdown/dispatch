@@ -3,8 +3,9 @@
 /// Kept as a separate library to `priority.dart` so that file does not need to import `material.dart`.
 library;
 
-import 'package:dispatch/domain/models/event/priority.dart';
 import 'package:material_ui/material_ui.dart';
+
+import 'priority.dart';
 
 extension PriorityColour on Priority {
   /// Defines the colour to be used for displaying events of this priority.

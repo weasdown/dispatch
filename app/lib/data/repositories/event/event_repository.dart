@@ -1,5 +1,5 @@
 import '../../../domain/models/event/event.dart';
-import '../../../domain/models/remark.dart';
+import '../../../domain/models/event/remark.dart';
 import '../../../utils/result.dart';
 
 /// Data source for events.

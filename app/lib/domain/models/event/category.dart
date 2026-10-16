@@ -1,6 +1,6 @@
-import '../noc.dart';
-import '../status.dart';
+import 'noc.dart';
 import 'priority.dart';
+import 'status.dart';
 
 /// The category assigned to an [Event].
 enum Category {

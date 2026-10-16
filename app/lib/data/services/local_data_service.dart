@@ -5,8 +5,8 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../domain/models/event/event.dart';
-import '../../domain/models/noc.dart';
-import '../../domain/models/remark.dart';
+import '../../domain/models/event/noc.dart';
+import '../../domain/models/event/remark.dart';
 import '../../domain/models/unit/unit.dart';
 import '../../domain/models/user/user.dart';
 

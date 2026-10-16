@@ -1,7 +1,5 @@
 import 'dart:collection';
 
-import 'package:dispatch/domain/models/remark.dart';
-import 'package:dispatch/ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +7,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/event/remark.dart';
+import '../../../ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
 
 class RemarksLog extends StatefulWidget {
   const RemarksLog({super.key, required this.event, required this.viewModel});

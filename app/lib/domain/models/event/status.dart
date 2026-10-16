@@ -1,6 +1,6 @@
-import 'event/category.dart';
-import 'event/priority.dart';
+import 'category.dart';
 import 'noc.dart';
+import 'priority.dart';
 
 interface class EventStatus {
   const EventStatus(this.category, this.description);

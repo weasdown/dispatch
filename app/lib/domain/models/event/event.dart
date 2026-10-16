@@ -1,12 +1,12 @@
 import 'dart:collection';
 
-import 'package:dispatch/domain/models/remark.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../status.dart';
 import '../unit/unit.dart';
 import 'category.dart';
 import 'priority.dart';
+import 'remark.dart';
+import 'status.dart';
 
 /// An emergency event that the ambulance service has become aware of.
 class Event {

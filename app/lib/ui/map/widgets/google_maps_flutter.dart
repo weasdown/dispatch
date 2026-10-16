@@ -1,10 +1,10 @@
-import 'package:dispatch/ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_marker_widgets/google_maps_marker_widgets.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../single_event_screen/view_models/single_event_screen_viewmodel.dart';
 import 'event_map_marker.dart';
 import 'unit_map_marker.dart';
 
