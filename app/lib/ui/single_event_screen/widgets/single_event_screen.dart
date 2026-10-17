@@ -75,7 +75,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                       event: event,
                       log: log,
                       viewModel: widget.viewModel,
-                    ); // event != null;
+                    ); // event != null
             },
           );
         },
@@ -194,7 +194,7 @@ class _Overview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log.info('Selected event in _Overview: ${event.idLastFour}');
+    log.info('Building _Overview with event: ${event.idLastFour}');
     return Center(
       child: Table(
         children: [
