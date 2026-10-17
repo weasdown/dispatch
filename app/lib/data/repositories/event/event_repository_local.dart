@@ -89,3 +89,21 @@ class EventRepositoryLocal extends EventRepository {
     return const Result.ok(true);
   }
 }
+
+class NoSelectedEventException implements Exception {
+  final Error? error;
+
+  final String message;
+
+  const NoSelectedEventException([this.error])
+    : message = 'No event is selected';
+
+  @override
+  String toString() {
+    final String base = 'no event is selected';
+    final String optional = (error == null)
+        ? ''
+        : ', which caused the following error: ${error.toString()}';
+    return base + optional;
+  }
+}
