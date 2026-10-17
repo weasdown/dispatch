@@ -144,6 +144,10 @@ class LocalDataService {
 
   List<Event> get events => _events;
 
+  Event getEvent() => _defaultEvents.first;
+
+  Patient getPatient() => _defaultPatient;
+
   User getUser() => _defaultUser;
 
   final List<Unit> _units;
