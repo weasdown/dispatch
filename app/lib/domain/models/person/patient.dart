@@ -3,6 +3,8 @@ import 'package:dispatch/domain/models/location/address.dart';
 import 'gp_practice.dart';
 import 'person.dart';
 
+import 'package:uuid/uuid.dart';
+
 final class Patient implements Person {
   Patient({
     this.name,
@@ -10,7 +12,7 @@ final class Patient implements Person {
     this.dateOfBirth,
     this.gpPractice,
     this.homeAddress,
-  });
+  }) : id = Uuid().v4();
 
   @override
   String? name;
@@ -22,6 +24,8 @@ final class Patient implements Person {
   DateTime? dateOfBirth;
 
   Address? homeAddress;
+
+  final String id;
 
   GPPractice? gpPractice;
 }
