@@ -12,12 +12,10 @@ class EventRepositoryLocal extends EventRepository {
   EventRepositoryLocal({required this._localDataService}) : _currentIDNum = 100;
 
   @override
-  void addRemark(Remark remark) {
-    if (_selectedEvent == null) {
-      throw Exception('Attempted to add remark to null event in $runtimeType.');
-    }
-    _selectedEvent!.addRemark(remark);
-  }
+  Future<Result<void>> addRemark(Remark remark) async =>
+      (_selectedEvent == null)
+      ? Result.error(Exception('Attempted to add remark to null event'))
+      : Result.ok(_selectedEvent!.addRemark(remark));
 
   bool _isInitialized = false; // Only create default event once.
 

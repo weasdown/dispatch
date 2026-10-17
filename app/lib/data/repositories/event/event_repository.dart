@@ -6,7 +6,7 @@ import '../../../utils/result.dart';
 abstract class EventRepository {
   Future<Result<List<Event>>> get allEvents;
 
-  void addRemark(Remark remark);
+  Future<Result<void>> addRemark(Remark remark);
 
   /// Get an event by its ID.
   Future<Result<Event>> eventByID(String id);
