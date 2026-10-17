@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../person/patient.dart';
 import '../unit/unit.dart';
 import 'category.dart';
 import 'priority.dart';
@@ -15,6 +16,7 @@ class Event {
     required this.address,
     required this.location,
     required this.status,
+    required this._patients,
   }) : category = status.category {
     if (status == EventStatus.preAlert()) {
       assert(category == null);
@@ -34,6 +36,7 @@ class Event {
          address: address,
          status: EventStatus.preAlert(),
          location: location,
+         patients: [],
        );
 
   factory Event.fromJson(Map<String, dynamic> json) => switch (json) {
@@ -42,8 +45,15 @@ class Event {
       'address': String address,
       'status': EventStatus status,
       'location': LatLng location,
+      'patients': List<Patient> patients,
     } =>
-      Event._(id: id, address: address, status: status, location: location),
+      Event._(
+        id: id,
+        address: address,
+        status: status,
+        location: location,
+        patients: patients,
+      ),
     _ => throw const FormatException('Failed to load album.'),
   };
 
@@ -182,6 +192,12 @@ class Event {
 
   Category? category;
 
+  bool get hasMultiplePatients => patients.length > 1;
+
+  bool get hasNoPatient => patients.isEmpty;
+
+  bool? get hasSinglePatient => patients.length == 1;
+
   static String _id(int idNum) {
     // Ensure the idNum is four digits by adding leading 0s if required.
     final String idNumString = idNum.toString().padLeft(4, "0");
@@ -216,6 +232,20 @@ class Event {
   /// Nature of Call.
   NOC? get noc => _noc;
 
+  NumberOfPatients get numberOfPatients => switch (patients.length) {
+    0 => NumberOfPatients.none,
+    1 => NumberOfPatients.one,
+    > 1 => NumberOfPatients.multiple,
+    _ => throw Exception(
+      'Got negative number of patients for event $idLastFour: ${patients.length}',
+    ),
+  };
+
+  List<Patient> _patients;
+
+  /// The person or people who will be cared for.
+  List<Patient> get patients => _patients;
+
   Priority get priority => status.priority;
 
   final List<Remark> _remarks = [];
@@ -237,3 +267,5 @@ class Event {
   @override
   String toString() => 'Event $id';
 }
+
+enum NumberOfPatients { none, one, multiple }
