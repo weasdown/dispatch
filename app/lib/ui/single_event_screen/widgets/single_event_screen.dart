@@ -146,6 +146,7 @@ class _NonNullEvent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const Gap(12),
                 _Overview(event: event, log: log),
                 const Gap(30),
                 _Location(event: event),
