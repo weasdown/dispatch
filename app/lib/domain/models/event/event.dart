@@ -167,6 +167,8 @@ class Event {
     }
   }
 
+  void addPatient(Patient patient) => _patients.add(patient);
+
   void addRemark(Remark remark) {
     _remarks.add(remark);
   }

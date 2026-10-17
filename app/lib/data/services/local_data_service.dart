@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:dispatch/domain/models/person/patient.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../domain/models/event/event.dart';
@@ -44,7 +45,8 @@ class LocalDataService {
               message: 'ND027 DP Stokenchurch HEMS base',
             ),
             Remark(author: _defaultUser, message: 'NT431 DP Oxford City RC'),
-          ]);
+          ])
+          ..addPatient(_defaultPatient);
 
     List<Event> defaults = [
       defaultC1,
@@ -86,6 +88,8 @@ class LocalDataService {
 
     return defaults;
   }
+
+  static final Patient _defaultPatient = Patient(name: 'Joe Bloggs');
 
   /// A default list of units.
   static final List<Unit> _defaultUnits = [
