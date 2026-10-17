@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,12 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     BrowserContextMenu.disableContextMenu(); // Disable browser's default right click handling.
   }
+
+  hierarchicalLoggingEnabled = true;
+  Logger.root.level = Level.WARNING;
+  Logger.root.onRecord.listen((record) {
+    debugPrint('[${record.loggerName}] [${record.level}] ${record.message}');
+  });
 
   for (final EnvironmentKey key in Environment.keys) {
     if (key().isEmpty) {

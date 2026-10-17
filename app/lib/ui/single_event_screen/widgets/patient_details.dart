@@ -1,15 +1,16 @@
+import 'package:gap/gap.dart';
+import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/person/patient.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 
-class PatientDetails extends StatelessWidget {
-  const PatientDetails({
-    super.key,
-    required this.event,
-    required this.viewModel,
-  });
+Logger get _log {
+  final Logger log = Logger('PatientDetails');
+  log.level = Level.ALL;
+  return log;
+}
 
   final Event event;
 

@@ -23,6 +23,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Logger log = Logger('HomeScreen');
+    hierarchicalLoggingEnabled = true;
 
     return FutureBuilder(
       future: Future.wait([
