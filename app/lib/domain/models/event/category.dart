@@ -8,7 +8,7 @@ enum Category {
   two(2, Priority.one),
   three(3, Priority.two),
   four(4, Priority.three),
-  none(0, Priority.four);
+  five(5, Priority.five);
 
   const Category(this.number, this.priority);
 
@@ -17,7 +17,7 @@ enum Category {
     Category.two => catTwoNOCs,
     Category.three => catThreeNOCs,
     Category.four => catFourNOCs,
-    Category.none => List.empty(),
+    Category.five => List.empty(),
   };
 
   final int number;
@@ -27,8 +27,5 @@ enum Category {
   String toJson() => name;
 
   @override
-  String toString() => switch (this) {
-    Category.none => '',
-    _ => 'C$number',
-  };
+  String toString() => 'C$number';
 }

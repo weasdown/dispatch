@@ -17,10 +17,10 @@ class Event {
     required this.status,
   }) : category = status.category {
     if (status == EventStatus.preAlert()) {
-      assert(category == Category.none);
+      assert(category == null);
     }
 
-    if (category == Category.none) {
+    if (category == null) {
       assert(_noc == null);
     }
   }
@@ -36,18 +36,16 @@ class Event {
          location: location,
        );
 
-  factory Event.fromJson(Map<String, dynamic> json) {
-    return switch (json) {
-      {
-        'id': String id,
-        'address': String address,
-        'status': EventStatus status,
-        'location': LatLng location,
-      } =>
-        Event._(id: id, address: address, status: status, location: location),
-      _ => throw const FormatException('Failed to load album.'),
-    };
-  }
+  factory Event.fromJson(Map<String, dynamic> json) => switch (json) {
+    {
+      'id': String id,
+      'address': String address,
+      'status': EventStatus status,
+      'location': LatLng location,
+    } =>
+      Event._(id: id, address: address, status: status, location: location),
+    _ => throw const FormatException('Failed to load album.'),
+  };
 
   factory Event.withNOC({
     required int idNum,
@@ -150,7 +148,7 @@ class Event {
   void addNOC(NOC noc) {
     if (_noc == null) {
       _noc = noc;
-      status = EventStatus.nhs999(noc.category);
+      status = EventStatus.nhs999(noc.category!);
       category = noc.category;
     } else {
       throw Exception(
@@ -182,7 +180,7 @@ class Event {
   // /// The radius within which the caller could be, in km.
   // num callerLocationUncertainty;
 
-  Category category;
+  Category? category;
 
   static String _id(int idNum) {
     // Ensure the idNum is four digits by adding leading 0s if required.
@@ -228,7 +226,7 @@ class Event {
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'category': category.toJson(),
+    'category': category?.toJson(),
     'noc': noc,
     'address': address,
     'assignedUnits': List<String>.from(
