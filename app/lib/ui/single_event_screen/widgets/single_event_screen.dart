@@ -17,10 +17,10 @@ class SingleEventScreen extends StatefulWidget {
 }
 
 class _SingleEventScreenState extends State<SingleEventScreen> {
-  EventMode? _eventMode = .select;
+  EventMode _eventMode = .select;
 
   void onEventModeUpdate(EventMode? mode) {
-    setState(() => _eventMode = mode);
+    setState(() => _eventMode = mode!);
   }
 
   @override
