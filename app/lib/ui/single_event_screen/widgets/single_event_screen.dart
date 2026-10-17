@@ -18,77 +18,45 @@ class SingleEventScreen extends StatefulWidget {
 class _SingleEventScreenState extends State<SingleEventScreen> {
   EventMode? _eventMode = .select;
 
+  void onEventModeUpdate(EventMode? mode) {
+    setState(() => _eventMode = mode);
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Widget> modeSelectButtons = [
-      // Select button
-      Flexible(
-        flex: 1,
-        child: DecoratedBox(
-          decoration: BoxDecoration(border: Border.all(color: Colors.green)),
-          child: ListTile(
-            title: Text('Select'),
-            leading: Radio<EventMode>(value: EventMode.select),
-          ),
-        ),
-      ),
-
-      // Create button
-      Flexible(
-        flex: 1,
-        child: SizedBox(
-          // width: 100,
-          child: ListTile(
-            title: const Text('Create'),
-            leading: Radio<EventMode>(
-              value: EventMode.create,
-              side: WidgetStateBorderSide.resolveWith(
-                (Set<WidgetState> states) =>
-                    (states.contains(WidgetState.selected))
-                    ? const BorderSide(
-                        color: Colors.red,
-                        width: 4,
-                        strokeAlign: BorderSide.strokeAlignCenter,
-                      )
-                    : null,
-              ),
-            ),
-          ),
-        ),
-      ),
-
-      // Update button
-      Flexible(
-        flex: 1,
-        child: SizedBox(
-          // width: 100,
-          child: ListTile(
-            title: Text('Update'),
-            leading: Radio<EventMode>(value: EventMode.update),
-          ),
-        ),
-      ),
-    ];
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Event'),
         elevation: 8,
         automaticallyImplyLeading: false,
         actions: [
-          SizedBox(
-            width: 500,
-            child: RadioGroup<EventMode>(
-              groupValue: _eventMode,
-              onChanged: (EventMode? mode) {
-                setState(() {
-                  _eventMode = mode;
-                });
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: modeSelectButtons,
-              ),
+          RadioGroup<EventMode>(
+            groupValue: _eventMode,
+            onChanged: onEventModeUpdate,
+            child: Row(
+              children: [
+                // Select button
+                _EventModeButton(
+                  label: 'Select',
+                  value: EventMode.select,
+                  onEventModeUpdate: onEventModeUpdate,
+                ),
+
+                // Create button
+                _EventModeButton(
+                  label: 'Create',
+                  value: EventMode.create,
+                  onEventModeUpdate: onEventModeUpdate,
+                ),
+
+                // Update button
+                _EventModeButton(
+                  label: 'Update',
+                  value: EventMode.update,
+                  onEventModeUpdate: onEventModeUpdate,
+                  colourOnSelected: Colors.red,
+                ),
+              ],
             ),
           ),
         ],
@@ -262,6 +230,53 @@ class _PatientDetails extends StatelessWidget {
             TableRow(children: [Text('Name'), Text('[pt name]')]),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _EventModeButton extends StatelessWidget {
+  const _EventModeButton({
+    required this.label,
+    required this.value,
+    required this.onEventModeUpdate,
+    this.colourOnSelected,
+  });
+
+  final Color? colourOnSelected;
+
+  final String label;
+
+  final EventMode value;
+
+  final void Function(EventMode? mode) onEventModeUpdate;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onEventModeUpdate(value),
+      child: Row(
+        children: [
+          const Gap(2),
+          Radio(
+            value: value,
+            side: (colourOnSelected == null)
+                ? null
+                : WidgetStateBorderSide.resolveWith(
+                    (Set<WidgetState> states) =>
+                        (states.contains(WidgetState.selected))
+                        ? BorderSide(
+                            color: colourOnSelected!,
+                            width: 4,
+                            strokeAlign: BorderSide.strokeAlignCenter,
+                          )
+                        : null,
+                  ),
+          ),
+          const Gap(2),
+          Text(label, softWrap: false),
+          const Gap(8),
+        ],
       ),
     );
   }
