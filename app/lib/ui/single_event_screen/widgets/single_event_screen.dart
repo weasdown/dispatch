@@ -26,6 +26,24 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // final Result<EventMode> eventModeResult;
+
+    // return FutureBuilder(
+    //   initialData: EventMode.select,
+    //   future: widget.viewModel.getMode.execute(),
+    //   builder: (context, AsyncSnapshot<void> snapshot) {
+    //     if (snapshot.connectionState == ConnectionState.done) {
+    //       if (snapshot.hasError) {
+    //         return ErrorWidget(snapshot.error!);
+    //       } else {
+    //         return child;
+    //       }
+    //     } else {
+    //       return Center(child: CircularProgressIndicator());
+    //     }
+    //   },
+    // );
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Event'),

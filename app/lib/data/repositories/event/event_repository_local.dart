@@ -41,7 +41,7 @@ class EventRepositoryLocal extends EventRepository {
   // Stream<Event> get allEvents;
 
   Future<Result<List<Event>>> get eventsList async {
-    // Initialize the repository with a default event.
+    // Initialize the repository with default events.
     if (!_isInitialized) {
       _events.addAll(_localDataService.events);
       _isInitialized = true;
@@ -88,7 +88,8 @@ class EventRepositoryLocal extends EventRepository {
   /// Gets a [Result.ok] holding a random event from `_events`.
   @override
   Future<Result<Event?>> get selectedEvent async {
-    _selectedEvent = _events[Random().nextInt(_events.length)];
+    _selectedEvent =
+        _events.first; // _events[Random().nextInt(_events.length)];
     return Result.ok(_selectedEvent);
   }
 

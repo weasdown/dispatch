@@ -3,12 +3,14 @@ import 'package:provider/single_child_widget.dart';
 
 import '../data/repositories/auth/auth_repository.dart';
 import '../data/repositories/auth/auth_repository_dev.dart';
+import '../data/repositories/event/event_mode_repository.dart';
+import '../data/repositories/event/event_mode_repository_local.dart';
 import '../data/repositories/event/event_repository.dart';
 import '../data/repositories/event/event_repository_local.dart';
+import '../data/repositories/person/user_repository.dart';
+import '../data/repositories/person/user_repository_local.dart';
 import '../data/repositories/unit/unit_repository.dart';
 import '../data/repositories/unit/unit_repository_local.dart';
-import '../data/repositories/user/user_repository.dart';
-import '../data/repositories/user/user_repository_local.dart';
 import '../data/services/local_data_service.dart';
 
 /// Configure dependencies for local data.
@@ -17,12 +19,18 @@ import '../data/services/local_data_service.dart';
 List<SingleChildWidget> get providersLocal {
   return [
     ChangeNotifierProvider.value(value: AuthRepositoryDev() as AuthRepository),
+    // TODO work out whether this is needed
+    // Provider.value(value: EventMode.select),
     Provider.value(value: LocalDataService()),
     Provider(
       // EventRepository Provider
       create: (context) =>
           EventRepositoryLocal(localDataService: context.read())
               as EventRepository,
+    ),
+    Provider.value(
+      // EventModeRepository Provider
+      value: EventModeRepositoryLocal() as EventModeRepository,
     ),
     Provider(
       // UnitRepository Provider

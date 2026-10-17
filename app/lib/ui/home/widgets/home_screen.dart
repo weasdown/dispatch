@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
-import '../../map/widgets/map.dart';
+// import '../../map/widgets/map.dart';
 import '../../single_event_screen/view_models/single_event_screen_viewmodel.dart';
 import '../../single_event_screen/widgets/single_event_screen.dart';
 import '../view_models/home_viewmodel.dart';
@@ -52,20 +52,20 @@ class HomeScreen extends StatelessWidget {
 
               log.fine('Events and units loaded successfully');
 
-              final List<Event> allEvents = eventsResult.value;
-              final List<Unit> allUnits = unitsResult.value;
+              // final List<Event> allEvents = eventsResult.value;
+              // final List<Unit> allUnits = unitsResult.value;
 
               return Row(
                 children: [
-                  Flexible(
-                    flex: 1,
-                    child: MapPage(
-                      singleEventScreenViewModel: singleEventScreenViewModel,
-                      events: allEvents,
-                      units: allUnits,
-                    ),
-                  ),
-                  VerticalDivider(width: 3, thickness: 3),
+                  // Flexible(
+                  //   flex: 1,
+                  //   child: MapPage(
+                  //     singleEventScreenViewModel: singleEventScreenViewModel,
+                  //     events: allEvents,
+                  //     units: allUnits,
+                  //   ),
+                  // ),
+                  // VerticalDivider(width: 3, thickness: 3),
                   Flexible(
                     flex: 1,
                     child: SingleEventScreen(
