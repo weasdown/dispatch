@@ -268,6 +268,10 @@ class Event {
 
   @override
   String toString() => 'Event $id';
+
+  void updatePatient(int index, Patient newPatient) {
+    _patients[index] = newPatient;
+  }
 }
 
 enum NumberOfPatients { none, one, multiple }

@@ -1,10 +1,13 @@
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/event/remark.dart';
+import '../../../domain/models/person/patient.dart';
 import '../../../utils/result.dart';
 
 /// Data source for events.
 abstract class EventRepository {
   Future<Result<List<Event>>> get allEvents;
+
+  Future<Result<void>> addPatientToEvent(String eventID, Patient patient);
 
   Future<Result<void>> addRemark(Remark remark);
 
@@ -18,4 +21,6 @@ abstract class EventRepository {
   Future<Result<Event?>> get selectedEvent async => Result.ok(_selectedEvent);
 
   Future<Result<void>> setEvent(Event event);
+
+  Future<Result<void>> updatePatientForEvent(Patient patient);
 }

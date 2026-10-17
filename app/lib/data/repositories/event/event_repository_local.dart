@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/event/status.dart';
+import '../../../domain/models/person/patient.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
 import 'event_repository.dart';
@@ -10,6 +11,14 @@ import 'event_repository.dart';
 /// Local implementation of EventRepository
 class EventRepositoryLocal extends EventRepository {
   EventRepositoryLocal({required this._localDataService}) : _currentIDNum = 100;
+
+  @override
+  Future<Result<void>> addPatientToEvent(
+    String eventID,
+    Patient patient,
+  ) async => (_selectedEvent == null)
+      ? Result.error(Exception('attempted to add patient to null event'))
+      : Result.ok(_selectedEvent!.addPatient(patient));
 
   @override
   Future<Result<void>> addRemark(Remark remark) async =>
@@ -87,6 +96,32 @@ class EventRepositoryLocal extends EventRepository {
   Future<Result<bool>> setEvent(Event event) async {
     _selectedEvent = event;
     return const Result.ok(true);
+  }
+
+  @override
+  Future<Result<void>> updatePatientForEvent(Patient patient) async {
+    if (_selectedEvent == null) {
+      // TODO test how this branch would be handled
+      return Result.error(NoSelectedEventException());
+    }
+
+    try {
+      final int currentPatientIndex = _selectedEvent!.patients.indexWhere(
+        (Patient p) => p.id == patient.id,
+      );
+      _selectedEvent!.updatePatient(currentPatientIndex, patient);
+      return Result.ok(null);
+    } on StateError {
+      return Result.error(
+        NoSelectedEventException(
+          ArgumentError.value(
+            patient,
+            'patient',
+            'was not found in _selectedEvent!.patients',
+          ) as Error,
+        ),
+      );
+    }
   }
 }
 
