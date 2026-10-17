@@ -2,7 +2,7 @@ import 'gp_practice.dart';
 import 'person.dart';
 
 final class Patient implements Person {
-  Patient();
+  Patient({this.name, this.age, this.dateOfBirth, this.gpPractice});
 
   @override
   String? name;
