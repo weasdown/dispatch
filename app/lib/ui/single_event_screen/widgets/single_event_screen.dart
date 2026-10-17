@@ -20,7 +20,8 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
   EventMode _eventMode = .select;
 
   void onEventModeUpdate(EventMode? mode) {
-    setState(() => _eventMode = mode!);
+    widget.viewModel.setMode.execute(mode!);
+    setState(() => _eventMode = mode);
   }
 
   @override
