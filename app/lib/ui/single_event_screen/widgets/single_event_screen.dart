@@ -77,6 +77,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                       event: event,
                       log: log,
                       viewModel: widget.viewModel,
+                      eventMode: _eventMode,
                     ); // event != null
             },
           );
