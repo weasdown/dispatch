@@ -27,30 +27,24 @@ class LocalDataService {
             _defaultUnits[4], // NF159
             _defaultUnits[6], // ND027
             _defaultUnits[7], // NT431
-          ];
-
-    defaultC1.addRemark(
-      Remark(
-        author: _defaultUser,
-        message: 'CPR was already in progress before the call was started.',
-      ),
-    );
-
-    defaultC1.addRemark(
-      Remark(author: _defaultUser, message: 'NA136 DP Didcot RC'),
-    );
-
-    defaultC1.addRemark(
-      Remark(author: _defaultUser, message: 'NF159 DP Smith\'s Wharf, Wantage'),
-    );
-
-    defaultC1.addRemark(
-      Remark(author: _defaultUser, message: 'ND027 DP Stokenchurch HEMS base'),
-    );
-
-    defaultC1.addRemark(
-      Remark(author: _defaultUser, message: 'NT431 DP Oxford City RC'),
-    );
+          ]
+          .._addRemarks([
+            Remark(
+              author: _defaultUser,
+              message:
+                  'CPR was already in progress before the call was started.',
+            ),
+            Remark(author: _defaultUser, message: 'NA136 DP Didcot RC'),
+            Remark(
+              author: _defaultUser,
+              message: 'NF159 DP Smith\'s Wharf, Wantage',
+            ),
+            Remark(
+              author: _defaultUser,
+              message: 'ND027 DP Stokenchurch HEMS base',
+            ),
+            Remark(author: _defaultUser, message: 'NT431 DP Oxford City RC'),
+          ]);
 
     List<Event> defaults = [
       defaultC1,
@@ -151,4 +145,9 @@ class LocalDataService {
   final List<Unit> _units;
 
   List<Unit> get units => _units;
+}
+
+extension AddRemarks on Event {
+  void _addRemarks(Iterable<Remark> remarks) =>
+      remarks.map((Remark remark) => addRemark(remark));
 }
