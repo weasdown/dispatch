@@ -148,6 +148,9 @@ class LocalDataService {
 }
 
 extension AddRemarks on Event {
-  void _addRemarks(Iterable<Remark> remarks) =>
-      remarks.map((Remark remark) => addRemark(remark));
+  void _addRemarks(Iterable<Remark> remarks) {
+    for (final remark in remarks) {
+      addRemark(remark);
+    }
+  }
 }
