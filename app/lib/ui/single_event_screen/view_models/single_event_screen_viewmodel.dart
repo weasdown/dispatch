@@ -89,4 +89,13 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   }
 }
 
-enum EventMode { select, create, update }
+enum EventMode {
+  select,
+  create,
+  update;
+
+  bool get isEditable => switch (this) {
+    EventMode.select => false,
+    EventMode.create || EventMode.update => true,
+  };
+}
