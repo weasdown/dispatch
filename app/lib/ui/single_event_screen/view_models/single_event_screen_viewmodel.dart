@@ -15,7 +15,8 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   SingleEventScreenViewModel({
     required this._eventRepository,
     required this._unitRepository,
-  }) {
+  }) : _mode = EventMode.select {
+    setMode = Command1<void, EventMode>(_setMode);
     updateEvent = Command0(_updateEvent);
     load = Command0(_load)..execute();
   }
@@ -42,6 +43,10 @@ class SingleEventScreenViewModel extends ChangeNotifier {
 
   Event? get event => _event;
 
+  EventMode _mode;
+
+  EventMode get mode => _mode;
+
   Future<Result<List<Event>>> get events => _eventRepository.allEvents;
 
   Future<Result> _load() async {
@@ -61,6 +66,13 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     }
   }
 
+  late final Command1<void, EventMode> setMode;
+
+  Future<Result<void>> _setMode(EventMode newMode) async {
+    _mode = newMode;
+    return Result.ok(null);
+  }
+
   Future<Result<List<Unit>>> get units => _unitRepository.allUnits;
 
   late final Command0 updateEvent;
@@ -76,3 +88,5 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     return result;
   }
 }
+
+enum EventMode { select, create, update }
