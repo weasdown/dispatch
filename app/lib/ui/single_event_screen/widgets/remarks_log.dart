@@ -49,69 +49,71 @@ class _RemarksLogState extends State<RemarksLog> {
   Widget build(BuildContext context) {
     initializeDateFormatting('en_GB', null);
     final UnmodifiableListView<Remark> remarks = widget.event.remarks;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Form(
-          key: _formKey,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: TextFormField(
-                  controller: _textController,
-                  autovalidateMode: AutovalidateMode.onUserInteractionIfError,
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
+    return Expanded(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Form(
+            key: _formKey,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: _textController,
+                    autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '';
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '';
-                    }
-                    return null;
-                  },
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () => _submitRemark(context),
-                child: Text('Submit'),
-              ),
-            ],
+                ElevatedButton(
+                  onPressed: () => _submitRemark(context),
+                  child: Text('Submit'),
+                ),
+              ],
+            ),
           ),
-        ),
-        Gap(8),
-        Expanded(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              DataTable(
-                columns: [
-                  DataColumn(
-                    label: Text('Name'),
-                    headingRowAlignment: MainAxisAlignment.start,
-                    columnWidth: FractionColumnWidth(0.2),
-                  ),
-                  DataColumn(
-                    label: Text('Time'),
-                    headingRowAlignment: MainAxisAlignment.start,
-                    columnWidth: FractionColumnWidth(0.2),
-                  ),
-                  DataColumn(
-                    label: Text('Remark'),
-                    headingRowAlignment: MainAxisAlignment.start,
-                    columnWidth: FractionColumnWidth(0.6),
-                  ),
-                ],
-                rows: remarks
-                    .map((Remark remark) => DataRow(cells: tableRow(remark)))
-                    .toList(),
-                dividerThickness: 1,
-              ),
-            ],
+          Gap(8),
+          Expanded(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                DataTable(
+                  columns: [
+                    DataColumn(
+                      label: Text('Name'),
+                      headingRowAlignment: MainAxisAlignment.start,
+                      columnWidth: FractionColumnWidth(0.2),
+                    ),
+                    DataColumn(
+                      label: Text('Time'),
+                      headingRowAlignment: MainAxisAlignment.start,
+                      columnWidth: FractionColumnWidth(0.2),
+                    ),
+                    DataColumn(
+                      label: Text('Remark'),
+                      headingRowAlignment: MainAxisAlignment.start,
+                      columnWidth: FractionColumnWidth(0.6),
+                    ),
+                  ],
+                  rows: remarks
+                      .map((Remark remark) => DataRow(cells: tableRow(remark)))
+                      .toList(),
+                  dividerThickness: 1,
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

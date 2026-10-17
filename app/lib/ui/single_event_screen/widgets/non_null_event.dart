@@ -38,9 +38,7 @@ class NonNullEvent extends StatelessWidget {
                 const Gap(50),
                 _PatientDetails(event: event),
                 const Gap(50),
-                Expanded(
-                  child: RemarksLog(event: event, viewModel: viewModel),
-                ),
+                RemarksLog(event: event, viewModel: viewModel),
               ],
             ),
           ),
