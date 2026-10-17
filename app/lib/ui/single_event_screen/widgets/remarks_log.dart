@@ -59,6 +59,7 @@ class _RemarksLogState extends State<RemarksLog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
+                  // TODO make remark submit on Enter pressed while field is focussed
                   child: TextFormField(
                     controller: _textController,
                     autovalidateMode: AutovalidateMode.onUserInteractionIfError,
