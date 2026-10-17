@@ -16,10 +16,83 @@ class SingleEventScreen extends StatefulWidget {
 }
 
 class _SingleEventScreenState extends State<SingleEventScreen> {
+  EventMode? _eventMode = .select;
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> modeSelectButtons = [
+      // Select button
+      Flexible(
+        flex: 1,
+        child: DecoratedBox(
+          decoration: BoxDecoration(border: Border.all(color: Colors.green)),
+          child: ListTile(
+            title: Text('Select'),
+            leading: Radio<EventMode>(value: EventMode.select),
+          ),
+        ),
+      ),
+
+      // Create button
+      Flexible(
+        flex: 1,
+        child: SizedBox(
+          // width: 100,
+          child: ListTile(
+            title: const Text('Create'),
+            leading: Radio<EventMode>(
+              value: EventMode.create,
+              side: WidgetStateBorderSide.resolveWith(
+                (Set<WidgetState> states) =>
+                    (states.contains(WidgetState.selected))
+                    ? const BorderSide(
+                        color: Colors.red,
+                        width: 4,
+                        strokeAlign: BorderSide.strokeAlignCenter,
+                      )
+                    : null,
+              ),
+            ),
+          ),
+        ),
+      ),
+
+      // Update button
+      Flexible(
+        flex: 1,
+        child: SizedBox(
+          // width: 100,
+          child: ListTile(
+            title: Text('Update'),
+            leading: Radio<EventMode>(value: EventMode.update),
+          ),
+        ),
+      ),
+    ];
+
     return Scaffold(
-      // appBar: AppBar(title: Text('Event'), toolbarHeight: 32),
+      appBar: AppBar(
+        title: Text('Event'),
+        elevation: 8,
+        automaticallyImplyLeading: false,
+        actions: [
+          SizedBox(
+            width: 500,
+            child: RadioGroup<EventMode>(
+              groupValue: _eventMode,
+              onChanged: (EventMode? mode) {
+                setState(() {
+                  _eventMode = mode;
+                });
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: modeSelectButtons,
+              ),
+            ),
+          ),
+        ],
+      ),
       body: ListenableBuilder(
         listenable: widget.viewModel.load,
         builder: (context, child) {
