@@ -2,10 +2,10 @@ import 'gp_practice.dart';
 import 'person.dart';
 
 final class Patient implements Person {
-  Patient({required this.name});
+  Patient();
 
   @override
-  final String name;
+  String? name;
 
   /// Person's age in integer years.
   int? age;
