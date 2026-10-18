@@ -1,3 +1,4 @@
+import 'package:dispatch/ui/single_event_screen/widgets/single_event_screen.dart';
 import 'package:gap/gap.dart';
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
@@ -8,21 +9,23 @@ import 'patient_details.dart';
 import 'remarks_log.dart';
 
 class NonNullEvent extends StatelessWidget {
-  const NonNullEvent({
+  NonNullEvent({
     super.key,
     required this.event,
     required this.eventMode,
-    required this.log,
     required this.viewModel,
+    required this.patientControllers,
   });
 
   final Event event;
   final EventMode eventMode;
-  final Logger log;
+  final Logger _log = Logger('NonNullEvent');
+  final PatientControllers patientControllers;
   final SingleEventScreenViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
+    _log.finer('eventMode: $eventMode');
     return Center(
       child: SizedBox.expand(
         child: Align(
@@ -33,7 +36,7 @@ class NonNullEvent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Gap(12),
-                _Overview(event: event, log: log),
+                _Overview(event: event, log: _log),
                 const Gap(30),
                 _Location(event: event),
                 const Gap(30),
@@ -41,7 +44,11 @@ class NonNullEvent extends StatelessWidget {
                 const Gap(50),
                 const Divider(),
                 const Gap(8),
-                PatientDetails(viewModel: viewModel),
+                PatientDetails(
+                  eventMode: eventMode,
+                  patientControllers: patientControllers,
+                  viewModel: viewModel,
+                ),
                 const Gap(50),
                 RemarksLog(event: event, viewModel: viewModel),
               ],

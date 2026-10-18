@@ -17,12 +17,38 @@ class SingleEventScreen extends StatefulWidget {
 }
 
 class _SingleEventScreenState extends State<SingleEventScreen> {
+  // bool _editing = false;
   EventMode _eventMode = .select;
+  // late EventMode _eventMode;
 
-  void onEventModeUpdate(EventMode? mode) {
-    widget.viewModel.setMode.execute(mode!);
-    setState(() => _eventMode = mode);
+  Logger get _log {
+    final Logger log = Logger('_SingleEventScreenState');
+    log.level = Level.ALL;
+    return log;
   }
+
+  // TODO when going from Update/Create to Select, set update patient's details to those from _patientControllers
+  void onEventModeUpdate(EventMode mode) {
+    // TODO If new mode is Select, update patient's details based on the contents of the form in _PatientInfoTableState.
+
+    setState(() {
+      _eventMode = mode;
+      if (mode.isEditable) {
+        // _editing = true;
+        _log.finer('Started editing');
+        _patientControllers.startEditingName();
+      } else {
+        // _editing = false;
+        _log.finer('Stopped editing');
+        _patientControllers.stopEditingName();
+      }
+    });
+    _log.fine('Set _eventMode to $_eventMode');
+  }
+
+  final PatientControllers _patientControllers = PatientControllers(
+    eventMode: .select,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -52,28 +78,31 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
         actions: [
           RadioGroup<EventMode>(
             groupValue: _eventMode,
-            onChanged: onEventModeUpdate,
+            onChanged: (EventMode? mode) => onEventModeUpdate(mode!),
             child: Row(
               children: [
                 // Select button
                 EventModeButton(
                   label: 'Select',
                   value: EventMode.select,
-                  onEventModeUpdate: onEventModeUpdate,
+                  onEventModeUpdate: (EventMode? mode) =>
+                      onEventModeUpdate(mode!),
                 ),
 
                 // Create button
                 EventModeButton(
                   label: 'Create',
                   value: EventMode.create,
-                  onEventModeUpdate: onEventModeUpdate,
+                  onEventModeUpdate: (EventMode? mode) =>
+                      onEventModeUpdate(mode!),
                 ),
 
                 // Update button
                 EventModeButton(
                   label: 'Update',
                   value: EventMode.update,
-                  onEventModeUpdate: onEventModeUpdate,
+                  onEventModeUpdate: (EventMode? mode) =>
+                      onEventModeUpdate(mode!),
                   colourOnSelected: Colors.red,
                 ),
               ],
@@ -93,9 +122,9 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                   ? NullEvent(event: event, log: log)
                   : NonNullEvent(
                       event: event,
-                      log: log,
                       viewModel: widget.viewModel,
                       eventMode: _eventMode,
+                      patientControllers: _patientControllers,
                     ); // event != null
             },
           );
@@ -103,4 +132,27 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       ),
     );
   }
+}
+
+final class PatientControllers extends ChangeNotifier {
+  PatientControllers({required this.eventMode})
+    : nameController = TextEditingController(),
+      _isEditingName = eventMode.isEditable;
+
+  final EventMode eventMode;
+
+  void startEditingName() {
+    _isEditingName = true;
+    notifyListeners();
+  }
+
+  void stopEditingName() {
+    _isEditingName = false;
+    notifyListeners();
+  }
+
+  bool get isEditingName => _isEditingName;
+  bool _isEditingName;
+
+  final TextEditingController nameController;
 }

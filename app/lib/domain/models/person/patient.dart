@@ -1,9 +1,8 @@
-import 'package:dispatch/domain/models/location/address.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../../domain/models/location/address.dart';
 import 'gp_practice.dart';
 import 'person.dart';
-
-import 'package:uuid/uuid.dart';
 
 final class Patient implements Person {
   Patient({

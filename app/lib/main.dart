@@ -16,7 +16,7 @@ void main() async {
   }
 
   hierarchicalLoggingEnabled = true;
-  Logger.root.level = Level.WARNING;
+  Logger.root.level = Level.ALL; // TODO set this to a lower level
   Logger.root.onRecord.listen((record) {
     debugPrint('[${record.loggerName}] [${record.level}] ${record.message}');
   });
