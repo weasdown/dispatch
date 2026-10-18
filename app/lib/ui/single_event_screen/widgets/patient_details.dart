@@ -45,24 +45,30 @@ class _PatientDetailsState extends State<PatientDetails> {
     //     (numberOfPatients == NumberOfPatients.none) ||
     //     (numberOfPatients == NumberOfPatients.one);
 
-    return DecoratedBox(
-      decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: switch (event.numberOfPatients) {
-          NumberOfPatients.none => _NoPatient(
-            eventMode: eventMode,
-            patientControllers: widget.patientControllers,
-            viewModel: widget.viewModel,
+    return Expanded(
+      child: SingleChildScrollView(
+        child: DecoratedBox(
+          decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: switch (event.numberOfPatients) {
+              NumberOfPatients.none => _NoPatient(
+                eventMode: eventMode,
+                patientControllers: widget.patientControllers,
+                viewModel: widget.viewModel,
+              ),
+              NumberOfPatients.one => _OnePatient(
+                eventMode: eventMode,
+                patient: firstPatient!,
+                patientControllers: widget.patientControllers,
+                viewModel: widget.viewModel,
+              ),
+              NumberOfPatients.multiple => _MultiplePatients(
+                eventMode: eventMode,
+              ),
+            },
           ),
-          NumberOfPatients.one => _OnePatient(
-            eventMode: eventMode,
-            patient: firstPatient!,
-            patientControllers: widget.patientControllers,
-            viewModel: widget.viewModel,
-          ),
-          NumberOfPatients.multiple => _MultiplePatients(eventMode: eventMode),
-        },
+        ),
       ),
     );
 
