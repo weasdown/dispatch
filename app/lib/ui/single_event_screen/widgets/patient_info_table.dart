@@ -145,7 +145,7 @@ class PatientInfoTableField<T> extends TableRow {
             ? TextFormField(
                 controller: controller,
                 validator: validator,
-                maxLength: maxLength,
+                maxLength: maxLength, // TODO hide display of max length (e.g. 1/3) below field
               )
             : Text(
                 (patient == null)
@@ -182,6 +182,16 @@ List<PatientInfoTableField> patientInfoFields({
     value: (Patient p) => p.age,
     maxLength: 3,
     isEditable: isEditable,
+    validator: (value) {
+      if (value == null || value.isEmpty) {
+        return 'Please enter an age';
+      }
+
+      if (int.tryParse(value) == null) {
+        return 'Please enter a whole number';
+      }
+      return null;
+    },
   ),
   // DOB field
   PatientInfoTableField<DateTime>(
