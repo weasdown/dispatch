@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart' show MaxLengthEnforcement;
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -92,6 +93,7 @@ class _PatientInfoTableState extends State<PatientInfoTable> {
           child: Table(
             columnWidths: {0: FlexColumnWidth(), 1: FlexColumnWidth()},
             children: patientInfoFields(
+              viewModel: widget.viewModel,
               patient: widget.patient,
               isEditable: isEditable,
             ).map((PatientInfoTableField field) => field.tableRow()).toList(),
@@ -108,15 +110,31 @@ class PatientInfoTableField<T> extends TableRow {
     required this.name,
     required this.value,
     required this.isEditable,
+    FormFieldValidator<String>? validator,
+    this.maxLength,
   }) : controller = TextEditingController(
          text: (patient == null) ? '' : value(patient)?.toString() ?? '',
-       );
+       ),
+       maxLengthEnforcement = (maxLength == null)
+           ? null
+           : MaxLengthEnforcement.enforced,
+       validator = validator ?? _defaultValidator;
 
   final TextEditingController controller;
   final bool isEditable;
   final String name;
+  final int? maxLength;
+  final MaxLengthEnforcement? maxLengthEnforcement;
+  final FormFieldValidator<String> validator;
   final Patient? patient;
   final T? Function(Patient) value;
+
+  static FormFieldValidator<String> get _defaultValidator => (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a value';
+    }
+    return null;
+  };
 
   TableRow tableRow() {
     return TableRow(
@@ -124,7 +142,11 @@ class PatientInfoTableField<T> extends TableRow {
         Text(name.capitalise()),
         isEditable
             // TODO change TextFormField to a widget appropriate for value type T, e.g. set of TextFormFields for setting an address.
-            ? TextFormField(controller: controller)
+            ? TextFormField(
+                controller: controller,
+                validator: validator,
+                maxLength: maxLength,
+              )
             : Text(
                 (patient == null)
                     ? ''
@@ -136,6 +158,7 @@ class PatientInfoTableField<T> extends TableRow {
 }
 
 List<PatientInfoTableField> patientInfoFields({
+  required SingleEventScreenViewModel viewModel,
   required Patient? patient,
   required bool isEditable,
 }) => [
@@ -145,12 +168,19 @@ List<PatientInfoTableField> patientInfoFields({
     name: 'name',
     value: (Patient p) => p.name,
     isEditable: isEditable,
+    validator: (value) {
+      if (value == null || value.isEmpty) {
+        return 'Please enter some text';
+      }
+      return null;
+    },
   ),
   // Age field
   PatientInfoTableField<int>(
     patient: patient,
     name: 'age',
     value: (Patient p) => p.age,
+    maxLength: 3,
     isEditable: isEditable,
   ),
   // DOB field
