@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../location/address.dart';
 import '../person/patient.dart';
 import '../unit/unit.dart';
 import 'category.dart';
@@ -29,7 +30,7 @@ class Event {
 
   Event.preAlert({
     required int idNum,
-    required String address,
+    required Address address,
     required LatLng location,
   }) : this._(
          id: _id(idNum),
@@ -42,7 +43,7 @@ class Event {
   factory Event.fromJson(Map<String, dynamic> json) => switch (json) {
     {
       'id': String id,
-      'address': String address,
+      'address': Address address,
       'status': EventStatus status,
       'location': LatLng location,
       'patients': List<Patient> patients,
@@ -59,7 +60,7 @@ class Event {
 
   factory Event.withNOC({
     required int idNum,
-    required String address,
+    required Address address,
     required LatLng location,
     required NOC noc,
   }) {
@@ -152,7 +153,7 @@ class Event {
   // );
 
   /// The street address of the emergency.
-  String address;
+  Address? address;
 
   /// Sets this event's [Event.noc] if it's not already set.
   void addNOC(NOC noc) {
