@@ -7,12 +7,12 @@ import '../../../utils/result.dart';
 abstract class EventRepository {
   Future<Result<List<Event>>> get allEvents;
 
-  Future<Result<void>> addPatientToEvent(String eventID, Patient patient);
+  Future<Result<void>> addPatientToEvent(EventID eventID, Patient patient);
 
   Future<Result<void>> addRemark(Remark remark);
 
   /// Get an event by its ID.
-  Future<Result<Event>> eventByID(String id);
+  Future<Result<Event>> eventByID(EventID id);
 
   int get nextIDNum;
 

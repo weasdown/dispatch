@@ -77,7 +77,7 @@ class EventGoogleMapsMarker extends EventMapMarker {
     super.key,
     required super.event,
     required super.viewModel,
-  }) : markerId = MarkerId(event.id);
+  }) : markerId = MarkerId(event.id.toString());
 
   void addToMap(MarkerWidgetsController markerWidgetsController) {
     markerWidgetsController.addMarkerWidget(

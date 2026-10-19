@@ -14,7 +14,7 @@ class EventRepositoryLocal extends EventRepository {
 
   @override
   Future<Result<void>> addPatientToEvent(
-    String eventID,
+    EventID eventID,
     Patient patient,
   ) async => (_selectedEvent == null)
       ? Result.error(Exception('attempted to add patient to null event'))
@@ -66,7 +66,7 @@ class EventRepositoryLocal extends EventRepository {
   }
 
   @override
-  Future<Result<Event>> eventByID(String id) async {
+  Future<Result<Event>> eventByID(EventID id) async {
     final event = _events.where((event) => event.id == id).firstOrNull;
     if (event == null) {
       return Result.error(Exception('Event not found'));

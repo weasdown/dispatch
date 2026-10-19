@@ -47,7 +47,7 @@ class Event {
     required Address address,
     required LatLng location,
   }) : this._(
-         id: _id(idNum),
+         id: EventID(id: idNum),
          address: address,
          status: EventStatus.preAlert(),
          location: location,
@@ -56,14 +56,14 @@ class Event {
 
   factory Event.fromJson(Map<String, dynamic> json) => switch (json) {
     {
-      'id': String id,
+      'idNum': int idNum,
       'address': Address address,
       'status': EventStatus status,
       'location': LatLng location,
       'patients': List<Patient> patients,
     } =>
       Event._(
-        id: id,
+        id: EventID(id: idNum),
         address: address,
         status: status,
         location: location,
@@ -215,21 +215,10 @@ class Event {
 
   bool? get hasSinglePatient => patients.length == 1;
 
-  static String _id(int idNum) {
-    // Ensure the idNum is four digits by adding leading 0s if required.
-    final String idNumString = idNum.toString().padLeft(4, "0");
-
-    final DateTime now = DateTime.now();
-    // Ensure the month and day are two digits by adding leading 0 if required.
-    final String day = now.day.toString().padLeft(2, "0");
-    final String month = now.month.toString().padLeft(2, "0");
-    return 'S${now.year}$month$day$idNumString';
-  }
-
   /// A unique numerical identifier.
-  final String id;
+  final EventID id;
 
-  String get idLastFour => id.substring(id.length - 4);
+  String get idLastFour => id.lastFour;
 
   /// The latitude and longitude of the emergency.
   LatLng location;
