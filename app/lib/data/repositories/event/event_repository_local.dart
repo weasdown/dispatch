@@ -1,4 +1,4 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/event/remark.dart';
