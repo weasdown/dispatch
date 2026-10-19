@@ -290,3 +290,24 @@ class Event {
 }
 
 enum NumberOfPatients { none, one, multiple }
+
+class EventID {
+  EventID({required this.id}) : date = DateTime.now();
+
+  final DateTime date;
+
+  /// Sequential value that, with the [date], uniquely identifies this ID.
+  final int id;
+
+  /// Makes a four-digit number from the [id] by adding any required leading zeros.
+  String get lastFour => id.toString().padLeft(4, '0');
+
+  @override
+  String toString() {
+    final DateTime now = DateTime.now();
+    // Ensure the month and day are two digits by adding leading 0 if required.
+    final String day = now.day.toString().padLeft(2, "0");
+    final String month = now.month.toString().padLeft(2, "0");
+    return 'S${now.year}$month$day$lastFour';
+  }
+}
