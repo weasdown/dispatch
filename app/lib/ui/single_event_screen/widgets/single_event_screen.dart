@@ -28,12 +28,27 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
   }
 
   // TODO when going from Update/Create to Select, set update patient's details to those from _patientControllers
-  void onEventModeUpdate(EventMode mode) {
+  void onEventModeUpdate(EventMode newMode) {
     // TODO If new mode is Select, update patient's details based on the contents of the form in _PatientInfoTableState.
 
+    final EventMode oldMode = _eventMode;
+
+    _log.info('Switching from ${oldMode.toString()} to ${newMode.toString()}');
+
+    switch ((oldMode, newMode)) {
+      case (EventMode.select, EventMode.update):
+        onSelectToUpdate();
+
+      case (_, _):
+        // TODO: Handle with cases above.
+        throw UnimplementedError(
+          'Switching from ${oldMode.toString()} to ${newMode.toString()} is not yet implemented.',
+        );
+    }
+
     setState(() {
-      _eventMode = mode;
-      if (mode.isEditable) {
+      _eventMode = newMode;
+      if (newMode.isEditable) {
         // _editing = true;
         _log.finer('Started editing');
         _patientControllers.startEditingName();
@@ -44,6 +59,23 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       }
     });
     _log.fine('Set _eventMode to $_eventMode');
+  }
+
+  /// When switching from Select to Update:
+  /// - Save current event parameters to the viewModel.
+  /// For each field in patient details table:
+  ///   - Set field's value widget to a TextFormField with a value equal to the current event's value for the field.
+  /// Once any changes made to event parameters, run viewModel.eventEdited.execute() to show the event has been modified.
+  /// Show Accept Event button.
+  ///   - On pressed, set event in viewModel to displayed parameters (get from TextEditingControllers). Set event mode to Select.
+  void onSelectToUpdate() {
+    _log.finer('In onSelectToUpdate');
+    // TODO remove viewModel.setOldEventBeforeEditing - instead will build new event here then compare against old one (rather than save old one and assume the new one).
+    // widget.viewModel.setOldEventBeforeEditing.execute();
+
+    throw UnimplementedError(
+      'Switching from Select to Update is not yet implemented.',
+    );
   }
 
   final PatientControllers _patientControllers = PatientControllers(
