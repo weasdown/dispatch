@@ -30,4 +30,6 @@ final class Address {
   final String? postcode;
 
   final String? country;
+
+  // TODO define toString() override method
 }
