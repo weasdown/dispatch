@@ -1,6 +1,6 @@
 final class Address {
   const Address({
-    this.flatNumber,
+    this.flatNumberOrName,
     this.buildingName,
     this.buildingNumber,
     this.street,
@@ -12,11 +12,12 @@ final class Address {
   }) : // Building cannot have a name and a number
        assert(!(buildingName != null && buildingNumber != null));
 
-  final String? flatNumber;
+  final String? flatNumberOrName;
 
   final String? buildingName;
 
-  final int? buildingNumber;
+  /// E.g. 25 or 42a.
+  final String? buildingNumber;
 
   final String? street;
 
