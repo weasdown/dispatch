@@ -1,6 +1,8 @@
+import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../domain/models/event/category.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/event/status.dart';
 import '../../../domain/models/location/address.dart';
@@ -31,11 +33,24 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
 
     final EventMode oldMode = _eventMode;
 
+    final Event? event = widget.viewModel.event;
+
     _log.info('Switching from ${oldMode.toString()} to ${newMode.toString()}');
 
     switch ((oldMode, newMode)) {
       case (EventMode.select, EventMode.update):
         onSelectToUpdate();
+
+      case (EventMode.update, EventMode.select):
+        onUpdateToSelect(event);
+
+      case (EventMode.select, EventMode.select) ||
+          (EventMode.create, EventMode.create) ||
+          (EventMode.update, EventMode.update):
+        _log.finer(
+          'Tried to switch from ${oldMode.toString()} to ${newMode.toString()} but this is a NoOp',
+        );
+      // Do nothing
 
       case (_, _):
         // TODO: Handle with cases above.
@@ -74,6 +89,89 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     throw UnimplementedError(
       'Switching from Select to Update is not yet implemented.',
     );
+  }
+
+  Future<void> onUpdatePatient(Patient? newPatient) async {
+    widget.viewModel.updatePatient.execute(newPatient);
+  }
+
+  /// When switching from Update to Select:
+  /// - Build new event.
+  /// - Compare new event against old event.
+  /// - If same:
+  ///   - Discard new event.
+  ///   - Switch straight to Select.
+  /// - If different:
+  ///   - Show dialog warning about discarding modifications.
+  ///     - On OK: discard new event. Switch straight to Select.
+  ///     - On Cancel: close dialog.
+  ///
+  ///  [currentEvent] can be null in the case where there's no event selected, then the user switches to Update, then straight back to Select.
+  void onUpdateToSelect(Event? currentEvent) async {
+    // Displays a dialog warning that event modifications will be discarded if the user confirms the switch back to Select.
+    Future<void> warnAboutModifiedEventAndOrPatient({
+      required bool eventModified,
+      required bool patientModified,
+    }) async {
+      throw UnimplementedError(
+        'warningAboutModifiedEvent() is not yet implemented.',
+      );
+    }
+
+    // TODO get these values from the PatientControllers and EventControllers (once created).
+    // TODO add EventControllers class for storing contents of location box, event status etc.
+    final Address newAddress = Address();
+    final LatLng newLocation = LatLng(0, 0);
+    final EventStatus newStatus = EventStatus(Category.one, 'PLACEHOLDER');
+    final List<Patient> newPatients = [];
+
+    late final Event? newEvent;
+
+    final Patient? oldPatient = currentEvent?.patients.first;
+
+    bool patientModified = false;
+    bool eventModified = false;
+
+    final Patient? newPatient = widget.viewModel.event!.patients.firstOrNull
+        ?.copyWith(
+          name: _patientControllers.newName(),
+          age: _patientControllers.newAge(),
+          dateOfBirth: _patientControllers.newDOB(),
+          homeAddress: _patientControllers.newHomeAddress(),
+          gpPractice: _patientControllers.newGPPractice(),
+        );
+
+    if (newPatient != oldPatient) {
+      patientModified = true;
+    }
+
+    newEvent = currentEvent?.copyWith(
+      address: newAddress,
+      location: newLocation,
+      status: newStatus,
+      patients: newPatients,
+    );
+
+    if ((currentEvent == null) && (newEvent != null)) {
+      eventModified = true;
+    } else if (currentEvent != null) {
+      // Compare against old values to work out if anything has changed.
+      eventModified =
+          (currentEvent.address != newAddress) ||
+          (currentEvent.location != newLocation) ||
+          (currentEvent.status != newStatus) ||
+          (currentEvent.patients != newPatients);
+    }
+
+    if (eventModified || patientModified) {
+      return await warnAboutModifiedEventAndOrPatient(
+        eventModified: eventModified,
+        patientModified: patientModified,
+      );
+    } else {
+      // Nothing to update
+      return;
+    }
   }
 
   final PatientControllers _patientControllers = PatientControllers(
