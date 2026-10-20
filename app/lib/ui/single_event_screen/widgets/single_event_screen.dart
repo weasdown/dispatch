@@ -2,6 +2,10 @@ import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/event/status.dart';
+import '../../../domain/models/location/address.dart';
+import '../../../domain/models/person/gp_practice.dart';
+import '../../../domain/models/person/patient.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 import 'event_mode_button.dart';
 import 'non_null_event.dart';
@@ -168,10 +172,76 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
 
 final class PatientControllers extends ChangeNotifier {
   PatientControllers({required this.eventMode})
-    : nameController = TextEditingController(),
+    : ageController = TextEditingController(),
+      dobController = TextEditingController(),
+      gpPracticeController = TextEditingController(),
+      homeAddressController = TextEditingController(),
+      nameController = TextEditingController(),
       _isEditingName = eventMode.isEditable;
 
+  final TextEditingController ageController;
+  final TextEditingController dobController;
+
   final EventMode eventMode;
+
+  final TextEditingController gpPracticeController;
+
+  final TextEditingController homeAddressController;
+
+  bool get isEditingName => _isEditingName;
+  bool _isEditingName;
+
+  final TextEditingController nameController;
+
+  int? newAge() {
+    final String ageString = ageController.text;
+    final int? nullableAge = int.tryParse(ageString);
+
+    // If the ageController had some text but it couldn't parse to an int, the user has entered an invalid value.
+    if ((ageString != "") && (nullableAge == null)) {
+      _log.severe('Invalid value was entered for age: $ageString');
+    }
+    return nullableAge;
+  }
+
+  DateTime? newDOB() {
+    final String dobString = dobController.text;
+    final DateTime? nullableDate = DateTime.tryParse(dobString);
+
+    // If the dobController had some text but it couldn't parse to a DateTime, the user has entered an invalid value.
+    if ((dobString != "") && (nullableDate == null)) {
+      _log.severe('Invalid value was entered for DOB: $dobString');
+    }
+    return nullableDate;
+  }
+
+  GPPractice? newGPPractice() {
+    final String gpPracticeString = homeAddressController.text;
+    final GPPractice? nullableGPPractice = GPPractice.tryParse(
+      gpPracticeString,
+    );
+
+    // If the dobController had some text but it couldn't parse to a GPPractice, the user has entered an invalid value.
+    if ((gpPracticeString != "") && (nullableGPPractice == null)) {
+      _log.severe(
+        'Invalid value was entered for GP practice: $gpPracticeString',
+      );
+    }
+    return nullableGPPractice;
+  }
+
+  Address? newHomeAddress() {
+    final String addressString = homeAddressController.text;
+    final Address? nullableAddress = Address.tryParse(addressString);
+
+    // If the dobController had some text but it couldn't parse to an Address, the user has entered an invalid value.
+    if ((addressString != "") && (nullableAddress == null)) {
+      _log.severe('Invalid value was entered for home address: $addressString');
+    }
+    return nullableAddress;
+  }
+
+  String? newName() => nameController.text == "" ? null : nameController.text;
 
   void startEditingName() {
     _isEditingName = true;
