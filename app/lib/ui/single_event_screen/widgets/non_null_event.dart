@@ -1,4 +1,3 @@
-import 'package:dispatch/ui/single_event_screen/widgets/single_event_screen.dart';
 import 'package:gap/gap.dart';
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
@@ -7,6 +6,7 @@ import '../../../domain/models/event/event.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 import 'patient_details.dart';
 import 'remarks_log.dart';
+import 'single_event_screen.dart';
 
 class NonNullEvent extends StatelessWidget {
   NonNullEvent({
@@ -94,7 +94,10 @@ class _Location extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(event.address, style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          event.address.toString(),
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
       ],
     );
   }
