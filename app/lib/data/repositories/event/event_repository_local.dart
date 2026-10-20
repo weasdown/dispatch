@@ -3,6 +3,7 @@ import 'package:latlong2/latlong.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/event/status.dart';
+import '../../../domain/models/location/address.dart';
 import '../../../domain/models/person/patient.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
@@ -51,7 +52,7 @@ class EventRepositoryLocal extends EventRepository {
   }
 
   Future<void> createEvent({
-    required String address,
+    required Address address,
     required LatLng location,
     required NOC noc,
   }) async {
