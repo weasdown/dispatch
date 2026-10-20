@@ -32,4 +32,11 @@ final class Address {
   final String? country;
 
   // TODO define toString() override method
+
+  // TODO implement Address.tryParse() static method
+  static Address? tryParse(String value) {
+    throw UnimplementedError(
+      'Address.tryParse() static method is not yet implemented',
+    );
+  }
 }

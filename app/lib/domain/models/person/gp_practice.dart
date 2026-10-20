@@ -11,4 +11,11 @@ final class GPPractice {
   final String? name;
 
   final String? phoneNumber;
+
+  // TODO implement GPPractice.tryParse() static method
+  static GPPractice? tryParse(String value) {
+    throw UnimplementedError(
+      'GPPractice.tryParse() static method is not yet implemented',
+    );
+  }
 }
