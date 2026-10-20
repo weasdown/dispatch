@@ -355,7 +355,6 @@ final class PatientControllers extends ChangeNotifier {
 // TODO use _AcceptEventButton - show it when SingleEventScreen.eventMode is Create or Update
 class _AcceptEventButton extends StatelessWidget {
   const _AcceptEventButton({
-    super.key,
     required this.newEvent,
     required this.eventModified,
     required this.newPatient,
