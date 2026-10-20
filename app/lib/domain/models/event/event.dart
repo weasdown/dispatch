@@ -29,17 +29,16 @@ class Event {
   }
 
   Event copyWith({
-    required Event oldEvent,
-    LatLng? location,
     Address? address,
+    LatLng? location,
     EventStatus? status,
     List<Patient>? patients,
   }) => Event._(
-    id: oldEvent.id,
-    address: address ?? oldEvent.address,
-    location: location ?? oldEvent.location,
-    status: status ?? oldEvent.status,
-    patients: patients ?? oldEvent.patients,
+    id: id,
+    address: address ?? this.address,
+    location: location ?? this.location,
+    status: status ?? this.status,
+    patients: patients ?? this.patients,
   );
 
   Event.preAlert({
