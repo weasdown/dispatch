@@ -10,7 +10,6 @@ import '../data/repositories/person/user_repository_local.dart';
 import '../data/repositories/unit/unit_repository.dart';
 import '../data/repositories/unit/unit_repository_local.dart';
 import '../data/services/local_data_service.dart';
-import '../ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
 
 /// Configure dependencies for local data.
 /// This dependency list uses repositories that provide local data.
@@ -20,7 +19,6 @@ List<SingleChildWidget> get providersLocal {
     ChangeNotifierProvider.value(value: AuthRepositoryDev() as AuthRepository),
     // TODO work out whether this is needed
     // Provider.value(value: EventMode.select),
-    ChangeNotifierProvider(create: (context) => EventModeModel()),
     Provider.value(value: LocalDataService()),
     Provider(
       // EventRepository Provider
