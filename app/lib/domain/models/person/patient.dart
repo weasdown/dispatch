@@ -22,9 +22,9 @@ final class Patient implements Person {
   /// Person's date of birth, usually displayed in the dd/mm/yyyy format.
   DateTime? dateOfBirth;
 
+  GPPractice? gpPractice;
+
   Address? homeAddress;
 
   final String id;
-
-  GPPractice? gpPractice;
 }
