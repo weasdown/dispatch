@@ -252,9 +252,42 @@ final class PatientControllers extends ChangeNotifier {
     _isEditingName = false;
     notifyListeners();
   }
+}
 
-  bool get isEditingName => _isEditingName;
-  bool _isEditingName;
+// TODO use _AcceptEventButton - show it when SingleEventScreen.eventMode is Create or Update
+class _AcceptEventButton extends StatelessWidget {
+  const _AcceptEventButton({
+    super.key,
+    required this.newEvent,
+    required this.eventModified,
+    required this.newPatient,
+    required this.patientModified,
+  });
 
-  final TextEditingController nameController;
+  final bool eventModified;
+  final Event newEvent;
+  final Patient? newPatient;
+  final bool patientModified;
+
+  void updateEvent(Event newEvent) {
+    throw UnimplementedError('updateEvent() is not yet implemented');
+  }
+
+  void updatePatient(Patient? newPatient) {
+    throw UnimplementedError('updatePatient() is not yet implemented');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        _log.info('Updating patient');
+        updatePatient(newPatient);
+        _log.info('Updating event');
+        updateEvent(newEvent);
+        _log.info('Event and patient updated');
+      },
+      child: Text('Accept Event'),
+    );
+  }
 }
