@@ -91,7 +91,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     );
   }
 
-  Future<void> onUpdatePatient(Patient? newPatient) async {
+  Future<void> onUpdatePatient(Patient newPatient) async {
     widget.viewModel.updatePatient.execute(newPatient);
   }
 
