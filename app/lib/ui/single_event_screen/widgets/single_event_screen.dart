@@ -25,12 +25,6 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
   EventMode _eventMode = .select;
   // late EventMode _eventMode;
 
-  Logger get _log {
-    final Logger log = Logger('_SingleEventScreenState');
-    log.level = Level.ALL;
-    return log;
-  }
-
   // TODO when going from Update/Create to Select, set update patient's details to those from _patientControllers
   void onEventModeUpdate(EventMode newMode) {
     // TODO If new mode is Select, update patient's details based on the contents of the form in _PatientInfoTableState.
@@ -168,6 +162,12 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       ),
     );
   }
+}
+
+Logger get _log {
+  final Logger log = Logger('_SingleEventScreenState');
+  log.level = Level.ALL;
+  return log;
 }
 
 final class PatientControllers extends ChangeNotifier {
