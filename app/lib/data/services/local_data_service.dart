@@ -2,15 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import '../../domain/models/person/patient.dart';
-
 import 'package:latlong2/latlong.dart';
 
 import '../../domain/models/event/event.dart';
 import '../../domain/models/event/noc.dart';
 import '../../domain/models/event/remark.dart';
-import '../../domain/models/unit/unit.dart';
+import '../../domain/models/location/address.dart';
+import '../../domain/models/person/patient.dart';
 import '../../domain/models/person/user.dart';
+import '../../domain/models/unit/unit.dart';
 
 class LocalDataService {
   LocalDataService() : _events = _defaultEvents, _units = _defaultUnits;
@@ -20,7 +20,11 @@ class LocalDataService {
     final Event defaultC1 =
         Event.withNOC(
             idNum: 3127,
-            address: '6 The Greenway, Oxfordshire',
+            address: Address(
+              buildingNumber: '6',
+              street: 'The Greenway',
+              county: 'Oxfordshire',
+            ),
             location: LatLng(51.59799446397092, -1.3537030950825775),
             noc: Cat1NOC.c1ArrestPeriArrest(),
           )
@@ -53,35 +57,47 @@ class LocalDataService {
       defaultC1,
       Event.preAlert(
         idNum: 123,
-        address: 'Sainsbury\'s Kidlington',
+        address: Address(buildingName: 'Sainsbury\'s Kidlington'),
         location: LatLng(51.80902234666047, -1.2775596525947042),
       ),
       Event.preAlert(
         idNum: 135,
-        address: '47 Hamble Drive, Abingdon',
+        address: Address(
+          buildingNumber: '47',
+          street: 'Hamble Drive',
+          townOrCity: 'Abingdon',
+        ),
         location: LatLng(51.68256903771005, -1.2649875925459515),
       ),
       Event.withNOC(
         idNum: 3129,
-        address: 'Carfax Tower, Oxford',
+        address: Address(buildingName: 'Carfax Tower', townOrCity: 'Oxford'),
         location: LatLng(51.752171158042344, -1.2581330894939455),
         noc: Cat2NOC.c2Stabbing(),
       )..assignedUnits = [_defaultUnits[2]],
       Event.withNOC(
         idNum: 3126,
-        address: '25 Old Union Way, Thame',
+        address: Address(
+          buildingNumber: '25',
+          street: 'Old Union Way',
+          townOrCity: 'Thame',
+        ),
         location: LatLng(51.75068849682342, -0.9859928066375558),
         noc: Cat4NOC.medicalMinor(),
       )..assignedUnits = [_defaultUnits[1]],
       Event.withNOC(
         idNum: 3128,
-        address: 'Thatcham Station',
+        address: Address(buildingName: 'Thatcham Station'),
         location: LatLng(51.393901, -1.242779),
         noc: Cat4NOC.mentalHealth(),
       )..assignedUnits = [_defaultUnits[5]],
       Event.withNOC(
         idNum: 3130,
-        address: 'Next, Westgate Shopping Centre, Oxford',
+        address: Address(
+          flatNumberOrName: 'Next',
+          buildingName: 'Westgate Shopping Centre',
+          townOrCity: 'Oxford',
+        ),
         location: LatLng(51.748863260384894, -1.261667647754695),
         noc: Cat3NOC.fallInjuriesUnknown(),
       )..assignedUnits = [_defaultUnits[3]],
