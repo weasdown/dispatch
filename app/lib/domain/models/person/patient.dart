@@ -14,6 +14,16 @@ final class Patient implements Person {
   }) : id = Uuid().v4();
 
   @override
+  bool operator ==(Object other) =>
+      (other is Patient) &&
+      (other.id == id) &&
+      (other.name == name) &&
+      (other.age == age) &&
+      (other.dateOfBirth == dateOfBirth) &&
+      (other.gpPractice == gpPractice) &&
+      (other.homeAddress == homeAddress);
+
+  @override
   String? name;
 
   /// Person's age in integer years.
@@ -23,6 +33,10 @@ final class Patient implements Person {
   DateTime? dateOfBirth;
 
   GPPractice? gpPractice;
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, name, age, dateOfBirth, homeAddress, gpPractice]);
 
   Address? homeAddress;
 
