@@ -147,11 +147,7 @@ class PatientInfoTableField<T> extends TableRow {
                 validator: validator,
                 maxLength: maxLength, // TODO hide display of max length (e.g. 1/3) below field
               )
-            : Text(
-                (patient == null)
-                    ? ''
-                    : value(patient!)?.toString() ?? 'No $name for patient',
-              ),
+            : Text((patient == null) ? '' : value(patient!)?.toString() ?? ''),
       ],
     );
   }
