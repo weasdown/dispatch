@@ -21,9 +21,11 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     getMode = Command0<EventMode>(_getMode);
     setMode = Command1<void, EventMode>(_setMode);
     // setMode = Command1<void, EventMode>(_setMode);
-    updateEvent = Command0<void>(_updateEvent);
 
-    // updateEventMode = Command1<void, EventMode>(_updateEventMode);
+    selectEvent = Command0<void>(_selectEvent);
+    // FIXME swap ordering of Command1 type parameters - arg first, then return
+    updateEvent = Command1<void, Event>(_updateEvent);
+
     createPatient = Command1<void, Patient>(_createPatient);
     updatePatient = Command1<void, Patient>(_updatePatient);
 
@@ -59,6 +61,12 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   Event? get event => _event;
   Event? _event;
 
+  bool get eventEdited => _eventEdited;
+  bool _eventEdited;
+  void setEventEdited() {
+    _eventEdited = true;
+    notifyListeners();
+  }
 
   EventMode get eventMode => _eventMode;
   EventMode _eventMode;
@@ -116,19 +124,34 @@ class SingleEventScreenViewModel extends ChangeNotifier {
 
   Future<Result<List<Unit>>> get units => _unitRepository.allUnits;
 
-  late final Command0<void> updateEvent;
-  Future<Result<void>> _updateEvent() async {
+  late final Command0<void> selectEvent;
+  Future<Result<void>> _selectEvent() async {
+    _eventEdited = true;
     final result = await _eventRepository.setEvent(_event!);
     switch (result) {
       case Ok<void>():
-        _log.fine('Event updated');
+        _log.fine('Event selected');
       case Error<void>():
-        _log.warning('Failed to update Event', result.error);
+        _log.warning('Failed to select Event', result.error);
     }
+    notifyListeners();
     return result;
   }
 
-  void updateEventMode(EventMode newMode) => _eventMode = newMode;
+  late final Command1<void, Event> updateEvent;
+  Future<Result<void>> _updateEvent(Event newEvent) async {
+    _eventEdited = true;
+    _event = newEvent;
+    final result = await _eventRepository.setEvent(newEvent);
+    switch (result) {
+      case Ok<void>():
+        _log.fine('Event selected');
+      case Error<void>():
+        _log.warning('Failed to select Event', result.error);
+    }
+    notifyListeners();
+    return result;
+  }
 
   // late final Command1<void, EventMode> updateEventMode;
   // Future<Result<void>> _updateEventMode(EventMode newMode) async {
