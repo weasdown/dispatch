@@ -24,7 +24,8 @@ class SingleEventScreen extends StatefulWidget {
 
 class _SingleEventScreenState extends State<SingleEventScreen> {
   // bool _editing = false;
-  EventMode _eventMode = .select;
+  late EventMode _eventMode;
+
   // late EventMode _eventMode;
 
   // TODO when going from Update/Create to Select, set update patient's details to those from _patientControllers
@@ -82,13 +83,14 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
   /// Show Accept Event button.
   ///   - On pressed, set event in viewModel to displayed parameters (get from TextEditingControllers). Set event mode to Select.
   void onSelectToUpdate() {
-    _log.finer('In onSelectToUpdate');
+    _log.finer('Changing _eventMode from Select to Update in onSelectToUpdate');
     // TODO remove viewModel.setOldEventBeforeEditing - instead will build new event here then compare against old one (rather than save old one and assume the new one).
     // widget.viewModel.setOldEventBeforeEditing.execute();
 
-    throw UnimplementedError(
-      'Switching from Select to Update is not yet implemented.',
-    );
+    setState(() {
+      _eventMode = .update;
+      widget.viewModel.updateEventMode(_eventMode);
+    });
   }
 
   Future<void> onUpdatePatient(Patient newPatient) async {
@@ -198,66 +200,73 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     //   },
     // );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Event'),
-        elevation: 8,
-        automaticallyImplyLeading: false,
-        actions: [
-          RadioGroup<EventMode>(
-            groupValue: _eventMode,
-            onChanged: (EventMode? mode) => onEventModeUpdate(mode!),
-            child: Row(
-              children: [
-                // Select button
-                EventModeButton(
-                  label: 'Select',
-                  value: EventMode.select,
-                  onEventModeUpdate: (EventMode? mode) =>
-                      onEventModeUpdate(mode!),
-                ),
+    return ListenableBuilder(
+      listenable: widget.viewModel,
+      builder: (BuildContext context, Widget? child) {
+        _eventMode = widget.viewModel.eventMode;
 
-                // Create button
-                EventModeButton(
-                  label: 'Create',
-                  value: EventMode.create,
-                  onEventModeUpdate: (EventMode? mode) =>
-                      onEventModeUpdate(mode!),
-                ),
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Event'),
+            elevation: 8,
+            automaticallyImplyLeading: false,
+            actions: [
+              RadioGroup<EventMode>(
+                groupValue: _eventMode,
+                onChanged: (EventMode? mode) => onEventModeUpdate(mode!),
+                child: Row(
+                  children: [
+                    // Select button
+                    EventModeButton(
+                      label: 'Select',
+                      value: EventMode.select,
+                      onEventModeUpdate: (EventMode? mode) =>
+                          onEventModeUpdate(mode!),
+                    ),
 
-                // Update button
-                EventModeButton(
-                  label: 'Update',
-                  value: EventMode.update,
-                  onEventModeUpdate: (EventMode? mode) =>
-                      onEventModeUpdate(mode!),
-                  colourOnSelected: Colors.red,
+                    // Create button
+                    EventModeButton(
+                      label: 'Create',
+                      value: EventMode.create,
+                      onEventModeUpdate: (EventMode? mode) =>
+                          onEventModeUpdate(mode!),
+                    ),
+
+                    // Update button
+                    EventModeButton(
+                      label: 'Update',
+                      value: EventMode.update,
+                      onEventModeUpdate: (EventMode? mode) =>
+                          onEventModeUpdate(mode!),
+                      colourOnSelected: Colors.red,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: ListenableBuilder(
-        listenable: widget.viewModel.load,
-        builder: (context, child) {
-          final Logger log = Logger('_SingleEventScreenState');
-          return ListenableBuilder(
-            listenable: widget.viewModel,
-            builder: (context, _) {
-              final Event? event = widget.viewModel.event;
-              return (event == null)
-                  ? NullEvent(event: event, log: log)
-                  : NonNullEvent(
-                      event: event,
-                      viewModel: widget.viewModel,
-                      eventMode: _eventMode,
-                      patientControllers: _patientControllers,
-                    ); // event != null
+          body: ListenableBuilder(
+            listenable: widget.viewModel.load,
+            builder: (context, child) {
+              final Logger log = Logger('_SingleEventScreenState');
+              return ListenableBuilder(
+                listenable: widget.viewModel,
+                builder: (context, _) {
+                  final Event? event = widget.viewModel.event;
+                  return (event == null)
+                      ? NullEvent(event: event, log: log)
+                      : NonNullEvent(
+                          event: event,
+                          viewModel: widget.viewModel,
+                          eventMode: _eventMode,
+                          patientControllers: _patientControllers,
+                        ); // event != null
+                },
+              );
             },
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

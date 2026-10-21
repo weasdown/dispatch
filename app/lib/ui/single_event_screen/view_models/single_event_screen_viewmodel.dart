@@ -1,6 +1,5 @@
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:provider/provider.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
 import '../../../data/repositories/person/user_repository.dart';
@@ -17,14 +16,13 @@ import '../../../utils/result.dart';
 class SingleEventScreenViewModel extends ChangeNotifier {
   SingleEventScreenViewModel({
     required this._eventRepository,
-    // required this._eventModeRepository,
     required this._unitRepository,
-  })
-  // : _eventModeModel = EventModeModel()
-  {
-    getMode = Command1<EventMode, BuildContext>(_getMode);
+  }) : _eventMode = EventMode.select {
+    getMode = Command0<EventMode>(_getMode);
+    setMode = Command1<void, EventMode>(_setMode);
     // setMode = Command1<void, EventMode>(_setMode);
     updateEvent = Command0<void>(_updateEvent);
+
     // updateEventMode = Command1<void, EventMode>(_updateEventMode);
     createPatient = Command1<void, Patient>(_createPatient);
     updatePatient = Command1<void, Patient>(_updatePatient);
@@ -61,17 +59,17 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   Event? get event => _event;
   Event? _event;
 
-  Future<Result<List<Event>>> get events => _eventRepository.allEvents;
 
-  // EventMode? get eventMode => _eventMode;
-  // EventMode? _eventMode;
+  EventMode get eventMode => _eventMode;
+  EventMode _eventMode;
+
+  Future<Result<List<Event>>> get events => _eventRepository.allEvents;
 
   // EventModeModel get eventModeModel => _eventModeModel;
   // final EventModeModel _eventModeModel;
 
-  late final Command1<EventMode, BuildContext> getMode;
-  Future<Result<EventMode>> _getMode(BuildContext context) async =>
-      Result.ok(Provider.of<EventModeModel>(context).mode);
+  late final Command0<EventMode> getMode;
+  Future<Result<EventMode>> _getMode() async => Result.ok(_eventMode);
 
   late Command0 load;
   Future<Result<Event?>> _load(
@@ -129,6 +127,8 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     }
     return result;
   }
+
+  void updateEventMode(EventMode newMode) => _eventMode = newMode;
 
   // late final Command1<void, EventMode> updateEventMode;
   // Future<Result<void>> _updateEventMode(EventMode newMode) async {
