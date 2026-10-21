@@ -17,10 +17,9 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   SingleEventScreenViewModel({
     required this._eventRepository,
     required this._unitRepository,
-  }) : _eventMode = EventMode.select {
+  }) : _eventEdited = false,
+       _eventMode = EventMode.select {
     getMode = Command0<EventMode>(_getMode);
-    setMode = Command1<void, EventMode>(_setMode);
-    // setMode = Command1<void, EventMode>(_setMode);
 
     selectEvent = Command0<void>(_selectEvent);
     // FIXME swap ordering of Command1 type parameters - arg first, then return
@@ -55,7 +54,6 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   }
 
   final EventRepository _eventRepository;
-  // final EventModeRepository _eventModeRepository;
   final UnitRepository _unitRepository;
 
   Event? get event => _event;
@@ -80,20 +78,13 @@ class SingleEventScreenViewModel extends ChangeNotifier {
 
   Future<Result<List<Event>>> get events => _eventRepository.allEvents;
 
-  // EventModeModel get eventModeModel => _eventModeModel;
-  // final EventModeModel _eventModeModel;
-
   late final Command0<EventMode> getMode;
   Future<Result<EventMode>> _getMode() async => Result.ok(_eventMode);
 
   late Command0 load;
-  Future<Result<Event?>> _load(
-    // BuildContext context
-  ) async {
-    // _eventMode = .select;
+  Future<Result<Event?>> _load() async {
     try {
       final eventResult = await _eventRepository.selectedEvent;
-      // final Result<EventMode> modeResult = await _getMode(context);
 
       switch (eventResult) {
         case Ok<Event?>():
@@ -104,17 +95,6 @@ class SingleEventScreenViewModel extends ChangeNotifier {
           _log.warning('Failed to load event', eventResult.error);
           return eventResult;
       }
-
-      // TODO remove commented chunk
-      // switch (modeResult) {
-      //   case Ok<EventMode>():
-      //     _eventMode = modeResult.value;
-      //     _log.fine('Loaded eventMode');
-      //     return Result.ok(_event);
-      //   case Error<EventMode>():
-      //     _log.warning('Failed to load eventMode', modeResult.error);
-      //     return eventResult;
-      // }
     } finally {
       notifyListeners();
     }
