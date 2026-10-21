@@ -61,6 +61,13 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   Event? get event => _event;
   Event? _event;
 
+  // /// `_eventBeforeEdits` is set when the `SingleEventScreen`'s `eventMode` is changed from [EventMode.select] to [EventMode.update].
+  // /// This stores the event's parameters as they were at the moment the `eventMode` was changed, so the user can revert back
+  // /// to them by clicking back to [EventMode.select] (and after confirming with a dialog that all changes will be lost).
+  // ///
+  // /// This is initialised when the user first switches from [EventMode.select] to [EventMode.update].
+  // late Event _eventBeforeEdits;
+
   bool get eventEdited => _eventEdited;
   bool _eventEdited;
   void setEventEdited() {
@@ -153,22 +160,10 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     return result;
   }
 
-  // late final Command1<void, EventMode> updateEventMode;
-  // Future<Result<void>> _updateEventMode(EventMode newMode) async {
-  //   _log.fine('Updating event mode from $_eventMode to $newMode');
-  //   final result = await _eventModeModel.updateMode(newMode);
-  //   switch (result) {
-  //     case Error<void>():
-  //       _log.warning(
-  //         'Failed to update Event mode: ${result.error}',
-  //         result.error,
-  //       );
-  //       return result;
-  //     case Ok<void>():
-  //       _log.fine('Event mode updated');
-  //   }
-  //   return result;
-  // }
+  void updateEventMode(EventMode newMode) {
+    _eventMode = newMode;
+    notifyListeners();
+  }
 
   late final Command1<void, Patient> updatePatient;
   Future<Result<void>> _updatePatient(Patient patient) async {
