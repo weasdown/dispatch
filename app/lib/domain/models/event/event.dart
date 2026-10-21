@@ -43,7 +43,7 @@ class Event {
 
   Event.preAlert({
     required int idNum,
-    required Address address,
+    required Address? address,
     required LatLng location,
   }) : this._(
          id: EventID(id: idNum),
