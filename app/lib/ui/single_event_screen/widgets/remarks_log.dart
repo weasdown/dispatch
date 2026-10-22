@@ -63,7 +63,6 @@ class _RemarksLogState extends State<RemarksLog> {
                   child: TextFormField(
                     controller: _textController,
                     autovalidateMode: AutovalidateMode.onUserInteractionIfError,
-                    autofocus: true,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(),
                     ),
@@ -120,14 +119,14 @@ class _RemarksLogState extends State<RemarksLog> {
 
   @override
   void didUpdateWidget(covariant RemarksLog oldWidget) {
-    oldWidget.viewModel.updateEvent.removeListener(_onResult);
-    widget.viewModel.updateEvent.addListener(_onResult);
+    oldWidget.viewModel.selectEvent.removeListener(_onResult);
+    widget.viewModel.selectEvent.addListener(_onResult);
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   void dispose() {
-    widget.viewModel.updateEvent.removeListener(_onResult);
+    widget.viewModel.selectEvent.removeListener(_onResult);
     // Clean up the controller when the widget is disposed.
     _textController.dispose();
     super.dispose();
@@ -136,22 +135,22 @@ class _RemarksLogState extends State<RemarksLog> {
   @override
   void initState() {
     super.initState();
-    widget.viewModel.updateEvent.addListener(_onResult);
+    widget.viewModel.selectEvent.addListener(_onResult);
   }
 
   void _onResult() {
-    if (widget.viewModel.updateEvent.completed) {
-      widget.viewModel.updateEvent.clearResult();
+    if (widget.viewModel.selectEvent.completed) {
+      widget.viewModel.selectEvent.clearResult();
     }
 
-    if (widget.viewModel.updateEvent.error) {
-      widget.viewModel.updateEvent.clearResult();
+    if (widget.viewModel.selectEvent.error) {
+      widget.viewModel.selectEvent.clearResult();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error while setting event'),
           action: SnackBarAction(
             label: 'Try again',
-            onPressed: widget.viewModel.updateEvent.execute,
+            onPressed: widget.viewModel.selectEvent.execute,
           ),
         ),
       );
