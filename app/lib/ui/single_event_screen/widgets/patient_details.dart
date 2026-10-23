@@ -31,12 +31,22 @@ class PatientDetails extends StatefulWidget {
 class _PatientDetailsState extends State<PatientDetails> {
   Event get event => widget.viewModel.event!;
 
+  void _onChanged(String? newValue) {
+    _log.finer('In _onChanged');
+    widget.viewModel.setPatientEdited();
+  }
+
   @override
   Widget build(BuildContext context) {
     final EventMode eventMode = widget.eventMode;
 
+    final int numberOfPatients = event.patients.length;
+
     _log.fine('Got event ${event.idLastFour}');
     _log.fine('Got event mode $eventMode');
+    _log.fine(
+      'Found $numberOfPatients patient${numberOfPatients == 1 ? '' : 's'}',
+    );
 
     final Patient? firstPatient = event.patients.firstOrNull;
 
@@ -56,15 +66,18 @@ class _PatientDetailsState extends State<PatientDetails> {
                 eventMode: eventMode,
                 patientControllers: widget.patientControllers,
                 viewModel: widget.viewModel,
+                onChanged: _onChanged,
               ),
               NumberOfPatients.one => _OnePatient(
                 eventMode: eventMode,
                 patient: firstPatient!,
                 patientControllers: widget.patientControllers,
                 viewModel: widget.viewModel,
+                onChanged: _onChanged,
               ),
               NumberOfPatients.multiple => _MultiplePatients(
                 eventMode: eventMode,
+                viewModel: widget.viewModel,
               ),
             },
           ),
@@ -117,9 +130,11 @@ class _NoPatient extends StatelessWidget {
     required this.eventMode,
     required this.patientControllers,
     required this.viewModel,
+    required this.onChanged,
   });
 
   final EventMode eventMode;
+  final ValueChanged<String>? onChanged;
   final PatientControllers patientControllers;
   final SingleEventScreenViewModel viewModel;
 
@@ -130,6 +145,7 @@ class _NoPatient extends StatelessWidget {
       patient: null,
       patientControllers: patientControllers,
       viewModel: viewModel,
+      onChanged: onChanged,
     );
   }
 }
@@ -140,9 +156,12 @@ class _OnePatient extends StatefulWidget {
     required this.patient,
     required this.patientControllers,
     required this.viewModel,
+    required this.onChanged,
   });
 
   final EventMode eventMode;
+
+  final ValueChanged<String>? onChanged;
 
   final Patient patient;
   final PatientControllers patientControllers;
@@ -165,17 +184,25 @@ class _OnePatientState extends State<_OnePatient> {
       patient: _patient,
       viewModel: widget.viewModel,
       patientControllers: widget.patientControllers,
+      onChanged: widget.onChanged,
     );
   }
 }
 
 class _MultiplePatients extends StatelessWidget {
-  const _MultiplePatients({required this.eventMode});
+  const _MultiplePatients({required this.eventMode, required this.viewModel});
 
   final EventMode eventMode;
+  final SingleEventScreenViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Center(
+      // TODO: add display of multiple patients, or copy CAD approach
+      child: Text(
+        '${viewModel.numPatients} patients found\n TODO: add display of multiple patients, or copy CAD approach',
+        style: Theme.of(context).textTheme.bodyLarge,
+      ),
+    );
   }
 }

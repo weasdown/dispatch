@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../domain/models/location/address.dart';
@@ -28,14 +29,17 @@ final class Patient implements Person {
     DateTime? dateOfBirth,
     GPPractice? gpPractice,
     Address? homeAddress,
-  }) => Patient._(
-    id: id,
-    name: name ?? this.name,
-    age: age ?? this.age,
-    dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-    gpPractice: gpPractice ?? this.gpPractice,
-    homeAddress: homeAddress ?? this.homeAddress,
-  );
+  }) {
+    _log.finer('Current ID: $id');
+    return Patient._(
+      id: id,
+      name: name ?? this.name,
+      age: age ?? this.age,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      gpPractice: gpPractice ?? this.gpPractice,
+      homeAddress: homeAddress ?? this.homeAddress,
+    );
+  }
 
   @override
   bool operator ==(Object other) =>
@@ -65,4 +69,14 @@ final class Patient implements Person {
   Address? homeAddress;
 
   final String id;
+
+  Logger get _log {
+    final Logger log = Logger('Patient');
+    log.level = Level.ALL;
+    return log;
+  }
+
+  @override
+  String toString() =>
+      'Patient(name: $name, age: $age, DOB: $dateOfBirth, GP practice: $gpPractice, home address: $homeAddress)';
 }

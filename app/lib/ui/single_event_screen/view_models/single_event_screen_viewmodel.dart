@@ -18,6 +18,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     required this._eventRepository,
     required this._unitRepository,
   }) : _eventEdited = false,
+       _patientEdited = false,
        _eventMode = EventMode.select {
     getMode = Command0<EventMode>(_getMode);
 
@@ -69,9 +70,18 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   bool get eventEdited => _eventEdited;
   bool _eventEdited;
   void setEventEdited() {
+    _log.finer('In setEventEdited');
     _eventEdited = true;
-    notifyListeners();
+    // notifyListeners();
   }
+
+  void setPatientEdited() {
+    _log.finer('In setPatientEdited');
+    _patientEdited = true;
+  }
+
+  /// [True] if the event is in Update.
+  bool get eventLocked => eventMode == .update;
 
   EventMode get eventMode => _eventMode;
   EventMode _eventMode;
@@ -102,12 +112,41 @@ class SingleEventScreenViewModel extends ChangeNotifier {
 
   final Logger _log = Logger('SingleEventScreenViewModel')..level = Level.ALL;
 
-  // EventMode get mode => _mode;
-  // EventMode _mode;
+  int get nextEventID => _eventRepository.nextIDNum;
+
+  int? get numPatients => _event?.patients.length;
+
+  bool get patientEdited => _patientEdited;
+  bool _patientEdited;
+
+  // /// Used when in [EventMode.update] and the user chooses to revert to [EventMode.select], abandoning any changes they have made.
+  // /// The event stored in [_eventBeforeEdits] get restored.
+  // late final Command0<Event> restorePreviousEvent;
+  // Future<Result<Event>> _restorePreviousEvent() async {
+  //   _event = _eventBeforeEdits;
+  //   notifyListeners();
+  //   return Result.ok(_event!);
+  // }
 
   // late final Command1<void, EventMode> setMode;
-  // Future<Result<void>> _setMode(EventMode newMode) async =>
-  //     _eventModeRepository.updateEventMode(newMode);
+  // Future<Result<void>> _setMode(EventMode newMode) async {
+  //   _eventMode = newMode;
+  //   notifyListeners();
+  //   return Result.ok(null);
+  // }
+  //
+  // late final Command0<void> setOldEventBeforeEditing;
+  // Future<Result<void>> _setOldEventBeforeEditing() async {
+  //   if (event != null) {
+  //     _eventBeforeEdits = _event!;
+  //     notifyListeners(); // TODO confirm if this notify is needed.
+  //     return Result.ok(null);
+  //   } else {
+  //     return Result.error(NoSelectedEventException());
+  //   }
+  // }
+
+  // Future<Result<void>> _setEvent(Event newEvent)async {}
 
   Future<Result<List<Unit>>> get units => _unitRepository.allUnits;
 
@@ -157,6 +196,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
           result.error,
         );
     }
+    notifyListeners();
     return result;
   }
 }
@@ -175,36 +215,36 @@ enum EventMode {
   toString() => name.capitalise();
 }
 
-class EventModeModel extends ChangeNotifier {
-  bool get isEditing => _isEditing;
-  bool _isEditing = false;
-
-  final Logger _log = Logger('EventModeModel');
-
-  EventMode get mode {
-    _log.fine('Getting mode $_mode from EventModeModel');
-    return _mode;
-  }
-
-  EventMode _mode = .select;
-
-  Future<Result<void>> startEditing() async {
-    _isEditing = true;
-    notifyListeners();
-    return Result.ok(null);
-  }
-
-  Future<Result<void>> stopEditing() async {
-    _isEditing = false;
-    notifyListeners();
-    return Result.ok(null);
-  }
-
-  Future<Result<void>> updateMode(EventMode newMode) async {
-    final oldMode = _mode;
-    _mode = newMode;
-    _log.fine('Changed _mode from $oldMode to $_mode');
-    notifyListeners();
-    return Result.ok(null);
-  }
-}
+// class EventModeModel extends ChangeNotifier {
+//   bool get isEditing => _isEditing;
+//   bool _isEditing = false;
+//
+//   final Logger _log = Logger('EventModeModel');
+//
+//   EventMode get mode {
+//     _log.fine('Getting mode $_mode from EventModeModel');
+//     return _mode;
+//   }
+//
+//   EventMode _mode = .select;
+//
+//   Future<Result<void>> startEditing() async {
+//     _isEditing = true;
+//     notifyListeners();
+//     return Result.ok(null);
+//   }
+//
+//   Future<Result<void>> stopEditing() async {
+//     _isEditing = false;
+//     notifyListeners();
+//     return Result.ok(null);
+//   }
+//
+//   Future<Result<void>> updateMode(EventMode newMode) async {
+//     final oldMode = _mode;
+//     _mode = newMode;
+//     _log.fine('Changed _mode from $oldMode to $_mode');
+//     notifyListeners();
+//     return Result.ok(null);
+//   }
+// }

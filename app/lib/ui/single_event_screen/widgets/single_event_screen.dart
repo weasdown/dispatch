@@ -8,6 +8,7 @@ import '../../../domain/models/event/status.dart';
 import '../../../domain/models/location/address.dart';
 import '../../../domain/models/person/gp_practice.dart';
 import '../../../domain/models/person/patient.dart';
+import '../../../ui/map/widgets/map.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 import 'event_mode_button.dart';
 import 'non_null_event.dart';
@@ -15,6 +16,8 @@ import 'null_event.dart';
 
 class SingleEventScreen extends StatefulWidget {
   const SingleEventScreen({super.key, required this.viewModel});
+
+  static final patientFormKey = GlobalKey<FormState>();
 
   final SingleEventScreenViewModel viewModel;
 
@@ -31,6 +34,35 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
   );
 
   late EventMode _eventMode;
+
+  void onAcceptEvent() {
+    _log.finer('In onAcceptEvent');
+    // _log.finer('Patient has been edited? ${widget.viewModel.patientEdited}');
+    _log.finer('Event has been edited? ${widget.viewModel.eventEdited}');
+    // Event and/or patient has been edited
+    if (widget.viewModel.eventEdited || widget.viewModel.patientEdited) {
+      _log.finer(
+        'Patient and/or event has been edited - skipping updating as required',
+      );
+      _log.info('Updating patient');
+      onUpdatePatient();
+
+      _log.info('Updating event');
+      onUpdateEvent();
+
+      _log.info('Event and patient updated');
+
+      widget.viewModel.updateEventMode(.select);
+    }
+    // Neither event nor patient has been edited
+    else {
+      _log.finer(
+        'Patient and event have not been edited at all - skipping updates',
+      );
+      widget.viewModel.updateEventMode(.select);
+      return;
+    }
+  }
 
   // late EventMode _eventMode;
 
@@ -70,11 +102,11 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       _eventMode = newMode;
       if (newMode.isEditable) {
         // _editing = true;
-        _log.finer('Started editing');
+        _log.finer('Entered editable mode');
         _patientControllers.startEditingName();
       } else {
         // _editing = false;
-        _log.finer('Stopped editing');
+        _log.finer('Exited editable mode');
         _patientControllers.stopEditingName();
       }
     });
@@ -83,10 +115,11 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
 
   /// When switching from Select to Update:
   /// - Save current event parameters to the viewModel.
-  /// For each field in patient details table:
-  ///   - Set field's value widget to a TextFormField with a value equal to the current event's value for the field.
+  /// Rebuild patient details table with EventMode.update:
+  ///   - Sets each field's value widget to a TextFormField with a value equal to the current event's value for the field.
   /// Once any changes made to event parameters, run viewModel.eventEdited.execute() to show the event has been modified.
-  /// Show Accept Event button.
+  /// Rebuild _SingleEventScreenState with EventMode.update:
+  /// - Show Accept Event button.
   ///   - On pressed, set event in viewModel to displayed parameters (get from TextEditingControllers). Set event mode to Select.
   void onSelectToUpdate() {
     _log.finer('Changing _eventMode from Select to Update in onSelectToUpdate');
@@ -99,10 +132,54 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     });
   }
 
-  Future<void> onUpdatePatient(Patient newPatient) async {
-    widget.viewModel.updatePatient.execute(newPatient);
+  Future<void> onUpdateEvent() async {
+    _log.finer('In onUpdateEvent');
+    _log.severe('onUpdateEvent() is not yet fully implemented.');
+
+    // TODO implement building of newEvent using copyWith with values from eventControllers
+    final Event newEvent =
+        widget.viewModel.event?.copyWith() ??
+        // FIXME fix hard-coded LatLng
+        Event.preAlert(
+          idNum: widget.viewModel.nextEventID,
+          address: null,
+          location: MapPage.scasCentre,
+        );
+
+    return widget.viewModel.updateEvent.execute(newEvent);
   }
 
+  Future<void> onUpdatePatient() async {
+    if (patient != null) {
+      if (SingleEventScreen.patientFormKey.currentState!.validate()) {
+        // If the form is valid, update the patient stored in the viewModel (and hence its EventRepository).
+        _log.fine('Valid patient data received!');
+
+        final Patient newPatient = patient!.copyWith(
+          name: _patientControllers.newName() ?? patient?.name,
+          age: _patientControllers.newAge() ?? patient?.age,
+          dateOfBirth: _patientControllers.newDOB() ?? patient?.dateOfBirth,
+          gpPractice:
+              _patientControllers.newGPPractice() ?? patient?.gpPractice,
+          homeAddress:
+              _patientControllers.newHomeAddress() ?? patient?.homeAddress,
+        );
+        _log.fine('New patient in onUpdatePatient: ${newPatient.toString()}');
+        return widget.viewModel.updatePatient.execute(newPatient);
+      }
+    }
+    // Current patient is null, so add a new patient
+    else {
+      throw UnimplementedError(
+        'Adding a new patient in onUpdatePatient is not yet implemented.',
+      );
+    }
+  }
+
+  // FIXME onUpdateToSelect currently throws an error.
+  // onUpdateToSelect is used similarly to pressing Accept Event when in Update, except that
+  // when clicking Select, the user is suggesting that they *don't* want to keep any new data.
+  // This should be checked with a dialog in case they have clicked Select accidentally.
   /// When switching from Update to Select:
   /// - Build new event.
   /// - Compare new event against old event.
@@ -182,9 +259,40 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     }
   }
 
-  final PatientControllers _patientControllers = PatientControllers(
-    eventMode: .select,
+  Patient? get patient => widget.viewModel.event?.patients.firstOrNull;
+
+  late final PatientControllers _patientControllers = PatientControllers(
+    eventMode: widget.viewModel.eventMode,
+    // FIXME reinstate something useful here or remove the argument/attribute altogether
+    onSetEventModified: () {
+      _log.finer('Setting patient edited');
+      widget.viewModel.setPatientEdited();
+    },
   );
+
+  // List<String>? _patientValues;
+
+  void updateEventModified() {
+    _log.finer('In updateEventModified');
+    widget.viewModel.setEventEdited();
+    _log.finer(
+      '- After update, event has been edited? ${widget.viewModel.eventEdited}',
+    );
+  }
+
+  @override
+  void initState() {
+    _eventControllers.addListener(updateEventModified);
+    _patientControllers.addListener(updateEventModified);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _eventControllers.dispose();
+    _patientControllers.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,6 +325,20 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
             elevation: 8,
             automaticallyImplyLeading: false,
             actions: [
+              // Include the _AcceptEventButton if in EventMode.create/update
+              ...?(_eventMode.isEditable)
+                  ? [
+                      _AcceptEventButton(
+                        eventControllers: _eventControllers,
+                        patientControllers: _patientControllers,
+                        eventModified: widget.viewModel.eventEdited,
+                        onPressed: onAcceptEvent,
+                        onUpdateEvent: onUpdateEvent,
+                        onUpdatePatient: onUpdatePatient,
+                        viewModel: widget.viewModel,
+                      ),
+                    ]
+                  : null,
               RadioGroup<EventMode>(
                 groupValue: _eventMode,
                 onChanged: (EventMode? mode) => onEventModeUpdate(mode!),
@@ -266,6 +388,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                           viewModel: widget.viewModel,
                           eventMode: _eventMode,
                           patientControllers: _patientControllers,
+                          // patientFormKey: _patientFormKey,
                         ); // event != null
                 },
               );
@@ -291,15 +414,29 @@ final class EventControllers extends ChangeNotifier {
 }
 
 final class PatientControllers extends ChangeNotifier {
-  PatientControllers({required this.eventMode})
-    : ageController = TextEditingController(),
-      dobController = TextEditingController(),
-      gpPracticeController = TextEditingController(),
-      homeAddressController = TextEditingController(),
-      nameController = TextEditingController(),
-      _isEditingName = eventMode.isEditable;
+  PatientControllers({
+    required this.eventMode,
+    required this.onSetEventModified,
+  }) : ageController = TextEditingController()..addListener(onSetEventModified),
+       dobController = TextEditingController()..addListener(onSetEventModified),
+       gpPracticeController = TextEditingController()
+         ..addListener(onSetEventModified),
+       homeAddressController = TextEditingController()
+         ..addListener(onSetEventModified),
+       nameController = TextEditingController()
+         ..addListener(onSetEventModified),
+       _isEditingName = eventMode.isEditable;
 
   final TextEditingController ageController;
+
+  // List<String> get allValues => [
+  //   ageController.text,
+  //   dobController.text,
+  //   gpPracticeController.text,
+  //   homeAddressController.text,
+  //   nameController.text,
+  // ];
+
   final TextEditingController dobController;
 
   final EventMode eventMode;
@@ -315,10 +452,13 @@ final class PatientControllers extends ChangeNotifier {
 
   int? newAge() {
     final String ageString = ageController.text;
+    if (ageString == "") {
+      return null;
+    }
     final int? nullableAge = int.tryParse(ageString);
 
     // If the ageController had some text but it couldn't parse to an int, the user has entered an invalid value.
-    if ((ageString != "") && (nullableAge == null)) {
+    if (nullableAge == null) {
       _log.severe('Invalid value was entered for age: $ageString');
     }
     return nullableAge;
@@ -326,6 +466,9 @@ final class PatientControllers extends ChangeNotifier {
 
   DateTime? newDOB() {
     final String dobString = dobController.text;
+    if (dobString == "") {
+      return null;
+    }
     final DateTime? nullableDate = DateTime.tryParse(dobString);
 
     // If the dobController had some text but it couldn't parse to a DateTime, the user has entered an invalid value.
@@ -337,6 +480,9 @@ final class PatientControllers extends ChangeNotifier {
 
   GPPractice? newGPPractice() {
     final String gpPracticeString = gpPracticeController.text;
+    if (gpPracticeString == "") {
+      return null;
+    }
     final GPPractice? nullableGPPractice = GPPractice.tryParse(
       gpPracticeString,
     );
@@ -352,6 +498,9 @@ final class PatientControllers extends ChangeNotifier {
 
   Address? newHomeAddress() {
     final String addressString = homeAddressController.text;
+    if (addressString == "") {
+      return null;
+    }
     final Address? nullableAddress = Address.tryParse(addressString);
 
     // If the dobController had some text but it couldn't parse to an Address, the user has entered an invalid value.
@@ -361,7 +510,18 @@ final class PatientControllers extends ChangeNotifier {
     return nullableAddress;
   }
 
-  String? newName() => nameController.text == "" ? null : nameController.text;
+  String? newName() {
+    final String newValue = nameController.text;
+    _log.finer('New name: $newValue');
+    return newValue.toString() == "" ? null : nameController.text;
+  }
+
+  // Patient newPatientFromValues(Patient existingPatient) {
+  //   // Have to use copyWith for the ID to transfer to the new patient.
+  //   return existingPatient.copyWith();
+  // }
+
+  final void Function() onSetEventModified;
 
   void startEditingName() {
     _isEditingName = true;
@@ -377,36 +537,26 @@ final class PatientControllers extends ChangeNotifier {
 // TODO use _AcceptEventButton - show it when SingleEventScreen.eventMode is Create or Update
 class _AcceptEventButton extends StatelessWidget {
   const _AcceptEventButton({
-    required this.newEvent,
+    required this.eventControllers,
+    required this.patientControllers,
     required this.eventModified,
-    required this.newPatient,
-    required this.patientModified,
+    required this.onPressed,
+    required this.onUpdateEvent,
+    required this.onUpdatePatient,
+    required this.viewModel,
   });
 
+  final EventControllers eventControllers;
   final bool eventModified;
-  final Event newEvent;
-  final Patient? newPatient;
-  final bool patientModified;
+  final Future<void> Function() onUpdateEvent;
+  final Future<void> Function() onUpdatePatient;
+  final PatientControllers patientControllers;
+  final SingleEventScreenViewModel viewModel;
 
-  void updateEvent(Event newEvent) {
-    throw UnimplementedError('updateEvent() is not yet implemented');
-  }
-
-  void updatePatient(Patient? newPatient) {
-    throw UnimplementedError('updatePatient() is not yet implemented');
-  }
+  final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        _log.info('Updating patient');
-        updatePatient(newPatient);
-        _log.info('Updating event');
-        updateEvent(newEvent);
-        _log.info('Event and patient updated');
-      },
-      child: Text('Accept Event'),
-    );
+    return ElevatedButton(onPressed: onPressed, child: Text('Accept Event'));
   }
 }

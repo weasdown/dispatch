@@ -21,11 +21,12 @@ class NonNullEvent extends StatelessWidget {
   final EventMode eventMode;
   final Logger _log = Logger('NonNullEvent');
   final PatientControllers patientControllers;
+  // final GlobalKey<FormState> patientFormKey;
   final SingleEventScreenViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
-    _log.finer('eventMode: $eventMode');
+    _log.finer('NonNullEvent eventMode: $eventMode');
     return Center(
       child: SizedBox.expand(
         child: Align(

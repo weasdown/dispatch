@@ -1,4 +1,5 @@
 import 'package:latlong2/latlong.dart';
+import 'package:logging/logging.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/event/remark.dart';
@@ -77,6 +78,12 @@ class EventRepositoryLocal extends EventRepository {
 
   int _currentIDNum;
 
+  Logger get _log {
+    final Logger log = Logger('EventRepositoryLocal');
+    log.level = Level.ALL;
+    return log;
+  }
+
   @override
   int get nextIDNum {
     int newIDNum = _currentIDNum += 1;
@@ -107,11 +114,37 @@ class EventRepositoryLocal extends EventRepository {
       return Result.error(NoSelectedEventException());
     }
 
+    final Iterable<String> currentIDs = _selectedEvent!.patients.map(
+      (Patient p) => p.id,
+    );
+    _log.finer(
+      'IDs for current patients in event ${_selectedEvent!.idLastFour}: $currentIDs',
+    );
+    _log.finer("New patient's ID: ${patient.id}");
+
     try {
       final int currentPatientIndex = _selectedEvent!.patients.indexWhere(
         (Patient p) => p.id == patient.id,
       );
-      _selectedEvent!.updatePatient(currentPatientIndex, patient);
+      _log.finer('Current patient index: $currentPatientIndex');
+
+      // If patient is currently in _selectedEvent.patients
+      if (currentPatientIndex != -1) {
+        // // If currentPatient found
+        // (patient != null)
+        //     ?
+        // We want to update the patient at currentPatientIndex
+        _log.finer('Updating patient in event ${_selectedEvent!.idLastFour}');
+        _selectedEvent!.updatePatient(currentPatientIndex, patient);
+        // :
+        //   // We want to remove the current patient
+        //   _selectedEvent!.removePatient(currentPatientIndex);
+      }
+      // Patient is NOT currently in _selectedEvent.patients
+      else {
+        _log.finer('Adding patient to event ${_selectedEvent!.idLastFour}');
+        _selectedEvent!.addPatient(patient);
+      }
       return Result.ok(null);
     } on StateError {
       return Result.error(

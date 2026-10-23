@@ -16,9 +16,12 @@ class PatientInfoTable extends StatefulWidget {
     required this.patient,
     required this.viewModel,
     required this.patientControllers,
+    required this.onChanged,
   });
 
   final EventMode eventMode;
+
+  final ValueChanged<String>? onChanged;
 
   final Patient? patient;
 
@@ -31,7 +34,7 @@ class PatientInfoTable extends StatefulWidget {
 }
 
 class _PatientInfoTableState extends State<PatientInfoTable> {
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
 
   final Logger log = Logger('_PatientInfoTable')..level = Level.ALL;
 
@@ -88,15 +91,18 @@ class _PatientInfoTableState extends State<PatientInfoTable> {
 
         final bool isEditable = widget.eventMode.isEditable;
 
+        // Patient form
         return Form(
-          key: _formKey,
+          key: SingleEventScreen.patientFormKey,
           child: Table(
             columnWidths: {0: FlexColumnWidth(), 1: FlexColumnWidth()},
             children: patientInfoFields(
+              patientControllers: widget.patientControllers,
               viewModel: widget.viewModel,
               patient: widget.patient,
               isEditable: isEditable,
-            ).map((PatientInfoTableField field) => field.tableRow()).toList(),
+              onChanged: widget.onChanged,
+            ),
           ),
         );
       },
@@ -105,61 +111,90 @@ class _PatientInfoTableState extends State<PatientInfoTable> {
 }
 
 class PatientInfoTableField<T> extends TableRow {
-  PatientInfoTableField({
+  const PatientInfoTableField({
+    required this.controller,
     required this.patient,
     required this.name,
     required this.value,
     required this.isEditable,
-    FormFieldValidator<String>? validator,
+    this.validator,
     this.maxLength,
-  }) : controller = TextEditingController(
-         text: (patient == null) ? '' : value(patient)?.toString() ?? '',
-       ),
+  }) : //  controller = TextEditingController(
+       //   text: (patient == null) ? '' : value(patient)?.toString() ?? '',
+       // ),
        maxLengthEnforcement = (maxLength == null)
            ? null
-           : MaxLengthEnforcement.enforced,
-       validator = validator ?? _defaultValidator;
+           : MaxLengthEnforcement.enforced;
 
   final TextEditingController controller;
   final bool isEditable;
   final String name;
   final int? maxLength;
   final MaxLengthEnforcement? maxLengthEnforcement;
-  final FormFieldValidator<String> validator;
   final Patient? patient;
+  final FormFieldValidator<String>? validator;
   final T? Function(Patient) value;
 
-  static FormFieldValidator<String> get _defaultValidator => (value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a value';
-    }
-    return null;
-  };
-
   TableRow tableRow() {
+    // FIXME fix centering of field name - should be left centre.
     return TableRow(
       children: [
-        Text(name.capitalise()),
-        isEditable
-            // TODO change TextFormField to a widget appropriate for value type T, e.g. set of TextFormFields for setting an address.
-            ? TextFormField(
-                controller: controller,
-                validator: validator,
-                maxLength: maxLength, // TODO hide display of max length (e.g. 1/3) below field
-              )
-            : Text((patient == null) ? '' : value(patient!)?.toString() ?? ''),
+        Align(
+          alignment: AlignmentGeometry.centerLeft,
+          child: Text(name.capitalise()),
+        ),
+        Align(
+          alignment: AlignmentGeometry.bottomCenter,
+          child: isEditable
+              // TODO change TextFormField to a widget appropriate for value type T, e.g. set of TextFormFields for setting an address.
+              ? TextFormField(
+                  controller: controller,
+                  validator: validator,
+                  maxLength: maxLength, // TODO hide display of max length (e.g. 1/3) below field
+                  // onChanged: onChanged, // FIXME fix running of viewModel.setEventEdited while maintaining new text value on screen - value is currently overwritten by setState()
+                  // initialValue: () {
+                  //   _log.finer('controller: $controller');
+                  //   _log.finer('controller.text: "${controller.text}"');
+                  //   return controller.text;
+                  // }(),
+                )
+              : Text(
+                  (patient == null) ? '' : value(patient!)?.toString() ?? '',
+                ),
+        ),
       ],
     );
   }
 }
 
-List<PatientInfoTableField> patientInfoFields({
+// TODO add a PatientFormField with _GPPracticeForm to patientInfoFields
+class _GPPracticeForm extends StatefulWidget {
+  const _GPPracticeForm(
+    // {super.key}
+  );
+
+  @override
+  State<_GPPracticeForm> createState() => _GPPracticeFormState();
+}
+
+// TODO implement _GPPracticeFormState with a Form with Texts/TextFormFields for GPPractice()'s arguments.
+class _GPPracticeFormState extends State<_GPPracticeForm> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+List<TableRow> patientInfoFields({
+  required PatientControllers patientControllers,
   required SingleEventScreenViewModel viewModel,
   required Patient? patient,
   required bool isEditable,
+  required ValueChanged<String>? onChanged,
 }) => [
   // Name field
   PatientInfoTableField<String>(
+    controller: patientControllers.nameController,
     patient: patient,
     name: 'name',
     value: (Patient p) => p.name,
@@ -170,9 +205,11 @@ List<PatientInfoTableField> patientInfoFields({
       }
       return null;
     },
-  ),
+    // onChanged: onChanged,
+  ).tableRow(),
   // Age field
   PatientInfoTableField<int>(
+    controller: patientControllers.ageController,
     patient: patient,
     name: 'age',
     value: (Patient p) => p.age,
@@ -188,26 +225,33 @@ List<PatientInfoTableField> patientInfoFields({
       }
       return null;
     },
-  ),
+    // onChanged: onChanged,
+  ).tableRow(),
   // DOB field
   PatientInfoTableField<DateTime>(
+    controller: patientControllers.dobController,
     patient: patient,
     name: 'DOB',
     value: (Patient p) => p.dateOfBirth,
     isEditable: isEditable,
-  ),
+    // onChanged: onChanged,
+  ).tableRow(),
   // Home address field
   PatientInfoTableField<Address>(
+    controller: patientControllers.homeAddressController,
     patient: patient,
     name: 'home address',
     value: (Patient p) => p.homeAddress,
     isEditable: isEditable,
-  ),
+    // onChanged: onChanged,
+  ).tableRow(),
   // GP practice field
   PatientInfoTableField<GPPractice>(
+    controller: patientControllers.gpPracticeController,
     patient: patient,
     name: 'GP practice',
     value: (Patient p) => p.gpPractice,
     isEditable: isEditable,
-  ),
+    // onChanged: onChanged,
+  ).tableRow(),
 ];
