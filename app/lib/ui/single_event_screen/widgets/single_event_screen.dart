@@ -336,7 +336,7 @@ final class PatientControllers extends ChangeNotifier {
   }
 
   GPPractice? newGPPractice() {
-    final String gpPracticeString = homeAddressController.text;
+    final String gpPracticeString = gpPracticeController.text;
     final GPPractice? nullableGPPractice = GPPractice.tryParse(
       gpPracticeString,
     );
