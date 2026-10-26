@@ -22,6 +22,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
        _eventMode = EventMode.select {
     getMode = Command0<EventMode>(_getMode);
 
+    newEvent = Command0<Event>(_newEvent);
     selectEvent = Command0<void>(_selectEvent);
     // FIXME swap ordering of Command1 type parameters - arg first, then return
     updateEvent = Command1<void, Event>(_updateEvent);
@@ -113,6 +114,21 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   }
 
   final Logger _log = Logger('SingleEventScreenViewModel')..level = Level.ALL;
+
+  late Command0<Event> newEvent;
+  Future<Result<Event>> _newEvent() async {
+    final Event newEvent = Event.preAlert(
+      idNum: nextEventID,
+      address: null,
+      location: null,
+    );
+    _eventRepository.setEvent(newEvent);
+    // _event =
+    //     ((await _eventRepository.eventByID(newEvent.id)) as Ok<Event>).value;
+    _event = newEvent;
+    notifyListeners();
+    return Result.ok(newEvent);
+  }
 
   int get nextEventID => _eventRepository.nextIDNum;
 
