@@ -1,6 +1,6 @@
-import 'event/category.dart';
-import 'event/priority.dart';
+import 'category.dart';
 import 'noc.dart';
+import 'priority.dart';
 
 interface class EventStatus {
   const EventStatus(this.category, this.description);
@@ -9,9 +9,7 @@ interface class EventStatus {
   const factory EventStatus.nhs999(Category category) =
       PathwaysDisposition._nhs999;
 
-  const EventStatus.preAlert()
-    : category = Category.none,
-      description = _preAlert;
+  const EventStatus.preAlert() : category = null, description = _preAlert;
 
   @override
   bool operator ==(Object other) =>
@@ -19,7 +17,7 @@ interface class EventStatus {
       (other.category == category) &&
       (other.description == description);
 
-  final Category category;
+  final Category? category;
 
   final String description;
 
@@ -28,7 +26,7 @@ interface class EventStatus {
 
   static const String _preAlert = 'Pre-Alert';
 
-  Priority get priority => category.priority;
+  Priority get priority => category?.priority ?? Priority.four;
 
   @override
   String toString() => description;
@@ -67,8 +65,10 @@ abstract class NOC extends EventStatus {
 
   @override
   String toString() {
-    final int catNumber = category.number;
+    final int? catNumber = category?.number;
     final String specifyText = specify ? ' (specify...)' : '';
-    return 'CAT $catNumber - $description$specifyText C$catNumber';
+    return (catNumber != null)
+        ? 'CAT $catNumber - $description$specifyText C$catNumber'
+        : '$description$specifyText';
   }
 }

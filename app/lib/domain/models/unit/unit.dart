@@ -1,5 +1,6 @@
-import 'package:dispatch/domain/models/unit/unit_status.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart';
+
+import 'unit_status.dart';
 
 /// An ambulance vehicle, air ambulance or other resource.
 class Unit {

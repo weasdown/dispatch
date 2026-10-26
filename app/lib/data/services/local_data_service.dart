@@ -2,20 +2,168 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../domain/models/event/event.dart';
-import '../../domain/models/noc.dart';
-import '../../domain/models/remark.dart';
+import '../../domain/models/event/noc.dart';
+import '../../domain/models/event/remark.dart';
+import '../../domain/models/location/address.dart';
+import '../../domain/models/person/patient.dart';
+import '../../domain/models/person/user.dart';
 import '../../domain/models/unit/unit.dart';
-import '../../domain/models/user/user.dart';
 
 class LocalDataService {
   LocalDataService() : _events = _defaultEvents, _units = _defaultUnits;
 
+  /// A default list of events.
+  static List<Event> get _defaultEvents {
+    final Event defaultC1 =
+        Event.withNOC(
+            idNum: 3127,
+            address: Address(
+              buildingNumber: '6',
+              street: 'The Greenway',
+              county: 'Oxfordshire',
+            ),
+            location: LatLng(51.59799446397092, -1.3537030950825775),
+            noc: Cat1NOC.c1ArrestPeriArrest(),
+          )
+          ..assignedUnits = [
+            LocalDataService._defaultUnits[0], // NA136
+            _defaultUnits[4], // NF159
+            _defaultUnits[6], // ND027
+            _defaultUnits[7], // NT431
+          ]
+          .._addRemarks([
+            Remark(
+              author: _defaultUser,
+              message:
+                  'CPR was already in progress before the call was started.',
+            ),
+            Remark(author: _defaultUser, message: 'NA136 DP Didcot RC'),
+            Remark(
+              author: _defaultUser,
+              message: 'NF159 DP Smith\'s Wharf, Wantage',
+            ),
+            Remark(
+              author: _defaultUser,
+              message: 'ND027 DP Stokenchurch HEMS base',
+            ),
+            Remark(author: _defaultUser, message: 'NT431 DP Oxford City RC'),
+          ])
+          ..addPatient(_defaultPatient);
+
+    List<Event> defaults = [
+      defaultC1,
+      Event.preAlert(
+        idNum: 123,
+        address: Address(buildingName: 'Sainsbury\'s Kidlington'),
+        location: LatLng(51.80902234666047, -1.2775596525947042),
+      ),
+      Event.preAlert(
+        idNum: 135,
+        address: Address(
+          buildingNumber: '47',
+          street: 'Hamble Drive',
+          townOrCity: 'Abingdon',
+        ),
+        location: LatLng(51.68256903771005, -1.2649875925459515),
+      ),
+      Event.withNOC(
+        idNum: 3129,
+        address: Address(buildingName: 'Carfax Tower', townOrCity: 'Oxford'),
+        location: LatLng(51.752171158042344, -1.2581330894939455),
+        noc: Cat2NOC.c2Stabbing(),
+      )..assignedUnits = [_defaultUnits[2]],
+      Event.withNOC(
+        idNum: 3126,
+        address: Address(
+          buildingNumber: '25',
+          street: 'Old Union Way',
+          townOrCity: 'Thame',
+        ),
+        location: LatLng(51.75068849682342, -0.9859928066375558),
+        noc: Cat4NOC.medicalMinor(),
+      )..assignedUnits = [_defaultUnits[1]],
+      Event.withNOC(
+        idNum: 3128,
+        address: Address(buildingName: 'Thatcham Station'),
+        location: LatLng(51.393901, -1.242779),
+        noc: Cat4NOC.mentalHealth(),
+      )..assignedUnits = [_defaultUnits[5]],
+      Event.withNOC(
+        idNum: 3130,
+        address: Address(
+          flatNumberOrName: 'Next',
+          buildingName: 'Westgate Shopping Centre',
+          townOrCity: 'Oxford',
+        ),
+        location: LatLng(51.748863260384894, -1.261667647754695),
+        noc: Cat3NOC.fallInjuriesUnknown(),
+      )..assignedUnits = [_defaultUnits[3]],
+    ];
+
+    return defaults;
+  }
+
+  static final Patient _defaultPatient = Patient(name: 'Joe Bloggs');
+
+  /// A default list of units.
+  static final List<Unit> _defaultUnits = [
+    Unit(
+      callsign: 'NA136',
+      location: LatLng(51.607539604000266, -1.237806756282358),
+    ),
+    Unit(callsign: 'NA402', location: LatLng(51.605, -1.238)),
+    Unit(
+      callsign: 'NA283',
+      location: LatLng(51.616072911907786, -1.2536017723108663),
+    ),
+    Unit(
+      callsign: 'NA072',
+      location: LatLng(51.8296012219854, -1.3134667111590494),
+    ),
+    Unit(
+      callsign: 'NF159',
+      location: LatLng(51.62832936052779, -1.1854888181805424),
+      vehicleType: VehicleType.communityFirstResponder,
+    ),
+    Unit(
+      callsign: 'NR154',
+      location: LatLng(51.66706110914126, -1.3082872829130447),
+      vehicleType: VehicleType.criticalCareCar,
+    ),
+    Unit(
+      callsign: 'ND027',
+      location: LatLng(51.66182910219628, -0.9084334753014697),
+      vehicleType: VehicleType.criticalCareCar,
+    ),
+    Unit(
+      callsign: 'NT431',
+      location: LatLng(51.397809576171085, -1.3230646597735394),
+      vehicleType: VehicleType.rrv,
+    ),
+    Unit(
+      callsign: '0024',
+      location: LatLng(51.61832936052779, -1.0854888181805424),
+      vehicleType: VehicleType.helicopter,
+    ),
+  ];
+
+  static final User _defaultUser = const User(
+    name: 'Sophie Williamson',
+    esr: 12353248763,
+    // For demo purposes we use a local asset
+    picture: 'assets/user.jpg',
+  );
+
   final List<Event> _events;
 
   List<Event> get events => _events;
+
+  Event getEvent() => _defaultEvents.first;
+
+  Patient getPatient() => _defaultPatient;
 
   User getUser() => _defaultUser;
 
@@ -24,128 +172,10 @@ class LocalDataService {
   List<Unit> get units => _units;
 }
 
-final User _defaultUser = const User(
-  name: 'Sophie Williamson',
-  esr: 12353248763,
-  // For demo purposes we use a local asset
-  picture: 'assets/user.jpg',
-);
-
-/// A default list of units.
-final List<Unit> _defaultUnits = [
-  Unit(
-    callsign: 'NA136',
-    location: LatLng(51.607539604000266, -1.237806756282358),
-  ),
-  Unit(callsign: 'NA402', location: LatLng(51.605, -1.238)),
-  Unit(
-    callsign: 'NA283',
-    location: LatLng(51.616072911907786, -1.2536017723108663),
-  ),
-  Unit(
-    callsign: 'NA072',
-    location: LatLng(51.8296012219854, -1.3134667111590494),
-  ),
-  Unit(
-    callsign: 'NF159',
-    location: LatLng(51.62832936052779, -1.1854888181805424),
-    vehicleType: VehicleType.communityFirstResponder,
-  ),
-  Unit(
-    callsign: 'NR154',
-    location: LatLng(51.66706110914126, -1.3082872829130447),
-    vehicleType: VehicleType.criticalCareCar,
-  ),
-  Unit(
-    callsign: 'ND027',
-    location: LatLng(51.66182910219628, -0.9084334753014697),
-    vehicleType: VehicleType.criticalCareCar,
-  ),
-  Unit(
-    callsign: 'NT431',
-    location: LatLng(51.397809576171085, -1.3230646597735394),
-    vehicleType: VehicleType.rrv,
-  ),
-  Unit(
-    callsign: '0024',
-    location: LatLng(51.61832936052779, -1.0854888181805424),
-    vehicleType: VehicleType.helicopter,
-  ),
-];
-
-/// A default list of events.
-List<Event> get _defaultEvents {
-  List<Event> defaults = [
-    Event.withNOC(
-        idNum: 3127,
-        address: '6 The Greenway, Oxfordshire',
-        location: LatLng(51.59799446397092, -1.3537030950825775),
-        noc: Cat1NOC.c1ArrestPeriArrest(),
-      )
-      ..assignedUnits = [
-        _defaultUnits[0], // NA136
-        _defaultUnits[4], // NF159
-        _defaultUnits[6], // ND027
-        _defaultUnits[7], // NT431
-      ],
-    Event.preAlert(
-      idNum: 123,
-      address: 'Sainsbury\'s Kidlington',
-      location: LatLng(51.80902234666047, -1.2775596525947042),
-    ),
-    Event.preAlert(
-      idNum: 135,
-      address: '47 Hamble Drive, Abingdon',
-      location: LatLng(51.68256903771005, -1.2649875925459515),
-    ),
-    Event.withNOC(
-      idNum: 3129,
-      address: 'Carfax Tower, Oxford',
-      location: LatLng(51.752171158042344, -1.2581330894939455),
-      noc: Cat2NOC.c2Stabbing(),
-    )..assignedUnits = [_defaultUnits[2]],
-    Event.withNOC(
-      idNum: 3126,
-      address: '25 Old Union Way, Thame',
-      location: LatLng(51.75068849682342, -0.9859928066375558),
-      noc: Cat4NOC.medicalMinor(),
-    )..assignedUnits = [_defaultUnits[1]],
-    Event.withNOC(
-      idNum: 3128,
-      address: 'Thatcham Station',
-      location: LatLng(51.393901, -1.242779),
-      noc: Cat4NOC.mentalHealth(),
-    )..assignedUnits = [_defaultUnits[5]],
-    Event.withNOC(
-      idNum: 3130,
-      address: 'Next, Westgate Shopping Centre, Oxford',
-      location: LatLng(51.748863260384894, -1.261667647754695),
-      noc: Cat3NOC.fallInjuriesUnknown(),
-    )..assignedUnits = [_defaultUnits[3]],
-  ];
-
-  defaults.first.addRemark(
-    Remark(
-      author: _defaultUser,
-      message: 'CPR was already in progress before the call was started.',
-    ),
-  );
-
-  defaults.first.addRemark(
-    Remark(author: _defaultUser, message: 'NA136 DP Didcot RC'),
-  );
-
-  defaults.first.addRemark(
-    Remark(author: _defaultUser, message: 'NF159 DP Smith\'s Wharf, Wantage'),
-  );
-
-  defaults.first.addRemark(
-    Remark(author: _defaultUser, message: 'ND027 DP Stokenchurch HEMS base'),
-  );
-
-  defaults.first.addRemark(
-    Remark(author: _defaultUser, message: 'NT431 DP Oxford City RC'),
-  );
-
-  return defaults;
+extension AddRemarks on Event {
+  void _addRemarks(Iterable<Remark> remarks) {
+    for (final remark in remarks) {
+      addRemark(remark);
+    }
+  }
 }

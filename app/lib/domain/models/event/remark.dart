@@ -1,4 +1,4 @@
-import 'user/user.dart';
+import '../person/user.dart';
 
 final class Remark {
   Remark({required this.author, required this.message});

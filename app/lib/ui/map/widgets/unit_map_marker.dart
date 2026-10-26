@@ -1,13 +1,13 @@
-import 'package:dispatch/ui/unit/unit_status_colour.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' hide Marker;
 import 'package:google_maps_marker_widgets/google_maps_marker_widgets.dart';
 import 'package:latlong2/latlong.dart' as ll2;
+import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../unit/unit_status_colour.dart';
 
 class UnitMapMarker extends StatelessWidget {
   const UnitMapMarker({super.key, required this._unit});

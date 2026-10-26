@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="app main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--dart-define GOOGLE_MAPS_API_KEY=&quot;AIzaSyBMjLCUz6wEqChD_g-I2pJe8bXAW_v8u4A&quot;" />
+    <option name="additionalArgs" value="--dart-define=ANSI=true --dart-define GOOGLE_MAPS_API_KEY=&quot;AIzaSyBMjLCUz6wEqChD_g-I2pJe8bXAW_v8u4A&quot;" />
     <option name="filePath" value="$PROJECT_DIR$/app/lib/main.dart" />
     <method v="2" />
   </configuration>

@@ -45,6 +45,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
           homeViewModel: homeViewModel,
           singleEventScreenViewModel: SingleEventScreenViewModel(
             eventRepository: context.read(),
+            // eventModeRepository: context.read(),
             unitRepository: context.read(),
           ),
         );
@@ -56,6 +57,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
             return SingleEventScreen(
               viewModel: SingleEventScreenViewModel(
                 eventRepository: context.read(),
+                // eventModeRepository: context.read(),
                 unitRepository: context.read(),
               ),
             );

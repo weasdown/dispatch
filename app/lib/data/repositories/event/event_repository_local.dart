@@ -1,8 +1,11 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:logging/logging.dart';
 
 import '../../../domain/models/event/event.dart';
-import '../../../domain/models/remark.dart';
-import '../../../domain/models/status.dart';
+import '../../../domain/models/event/remark.dart';
+import '../../../domain/models/event/status.dart';
+import '../../../domain/models/location/address.dart';
+import '../../../domain/models/person/patient.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
 import 'event_repository.dart';
@@ -12,12 +15,18 @@ class EventRepositoryLocal extends EventRepository {
   EventRepositoryLocal({required this._localDataService}) : _currentIDNum = 100;
 
   @override
-  void addRemark(Remark remark) {
-    if (_selectedEvent == null) {
-      throw Exception('Attempted to add remark to null event in $runtimeType.');
-    }
-    _selectedEvent!.addRemark(remark);
-  }
+  Future<Result<void>> addPatientToEvent(
+    EventID eventID,
+    Patient patient,
+  ) async => (_selectedEvent == null)
+      ? Result.error(Exception('attempted to add patient to null event'))
+      : Result.ok(_selectedEvent!.addPatient(patient));
+
+  @override
+  Future<Result<void>> addRemark(Remark remark) async =>
+      (_selectedEvent == null)
+      ? Result.error(Exception('Attempted to add remark to null event'))
+      : Result.ok(_selectedEvent!.addRemark(remark));
 
   bool _isInitialized = false; // Only create default event once.
 
@@ -34,7 +43,7 @@ class EventRepositoryLocal extends EventRepository {
   // Stream<Event> get allEvents;
 
   Future<Result<List<Event>>> get eventsList async {
-    // Initialize the repository with a default event.
+    // Initialize the repository with default events.
     if (!_isInitialized) {
       _events.addAll(_localDataService.events);
       _isInitialized = true;
@@ -44,7 +53,7 @@ class EventRepositoryLocal extends EventRepository {
   }
 
   Future<void> createEvent({
-    required String address,
+    required Address address,
     required LatLng location,
     required NOC noc,
   }) async {
@@ -59,7 +68,7 @@ class EventRepositoryLocal extends EventRepository {
   }
 
   @override
-  Future<Result<Event>> eventByID(String id) async {
+  Future<Result<Event>> eventByID(EventID id) async {
     final event = _events.where((event) => event.id == id).firstOrNull;
     if (event == null) {
       return Result.error(Exception('Event not found'));
@@ -68,6 +77,12 @@ class EventRepositoryLocal extends EventRepository {
   }
 
   int _currentIDNum;
+
+  Logger get _log {
+    final Logger log = Logger('EventRepositoryLocal');
+    log.level = Level.ALL;
+    return log;
+  }
 
   @override
   int get nextIDNum {
@@ -81,7 +96,8 @@ class EventRepositoryLocal extends EventRepository {
   /// Gets a [Result.ok] holding a random event from `_events`.
   @override
   Future<Result<Event?>> get selectedEvent async {
-    _selectedEvent = _events[Random().nextInt(_events.length)];
+    _selectedEvent =
+        _events.first; // _events[Random().nextInt(_events.length)];
     return Result.ok(_selectedEvent);
   }
 
@@ -89,5 +105,57 @@ class EventRepositoryLocal extends EventRepository {
   Future<Result<bool>> setEvent(Event event) async {
     _selectedEvent = event;
     return const Result.ok(true);
+  }
+
+  @override
+  Future<Result<void>> updatePatientForEvent(Patient patient) async {
+    if (_selectedEvent == null) {
+      // TODO test how this branch would be handled
+      return Result.error(NoSelectedEventException());
+    }
+
+    final Iterable<String> currentIDs = _selectedEvent!.patients.map(
+      (Patient p) => p.id,
+    );
+    _log.finer(
+      'IDs for current patients in event ${_selectedEvent!.idLastFour}: $currentIDs',
+    );
+    _log.finer("New patient's ID: ${patient.id}");
+
+    try {
+      final int currentPatientIndex = _selectedEvent!.patients.indexWhere(
+        (Patient p) => p.id == patient.id,
+      );
+      _log.finer('Current patient index: $currentPatientIndex');
+
+      // If patient is currently in _selectedEvent.patients
+      if (currentPatientIndex != -1) {
+        // // If currentPatient found
+        // (patient != null)
+        //     ?
+        // We want to update the patient at currentPatientIndex
+        _log.finer('Updating patient in event ${_selectedEvent!.idLastFour}');
+        _selectedEvent!.updatePatient(currentPatientIndex, patient);
+        // :
+        //   // We want to remove the current patient
+        //   _selectedEvent!.removePatient(currentPatientIndex);
+      }
+      // Patient is NOT currently in _selectedEvent.patients
+      else {
+        _log.finer('Adding patient to event ${_selectedEvent!.idLastFour}');
+        _selectedEvent!.addPatient(patient);
+      }
+      return Result.ok(null);
+    } on StateError {
+      return Result.error(
+        NoSelectedEventException(
+          ArgumentError.value(
+            patient,
+            'patient',
+            'was not found in _selectedEvent!.patients',
+          ) as Error,
+        ),
+      );
+    }
   }
 }

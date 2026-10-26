@@ -1,15 +1,18 @@
 import '../../../domain/models/event/event.dart';
-import '../../../domain/models/remark.dart';
+import '../../../domain/models/event/remark.dart';
+import '../../../domain/models/person/patient.dart';
 import '../../../utils/result.dart';
 
 /// Data source for events.
 abstract class EventRepository {
   Future<Result<List<Event>>> get allEvents;
 
-  void addRemark(Remark remark);
+  Future<Result<void>> addPatientToEvent(EventID eventID, Patient patient);
+
+  Future<Result<void>> addRemark(Remark remark);
 
   /// Get an event by its ID.
-  Future<Result<Event>> eventByID(String id);
+  Future<Result<Event>> eventByID(EventID id);
 
   int get nextIDNum;
 
@@ -18,4 +21,24 @@ abstract class EventRepository {
   Future<Result<Event?>> get selectedEvent async => Result.ok(_selectedEvent);
 
   Future<Result<void>> setEvent(Event event);
+
+  Future<Result<void>> updatePatientForEvent(Patient patient);
+}
+
+final class NoSelectedEventException implements Exception {
+  final Error? error;
+
+  final String message;
+
+  const NoSelectedEventException([this.error])
+    : message = 'No event is selected';
+
+  @override
+  String toString() {
+    final String base = 'no event is selected';
+    final String optional = (error == null)
+        ? ''
+        : ', which caused the following error: ${error.toString()}';
+    return base + optional;
+  }
 }

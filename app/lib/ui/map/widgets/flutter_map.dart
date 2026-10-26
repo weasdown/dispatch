@@ -1,13 +1,13 @@
-import 'package:dispatch/domain/models/scas_locations.dart';
-import 'package:dispatch/ui/map/widgets/event_map_marker.dart';
-import 'package:dispatch/ui/map/widgets/unit_map_marker.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/location/scas_locations.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../single_event_screen/view_models/single_event_screen_viewmodel.dart';
+import 'event_map_marker.dart';
 import 'map.dart';
+import 'unit_map_marker.dart';
 
 class FlutterMapPage extends StatelessWidget {
   const FlutterMapPage({
@@ -27,14 +27,18 @@ class FlutterMapPage extends StatelessWidget {
   /// The [Unit]s that are currently in the SCAS fleet.
   final List<Unit> units;
 
-  List<Marker> get eventMarkers => events
-      .map(
-        (Event event) => EventMapMarker(
-          event: event,
-          viewModel: singleEventScreenViewModel,
-        ).flutterMapMarker,
-      )
-      .toList();
+  List<Marker> get eventMarkers {
+    final List<Event> nonNullLocations = events
+        .where((Event event) => event.location != null)
+        .toList();
+    final List<Marker> markers = nonNullLocations.map((Event event) {
+      return EventMapMarker(
+        event: event,
+        viewModel: singleEventScreenViewModel,
+      ).flutterMapMarker;
+    }).toList();
+    return markers;
+  }
 
   final bool showAmbulanceStations;
 
