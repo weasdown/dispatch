@@ -11,6 +11,7 @@ import '../../domain/models/location/address.dart';
 import '../../domain/models/person/patient.dart';
 import '../../domain/models/person/user.dart';
 import '../../domain/models/unit/unit.dart';
+import '../../domain/models/unit/unit_status.dart';
 
 class LocalDataService {
   LocalDataService() : _events = _defaultEvents, _units = _defaultUnits;
@@ -29,10 +30,11 @@ class LocalDataService {
             noc: Cat1NOC.c1ArrestPeriArrest(),
           )
           ..assignedUnits = [
-            LocalDataService._defaultUnits[0], // NA136
+            _defaultUnits[0], // NA136
             _defaultUnits[4], // NF159
             _defaultUnits[6], // ND027
             _defaultUnits[7], // NT431
+            _defaultUnits[8], // 0024
           ]
           .._addRemarks([
             Remark(
@@ -113,41 +115,42 @@ class LocalDataService {
     Unit(
       callsign: 'NA136',
       location: LatLng(51.607539604000266, -1.237806756282358),
-    ),
-    Unit(callsign: 'NA402', location: LatLng(51.605, -1.238)),
+    )..updateStatus(UnitStatus.mo),
+    Unit(callsign: 'NA402', location: LatLng(51.605, -1.238))
+      ..updateStatus(UnitStatus.as),
     Unit(
       callsign: 'NA283',
       location: LatLng(51.616072911907786, -1.2536017723108663),
-    ),
+    )..updateStatus(UnitStatus.as),
     Unit(
       callsign: 'NA072',
       location: LatLng(51.8296012219854, -1.3134667111590494),
-    ),
+    )..updateStatus(UnitStatus.dp),
     Unit(
       callsign: 'NF159',
       location: LatLng(51.62832936052779, -1.1854888181805424),
       vehicleType: VehicleType.communityFirstResponder,
-    ),
+    )..updateStatus(UnitStatus.as),
     Unit(
       callsign: 'NR154',
       location: LatLng(51.66706110914126, -1.3082872829130447),
       vehicleType: VehicleType.criticalCareCar,
-    ),
+    )..updateStatus(UnitStatus.ah),
     Unit(
       callsign: 'ND027',
       location: LatLng(51.66182910219628, -0.9084334753014697),
       vehicleType: VehicleType.criticalCareCar,
-    ),
+    )..updateStatus(UnitStatus.mo),
     Unit(
       callsign: 'NT431',
       location: LatLng(51.397809576171085, -1.3230646597735394),
       vehicleType: VehicleType.rrv,
-    ),
+    )..updateStatus(UnitStatus.mo),
     Unit(
       callsign: '0024',
       location: LatLng(51.61832936052779, -1.0854888181805424),
       vehicleType: VehicleType.helicopter,
-    ),
+    )..updateStatus(UnitStatus.mo),
   ];
 
   static final User _defaultUser = const User(
