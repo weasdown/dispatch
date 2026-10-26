@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/location/scas_locations.dart';
 import '../../../domain/models/unit/unit.dart';
-import '../../single_event_screen/view_models/single_event_screen_viewmodel.dart';
+import '../../events/view_models/single_event_screen_viewmodel.dart';
 import 'event_map_marker.dart';
 import 'map.dart';
 import 'unit_map_marker.dart';

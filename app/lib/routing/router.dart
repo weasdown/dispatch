@@ -2,15 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
 import '../data/repositories/auth/auth_repository.dart';
+import '../ui/events/view_models/single_event_screen_viewmodel.dart';
+import '../ui/events/widgets/single_event_screen.dart';
 import '../ui/home/view_models/home_viewmodel.dart';
 import '../ui/home/widgets/home_screen.dart';
-import '../ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
-import '../ui/single_event_screen/widgets/single_event_screen.dart';
 import 'routes.dart';
 
 /// Top go_router entry point.
