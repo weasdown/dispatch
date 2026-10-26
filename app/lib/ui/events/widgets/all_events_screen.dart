@@ -239,7 +239,7 @@ final class _AllEventTableFields {
 
   _EventTableField get idField => _EventTableField(
     heading: 'ID',
-    cellBuilder: (Event event) => DataCell(Text(event.id.toString())),
+    cellBuilder: (Event event) => DataCell(Text(event.idLastFour.toString())),
     onSort: onSort,
   );
 
