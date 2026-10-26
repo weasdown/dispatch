@@ -144,29 +144,29 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
   }
 
   Future<void> onUpdatePatient() async {
-    if (patient != null) {
-      if (SingleEventScreen.patientFormKey.currentState!.validate()) {
-        // If the form is valid, update the patient stored in the viewModel (and hence its EventRepository).
-        _log.fine('Valid patient data received!');
-
-        final Patient newPatient = patient!.copyWith(
-          name: _patientControllers.newName() ?? patient?.name,
-          age: _patientControllers.newAge() ?? patient?.age,
-          dateOfBirth: _patientControllers.newDOB() ?? patient?.dateOfBirth,
-          gpPractice:
-              _patientControllers.newGPPractice() ?? patient?.gpPractice,
-          homeAddress:
-              _patientControllers.newHomeAddress() ?? patient?.homeAddress,
+    _log.finer('In onUpdatePatient, current value of patient: $patient');
+    if (SingleEventScreen.patientFormKey.currentState!.validate()) {
+      // If the form is valid, update the patient stored in the viewModel (and hence its EventRepository).
+      _log.fine('Valid patient data received!');
+      if (patient != null) {
+        final Patient newPatient = _patientControllers._newPatientFromValues(
+          patient!,
         );
         _log.fine('New patient in onUpdatePatient: ${newPatient.toString()}');
         return widget.viewModel.updatePatient.execute(newPatient);
       }
-    }
-    // Current patient is null, so add a new patient
-    else {
-      throw UnimplementedError(
-        'Adding a new patient in onUpdatePatient is not yet implemented.',
-      );
+      // Current patient is null, so add a new patient
+      else {
+        _log.finer('Current patient is null - adding a new patient');
+        final Patient newPatient = _patientControllers._newPatientFromValues(
+          patient,
+        );
+        _log.fine('New patient in onUpdatePatient: ${newPatient.toString()}');
+        return widget.viewModel.createPatient.execute(newPatient);
+      }
+    } else {
+      // FIXME validators showing invalid data on Create.
+      _log.severe('Invalid patient data!');
     }
   }
 
@@ -510,10 +510,25 @@ final class PatientControllers extends ChangeNotifier {
     return newValue.toString() == "" ? null : nameController.text;
   }
 
-  // Patient newPatientFromValues(Patient existingPatient) {
-  //   // Have to use copyWith for the ID to transfer to the new patient.
-  //   return existingPatient.copyWith();
-  // }
+  Patient _newPatientFromValues(Patient? existingPatient) {
+    final Patient newPatient = (existingPatient != null)
+        ? existingPatient.copyWith(
+            name: newName() ?? existingPatient.name,
+            age: newAge() ?? existingPatient.age,
+            dateOfBirth: newDOB() ?? existingPatient.dateOfBirth,
+            gpPractice: newGPPractice() ?? existingPatient.gpPractice,
+            homeAddress: newHomeAddress() ?? existingPatient.homeAddress,
+          )
+        : Patient(
+            name: newName(),
+            age: newAge(),
+            dateOfBirth: newDOB(),
+            gpPractice: newGPPractice(),
+            homeAddress: newHomeAddress(),
+          );
+
+    return newPatient;
+  }
 
   final void Function() onSetEventModified;
 
