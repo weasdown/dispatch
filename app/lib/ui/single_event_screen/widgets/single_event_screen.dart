@@ -435,6 +435,7 @@ final class EventControllers extends ChangeNotifier {
   final EventMode eventMode;
 }
 
+// FIXME patient attributes not updating and patient table not rebuilding when Accept Event button clicked.
 final class PatientControllers extends ChangeNotifier {
   PatientControllers({
     required this.eventMode,
