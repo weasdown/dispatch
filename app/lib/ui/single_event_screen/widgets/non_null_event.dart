@@ -96,7 +96,7 @@ class _Location extends StatelessWidget {
     return Row(
       children: [
         Text(
-          event.address.toString(),
+          event.address?.toString() ?? 'No address',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
       ],
