@@ -18,7 +18,8 @@ class Event {
     required this.location,
     required this.status,
     required this._patients,
-  }) : category = status.category {
+  }) : _accepted = false,
+       category = status.category {
     if (status == EventStatus.preAlert()) {
       assert(category == null);
     }
@@ -164,6 +165,12 @@ class Event {
   //   address: address,
   //   callerLocationUncertainty: callerLocationUncertainty,
   // );
+
+  void accept() => _accepted = true;
+
+  /// True if the user has ever clicked the Accept Event button to add this event to the database.
+  bool get accepted => _accepted;
+  bool _accepted;
 
   /// The street address of the emergency.
   Address? address;
