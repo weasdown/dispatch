@@ -25,6 +25,10 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
 
   List<Event> _events = [];
 
+  late final _AllEventTableFields _fields = _AllEventTableFields(
+    onSort: onSort,
+  );
+
   Logger get _log {
     final Logger log = Logger('_AllEventsScreenState');
     log.level = Level.ALL;
@@ -39,13 +43,16 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
   }
 
   void onSortColum(List<Event> events, int columnIndex, bool ascending) {
-    // TODO add logic for sorting other columns
-    // TODO define columnIndex-attribute pairs in _EventTableField instances and columnOrdering attribute
+    // TODO add logic for sorting other columns. Pull fields to sort from _fields, e.g. _fields[columnIndex].field.
     return switch (columnIndex) {
       0 =>
         (ascending)
             ? events.sort((a, b) => a.id.compareTo(b.id))
             : events.sort((a, b) => b.id.compareTo(a.id)),
+      1 =>
+        (ascending)
+            ? events.sort((a, b) => a.status.compareTo(b.status))
+            : events.sort((a, b) => b.status.compareTo(a.status)),
 
       int _ => throw ArgumentError.value(
         columnIndex,
@@ -72,9 +79,7 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
       });
 
   bool sortAscending = true;
-  int sortColumnIndex = 0;
-
-  final _AllEventTableFields _fields = _AllEventTableFields();
+  int sortColumnIndex = 1;
 
   // TODO other attributes and move into _EventRow
   List<DataCell> tableRow(Event event, BuildContext context) => [
@@ -182,7 +187,7 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
 }
 
 final class _AllEventTableFields {
-  const _AllEventTableFields();
+  const _AllEventTableFields({required this.onSort});
 
   _EventTableField get assignedUnitsField => _EventTableField(
     heading: 'Units',
@@ -235,6 +240,7 @@ final class _AllEventTableFields {
   _EventTableField get idField => _EventTableField(
     heading: 'ID',
     cellBuilder: (Event event) => DataCell(Text(event.id.toString())),
+    onSort: onSort,
   );
 
   // TODO add other fields
@@ -268,6 +274,8 @@ final class _AllEventTableFields {
     columnWidth: IntrinsicColumnWidth(),
   );
 
+  final void Function(int columnIndex, bool ascending) onSort;
+
   _EventTableField get priorityField => _EventTableField(
     heading: 'Priority',
     cellBuilder: (Event event) => DataCell(Text(event.priority.toString())),
@@ -277,6 +285,7 @@ final class _AllEventTableFields {
     heading: 'Status',
     cellBuilder: (Event event) =>
         DataCell(Text(event.category?.toString() ?? event.status.toString())),
+    onSort: onSort,
   );
 
   List<DataCell> tableRows(Event event, BuildContext context) =>
