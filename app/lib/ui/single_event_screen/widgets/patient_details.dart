@@ -68,16 +68,12 @@ class _PatientDetailsState extends State<PatientDetails> {
                 viewModel: widget.viewModel,
                 onChanged: _onChanged,
               ),
-              NumberOfPatients.one => _OnePatient(
+              NumberOfPatients.one || NumberOfPatients.multiple => _OnePatient(
                 eventMode: eventMode,
                 patient: firstPatient!,
                 patientControllers: widget.patientControllers,
                 viewModel: widget.viewModel,
                 onChanged: _onChanged,
-              ),
-              NumberOfPatients.multiple => _MultiplePatients(
-                eventMode: eventMode,
-                viewModel: widget.viewModel,
               ),
             },
           ),
@@ -185,24 +181,6 @@ class _OnePatientState extends State<_OnePatient> {
       viewModel: widget.viewModel,
       patientControllers: widget.patientControllers,
       onChanged: widget.onChanged,
-    );
-  }
-}
-
-class _MultiplePatients extends StatelessWidget {
-  const _MultiplePatients({required this.eventMode, required this.viewModel});
-
-  final EventMode eventMode;
-  final SingleEventScreenViewModel viewModel;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      // TODO: add display of multiple patients, or copy CAD approach
-      child: Text(
-        '${viewModel.numPatients} patients found\n TODO: add display of multiple patients, or copy CAD approach',
-        style: Theme.of(context).textTheme.bodyLarge,
-      ),
     );
   }
 }
