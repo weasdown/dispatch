@@ -48,8 +48,10 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   Future<Result<void>> _createPatient(Patient newPatient) async {
     final eventID = _event?.id;
     if (eventID == null) {
+      notifyListeners();
       return Result.error(ArgumentError.notNull('_event') as Exception);
     } else {
+      notifyListeners();
       return _eventRepository.addPatientToEvent(eventID, newPatient);
     }
   }
