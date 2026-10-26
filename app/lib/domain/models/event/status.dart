@@ -2,7 +2,7 @@ import 'category.dart';
 import 'noc.dart';
 import 'priority.dart';
 
-interface class EventStatus {
+interface class EventStatus implements Comparable<EventStatus> {
   const EventStatus(this.category, this.description);
 
   /// Creates an emergency ambulance [EventStatus].
@@ -18,6 +18,9 @@ interface class EventStatus {
       (other.description == description);
 
   final Category? category;
+
+  @override
+  int compareTo(EventStatus other) => priority.compareTo(other.priority);
 
   final String description;
 
@@ -40,7 +43,7 @@ base class PathwaysDisposition extends EventStatus {
 }
 
 /// Nature of Call.
-abstract class NOC extends EventStatus {
+abstract base class NOC extends EventStatus {
   const NOC(super.category, super.description) : specify = false;
 
   const NOC.withSpecify(super.category, super.description) : specify = true;
