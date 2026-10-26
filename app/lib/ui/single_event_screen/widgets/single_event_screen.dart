@@ -31,7 +31,6 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
 
   late final EventControllers _eventControllers = EventControllers(
     eventMode: widget.viewModel.eventMode,
-    onSetEventModified: updateEventModified,
   );
 
   late EventMode _eventMode;
@@ -394,10 +393,9 @@ Logger get _log {
 }
 
 final class EventControllers extends ChangeNotifier {
-  EventControllers({required this.eventMode, required this.onSetEventModified});
+  EventControllers({required this.eventMode});
 
   final EventMode eventMode;
-  final void Function() onSetEventModified;
 }
 
 final class PatientControllers extends ChangeNotifier {
