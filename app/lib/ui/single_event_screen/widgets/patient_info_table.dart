@@ -72,6 +72,7 @@ class _PatientInfoTableState extends State<PatientInfoTable> {
   //   });
   // }
 
+  // FIXME when dispose() uncommented, error about controller disposal being thrown when switching event modes.
   @override
   void dispose() {
     nameController.dispose();
