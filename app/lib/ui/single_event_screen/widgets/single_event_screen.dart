@@ -80,16 +80,19 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       case (EventMode.select, EventMode.update):
         onSelectToUpdate();
 
+      case (EventMode.select, EventMode.create):
+        onSelectToCreate();
+
       case (EventMode.update, EventMode.select):
         onUpdateToSelect(event);
 
       case (EventMode.select, EventMode.select) ||
           (EventMode.create, EventMode.create) ||
           (EventMode.update, EventMode.update):
+        // Do nothing
         _log.finer(
           'Tried to switch from ${oldMode.toString()} to ${newMode.toString()} but this is a NoOp',
         );
-      // Do nothing
 
       case (_, _):
         // TODO: Handle with cases above.
@@ -111,6 +114,38 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       }
     });
     _log.fine('Set _eventMode to $_eventMode');
+  }
+
+  /// When switching from Select to Create:
+  /// Create a new event (with no patients).
+  /// Rebuild _SingleEventScreenState with EventMode.create (and Accept Event button showing).
+  void onSelectToCreate() {
+    _log.finer('Changing _eventMode from Select to Create in onSelectToCreate');
+
+    setState(() {
+      _event = Event.preAlert(
+        idNum: widget.viewModel.nextEventID,
+        address: null,
+      );
+      widget.viewModel.newEvent.execute();
+
+      _eventMode = .create;
+      widget.viewModel.updateEventMode(_eventMode);
+
+      // TODO remove this chunk once confirmed not needed
+      // if (widget.viewModel.newEvent.completed) {
+      //   switch (widget.viewModel.newEvent.result) {
+      //     case Ok<dynamic>():
+      //       // TODO: Handle this case.
+      //       throw UnimplementedError();
+      //     case Error<dynamic>():
+      //       // TODO: Handle this case.
+      //       throw UnimplementedError();
+      //     case null:
+      //       _log.finer('Waiting for widget.viewModel.newEvent to complete...');
+      //   }
+      // }
+    });
   }
 
   /// When switching from Select to Update:
