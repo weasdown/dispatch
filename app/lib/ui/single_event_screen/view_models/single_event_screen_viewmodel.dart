@@ -22,6 +22,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
        _eventMode = EventMode.select {
     getMode = Command0<EventMode>(_getMode);
 
+    acceptEvent = Command0<Event>(_acceptEvent);
     newEvent = Command0<Event>(_newEvent);
     selectEvent = Command0<void>(_selectEvent);
     // FIXME swap ordering of Command1 type parameters - arg first, then return
@@ -31,6 +32,17 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     updatePatient = Command1<void, Patient>(_updatePatient);
 
     load = Command0(_load)..execute();
+  }
+
+  late Command0<Event> acceptEvent;
+  Future<Result<Event>> _acceptEvent() async {
+    if (_event == null) {
+      throw ArgumentError.notNull('_event');
+    }
+    _event!.accept();
+    _log.fine('Accepted event ${_event!.idLastFour}');
+    notifyListeners();
+    return Result.ok(_event!);
   }
 
   Future<void> addRemark(UserRepository userRepository, String message) async {
