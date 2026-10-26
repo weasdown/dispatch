@@ -38,27 +38,27 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     _log.finer('In onAcceptEvent');
     // _log.finer('Patient has been edited? ${widget.viewModel.patientEdited}');
     _log.finer('Event has been edited? ${widget.viewModel.eventEdited}');
-    // Event and/or patient has been edited
-    if (widget.viewModel.eventEdited || widget.viewModel.patientEdited) {
-      _log.finer(
-        'Patient and/or event has been edited - skipping updating as required',
-      );
-      _log.info('Updating patient');
-      onUpdatePatient();
+    if (widget.viewModel.eventEdited) {
+      _log.finer('Event has been edited - updating event');
 
       _log.info('Updating event');
       onUpdateEvent();
 
-      _log.info('Event and patient updated');
-
       widget.viewModel.updateEventMode(.select);
     }
+    if (widget.viewModel.patientEdited) {
+      _log.finer('Patient has been edited - updating patient');
+
+      _log.info('Updating patient');
+      onUpdatePatient();
+    }
     // Neither event nor patient has been edited
-    else {
+    if (!widget.viewModel.eventEdited && !widget.viewModel.patientEdited) {
       _log.finer(
         'Patient and event have not been edited at all - skipping updates',
       );
       widget.viewModel.updateEventMode(.select);
+      widget.viewModel.acceptEvent.execute();
       return;
     }
   }
