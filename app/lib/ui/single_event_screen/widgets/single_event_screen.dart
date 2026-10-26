@@ -27,6 +27,8 @@ class SingleEventScreen extends StatefulWidget {
 class _SingleEventScreenState extends State<SingleEventScreen> {
   // bool _editing = false;
 
+  late Event? _event;
+
   late final EventControllers _eventControllers = EventControllers(
     eventMode: widget.viewModel.eventMode,
     onSetEventModified: updateEventModified,
@@ -312,6 +314,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
       listenable: widget.viewModel,
       builder: (BuildContext context, Widget? child) {
         _eventMode = widget.viewModel.eventMode;
+        _event = widget.viewModel.event;
 
         return Scaffold(
           appBar: AppBar(
@@ -369,24 +372,14 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
           ),
           body: ListenableBuilder(
             listenable: widget.viewModel.load,
-            builder: (context, child) {
-              final Logger log = Logger('_SingleEventScreenState');
-              return ListenableBuilder(
-                listenable: widget.viewModel,
-                builder: (context, _) {
-                  final Event? event = widget.viewModel.event;
-                  return (event == null)
-                      ? NullEvent(event: event, log: log)
-                      : NonNullEvent(
-                          event: event,
-                          viewModel: widget.viewModel,
-                          eventMode: _eventMode,
-                          patientControllers: _patientControllers,
-                          // patientFormKey: _patientFormKey,
-                        ); // event != null
-                },
-              );
-            },
+            builder: (context, child) => (_event == null)
+                ? NullEvent(event: _event, log: _log)
+                : NonNullEvent(
+                    event: _event!,
+                    viewModel: widget.viewModel,
+                    eventMode: _eventMode,
+                    patientControllers: _patientControllers,
+                  ),
           ),
         );
       },
