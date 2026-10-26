@@ -352,7 +352,9 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Event'),
+            title: Text(
+              _event != null ? 'Event ${_event!.idLastFour}' : 'Event',
+            ),
             elevation: 8,
             automaticallyImplyLeading: false,
             actions: [
