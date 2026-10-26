@@ -217,8 +217,9 @@ List<TableRow> patientInfoFields({
     maxLength: 3,
     isEditable: isEditable,
     validator: (value) {
+      // Accept empty string.
       if (value == null || value.isEmpty) {
-        return 'Please enter an age';
+        return null;
       }
 
       if (int.tryParse(value) == null) {
