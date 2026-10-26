@@ -27,14 +27,18 @@ class FlutterMapPage extends StatelessWidget {
   /// The [Unit]s that are currently in the SCAS fleet.
   final List<Unit> units;
 
-  List<Marker> get eventMarkers => events
-      .map(
-        (Event event) => EventMapMarker(
-          event: event,
-          viewModel: singleEventScreenViewModel,
-        ).flutterMapMarker,
-      )
-      .toList();
+  List<Marker> get eventMarkers {
+    final List<Event> nonNullLocations = events
+        .where((Event event) => event.location != null)
+        .toList();
+    final List<Marker> markers = nonNullLocations.map((Event event) {
+      return EventMapMarker(
+        event: event,
+        viewModel: singleEventScreenViewModel,
+      ).flutterMapMarker;
+    }).toList();
+    return markers;
+  }
 
   final bool showAmbulanceStations;
 
