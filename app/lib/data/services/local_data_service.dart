@@ -123,7 +123,7 @@ class LocalDataService {
       location: LatLng(51.616072911907786, -1.2536017723108663),
     )..updateStatus(UnitStatus.as),
     Unit(
-      callsign: 'NA072',
+      callsign: 'NA172',
       location: LatLng(51.8296012219854, -1.3134667111590494),
     )..updateStatus(UnitStatus.dp),
     Unit(
