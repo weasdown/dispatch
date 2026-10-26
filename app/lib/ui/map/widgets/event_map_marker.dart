@@ -19,17 +19,17 @@ class EventMapMarker extends StatelessWidget {
   final Event _event;
 
   fm.Marker get flutterMapMarker => fm.Marker(
-    point: ll2.LatLng(lat, lng),
+    point: ll2.LatLng(lat!, lng!),
     height: 20,
     width: 35,
     child: _body,
   );
 
   /// Latitude.
-  double get lat => _event.location.latitude;
+  double? get lat => _event.location?.latitude;
 
   /// Longitude.
-  double get lng => _event.location.longitude;
+  double? get lng => _event.location?.longitude;
 
   final SingleEventScreenViewModel _viewModel;
 
@@ -72,47 +72,47 @@ class EventMapMarker extends StatelessWidget {
   }
 }
 
-class EventGoogleMapsMarker extends EventMapMarker {
-  EventGoogleMapsMarker({
-    super.key,
-    required super.event,
-    required super.viewModel,
-  }) : markerId = MarkerId(event.id.toString());
-
-  void addToMap(MarkerWidgetsController markerWidgetsController) {
-    markerWidgetsController.addMarkerWidget(
-      markerWidget: MarkerWidget(markerId: markerId, child: this),
-      marker: Marker(
-        markerId: markerId,
-        anchor: Offset(0.5, 0.5),
-        position: LatLng(_event.location.latitude, _event.location.longitude),
-      ),
-    );
-  }
-
-  // TODO move onTap to markerWidget
-  /// Gets a [AdvancedMarker] for showing this [Event] on a map.
-  AdvancedMarker get advancedMapMarker => AdvancedMarker(
-    markerId: markerId,
-    position: LatLng(lat, lng),
-    onTap: _onDoubleTap,
-
-    // infoWindow: InfoWindow(
-    //   title: _event.noc?.description ?? _event.status.description,
-    //   snippet: _event.address,
-    //   // onTap: onTap,
-    // ),
-  );
-
-  final MarkerId markerId;
-
-  MarkerWidget get markerWidget => MarkerWidget(
-    markerId: markerId,
-    child: GestureDetector(onDoubleTap: _onDoubleTap, child: _body),
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
+// class EventGoogleMapsMarker extends EventMapMarker {
+//   EventGoogleMapsMarker({
+//     super.key,
+//     required super.event,
+//     required super.viewModel,
+//   }) : markerId = MarkerId(event.id.toString());
+//
+//   void addToMap(MarkerWidgetsController markerWidgetsController) {
+//     markerWidgetsController.addMarkerWidget(
+//       markerWidget: MarkerWidget(markerId: markerId, child: this),
+//       marker: Marker(
+//         markerId: markerId,
+//         anchor: Offset(0.5, 0.5),
+//         position: LatLng(_event.location.latitude, _event.location.longitude),
+//       ),
+//     );
+//   }
+//
+//   // TODO move onTap to markerWidget
+//   /// Gets a [AdvancedMarker] for showing this [Event] on a map.
+//   AdvancedMarker get advancedMapMarker => AdvancedMarker(
+//     markerId: markerId,
+//     position: LatLng(lat, lng),
+//     onTap: _onDoubleTap,
+//
+//     // infoWindow: InfoWindow(
+//     //   title: _event.noc?.description ?? _event.status.description,
+//     //   snippet: _event.address,
+//     //   // onTap: onTap,
+//     // ),
+//   );
+//
+//   final MarkerId markerId;
+//
+//   MarkerWidget get markerWidget => MarkerWidget(
+//     markerId: markerId,
+//     child: GestureDetector(onDoubleTap: _onDoubleTap, child: _body),
+//   );
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Placeholder();
+//   }
+// }

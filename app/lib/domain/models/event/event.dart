@@ -44,7 +44,7 @@ class Event {
   Event.preAlert({
     required int idNum,
     required Address? address,
-    required LatLng location,
+    LatLng? location,
   }) : this._(
          id: EventID(id: idNum),
          address: address,
@@ -220,7 +220,7 @@ class Event {
   String get idLastFour => id.lastFour;
 
   /// The latitude and longitude of the emergency.
-  LatLng location;
+  LatLng? location;
 
   // /// Returns the latitude and longitude of a given street [address].
   // Future<Location> _locationFromAddress() async {

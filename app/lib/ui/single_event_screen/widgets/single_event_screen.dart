@@ -8,7 +8,6 @@ import '../../../domain/models/event/status.dart';
 import '../../../domain/models/location/address.dart';
 import '../../../domain/models/person/gp_practice.dart';
 import '../../../domain/models/person/patient.dart';
-import '../../../ui/map/widgets/map.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 import 'event_mode_button.dart';
 import 'non_null_event.dart';
@@ -139,12 +138,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     // TODO implement building of newEvent using copyWith with values from eventControllers
     final Event newEvent =
         widget.viewModel.event?.copyWith() ??
-        // FIXME fix hard-coded LatLng
-        Event.preAlert(
-          idNum: widget.viewModel.nextEventID,
-          address: null,
-          location: MapPage.scasCentre,
-        );
+        Event.preAlert(idNum: widget.viewModel.nextEventID, address: null);
 
     return widget.viewModel.updateEvent.execute(newEvent);
   }
