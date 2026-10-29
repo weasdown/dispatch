@@ -42,13 +42,16 @@ class Unit {
 }
 
 enum VehicleType {
-  dca('Double-Crewed Ambulance'),
-  rrv('Rapid Response Vehicle'),
-  helicopter('Air Ambulance Helicopter'),
-  criticalCareCar('Critical Care Car'),
-  communityFirstResponder('Community First Responder');
+  dca('Double-Crewed Ambulance', 'DCA'),
+  rrv('Rapid Response Vehicle', 'RRV'),
+  helicopter('Air Ambulance Helicopter', 'Heli'),
+  criticalCareCar('Critical Care Car', 'HCar'),
+  communityFirstResponder('Community First Responder', 'CFR'),
+  coResponder('Community First Responder', 'CoResp');
 
-  const VehicleType(this.name);
+  const VehicleType(this.name, this.abbreviation);
+
+  final String abbreviation;
 
   final String name;
 }
