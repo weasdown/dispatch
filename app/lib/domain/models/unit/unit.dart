@@ -8,7 +8,9 @@ class Unit {
     required this.callsign,
     required this.location,
     this.vehicleType = VehicleType.dca,
-  });
+  }) {
+    _timeInStatus.start();
+  }
 
   /// A unique identifier for this resource.
   final String callsign;
@@ -39,6 +41,10 @@ class Unit {
   UnitStatus get status => _status;
 
   void updateStatus(UnitStatus status) => _status = status;
+
+  Duration get timeInStatus => _timeInStatus.elapsed;
+  // TODO instead of directly storing duration, store time of last status update then recalculate duration since then on each tick. This will enable the times in status to be set differently for each unit on startup.
+  final Stopwatch _timeInStatus = Stopwatch();
 }
 
 enum VehicleType {
