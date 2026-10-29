@@ -40,8 +40,9 @@ class UnitMapMarker extends StatelessWidget {
     VehicleType.rrv => 'assets/images/rrv.png',
     VehicleType.helicopter => 'assets/images/tvaa.jpg',
     VehicleType.criticalCareCar => 'assets/images/hems-car.png',
-    // FIXME: give the CFR a unique image.
-    VehicleType.communityFirstResponder => 'assets/images/rrv.png',
+    // FIXME: give the CFR and co-responder unique images.
+    VehicleType.communityFirstResponder ||
+    VehicleType.coResponder => 'assets/images/rrv.png',
   };
 
   Widget _body(BuildContext context) => GestureDetector(
