@@ -16,22 +16,13 @@ class Unit {
   /// A unique identifier for this resource.
   final String callsign;
 
-  /// The current latitude and longitude of this unit.
-  LatLng location;
-
-  Map<String, dynamic> toJson() => {
-    'callsign': callsign,
-    'vehicleType': vehicleType.toString(),
-    'location': [location.latitude, location.longitude],
-  };
-
-  @override
-  String toString() => callsign;
-
   bool get isHEMSUnit => switch (vehicleType) {
     VehicleType.helicopter || VehicleType.criticalCareCar => true,
     _ => false,
   };
+
+  /// The current latitude and longitude of this unit.
+  LatLng location;
 
   MealBreakWindow? get mealBreakWindow => _mealBreakWindow;
   MealBreakWindow? _mealBreakWindow;
@@ -45,6 +36,15 @@ class Unit {
   Duration get timeInStatus => _timeInStatus.elapsed;
   // TODO instead of directly storing duration, store time of last status update then recalculate duration since then on each tick. This will enable the times in status to be set differently for each unit on startup.
   final Stopwatch _timeInStatus = Stopwatch();
+
+  Map<String, dynamic> toJson() => {
+    'callsign': callsign,
+    'vehicleType': vehicleType.toString(),
+    'location': [location.latitude, location.longitude],
+  };
+
+  @override
+  String toString() => callsign;
 
   // TODO add a separate unitType attribute, or make subclasses of Unit (and make Unit sealed), for storing type, e.g. OpsComm, as opposed to the vehicle they happen to be in.
   /// The type of vehicle that this is.
