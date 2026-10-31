@@ -9,7 +9,7 @@ class Unit {
   Unit({
     required this.callsign,
     required this.location,
-    this.vehicleType = VehicleType.dca,
+    this._vehicleType = VehicleType.dca,
   }) {
     _timeInStatus.start();
   }
@@ -28,11 +28,33 @@ class Unit {
   /// The current latitude and longitude of this unit.
   LatLng location;
 
+  Unit logon({
+    required DateTime shiftStart,
+    required DateTime shiftEnd,
+    required AmbulanceStation base,
+    required VehicleType vehicleType,
+  }) {
+    _shiftStart = shiftStart;
+    _shiftEnd = shiftEnd;
+    _mealBreakWindow = MealBreakWindow.forShift(
+      shiftStart: shiftStart,
+      shiftEnd: shiftEnd,
+    );
+
+    _base = base;
+
+    _vehicleType = vehicleType;
+
+    return this;
+  }
+
   MealBreakWindow? get mealBreakWindow => _mealBreakWindow;
   MealBreakWindow? _mealBreakWindow;
 
-  DateTime? shiftStart;
-  DateTime? shiftEnd;
+  DateTime? get shiftStart => _shiftStart;
+  DateTime? _shiftStart;
+  DateTime? get shiftEnd => _shiftEnd;
+  DateTime? _shiftEnd;
 
   UnitStatus _status = UnitStatus.pd;
 
@@ -71,7 +93,8 @@ class Unit {
 
   // TODO add a separate unitType attribute, or make subclasses of Unit (and make Unit sealed), for storing type, e.g. OpsComm, as opposed to the vehicle they happen to be in.
   /// The type of vehicle that this is.
-  final VehicleType vehicleType;
+  VehicleType get vehicleType => _vehicleType;
+  VehicleType _vehicleType = VehicleType.dca;
 }
 
 enum VehicleType {
