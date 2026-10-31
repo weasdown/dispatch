@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import '../location/address.dart';
 import '../person/patient.dart';
 import '../unit/unit.dart';
+import '../unit/unit_status.dart';
 import 'category.dart';
 import 'priority.dart';
 import 'remark.dart';
@@ -194,6 +195,25 @@ class Event {
     _remarks.add(remark);
   }
 
+  void _addUnitHistory({
+    required Unit unit,
+    required UnitStatus status,
+    DateTime? time,
+  }) {
+    _unitHistory.add(
+      UnitHistoryEntry(
+        unit: unit,
+        status: status,
+        time: time ?? DateTime.now(),
+      ),
+    );
+  }
+
+  void dispatchUnit({required Unit unit}) {
+    assignedUnits.add(unit);
+    _addUnitHistory(unit: unit, status: UnitStatus.dp, time: DateTime.now());
+  }
+
   /// The ambulances and other units assigned to this event.
   List<Unit> assignedUnits = List.empty(growable: true);
 
@@ -278,6 +298,9 @@ class Event {
 
   @override
   String toString() => 'Event $id';
+
+  List<UnitHistoryEntry> get unitHistory => _unitHistory;
+  final List<UnitHistoryEntry> _unitHistory = List.empty(growable: true);
 
   void updatePatient(int index, Patient newPatient) {
     _patients[index] = newPatient;
