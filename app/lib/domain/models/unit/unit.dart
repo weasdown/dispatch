@@ -32,10 +32,6 @@ class Unit {
     _ => false,
   };
 
-  // TODO add a separate unitType attribute, or make subclasses of Unit (and make Unit sealed), for storing type, e.g. OpsComm, as opposed to the vehicle they happen to be in.
-  /// The type of vehicle that this is.
-  final VehicleType vehicleType;
-
   UnitStatus _status = UnitStatus.pd;
 
   UnitStatus get status => _status;
@@ -45,6 +41,10 @@ class Unit {
   Duration get timeInStatus => _timeInStatus.elapsed;
   // TODO instead of directly storing duration, store time of last status update then recalculate duration since then on each tick. This will enable the times in status to be set differently for each unit on startup.
   final Stopwatch _timeInStatus = Stopwatch();
+
+  // TODO add a separate unitType attribute, or make subclasses of Unit (and make Unit sealed), for storing type, e.g. OpsComm, as opposed to the vehicle they happen to be in.
+  /// The type of vehicle that this is.
+  final VehicleType vehicleType;
 }
 
 enum VehicleType {
