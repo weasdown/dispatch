@@ -46,7 +46,7 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Units')),
       body: SingleChildScrollView(
-        // TODO wrap with Center
+        // TODO make DataTable whole available width
         child: ListenableBuilder(
           listenable: widget.viewModel.loadUnits,
           builder: (context, child) {
