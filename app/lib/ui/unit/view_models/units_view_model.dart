@@ -11,11 +11,6 @@ import '../../../utils/result.dart';
 final class UnitsViewModel extends ChangeNotifier {
   UnitsViewModel({required this._unitRepository}) {
     loadUnits = Command0(_loadUnits)..execute();
-
-    // TODO perhaps use timer as listenable in AllUnitsScreen
-    Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
-      notifyListeners();
-    });
   }
 
   late final Command0<void> loadUnits;
