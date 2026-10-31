@@ -2,10 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
+import '../../../ui/unit/view_models/units_view_model.dart';
 import '../data/repositories/auth/auth_repository.dart';
 import '../ui/home/view_models/home_viewmodel.dart';
 import '../ui/home/widgets/home_screen.dart';
@@ -48,6 +49,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
             // eventModeRepository: context.read(),
             unitRepository: context.read(),
           ),
+          unitsViewModel: UnitsViewModel(unitRepository: context.read()),
         );
       },
       routes: [
