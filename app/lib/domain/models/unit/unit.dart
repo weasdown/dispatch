@@ -129,7 +129,8 @@ enum VehicleType {
 }
 
 extension ToHM on DateTime {
-  String toHM() => '$hour:$minute';
+  String toHM() =>
+      '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
 }
 
 extension ToHMS on Duration {
