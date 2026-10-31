@@ -162,3 +162,8 @@ extension ToHMS on Duration {
     return '$hours:$minutes:$seconds';
   }
 }
+
+extension ToSimpleString on LatLng {
+  String toSimpleString([int decimalPlaces = 5]) =>
+      '${latitude.toStringAsFixed(decimalPlaces)}, ${longitude.toStringAsFixed(decimalPlaces)}';
+}
