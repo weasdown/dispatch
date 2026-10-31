@@ -17,6 +17,29 @@ final class TimeWindow {
 final class MealBreakWindow extends TimeWindow {
   const MealBreakWindow({required super.startTime, required super.endTime});
 
+  factory MealBreakWindow.forShift({
+    required DateTime shiftStart,
+    required DateTime shiftEnd,
+  }) {
+    final Duration shiftDuration = shiftEnd.difference(shiftStart);
+
+    if (shiftDuration < Duration(hours: 6)) {
+      throw ArgumentError(
+        'Time between shiftStart and shiftEnd must be greater than 6 hours for a meal break window to be calculated.',
+      );
+    }
+
+    final Duration halfShift = shiftDuration ~/ 2;
+    final DateTime shiftMidpoint = shiftStart.add(halfShift);
+
+    final DateTime startOfWindow = shiftMidpoint.subtract(_duration ~/ 2);
+    final DateTime endOfWindow = shiftMidpoint.add(_duration ~/ 2);
+
+    return MealBreakWindow(startTime: startOfWindow, endTime: endOfWindow);
+  }
+
+  static Duration get _duration => Duration(hours: 3);
+
   TimeWindow get firstHour => TimeWindow(
     startTime: startTime,
     endTime: startTime.add(Duration(hours: 1)),
