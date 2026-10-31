@@ -39,8 +39,8 @@ final class UnitsViewModel extends ChangeNotifier {
 
   final Logger _log = Logger('UnitsViewModel')..level = Level.ALL;
 
-  List<Unit>? get units => _units;
-  List<Unit>? _units;
+  List<Unit> get units => _units;
+  List<Unit> _units = [];
 
   final UnitRepository _unitRepository;
 }

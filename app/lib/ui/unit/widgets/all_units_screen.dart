@@ -20,7 +20,8 @@ class AllUnitsScreen extends StatefulWidget {
 
 class _AllUnitsScreenState extends State<AllUnitsScreen> {
   late Timer timer;
-  // late String timeInStatus;
+
+  List<Unit> _units = [];
 
   @override
   void dispose() {
@@ -47,14 +48,15 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
       body: SingleChildScrollView(
         // TODO wrap with Center
         child: ListenableBuilder(
-          listenable: Listenable.merge([
-            widget.viewModel.loadUnits,
-            // widget.viewModel.timer,
-          ]),
+          listenable: widget.viewModel.loadUnits,
           builder: (context, child) {
             // If command is running, show progress indicator
             if (widget.viewModel.loadUnits.running) {
               return const Center(child: CircularProgressIndicator());
+            }
+
+            if (widget.viewModel.loadUnits.completed) {
+              _units = widget.viewModel.units;
             }
 
             // If existing booking fails to load, tap to go /home
@@ -73,6 +75,10 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
             return child!;
           },
           child: DataTable(
+            sortAscending: true,
+            // TODO implement sorting by status then by Time
+            // TODO implement user-settable sorting by multiple fields
+            sortColumnIndex: 4, // Sort by Status
             columns: <DataColumn>[
               // Callsign
               DataColumn(label: Text('Callsign')),
@@ -85,7 +91,16 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
               // EOS
               DataColumn(label: Text('EOS')),
               // Status
-              DataColumn(label: Text('Status')),
+              DataColumn(
+                label: Text('Status'),
+                onSort: (int sortColumnIndex, bool ascending) {
+                  // FIXME fix hard-coded value for Status column's index
+                  debugPrint('sortColumnIndex: $sortColumnIndex');
+                  if (sortColumnIndex == 4) {
+                    _units.sort((a, b) => a.status.compareTo(b.status));
+                  }
+                },
+              ),
               // Time (in status)
               DataColumn(label: Text('Time')),
               // Assigned event
@@ -93,71 +108,65 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
               // Location
               DataColumn(label: Text('Location')),
             ],
-            rows:
-                widget.viewModel.units?.map((Unit unit) {
-                  final UnitStatus status = unit.status;
-                  final Color statusTextColour = status.textColour;
-                  Text textColouredByStatus(String text) =>
-                      Text(text, style: TextStyle(color: statusTextColour));
+            rows: widget.viewModel.units.map((Unit unit) {
+              final UnitStatus status = unit.status;
+              final Color statusTextColour = status.textColour;
+              Text textColouredByStatus(String text) =>
+                  Text(text, style: TextStyle(color: statusTextColour));
 
-                  final WidgetStateProperty<Color> backgroundColour =
-                      WidgetStateProperty.resolveWith<Color>((
-                        Set<WidgetState> states,
-                      ) {
-                        return status.backgroundColour;
+              final WidgetStateProperty<Color> backgroundColour =
+                  WidgetStateProperty.resolveWith<Color>((
+                    Set<WidgetState> states,
+                  ) {
+                    return status.backgroundColour;
 
-                        // // TODO if selected, apply a grey colour on top of the base colour
-                        // if (states.contains(WidgetState.selected)) {
-                        //   return Colors.grey[400]!;
-                        // }
-                      });
+                    // // TODO if selected, apply a grey colour on top of the base colour
+                    // if (states.contains(WidgetState.selected)) {
+                    //   return Colors.grey[400]!;
+                    // }
+                  });
 
-                  return DataRow(
-                    color: backgroundColour,
-                    cells: [
-                      // Callsign
-                      DataCell(textColouredByStatus(unit.callsign)),
-                      // Vehicle type
-                      DataCell(
-                        textColouredByStatus(unit.vehicleType.abbreviation),
-                      ),
-                      // MBW
-                      DataCell(
-                        textColouredByStatus(
-                          unit.mealBreakWindow != null
-                              ? unit.mealBreakWindow.toString()
-                              : '',
-                        ),
-                      ),
-                      // EOS
-                      DataCell(
-                        textColouredByStatus(
-                          unit.endOfShift != null
-                              ? unit.endOfShift!.toHM()
-                              : '',
-                        ),
-                      ),
-                      // Status
-                      DataCell(textColouredByStatus(unit.status.abbreviation)),
-                      // Time in status
-                      DataCell(textColouredByStatus(unit.timeInStatus.toHMS())),
-                      // Assigned event
-                      DataCell(
-                        textColouredByStatus(
-                          (unit.assignedEvent != null)
-                              ? unit.assignedEvent!.id.toString()
-                              : '',
-                        ),
-                      ),
-                      // Location
-                      // TODO display address at unit's current location (e.g. full address if at scene, or just road name if mobile)
-                      DataCell(
-                        textColouredByStatus(unit.location.toSimpleString()),
-                      ),
-                    ],
-                  );
-                }).toList() ??
-                [],
+              return DataRow(
+                color: backgroundColour,
+                cells: [
+                  // Callsign
+                  DataCell(textColouredByStatus(unit.callsign)),
+                  // Vehicle type
+                  DataCell(textColouredByStatus(unit.vehicleType.abbreviation)),
+                  // MBW
+                  DataCell(
+                    textColouredByStatus(
+                      unit.mealBreakWindow != null
+                          ? unit.mealBreakWindow.toString()
+                          : '',
+                    ),
+                  ),
+                  // EOS
+                  DataCell(
+                    textColouredByStatus(
+                      unit.endOfShift != null ? unit.endOfShift!.toHM() : '',
+                    ),
+                  ),
+                  // Status
+                  DataCell(textColouredByStatus(unit.status.abbreviation)),
+                  // Time in status
+                  DataCell(textColouredByStatus(unit.timeInStatus.toHMS())),
+                  // Assigned event
+                  DataCell(
+                    textColouredByStatus(
+                      (unit.assignedEvent != null)
+                          ? unit.assignedEvent!.id.toString()
+                          : '',
+                    ),
+                  ),
+                  // Location
+                  // TODO display address at unit's current location (e.g. full address if at scene, or just road name if mobile)
+                  DataCell(
+                    textColouredByStatus(unit.location.toSimpleString()),
+                  ),
+                ],
+              );
+            }).toList(),
           ),
         ),
       ),

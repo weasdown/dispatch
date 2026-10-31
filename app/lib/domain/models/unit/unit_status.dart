@@ -2,7 +2,7 @@
 library;
 
 /// Possible statuses for a [Unit] to show its current activity.
-enum UnitStatus {
+enum UnitStatus implements Comparable<UnitStatus> {
   oneR('1R', 'Cat 1 only'),
   ab('AB', 'Available Base'),
   af('AF', 'Available - Foot'),
@@ -30,6 +30,26 @@ enum UnitStatus {
   const UnitStatus(this.abbreviation, this.name);
 
   final String abbreviation;
+
+  // TODO implement UnitStatus.compareTo() to enable sorting of units by status
+  /// Unit statuses are sorted as follows:
+  /// - First: available statuses, with VC first
+  /// - Second: en route statuses, with DP before MO
+  /// - Patient committed statuses, in order of real-life flow (e.g. AS before AH)
+  @override
+  int compareTo(UnitStatus other) {
+    throw UnimplementedError();
+  }
+
+  bool get isPatientCommitted => switch (this) {
+    UnitStatus.as ||
+    UnitStatus.rt ||
+    UnitStatus.wp ||
+    UnitStatus.ls ||
+    UnitStatus.ah ||
+    UnitStatus.ho => true,
+    _ => false,
+  };
 
   final String name;
 }
