@@ -125,3 +125,7 @@ enum VehicleType {
 
   final String name;
 }
+
+extension ToHM on DateTime {
+  String toHM() => '$hour:$minute';
+}
