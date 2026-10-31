@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:dispatch/ui/unit/unit_status_colour.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/unit/unit.dart';
+import '../../../ui/unit/unit_status_colour.dart';
 import '../../../utils/result.dart';
 import '../view_models/units_view_model.dart';
 
@@ -83,6 +83,7 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
               DataColumn(label: Text('Type')),
               // // TODO implement display of number of personnel on vehicle
               // DataColumn(label: Text('# P')),
+              DataColumn(label: Text('MBW')),
               DataColumn(label: Text('Status')),
               DataColumn(label: Text('Time')),
             ],
@@ -94,6 +95,13 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
                         cells: [
                           DataCell(Text(unit.callsign)),
                           DataCell(Text(unit.vehicleType.abbreviation)),
+                          DataCell(
+                            Text(
+                              unit.mealBreakWindow != null
+                                  ? unit.mealBreakWindow.toString()
+                                  : '',
+                            ),
+                          ),
                           DataCell(Text(unit.status.abbreviation)),
                           DataCell(Text(unit.timeInStatus.toHMS())),
                         ],
