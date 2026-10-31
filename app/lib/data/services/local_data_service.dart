@@ -109,46 +109,57 @@ class LocalDataService {
   static final Patient _defaultPatient = Patient(name: 'Joe Bloggs');
 
   /// A default list of units.
-  static final List<Unit> _defaultUnits = [
-    Unit(
-      callsign: 'NA136',
-      location: LatLng(51.607539604000266, -1.237806756282358),
-    ),
-    Unit(callsign: 'NA402', location: LatLng(51.605, -1.238)),
-    Unit(
-      callsign: 'NA283',
-      location: LatLng(51.616072911907786, -1.2536017723108663),
-    ),
-    Unit(
-      callsign: 'NA072',
-      location: LatLng(51.8296012219854, -1.3134667111590494),
-    ),
-    Unit(
-      callsign: 'NF159',
-      location: LatLng(51.62832936052779, -1.1854888181805424),
-      vehicleType: VehicleType.communityFirstResponder,
-    ),
-    Unit(
-      callsign: 'NR154',
-      location: LatLng(51.66706110914126, -1.3082872829130447),
-      vehicleType: VehicleType.criticalCareCar,
-    ),
-    Unit(
-      callsign: 'ND027',
-      location: LatLng(51.66182910219628, -0.9084334753014697),
-      vehicleType: VehicleType.criticalCareCar,
-    ),
-    Unit(
-      callsign: 'NT431',
-      location: LatLng(51.397809576171085, -1.3230646597735394),
-      vehicleType: VehicleType.rrv,
-    ),
-    Unit(
-      callsign: '0024',
-      location: LatLng(51.61832936052779, -1.0854888181805424),
-      vehicleType: VehicleType.helicopter,
-    ),
-  ];
+  static List<Unit> get _defaultUnits {
+    final DateTime today0800 = _todayAtTime(hour: 8);
+    final DateTime today1000 = _todayAtTime(hour: 10);
+    final DateTime today1800 = _todayAtTime(hour: 18);
+    final DateTime today2000 = _todayAtTime(hour: 20);
+
+    return [
+      Unit(
+        callsign: 'NA136',
+        location: LatLng(51.607539604000266, -1.237806756282358),
+      )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800),
+      Unit(callsign: 'NA402', location: LatLng(51.605, -1.238))
+        ..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800),
+      Unit(
+        callsign: 'NA283',
+        location: LatLng(51.616072911907786, -1.2536017723108663),
+      )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800),
+      Unit(
+        callsign: 'NA172',
+        location: LatLng(51.8296012219854, -1.3134667111590494),
+      )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000),
+      Unit(
+        callsign: 'NF159',
+        location: LatLng(51.62832936052779, -1.1854888181805424),
+        vehicleType: VehicleType.communityFirstResponder,
+      )..updateShiftTimes(
+        shiftStart: today1000,
+        shiftEnd: _todayAtTime(hour: 22),
+      ),
+      Unit(
+        callsign: 'NR154',
+        location: LatLng(51.66706110914126, -1.3082872829130447),
+        vehicleType: VehicleType.rrv,
+      )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000),
+      Unit(
+        callsign: 'ND027',
+        location: LatLng(51.66182910219628, -0.9084334753014697),
+        vehicleType: VehicleType.criticalCareCar,
+      )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000),
+      Unit(
+        callsign: 'NT431',
+        location: LatLng(51.397809576171085, -1.3230646597735394),
+        vehicleType: VehicleType.rrv,
+      )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000),
+      Unit(
+        callsign: '0024',
+        location: LatLng(51.61832936052779, -1.0854888181805424),
+        vehicleType: VehicleType.helicopter,
+      )..updateShiftTimes(shiftStart: today0800, shiftEnd: today2000),
+    ];
+  }
 
   static final User _defaultUser = const User(
     name: 'Sophie Williamson',
@@ -179,3 +190,6 @@ extension AddRemarks on Event {
     }
   }
 }
+
+DateTime _todayAtTime({required int hour, int? minute}) =>
+    DateTime.now().copyWith(hour: hour, minute: minute ?? 0);
