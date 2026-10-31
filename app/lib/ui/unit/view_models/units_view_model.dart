@@ -26,7 +26,7 @@ final class UnitsViewModel extends ChangeNotifier {
       switch (unitResult) {
         case Ok<List<Unit>> _:
           _units = unitResult.value;
-          _log.fine('Loaded units');
+          _log.fine('Loaded ${_units.length} units');
           return Result.ok(_units);
         case Error<List<Unit>>():
           _log.warning('Failed to load units', unitResult.error);
