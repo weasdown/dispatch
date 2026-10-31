@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/unit/unit.dart';
+import '../../../domain/models/unit/unit_status.dart';
 import '../../../ui/unit/unit_status_colour.dart';
 import '../../../utils/result.dart';
 import '../view_models/units_view_model.dart';
@@ -19,6 +20,7 @@ class AllUnitsScreen extends StatefulWidget {
 
 class _AllUnitsScreenState extends State<AllUnitsScreen> {
   late Timer timer;
+  // late String timeInStatus;
 
   @override
   void dispose() {
@@ -32,25 +34,18 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
 
     // Create a timer that runs a callback every 200 milliseconds to update UI
     timer = Timer.periodic(const Duration(milliseconds: 200), (Timer timer) {
-      setState(() {});
+      setState(() {
+        // timeInStatus = '';
+      });
     });
   }
-
-  WidgetStateProperty<Color> rowColour(Unit unit) =>
-      WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
-        return unit.status.backgroundColour;
-
-        // // TODO if selected, apply a grey colour on top of the base colour
-        // if (states.contains(WidgetState.selected)) {
-        //   return Colors.grey[400]!;
-        // }
-      });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Units')),
       body: SingleChildScrollView(
+        // TODO wrap with Center
         child: ListenableBuilder(
           listenable: Listenable.merge([
             widget.viewModel.loadUnits,
@@ -93,41 +88,75 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
               DataColumn(label: Text('Status')),
               // Time (in status)
               DataColumn(label: Text('Time')),
+              // Assigned event
+              DataColumn(label: Text('Assigned event')),
+              // Location
+              DataColumn(label: Text('Location')),
             ],
             rows:
-                widget.viewModel.units
-                    ?.map(
-                      (Unit unit) => DataRow(
-                        color: rowColour(unit),
-                        cells: [
-                          // Callsign
-                          DataCell(Text(unit.callsign)),
-                          // Vehicle type
-                          DataCell(Text(unit.vehicleType.abbreviation)),
-                          // MBW
-                          DataCell(
-                            Text(
-                              unit.mealBreakWindow != null
-                                  ? unit.mealBreakWindow.toString()
-                                  : '',
-                            ),
-                          ),
-                          // EOS
-                          DataCell(
-                            Text(
-                              unit.endOfShift != null
-                                  ? unit.endOfShift!.toHM()
-                                  : '',
-                            ),
-                          ),
-                          // Status
-                          DataCell(Text(unit.status.abbreviation)),
-                          // Time in status
-                          DataCell(Text(unit.timeInStatus.toHMS())),
-                        ],
+                widget.viewModel.units?.map((Unit unit) {
+                  final UnitStatus status = unit.status;
+                  final Color statusTextColour = status.textColour;
+                  Text textColouredByStatus(String text) =>
+                      Text(text, style: TextStyle(color: statusTextColour));
+
+                  final WidgetStateProperty<Color> backgroundColour =
+                      WidgetStateProperty.resolveWith<Color>((
+                        Set<WidgetState> states,
+                      ) {
+                        return status.backgroundColour;
+
+                        // // TODO if selected, apply a grey colour on top of the base colour
+                        // if (states.contains(WidgetState.selected)) {
+                        //   return Colors.grey[400]!;
+                        // }
+                      });
+
+                  return DataRow(
+                    color: backgroundColour,
+                    cells: [
+                      // Callsign
+                      DataCell(textColouredByStatus(unit.callsign)),
+                      // Vehicle type
+                      DataCell(
+                        textColouredByStatus(unit.vehicleType.abbreviation),
                       ),
-                    )
-                    .toList() ??
+                      // MBW
+                      DataCell(
+                        textColouredByStatus(
+                          unit.mealBreakWindow != null
+                              ? unit.mealBreakWindow.toString()
+                              : '',
+                        ),
+                      ),
+                      // EOS
+                      DataCell(
+                        textColouredByStatus(
+                          unit.endOfShift != null
+                              ? unit.endOfShift!.toHM()
+                              : '',
+                        ),
+                      ),
+                      // Status
+                      DataCell(textColouredByStatus(unit.status.abbreviation)),
+                      // Time in status
+                      DataCell(textColouredByStatus(unit.timeInStatus.toHMS())),
+                      // Assigned event
+                      DataCell(
+                        textColouredByStatus(
+                          (unit.assignedEvent != null)
+                              ? unit.assignedEvent!.id.toString()
+                              : '',
+                        ),
+                      ),
+                      // Location
+                      // TODO display address at unit's current location (e.g. full address if at scene, or just road name if mobile)
+                      DataCell(
+                        textColouredByStatus(unit.location.toSimpleString()),
+                      ),
+                    ],
+                  );
+                }).toList() ??
                 [],
           ),
         ),

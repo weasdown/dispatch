@@ -21,10 +21,10 @@ class Unit {
   Event? get assignedEvent => _assignedEvent;
   Event? _assignedEvent;
 
-  void dispatchToEvent({required Event event, required UnitStatus status}) {
-    event.dispatchUnit(unit: this);
+  void assignToEvent({required Event event, required UnitStatus status}) {
+    _assignedEvent = event;
     _history.add(
-      UnitHistoryEntry(unit: this, status: UnitStatus.dp, time: DateTime.now()),
+      UnitHistoryEntry(unit: this, status: status, time: DateTime.now()),
     );
   }
 
@@ -125,10 +125,12 @@ class Unit {
 final class UnitHistoryEntry {
   const UnitHistoryEntry({
     required this.unit,
+    this.event,
     required this.status,
     required this.time,
   });
 
+  final Event? event;
   final UnitStatus status;
   final DateTime time;
   final Unit unit;

@@ -11,9 +11,12 @@ import '../../domain/models/location/address.dart';
 import '../../domain/models/person/patient.dart';
 import '../../domain/models/person/user.dart';
 import '../../domain/models/unit/unit.dart';
+import '../../domain/models/unit/unit_status.dart';
 
 class LocalDataService {
-  LocalDataService() : _events = _defaultEvents, _units = _defaultUnits;
+  LocalDataService() : _events = _defaultEvents, _units = _defaultUnits {
+    _setInitialEventUnitAllocations();
+  }
 
   /// A default list of events.
   static List<Event> get _defaultEvents {
@@ -28,12 +31,6 @@ class LocalDataService {
             location: LatLng(51.59799446397092, -1.3537030950825775),
             noc: Cat1NOC.c1ArrestPeriArrest(),
           )
-          ..assignedUnits = [
-            LocalDataService._defaultUnits[0], // NA136
-            _defaultUnits[4], // NF159
-            _defaultUnits[6], // ND027
-            _defaultUnits[7], // NT431
-          ]
           .._addRemarks([
             Remark(
               author: _defaultUser,
@@ -74,7 +71,7 @@ class LocalDataService {
         address: Address(buildingName: 'Carfax Tower', townOrCity: 'Oxford'),
         location: LatLng(51.752171158042344, -1.2581330894939455),
         noc: Cat2NOC.c2Stabbing(),
-      )..assignedUnits = [_defaultUnits[2]],
+      ),
       Event.withNOC(
         idNum: 3126,
         address: Address(
@@ -84,13 +81,13 @@ class LocalDataService {
         ),
         location: LatLng(51.75068849682342, -0.9859928066375558),
         noc: Cat4NOC.medicalMinor(),
-      )..assignedUnits = [_defaultUnits[1]],
+      ),
       Event.withNOC(
         idNum: 3128,
         address: Address(buildingName: 'Thatcham Station'),
         location: LatLng(51.393901, -1.242779),
         noc: Cat4NOC.mentalHealth(),
-      )..assignedUnits = [_defaultUnits[5]],
+      ),
       Event.withNOC(
         idNum: 3130,
         address: Address(
@@ -100,7 +97,7 @@ class LocalDataService {
         ),
         location: LatLng(51.748863260384894, -1.261667647754695),
         noc: Cat3NOC.fallInjuriesUnknown(),
-      )..assignedUnits = [_defaultUnits[3]],
+      ),
     ];
 
     return defaults;
@@ -115,21 +112,26 @@ class LocalDataService {
     final DateTime today1800 = _todayAtTime(hour: 18);
     final DateTime today2000 = _todayAtTime(hour: 20);
 
-    return [
+    final List<Unit> units = [
+      // NA136
       Unit(
         callsign: 'NA136',
         location: LatLng(51.607539604000266, -1.237806756282358),
       )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800),
+      // NA402
       Unit(callsign: 'NA402', location: LatLng(51.605, -1.238))
         ..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800),
+      // NA283
       Unit(
         callsign: 'NA283',
         location: LatLng(51.616072911907786, -1.2536017723108663),
       )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800),
+      // NA172
       Unit(
         callsign: 'NA172',
         location: LatLng(51.8296012219854, -1.3134667111590494),
       )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000),
+      // NF159
       Unit(
         callsign: 'NF159',
         location: LatLng(51.62832936052779, -1.1854888181805424),
@@ -138,27 +140,33 @@ class LocalDataService {
         shiftStart: today1000,
         shiftEnd: _todayAtTime(hour: 22),
       ),
+      // NR154
       Unit(
         callsign: 'NR154',
         location: LatLng(51.66706110914126, -1.3082872829130447),
         vehicleType: VehicleType.rrv,
       )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000),
+      // ND027
       Unit(
         callsign: 'ND027',
         location: LatLng(51.66182910219628, -0.9084334753014697),
         vehicleType: VehicleType.criticalCareCar,
       )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000),
+      // NT431
       Unit(
         callsign: 'NT431',
         location: LatLng(51.397809576171085, -1.3230646597735394),
         vehicleType: VehicleType.rrv,
       )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000),
+      // 0024
       Unit(
         callsign: '0024',
         location: LatLng(51.61832936052779, -1.0854888181805424),
         vehicleType: VehicleType.helicopter,
       )..updateShiftTimes(shiftStart: today0800, shiftEnd: today2000),
     ];
+
+    return units;
   }
 
   static final User _defaultUser = const User(
@@ -172,8 +180,6 @@ class LocalDataService {
 
   List<Event> get events => _events;
 
-  Event getEvent() => _defaultEvents.first;
-
   Patient getPatient() => _defaultPatient;
 
   User getUser() => _defaultUser;
@@ -181,6 +187,20 @@ class LocalDataService {
   final List<Unit> _units;
 
   List<Unit> get units => _units;
+
+  void _setInitialEventUnitAllocations() {
+    // Default Cat 1
+    _units[0].assignToEvent(event: _events[0], status: UnitStatus.dp); // NA136
+    _units[4].assignToEvent(event: _events[0], status: UnitStatus.dp); // NF159
+    _units[6].assignToEvent(event: _events[0], status: UnitStatus.dp); // ND027
+    _units[7].assignToEvent(event: _events[0], status: UnitStatus.dp); // NT431
+    _units[8].assignToEvent(event: _events[0], status: UnitStatus.dp); // 0024
+
+    _units[2].assignToEvent(event: _events[3], status: UnitStatus.as); // NA283
+    _units[1].assignToEvent(event: _events[4], status: UnitStatus.ls); // NA402
+    _units[5].assignToEvent(event: _events[5], status: UnitStatus.as); // NR154
+    _units[3].assignToEvent(event: _events[6], status: UnitStatus.mo); // NA172
+  }
 }
 
 extension AddRemarks on Event {

@@ -209,9 +209,10 @@ class Event {
     );
   }
 
-  void dispatchUnit({required Unit unit}) {
+  void dispatchUnit(Unit unit) {
     assignedUnits.add(unit);
     _addUnitHistory(unit: unit, status: UnitStatus.dp, time: DateTime.now());
+    unit.assignToEvent(event: this, status: UnitStatus.dp);
   }
 
   /// The ambulances and other units assigned to this event.
