@@ -1,5 +1,6 @@
 import 'package:latlong2/latlong.dart';
 
+import 'meal_break_window.dart';
 import 'unit_status.dart';
 
 /// An ambulance vehicle, air ambulance or other resource.
@@ -31,6 +32,9 @@ class Unit {
     VehicleType.helicopter || VehicleType.criticalCareCar => true,
     _ => false,
   };
+
+  MealBreakWindow? get mealBreakWindow => _mealBreakWindow;
+  MealBreakWindow? _mealBreakWindow;
 
   UnitStatus _status = UnitStatus.pd;
 
