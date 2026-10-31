@@ -73,6 +73,14 @@ final class MealBreakWindow extends TimeWindow {
     startTime: startTime.add(Duration(hours: 2)),
     endTime: endTime,
   );
+
+  /// Returns a string giving the start and end hours of the meal break window, e.g. "11:30-14:30".
+  @override
+  String toString() {
+    final String start = '${startTime.hour}:${startTime.minute}';
+    final String end = '${endTime.hour}:${endTime.minute}';
+    return '$start-$end';
+  }
 }
 
 enum MealBreakWindowHour { firstHour, secondHour, thirdHour, notInWindow }
