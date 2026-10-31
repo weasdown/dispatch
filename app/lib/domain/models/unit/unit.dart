@@ -10,9 +10,7 @@ class Unit {
     required this.callsign,
     required this.location,
     this._vehicleType = VehicleType.dca,
-  }) {
-    _timeInStatus.start();
-  }
+  });
 
   AmbulanceStation? get base => _base;
   AmbulanceStation? _base;
@@ -45,6 +43,8 @@ class Unit {
 
     _vehicleType = vehicleType;
 
+    updateStatus(newStatus: UnitStatus.pd);
+
     return this;
   }
 
@@ -56,15 +56,10 @@ class Unit {
   DateTime? get shiftEnd => _shiftEnd;
   DateTime? _shiftEnd;
 
-  UnitStatus _status = UnitStatus.pd;
+  UnitStatus get status => _latestHistoryEntry.status;
 
-  UnitStatus get status => _status;
-
-  void updateStatus(UnitStatus status) => _status = status;
-
-  Duration get timeInStatus => _timeInStatus.elapsed;
-  // TODO instead of directly storing duration, store time of last status update then recalculate duration since then on each tick. This will enable the times in status to be set differently for each unit on startup.
-  final Stopwatch _timeInStatus = Stopwatch();
+  Duration get timeInStatus =>
+      DateTime.now().difference(_latestHistoryEntry.time);
 
   Map<String, dynamic> toJson() => {
     'callsign': callsign,
@@ -75,6 +70,12 @@ class Unit {
   @override
   String toString() => callsign;
 
+  UnitHistoryEntry get _latestHistoryEntry => _unitHistory.last;
+
+  List<UnitHistoryEntry> get unitHistory => _unitHistory;
+  final List<UnitHistoryEntry> _unitHistory = [
+    UnitHistoryEntry(status: UnitStatus.pd, time: DateTime.now()),
+  ];
 
   void updateBase(AmbulanceStation newBase) => _base = newBase;
 
@@ -91,10 +92,23 @@ class Unit {
     );
   }
 
+  void updateStatus({required UnitStatus newStatus, DateTime? time}) {
+    final DateTime newTime = time ?? DateTime.now();
+
+    _unitHistory.add(UnitHistoryEntry(status: newStatus, time: newTime));
+  }
+
   // TODO add a separate unitType attribute, or make subclasses of Unit (and make Unit sealed), for storing type, e.g. OpsComm, as opposed to the vehicle they happen to be in.
   /// The type of vehicle that this is.
   VehicleType get vehicleType => _vehicleType;
   VehicleType _vehicleType = VehicleType.dca;
+}
+
+final class UnitHistoryEntry {
+  const UnitHistoryEntry({required this.status, required this.time});
+
+  final UnitStatus status;
+  final DateTime time;
 }
 
 enum VehicleType {
