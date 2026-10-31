@@ -18,6 +18,8 @@ class Unit {
   /// A unique identifier for this resource.
   final String callsign;
 
+  DateTime? get endOfShift => shiftEnd;
+
   bool get isHEMSUnit => switch (vehicleType) {
     VehicleType.helicopter || VehicleType.criticalCareCar => true,
     _ => false,

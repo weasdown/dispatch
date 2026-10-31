@@ -1,3 +1,5 @@
+import 'unit.dart';
+
 final class TimeWindow {
   const TimeWindow({required this.startTime, required this.endTime});
 
@@ -76,11 +78,7 @@ final class MealBreakWindow extends TimeWindow {
 
   /// Returns a string giving the start and end hours of the meal break window, e.g. "11:30-14:30".
   @override
-  String toString() {
-    final String start = '${startTime.hour}:${startTime.minute}';
-    final String end = '${endTime.hour}:${endTime.minute}';
-    return '$start-$end';
-  }
+  String toString() => '${startTime.toHM()}-${endTime.toHM()}';
 }
 
 enum MealBreakWindowHour { firstHour, secondHour, thirdHour, notInWindow }

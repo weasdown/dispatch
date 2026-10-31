@@ -79,12 +79,19 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
           },
           child: DataTable(
             columns: <DataColumn>[
+              // Callsign
               DataColumn(label: Text('Callsign')),
+              // Type (vehicle type)
               DataColumn(label: Text('Type')),
               // // TODO implement display of number of personnel on vehicle
               // DataColumn(label: Text('# P')),
+              // MBW
               DataColumn(label: Text('MBW')),
+              // EOS
+              DataColumn(label: Text('EOS')),
+              // Status
               DataColumn(label: Text('Status')),
+              // Time (in status)
               DataColumn(label: Text('Time')),
             ],
             rows:
@@ -93,8 +100,11 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
                       (Unit unit) => DataRow(
                         color: rowColour(unit),
                         cells: [
+                          // Callsign
                           DataCell(Text(unit.callsign)),
+                          // Vehicle type
                           DataCell(Text(unit.vehicleType.abbreviation)),
+                          // MBW
                           DataCell(
                             Text(
                               unit.mealBreakWindow != null
@@ -102,7 +112,17 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
                                   : '',
                             ),
                           ),
+                          // EOS
+                          DataCell(
+                            Text(
+                              unit.endOfShift != null
+                                  ? unit.endOfShift!.toHM()
+                                  : '',
+                            ),
+                          ),
+                          // Status
                           DataCell(Text(unit.status.abbreviation)),
+                          // Time in status
                           DataCell(Text(unit.timeInStatus.toHMS())),
                         ],
                       ),
