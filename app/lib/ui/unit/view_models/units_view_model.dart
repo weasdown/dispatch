@@ -43,6 +43,4 @@ final class UnitsViewModel extends ChangeNotifier {
   List<Unit>? _units;
 
   final UnitRepository _unitRepository;
-
-  // _updateTimeInStatus
 }
