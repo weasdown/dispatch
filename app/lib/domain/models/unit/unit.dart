@@ -1,5 +1,6 @@
 import 'package:latlong2/latlong.dart';
 
+import '../location/scas_locations.dart';
 import 'meal_break_window.dart';
 import 'unit_status.dart';
 
@@ -12,6 +13,9 @@ class Unit {
   }) {
     _timeInStatus.start();
   }
+
+  AmbulanceStation? get base => _base;
+  AmbulanceStation? _base;
 
   /// A unique identifier for this resource.
   final String callsign;
