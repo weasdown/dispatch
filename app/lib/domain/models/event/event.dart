@@ -195,7 +195,7 @@ class Event {
     _remarks.add(remark);
   }
 
-  void _addUnitHistory({
+  void addUnitHistory({
     required Unit unit,
     required UnitStatus status,
     DateTime? time,
@@ -209,9 +209,10 @@ class Event {
     );
   }
 
+  // TODO use or remove dispatchUnit()
   void dispatchUnit(Unit unit) {
     assignedUnits.add(unit);
-    _addUnitHistory(unit: unit, status: UnitStatus.dp, time: DateTime.now());
+    addUnitHistory(unit: unit, status: UnitStatus.dp, time: DateTime.now());
     unit.assignToEvent(event: this, status: UnitStatus.dp);
   }
 

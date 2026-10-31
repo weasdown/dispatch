@@ -23,6 +23,7 @@ class Unit {
 
   void assignToEvent({required Event event, required UnitStatus status}) {
     _assignedEvent = event;
+    event.addUnitHistory(unit: this, status: status);
     _history.add(
       UnitHistoryEntry(unit: this, status: status, time: DateTime.now()),
     );
