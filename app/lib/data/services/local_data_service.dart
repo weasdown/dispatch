@@ -190,11 +190,11 @@ class LocalDataService {
 
   void _setInitialEventUnitAllocations() {
     // Default Cat 1
-    _units[0].assignToEvent(event: _events[0], status: UnitStatus.dp); // NA136
-    _units[4].assignToEvent(event: _events[0], status: UnitStatus.dp); // NF159
-    _units[6].assignToEvent(event: _events[0], status: UnitStatus.dp); // ND027
-    _units[7].assignToEvent(event: _events[0], status: UnitStatus.dp); // NT431
-    _units[8].assignToEvent(event: _events[0], status: UnitStatus.dp); // 0024
+    _units[0].dispatchToEvent(event: _events[0]); // NA136
+    _units[4].dispatchToEvent(event: _events[0]); // NF159
+    _units[6].dispatchToEvent(event: _events[0]); // ND027
+    _units[7].dispatchToEvent(event: _events[0]); // NT431
+    _units[8].dispatchToEvent(event: _events[0]); // 0024
 
     _units[2].assignToEvent(event: _events[3], status: UnitStatus.as); // NA283
     _units[1].assignToEvent(event: _events[4], status: UnitStatus.ls); // NA402

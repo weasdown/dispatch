@@ -35,6 +35,9 @@ class Unit {
   /// A unique identifier for this resource.
   final String callsign;
 
+  void dispatchToEvent({required Event event}) =>
+      assignToEvent(event: event, status: UnitStatus.dp);
+
   DateTime? get endOfShift => shiftEnd;
 
   bool get isHEMSUnit => switch (vehicleType) {
