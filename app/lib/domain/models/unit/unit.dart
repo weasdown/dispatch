@@ -27,6 +27,9 @@ class Unit {
   MealBreakWindow? get mealBreakWindow => _mealBreakWindow;
   MealBreakWindow? _mealBreakWindow;
 
+  DateTime? shiftStart;
+  DateTime? shiftEnd;
+
   UnitStatus _status = UnitStatus.pd;
 
   UnitStatus get status => _status;
