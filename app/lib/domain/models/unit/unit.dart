@@ -1,5 +1,6 @@
 import 'package:latlong2/latlong.dart';
 
+import '../event/event.dart';
 import '../location/scas_locations.dart';
 import 'meal_break_window.dart';
 import 'unit_status.dart';
@@ -10,7 +11,22 @@ class Unit {
     required this.callsign,
     required this.location,
     this._vehicleType = VehicleType.dca,
-  });
+  }) {
+    _history.add(
+      UnitHistoryEntry(unit: this, status: UnitStatus.pd, time: DateTime.now()),
+    );
+  }
+
+  // TODO add another attribute to handle when a unit is Dispatch Assigned to one or more other events at the same time as _assignedEvent being set.
+  Event? get assignedEvent => _assignedEvent;
+  Event? _assignedEvent;
+
+  void dispatchToEvent({required Event event, required UnitStatus status}) {
+    event.dispatchUnit(unit: this);
+    _history.add(
+      UnitHistoryEntry(unit: this, status: UnitStatus.dp, time: DateTime.now()),
+    );
+  }
 
   AmbulanceStation? get base => _base;
   AmbulanceStation? _base;
@@ -72,12 +88,10 @@ class Unit {
   @override
   String toString() => callsign;
 
-  UnitHistoryEntry get _latestHistoryEntry => _unitHistory.last;
+  UnitHistoryEntry get _latestHistoryEntry => _history.last;
 
-  List<UnitHistoryEntry> get unitHistory => _unitHistory;
-  final List<UnitHistoryEntry> _unitHistory = [
-    UnitHistoryEntry(status: UnitStatus.pd, time: DateTime.now()),
-  ];
+  List<UnitHistoryEntry> get history => _history;
+  final List<UnitHistoryEntry> _history = List.empty(growable: true);
 
   void updateBase(AmbulanceStation newBase) => _base = newBase;
 
@@ -97,7 +111,9 @@ class Unit {
   void updateStatus({required UnitStatus newStatus, DateTime? time}) {
     final DateTime newTime = time ?? DateTime.now();
 
-    _unitHistory.add(UnitHistoryEntry(status: newStatus, time: newTime));
+    _history.add(
+      UnitHistoryEntry(unit: this, status: newStatus, time: newTime),
+    );
   }
 
   // TODO add a separate unitType attribute, or make subclasses of Unit (and make Unit sealed), for storing type, e.g. OpsComm, as opposed to the vehicle they happen to be in.
@@ -107,10 +123,15 @@ class Unit {
 }
 
 final class UnitHistoryEntry {
-  const UnitHistoryEntry({required this.status, required this.time});
+  const UnitHistoryEntry({
+    required this.unit,
+    required this.status,
+    required this.time,
+  });
 
   final UnitStatus status;
   final DateTime time;
+  final Unit unit;
 }
 
 enum VehicleType {
