@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/unit/unit.dart';
@@ -39,6 +40,17 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
         // timeInStatus = '';
       });
     });
+  }
+
+  Logger get _log {
+    final Logger log = Logger('_AllUnitsScreenState');
+    log.level = Level.ALL;
+    return log;
+  }
+
+  // TODO on hovering over a # P entry, show a small window with the name and ESR of each crew member onboard
+  void _onPersonnelHover(PointerEvent details, Unit unit) {
+    _log.finer('Hovering over #P for ${unit.callsign}');
   }
 
   @override
@@ -139,7 +151,13 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
                   DataCell(textColouredByStatus(unit.vehicleType.abbreviation)),
                   // Number of personnel on vehicle
                   DataCell(
-                    textColouredByStatus(unit.numberOfPersonnel.toString()),
+                    MouseRegion(
+                      onHover: (PointerEvent details) =>
+                          _onPersonnelHover(details, unit),
+                      child: textColouredByStatus(
+                        unit.numberOfPersonnel.toString(),
+                      ),
+                    ),
                   ),
                   // MBW
                   DataCell(
