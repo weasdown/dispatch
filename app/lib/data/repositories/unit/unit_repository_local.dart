@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:latlong2/latlong.dart';
-
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
@@ -19,14 +17,6 @@ class UnitRepositoryLocal extends UnitRepository {
 
   @override
   Future<Result<List<Unit>>> get allUnits => unitsList;
-
-  @override
-  Future<void> createUnit({
-    required String callsign,
-    required LatLng location,
-  }) async {
-    _units.add(Unit(callsign: 'NA421', location: LatLng(51.8, 1.2)));
-  }
 
   /// Gets a [Result.ok] holding a random unit from `_units`.
   @override
