@@ -23,7 +23,8 @@ class Unit {
 
   void assignToEvent({required Event event, required UnitStatus status}) {
     _assignedEvent = event;
-    event.addUnitHistory(unit: this, status: status);
+    // TODO remove this call (as could cause a stack overflow given that assignToEvent() is called by Event.addUnitHistory()) or preferably replace with alternative logic to handle adding of unit history to event.
+    // event.addUnitHistory(unit: this, status: status);
     _history.add(
       UnitHistoryEntry(unit: this, status: status, time: DateTime.now()),
     );
