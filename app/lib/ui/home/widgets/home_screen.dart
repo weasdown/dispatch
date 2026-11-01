@@ -30,6 +30,7 @@ class HomeScreen extends StatelessWidget {
     final Logger log = Logger('HomeScreen');
     hierarchicalLoggingEnabled = true;
 
+    // FIXME use ListenableBuilder instead of FutureBuilder (e.g. see AllUnitsScreen)
     return FutureBuilder(
       future: Future.wait([
         singleEventScreenViewModel.events,
