@@ -5,10 +5,17 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../events/view_models/all_events_view_model.dart';
 import '../../unit/unit_status_colour.dart';
+import '../../unit/view_models/units_view_model.dart';
+import '../../unit/widgets/unit_context_menu.dart';
 
 final class UnitMapMarker {
-  const UnitMapMarker({required this._unit});
+  const UnitMapMarker({
+    required this._unit,
+    required this._eventsViewModel,
+    required this._unitsViewModel,
+  });
 
   final double height = 60;
 
@@ -43,42 +50,48 @@ final class UnitMapMarker {
     VehicleType.coResponder => 'assets/images/rrv.png',
   };
 
-  Widget _body(BuildContext context) => GestureDetector(
-    onTap: _onTap,
-    onDoubleTap: _onDoubleTap,
-    child: Container(
-      // height: 100,
-      // width: 80,
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Gap(4),
-          Container(
-            color: _unit.status.backgroundColour,
-            child: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Text(
-                _unit.callsign,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: _unit.status.textColour,
+  Widget _body(BuildContext context) => UnitContextMenuRegion(
+    unit: _unit,
+    eventsViewModel: _eventsViewModel,
+    unitsViewModel: _unitsViewModel,
+    child: GestureDetector(
+      // onSecondaryTap: _onRightClick,
+      onTap: _onTap,
+      onDoubleTap: _onDoubleTap,
+      child: Container(
+        // height: 100,
+        // width: 80,
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Gap(4),
+            Container(
+              color: _unit.status.backgroundColour,
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Text(
+                  _unit.callsign,
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: _unit.status.textColour,
+                  ),
+                  textAlign: TextAlign.center,
+                  softWrap: false,
                 ),
-                textAlign: TextAlign.center,
-                softWrap: false,
               ),
             ),
-          ),
 
-          // Gap(4),
-          Image.asset(
-            _iconAsset,
-            height: 35,
-            // scale: 0.5,
-            width: 50,
-            // scale: 0.2,
-          ),
-        ],
+            // Gap(4),
+            Image.asset(
+              _iconAsset,
+              height: 35,
+              // scale: 0.5,
+              width: 50,
+              // scale: 0.2,
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -91,4 +104,8 @@ final class UnitMapMarker {
     debugPrint('Tapped map marker for ${_unit.callsign}');
     // _viewModel.updateUnit(_unit);
   }
+
+  final AllEventsViewModel _eventsViewModel;
+
+  final UnitsViewModel _unitsViewModel;
 }

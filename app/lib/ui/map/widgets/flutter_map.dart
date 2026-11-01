@@ -1,9 +1,11 @@
+import 'package:dispatch/ui/unit/view_models/units_view_model.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/location/scas_locations.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../../ui/events/view_models/all_events_view_model.dart';
 import '../../events/view_models/single_event_screen_viewmodel.dart';
 import 'event_map_marker.dart';
 import 'map.dart';
@@ -14,13 +16,17 @@ class FlutterMapPage extends StatelessWidget {
     super.key,
     required this.events,
     required this.units,
+    required this.eventsViewModel,
     required this.singleEventScreenViewModel,
+    required this.unitsViewModel,
     required this.showAmbulanceStations,
     required this.showEOCs,
   });
 
   /// The [Event]s that will be displayed on the map.
   final List<Event> events;
+
+  final AllEventsViewModel eventsViewModel;
 
   final SingleEventScreenViewModel singleEventScreenViewModel;
 
@@ -45,8 +51,16 @@ class FlutterMapPage extends StatelessWidget {
   final bool showEOCs;
 
   List<Marker> unitMarkers(BuildContext context) => units
-      .map((Unit unit) => UnitMapMarker(unit: unit).marker(context))
+      .map(
+        (Unit unit) => UnitMapMarker(
+          unit: unit,
+          eventsViewModel: eventsViewModel,
+          unitsViewModel: unitsViewModel,
+        ).marker(context),
+      )
       .toList();
+
+  final UnitsViewModel unitsViewModel;
 
   @override
   Widget build(BuildContext context) {
