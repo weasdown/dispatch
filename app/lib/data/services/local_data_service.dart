@@ -1,6 +1,4 @@
-// Copyright 2024 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+import 'dart:math';
 
 import 'package:latlong2/latlong.dart';
 
@@ -8,14 +6,67 @@ import '../../domain/models/event/event.dart';
 import '../../domain/models/event/noc.dart';
 import '../../domain/models/event/remark.dart';
 import '../../domain/models/location/address.dart';
+import '../../domain/models/person/crew_member.dart';
 import '../../domain/models/person/patient.dart';
 import '../../domain/models/person/user.dart';
 import '../../domain/models/unit/unit.dart';
 import '../../domain/models/unit/unit_status.dart';
 
 class LocalDataService {
-  LocalDataService() : _events = _defaultEvents, _units = _defaultUnits {
+  LocalDataService()
+    : _events = _defaultEvents,
+      _units = _defaultUnits,
+      _crewMembers = _defaultCrewMembers {
     _setInitialEventUnitAllocations();
+  }
+
+  List<CrewMember> get crewMembers => _crewMembers;
+  final List<CrewMember> _crewMembers;
+
+  /// A default list of crew members who can be crewed on units.
+  static List<CrewMember> get _defaultCrewMembers {
+    List<CrewMember> crewMembers = _generateCrewMembers();
+    crewMembers = [
+      CrewMember(name: 'Kacper Thompson', esr: 30554875),
+      CrewMember(name: 'Dave Lavender', esr: 30188217),
+      CrewMember(name: 'Bonnie Smith', esr: 23121051),
+      CrewMember(name: 'Gus Enfield', esr: 21547762),
+      CrewMember(name: 'Guy Robertson', esr: 29852687),
+      CrewMember(name: 'Dave Baker', esr: 31190545),
+      CrewMember(name: 'Hermione Somerset', esr: 35380046),
+      CrewMember(name: 'Mary Western', esr: 23079010),
+      CrewMember(name: 'Dave Maxwell', esr: 24735435),
+      CrewMember(name: 'James Heath', esr: 35027425),
+      CrewMember(name: 'John Neal', esr: 35061788),
+      CrewMember(name: 'Dave Rose', esr: 28170436),
+      CrewMember(name: 'Monica Fernandez', esr: 22757178),
+      CrewMember(name: 'James Mitchell', esr: 30283198),
+      CrewMember(name: 'Harry Willis', esr: 29922268),
+      CrewMember(name: 'Elizabeth Bell', esr: 39168515),
+      CrewMember(name: 'Paul Harman', esr: 27295772),
+      CrewMember(name: 'Paul Jones', esr: 25831499),
+      CrewMember(name: 'Sarah Thompson', esr: 31595474),
+      CrewMember(name: 'Dave Lavender', esr: 36635661),
+      CrewMember(name: 'Hannah Smith', esr: 26013173),
+      CrewMember(name: 'Emma Enfield', esr: 29367603),
+      CrewMember(name: 'Hannah Davies', esr: 35875222),
+      CrewMember(name: 'Mary Baker', esr: 20321294),
+      CrewMember(name: 'Amy Somerset', esr: 39224888),
+      CrewMember(name: 'Olivia Western', esr: 31817929),
+      CrewMember(name: 'Amy Maxwell', esr: 25700325),
+      CrewMember(name: 'Olivia Neal', esr: 38539751),
+      CrewMember(name: 'Lara Rose', esr: 28214012),
+      CrewMember(name: 'Phil Gardner', esr: 33178751),
+      CrewMember(name: 'Paul Fernandez', esr: 21340660),
+      CrewMember(name: 'Harry Mitchell', esr: 37658476),
+      CrewMember(name: 'Sarah Jones', esr: 30871949),
+    ];
+    // print(
+    //   '\n\n*************** Built ${crewMembers.length} crew members ***************',
+    // );
+    // print(crewMembers.join('\n'));
+
+    return crewMembers;
   }
 
   /// A default list of events.
@@ -179,6 +230,120 @@ class LocalDataService {
   final List<Event> _events;
 
   List<Event> get events => _events;
+
+  /// Generates a random ESR number.
+  static ESR _generateESR() {
+    final Random random = Random();
+    final int firstDigit = random.nextBool() ? 2 : 3;
+    String esrString = firstDigit.toString();
+    // Fill the rest of the eight digits with random digits.
+    while (esrString.length < ESRNumberOfDigits.numberOfDigits) {
+      esrString += random.nextInt(10).toString();
+    }
+
+    return int.parse(esrString);
+  }
+
+  // TODO refine _generateCrewMembers() in terms of name distribution, so it can be used instead of hard-coded values in _defaultCrewMembers
+  static List<CrewMember> _generateCrewMembers(
+    // [
+    //   int numCrewMembersRequired = 20,
+    // ]
+  ) {
+    final Random random = Random();
+    final List<String> firstNames = [
+      // Female
+      'Olivia', 'Mary', 'Hannah', 'Amy', 'Sarah', 'Emma', 'Bonnie', 'Lara',
+      'Hermione', 'Elizabeth', 'Monica',
+
+      // Male
+      'John', 'James', 'Dave', 'Will', 'Paul', 'Harry', 'Gus', 'Phil', 'Kacper',
+    ];
+    final List<String> surnames = [
+      'Thompson',
+      'Lavender',
+      'Smith',
+      'Enfield',
+      'Robertson',
+      'Davies',
+      'Baker',
+      'Somerset',
+      'Western',
+      'Maxwell',
+      'Heath',
+      'Neal',
+      'Rose',
+      'Gardner',
+      'Fernandez',
+      'Mitchell',
+      'Willis',
+      'Bell',
+      'Harman',
+      'Jones',
+    ];
+    // final int maxLength = surnames.length - 1;
+    //
+    // if (numCrewMembersRequired > maxLength) {
+    //   throw ArgumentError.value(
+    //     numCrewMembersRequired,
+    //     'numCrewMembersRequired',
+    //     'can only generate up to $maxLength crew members as ',
+    //   );
+    // }
+
+    // // Start of filtered surnames section
+    //
+    // List<CrewMember> randomCrewMembers = [];
+    // // Track use of surnames to avoid overusing any.
+    // final Map<String, int> usedSurnames = Map.fromEntries(
+    //   surnames.map((String surname) => MapEntry(surname, 0)),
+    // );
+    // while (randomCrewMembers.length < numCrewMembersRequired) {
+    //   final String randomFirstName =
+    //       firstNames[random.nextInt(firstNames.length)];
+    //   String randomSurname = surnames[random.nextInt(surnames.length)];
+    //   // TODO rather than limiting by absolute number of uses, limit by proportion of the total.
+    //   // Don't use surnames more than twice.
+    //   while (usedSurnames[randomSurname]! > 2) {
+    //     // print(
+    //     //   'Surname $randomSurname has been used ${usedSurnames[randomSurname]} times - getting another',
+    //     // );
+    //     randomSurname = surnames[random.nextInt(surnames.length)];
+    //     // print('Trying $randomSurname instead');
+    //   }
+    //   usedSurnames[randomSurname] = usedSurnames[randomSurname]! + 1;
+    //
+    //   final CrewMember newCrewMember = CrewMember(
+    //     name: '$randomFirstName $randomSurname',
+    //     esr: _generateESR(),
+    //   );
+    //   randomCrewMembers.add(newCrewMember);
+    // }
+    //
+    // // End of filtered surnames section
+
+    final List<CrewMember> randomCrewMembers = List<CrewMember>.generate(
+      // numCrewMembersRequired,
+      surnames.length,
+      (int index) {
+        final String randomFirstName =
+            firstNames[random.nextInt(firstNames.length)];
+        final String surname = surnames[index];
+
+        return CrewMember(
+          name: '$randomFirstName $surname',
+          esr: _generateESR(),
+        );
+      },
+    );
+
+    // print(
+    //   '\n\n *************** Built ${randomCrewMembers.length} random crew members: ***************',
+    // );
+    // print(randomCrewMembers.join('\n'));
+
+    return randomCrewMembers;
+  }
 
   Patient getPatient() => _defaultPatient;
 
