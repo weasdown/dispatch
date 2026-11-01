@@ -24,6 +24,11 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
 
   List<Unit> _units = [];
 
+  bool _sortAscending = true;
+
+  // TODO remove hard-coded value - build columns similarly to in AllEventsScreen instead
+  static const int statusColumnIndex = 5;
+
   @override
   void dispose() {
     timer.cancel();
@@ -69,6 +74,12 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
 
             if (widget.viewModel.loadUnits.completed) {
               _units = widget.viewModel.units;
+              // Sort the units in ascending order by unit status
+              _units.sort(
+                (a, b) => _sortAscending
+                    ? a.status.compareTo(b.status)
+                    : b.status.compareTo(a.status),
+              );
             }
 
             // If existing booking fails to load, tap to go /home
@@ -88,10 +99,10 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
           },
           // TODO add toolbar with optional filters e.g. to only show C1-capable units (i.e. non-patient committed and not assigned to C1/L1), or just CFRs.
           child: DataTable(
-            sortAscending: true,
+            sortAscending: _sortAscending,
             // TODO implement sorting by status then by Time
             // TODO implement user-settable sorting by multiple fields
-            sortColumnIndex: 4, // Sort by Status
+            sortColumnIndex: statusColumnIndex, // Sort by Status
             columns: <DataColumn>[
               // Callsign
               DataColumn(label: Text('Callsign')),
@@ -109,8 +120,15 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
                 onSort: (int sortColumnIndex, bool ascending) {
                   // FIXME fix hard-coded value for Status column's index
                   debugPrint('sortColumnIndex: $sortColumnIndex');
-                  if (sortColumnIndex == 4) {
-                    _units.sort((a, b) => a.status.compareTo(b.status));
+                  setState(() {
+                    _sortAscending = !_sortAscending;
+                  });
+                  if (sortColumnIndex == statusColumnIndex) {
+                    _units.sort(
+                      (a, b) => _sortAscending
+                          ? a.status.compareTo(b.status)
+                          : b.status.compareTo(a.status),
+                    );
                   }
                 },
               ),
@@ -124,7 +142,7 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
                 columnWidth: FlexColumnWidth(),
               ),
             ],
-            rows: widget.viewModel.units.map((Unit unit) {
+            rows: _units.map((Unit unit) {
               final UnitStatus status = unit.status;
               final Color statusTextColour = status.textColour;
               Text textColouredByStatus(String text) =>
