@@ -6,7 +6,8 @@ import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
 // import '../../map/widgets/map.dart';
 import '../../single_event_screen/view_models/single_event_screen_viewmodel.dart';
-import '../../single_event_screen/widgets/single_event_screen.dart';
+import '../../unit/view_models/units_view_model.dart';
+import '../../unit/widgets/all_units_screen.dart';
 import '../view_models/home_viewmodel.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -14,11 +15,14 @@ class HomeScreen extends StatelessWidget {
     super.key,
     required this.homeViewModel,
     required this.singleEventScreenViewModel,
+    required this.unitsViewModel,
   });
 
   final HomeViewModel homeViewModel;
 
   final SingleEventScreenViewModel singleEventScreenViewModel;
+
+  final UnitsViewModel unitsViewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +59,7 @@ class HomeScreen extends StatelessWidget {
               // final List<Event> allEvents = eventsResult.value;
               // final List<Unit> allUnits = unitsResult.value;
 
+              // TODO convert this row of flexibles into tabs, with one tab being displayed on narrow screens, or two tabs side by side on laptop-sized screens.
               return Row(
                 children: [
                   // Flexible(
@@ -66,11 +71,15 @@ class HomeScreen extends StatelessWidget {
                   //   ),
                   // ),
                   // VerticalDivider(width: 3, thickness: 3),
+                  // Flexible(
+                  //   flex: 1,
+                  //   child: SingleEventScreen(
+                  //     viewModel: singleEventScreenViewModel,
+                  //   ),
+                  // ),
                   Flexible(
                     flex: 1,
-                    child: SingleEventScreen(
-                      viewModel: singleEventScreenViewModel,
-                    ),
+                    child: AllUnitsScreen(viewModel: unitsViewModel),
                   ),
                 ],
               );
