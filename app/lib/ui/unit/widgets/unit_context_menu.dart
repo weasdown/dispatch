@@ -26,9 +26,7 @@ final class UnitContextMenuRegion extends StatelessWidget {
           label: 'Dispatch ${unit.callsign}',
           onPressed: () {
             ContextMenuController.removeAny();
-            _log.info(
-              'Triggering dispatching of ${unit.callsign} via context menu',
-            );
+            _log.info('Dispatching of ${unit.callsign} via context menu');
             // TODO replace snackbar with actual dispatch function
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Dispatching ${unit.callsign}')),
