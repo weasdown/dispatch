@@ -27,12 +27,11 @@ final class UnitContextMenuRegion extends StatelessWidget {
   List<ContextMenuButtonItem> items(BuildContext context) =>
       <ContextMenuButtonItem>[
         // Dispatch unit
-        ContextMenuButtonItem(
+        UnitContextMenuButtonItem(
           label: 'Dispatch ${unit.callsign}',
           onPressed: () {
-            ContextMenuController.removeAny();
             _log.info('Dispatching ${unit.callsign} via context menu');
-            // singleEventScreenViewModel.dispatchUnit(unit);
+            singleEventScreenViewModel.dispatchUnit(unit);
           },
         ),
       ];
