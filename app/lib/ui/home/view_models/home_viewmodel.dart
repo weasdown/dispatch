@@ -2,8 +2,8 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
 import '../../../domain/models/event/event.dart';
-import '../../event/priority_colour.dart';
 import '../../../utils/result.dart';
+import '../../events/priority_colour.dart';
 
 class HomeViewModel extends ChangeNotifier {
   HomeViewModel({

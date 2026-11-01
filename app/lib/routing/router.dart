@@ -8,10 +8,11 @@ import 'package:provider/provider.dart';
 
 import '../../../ui/unit/view_models/units_view_model.dart';
 import '../data/repositories/auth/auth_repository.dart';
+import '../ui/events/view_models/all_events_view_model.dart';
+import '../ui/events/view_models/single_event_screen_viewmodel.dart';
+import '../ui/events/widgets/single_event_screen.dart';
 import '../ui/home/view_models/home_viewmodel.dart';
 import '../ui/home/widgets/home_screen.dart';
-import '../ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
-import '../ui/single_event_screen/widgets/single_event_screen.dart';
 import 'routes.dart';
 
 /// Top go_router entry point.
@@ -48,6 +49,9 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
             eventRepository: context.read(),
             // eventModeRepository: context.read(),
             unitRepository: context.read(),
+          ),
+          allEventsViewModel: AllEventsViewModel(
+            eventRepository: context.read(),
           ),
           unitsViewModel: UnitsViewModel(unitRepository: context.read()),
         );

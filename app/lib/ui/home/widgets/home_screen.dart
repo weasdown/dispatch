@@ -4,8 +4,10 @@ import 'package:material_ui/material_ui.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
-// import '../../map/widgets/map.dart';
-import '../../single_event_screen/view_models/single_event_screen_viewmodel.dart';
+import '../../events/view_models/all_events_view_model.dart';
+import '../../events/view_models/single_event_screen_viewmodel.dart';
+import '../../events/widgets/all_events_screen.dart';
+import '../../map/widgets/map.dart';
 import '../../unit/view_models/units_view_model.dart';
 import '../../unit/widgets/all_units_screen.dart';
 import '../view_models/home_viewmodel.dart';
@@ -15,8 +17,11 @@ class HomeScreen extends StatelessWidget {
     super.key,
     required this.homeViewModel,
     required this.singleEventScreenViewModel,
+    required this.allEventsViewModel,
     required this.unitsViewModel,
   });
+
+  final AllEventsViewModel allEventsViewModel;
 
   final HomeViewModel homeViewModel;
 
@@ -29,6 +34,7 @@ class HomeScreen extends StatelessWidget {
     final Logger log = Logger('HomeScreen');
     hierarchicalLoggingEnabled = true;
 
+    // FIXME use ListenableBuilder instead of FutureBuilder (e.g. see AllUnitsScreen)
     return FutureBuilder(
       future: Future.wait([
         singleEventScreenViewModel.events,
@@ -56,18 +62,22 @@ class HomeScreen extends StatelessWidget {
 
               log.fine('Events and units loaded successfully');
 
-              // final List<Event> allEvents = eventsResult.value;
-              // final List<Unit> allUnits = unitsResult.value;
-
               // TODO convert this row of flexibles into tabs, with one tab being displayed on narrow screens, or two tabs side by side on laptop-sized screens.
               return Row(
                 children: [
+                  Flexible(
+                    flex: 1,
+                    child: MapPage(
+                      singleEventScreenViewModel: singleEventScreenViewModel,
+                      events: eventsResult.value,
+                      units: unitsResult.value,
+                    ),
+                  ),
+                  VerticalDivider(width: 3, thickness: 3),
                   // Flexible(
                   //   flex: 1,
-                  //   child: MapPage(
-                  //     singleEventScreenViewModel: singleEventScreenViewModel,
-                  //     events: allEvents,
-                  //     units: allUnits,
+                  //   child: SingleEventScreen(
+                  //     viewModel: singleEventScreenViewModel,
                   //   ),
                   // ),
                   // VerticalDivider(width: 3, thickness: 3),
@@ -76,6 +86,10 @@ class HomeScreen extends StatelessWidget {
                   //   child: SingleEventScreen(
                   //     viewModel: singleEventScreenViewModel,
                   //   ),
+                  // ),
+                  // Flexible(
+                  //   flex: 1,
+                  //   child: AllEventsScreen(viewModel: allEventsViewModel),
                   // ),
                   Flexible(
                     flex: 1,
@@ -90,41 +104,6 @@ class HomeScreen extends StatelessWidget {
             }
           },
     );
-
-    // // TODO remove commented code below to AllEventsScreen (not yet created)
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text(
-    //       'Events',
-    //       style: Theme.of(context).textTheme.headlineMedium,
-    //     ),
-    //   ),
-    //   drawer: NavigationDrawer(
-    //     children: [
-    //       DrawerHeader(child: Text('Drawer Header')),
-    //       Container(color: Colors.grey, child: Text('First item')),
-    //     ],
-    //   ),
-    //   body: Center(
-    //     child: Column(
-    //       children: [
-    //         ListenableBuilder(
-    //           listenable: widget.viewModel,
-    //           builder: (context, _) {
-    //             debugPrint(
-    //               'Number of events: ${widget.viewModel.events.length}',
-    //             );
-    //             return ListView(
-    //               padding: EdgeInsets.symmetric(horizontal: 20),
-    //               shrinkWrap: true,
-    //               children: widget.viewModel.eventTiles,
-    //             );
-    //           },
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }
 

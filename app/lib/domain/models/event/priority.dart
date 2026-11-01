@@ -1,5 +1,5 @@
 /// The priority assigned to an [Event].
-enum Priority implements Comparable {
+enum Priority implements Comparable<Priority> {
   /// Cat 1 / HCP/IFT Level 1
   zero(0),
 
@@ -37,13 +37,7 @@ enum Priority implements Comparable {
   /// Returns a value like a Comparator when comparing this to [other].
   /// That is, it returns a negative integer if this is ordered before [other], a positive integer if this is ordered after [other], and zero if this and [other] are ordered together.
   @override
-  int compareTo(other) {
-    if (other is! Priority) {
-      throw UnsupportedError(
-        'Cannot compare Priority $this against $other of type ${other.runtimeType}',
-      );
-    }
-
+  int compareTo(Priority other) {
     if (other.number == number) {
       return 0;
     }

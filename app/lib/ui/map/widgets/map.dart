@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
-import '../../single_event_screen/view_models/single_event_screen_viewmodel.dart';
+import '../../events/view_models/single_event_screen_viewmodel.dart';
 import 'flutter_map.dart';
 
 /// A page that displays a Google Maps map.

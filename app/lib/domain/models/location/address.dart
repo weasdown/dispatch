@@ -31,6 +31,16 @@ final class Address {
 
   final String? country;
 
+  String? get firstLine {
+    final Iterable<String> nonNullParts = [
+      flatNumberOrName,
+      buildingNumber,
+      buildingName,
+      street,
+    ].where((String? element) => element != null).cast<String>();
+    return nonNullParts.isEmpty ? null : nonNullParts.join(', ');
+  }
+
   // TODO define toString() override method
 
   // TODO implement Address.tryParse() static method
@@ -38,5 +48,16 @@ final class Address {
     throw UnimplementedError(
       'Address.tryParse() static method is not yet implemented',
     );
+  }
+
+  @override
+  String toString() {
+    final Iterable<String> nonNullParts = [
+      firstLine,
+      district,
+      townOrCity,
+      postcode,
+    ].where((String? element) => element != null).cast<String>();
+    return nonNullParts.isEmpty ? '' : nonNullParts.join(', ');
   }
 }

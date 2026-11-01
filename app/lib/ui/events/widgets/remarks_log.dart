@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/event/remark.dart';
-import '../../../ui/single_event_screen/view_models/single_event_screen_viewmodel.dart';
+import '../../../ui/events/view_models/single_event_screen_viewmodel.dart';
 
 class RemarksLog extends StatefulWidget {
   const RemarksLog({super.key, required this.event, required this.viewModel});

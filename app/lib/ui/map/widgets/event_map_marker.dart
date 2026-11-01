@@ -3,8 +3,8 @@ import 'package:latlong2/latlong.dart' as ll2;
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
-import '../../event/priority_colour.dart';
-import '../../single_event_screen/view_models/single_event_screen_viewmodel.dart';
+import '../../events/priority_colour.dart';
+import '../../events/view_models/single_event_screen_viewmodel.dart';
 
 class EventMapMarker extends StatelessWidget {
   const EventMapMarker({

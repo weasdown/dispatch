@@ -311,8 +311,11 @@ class Event {
 
 enum NumberOfPatients { none, one, multiple }
 
-class EventID {
+class EventID implements Comparable<EventID> {
   EventID({required this.id}) : date = DateTime.now();
+
+  @override
+  int compareTo(EventID other) => _numberPart.compareTo(other._numberPart);
 
   final DateTime date;
 
@@ -321,6 +324,8 @@ class EventID {
 
   /// Makes a four-digit number from the [id] by adding any required leading zeros.
   String get lastFour => id.toString().padLeft(4, '0');
+
+  int get _numberPart => int.parse(toString().substring(1));
 
   @override
   String toString() {
