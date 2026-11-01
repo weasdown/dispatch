@@ -4,9 +4,11 @@ import 'package:material_ui/material_ui.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
-// import '../../map/widgets/map.dart';
+import '../../events/view_models/all_events_view_model.dart';
 import '../../events/view_models/single_event_screen_viewmodel.dart';
-import '../../events/widgets/single_event_screen.dart';
+import '../../events/widgets/all_events_screen.dart';
+// import '../../events/widgets/single_event_screen.dart';
+import '../../map/widgets/map.dart';
 import '../view_models/home_viewmodel.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -14,7 +16,10 @@ class HomeScreen extends StatelessWidget {
     super.key,
     required this.homeViewModel,
     required this.singleEventScreenViewModel,
+    required this.allEventsViewModel,
   });
+
+  final AllEventsViewModel allEventsViewModel;
 
   final HomeViewModel homeViewModel;
 
@@ -52,25 +57,27 @@ class HomeScreen extends StatelessWidget {
 
               log.fine('Events and units loaded successfully');
 
-              // final List<Event> allEvents = eventsResult.value;
-              // final List<Unit> allUnits = unitsResult.value;
-
               return Row(
                 children: [
+                  Flexible(
+                    flex: 1,
+                    child: MapPage(
+                      singleEventScreenViewModel: singleEventScreenViewModel,
+                      events: eventsResult.value,
+                      units: unitsResult.value,
+                    ),
+                  ),
+                  VerticalDivider(width: 3, thickness: 3),
                   // Flexible(
                   //   flex: 1,
-                  //   child: MapPage(
-                  //     singleEventScreenViewModel: singleEventScreenViewModel,
-                  //     events: allEvents,
-                  //     units: allUnits,
+                  //   child: SingleEventScreen(
+                  //     viewModel: singleEventScreenViewModel,
                   //   ),
                   // ),
                   // VerticalDivider(width: 3, thickness: 3),
                   Flexible(
                     flex: 1,
-                    child: SingleEventScreen(
-                      viewModel: singleEventScreenViewModel,
-                    ),
+                    child: AllEventsScreen(viewModel: allEventsViewModel),
                   ),
                 ],
               );
