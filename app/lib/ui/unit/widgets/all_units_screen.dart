@@ -74,6 +74,7 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
             }
             return child!;
           },
+          // TODO add toolbar with optional filters e.g. to only show C1-capable units (i.e. non-patient committed and not assigned to C1/L1), or just CFRs.
           child: DataTable(
             sortAscending: true,
             // TODO implement sorting by status then by Time
