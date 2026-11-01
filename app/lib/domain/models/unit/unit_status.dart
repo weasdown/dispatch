@@ -31,14 +31,54 @@ enum UnitStatus implements Comparable<UnitStatus> {
 
   final String abbreviation;
 
-  // TODO implement UnitStatus.compareTo() to enable sorting of units by status
   /// Unit statuses are sorted as follows:
   /// - First: available statuses, with VC first
   /// - Second: en route statuses, with DP before MO
   /// - Patient committed statuses, in order of real-life flow (e.g. AS before AH)
   @override
   int compareTo(UnitStatus other) {
-    throw UnimplementedError();
+    // The definitive sorting of unit status options.
+    final List<UnitStatus> sorted = [
+      // Available
+      UnitStatus.vc,
+      UnitStatus.ra,
+      UnitStatus.ab,
+      UnitStatus.oneR,
+      UnitStatus.af,
+      UnitStatus.ak,
+      UnitStatus.am,
+      UnitStatus.av,
+
+      // Standby
+      UnitStatus.ds,
+      UnitStatus.ms,
+      UnitStatus.sb,
+
+      // En route
+      UnitStatus.dp,
+      UnitStatus.mo,
+      UnitStatus.rv,
+
+      // Patient committed
+      UnitStatus.as,
+      UnitStatus.rt,
+      UnitStatus.nt,
+      UnitStatus.wp,
+      UnitStatus.ls,
+      UnitStatus.ah,
+      UnitStatus.ho,
+
+      UnitStatus.pd,
+
+      UnitStatus.os,
+    ];
+
+    assert(
+      sorted.length == UnitStatus.values.length,
+      'sorted list must have exactly the same length as the number of UnitStatus options',
+    );
+
+    return sorted.indexOf(this).compareTo(sorted.indexOf(other));
   }
 
   bool get isPatientCommitted => switch (this) {
