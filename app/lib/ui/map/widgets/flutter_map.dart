@@ -45,7 +45,7 @@ class FlutterMapPage extends StatelessWidget {
   final bool showEOCs;
 
   List<Marker> unitMarkers(BuildContext context) => units
-      .map((Unit unit) => UnitMapMarker(unit: unit).flutterMapMarker(context))
+      .map((Unit unit) => UnitMapMarker(unit: unit).marker(context))
       .toList();
 
   @override

@@ -18,8 +18,8 @@ class UnitMapMarker extends StatelessWidget {
 
   final double width = 52;
 
-  Marker flutterMapMarker(BuildContext context) => Marker(
-    point: ll2.LatLng(lat, lng),
+  Marker marker(BuildContext context) => Marker(
+    point: LatLng(lat, lng),
     height: height,
     width: width,
     child: _body(context),
