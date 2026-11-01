@@ -9,8 +9,8 @@ import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../unit/unit_status_colour.dart';
 
-class UnitMapMarker extends StatelessWidget {
-  const UnitMapMarker({super.key, required this._unit});
+final class UnitMapMarker {
+  const UnitMapMarker({required this._unit});
 
   final double height = 60;
 
@@ -92,13 +92,6 @@ class UnitMapMarker extends StatelessWidget {
   void _onTap() {
     debugPrint('Tapped AdvancedMarker for ${_unit.callsign}');
     // _viewModel.updateUnit(_unit);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final String icon = _iconAsset;
-    debugPrint('Unit icon: $icon');
-    return _body(context);
   }
 }
 
