@@ -11,7 +11,7 @@ import 'event_map_marker.dart';
 import 'map.dart';
 import 'unit_map_marker.dart';
 
-class FlutterMapPage extends StatelessWidget {
+class FlutterMapPage extends StatefulWidget {
   const FlutterMapPage({
     super.key,
     required this.events,
@@ -33,40 +33,56 @@ class FlutterMapPage extends StatelessWidget {
   /// The [Unit]s that are currently in the SCAS fleet.
   final List<Unit> units;
 
+  final bool showAmbulanceStations;
+
+  final bool showEOCs;
+
+  final UnitsViewModel unitsViewModel;
+
+  @override
+  State<FlutterMapPage> createState() => _FlutterMapPageState();
+}
+
+class _FlutterMapPageState extends State<FlutterMapPage> {
+  final ContextMenuController contextMenuController = ContextMenuController();
+
   List<Marker> get eventMarkers {
-    final List<Event> nonNullLocations = events
+    final List<Event> nonNullLocations = widget.events
         .where((Event event) => event.location != null)
         .toList();
     final List<Marker> markers = nonNullLocations.map((Event event) {
       return EventMapMarker(
         event: event,
-        viewModel: singleEventScreenViewModel,
+        viewModel: widget.singleEventScreenViewModel,
       ).flutterMapMarker;
     }).toList();
     return markers;
   }
 
-  final bool showAmbulanceStations;
-
-  final bool showEOCs;
-
-  List<Marker> unitMarkers(BuildContext context) => units
+  List<Marker> unitMarkers(BuildContext context) => widget.units
       .map(
         (Unit unit) => UnitMapMarker(
           unit: unit,
-          eventsViewModel: eventsViewModel,
-          unitsViewModel: unitsViewModel,
+          menuController: contextMenuController,
+          eventsViewModel: widget.eventsViewModel,
+          unitsViewModel: widget.unitsViewModel,
+          singleEventScreenViewModel: widget.singleEventScreenViewModel,
         ).marker(context),
       )
       .toList();
 
-  final UnitsViewModel unitsViewModel;
-
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
-      options: MapOptions(initialCenter: MapPage.scasCentre, initialZoom: 9),
-      children: [
+      options: MapOptions(
+        initialCenter: MapPage.scasCentre,
+        initialZoom: 9,
+        onTap: (tapPosition, point) {
+          debugPrint('MapOptions onTap');
+          contextMenuController.remove();
+        },
+      ),
+      children: <Widget>[
         // Base layer
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // For demonstration only
@@ -81,7 +97,7 @@ class FlutterMapPage extends StatelessWidget {
 
         // EOCs layer
         MarkerLayer(
-          markers: showEOCs
+          markers: widget.showEOCs
               ? EmergencyOperationsCentre.values
                     .map((EmergencyOperationsCentre eoc) => eoc.marker)
                     .toList()
@@ -90,7 +106,7 @@ class FlutterMapPage extends StatelessWidget {
 
         // Ambulance Stations layer
         MarkerLayer(
-          markers: showAmbulanceStations
+          markers: widget.showAmbulanceStations
               ? AmbulanceStation.values
                     .map((AmbulanceStation station) => station.marker)
                     .toList()

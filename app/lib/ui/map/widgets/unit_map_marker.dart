@@ -1,7 +1,7 @@
+import 'package:dispatch/ui/events/view_models/single_event_screen_viewmodel.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:gap/gap.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
@@ -14,8 +14,10 @@ import '../../unit/widgets/unit_context_menu.dart';
 final class UnitMapMarker {
   const UnitMapMarker({
     required this._unit,
+    required this.menuController,
     required this._eventsViewModel,
     required this._unitsViewModel,
+    required this._singleEventScreenViewModel,
   });
 
   final double height = 60;
@@ -23,6 +25,8 @@ final class UnitMapMarker {
   final Unit _unit;
 
   final double width = 52;
+
+  final ContextMenuController menuController;
 
   Marker marker(BuildContext context) => Marker(
     point: LatLng(lat, lng),
@@ -36,12 +40,6 @@ final class UnitMapMarker {
 
   /// Longitude.
   double get lng => _unit.location.longitude;
-
-  Logger get _log {
-    final Logger log = Logger('UnitMapMarker (${_unit.callsign})');
-    log.level = Level.ALL;
-    return log;
-  }
 
   // // FIXME change _viewModel to correct class and use for setting selected unit
   // final SingleEventScreenViewModel _viewModel;
@@ -59,60 +57,50 @@ final class UnitMapMarker {
 
   Widget _body(BuildContext context) => UnitContextMenuRegion(
     unit: _unit,
+    controller: menuController,
     eventsViewModel: _eventsViewModel,
     unitsViewModel: _unitsViewModel,
-    child: GestureDetector(
-      // onSecondaryTap: _onRightClick,
-      onTap: _onTap,
-      onDoubleTap: _onDoubleTap,
-      child: Container(
-        // height: 100,
-        // width: 80,
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Gap(4),
-            Container(
-              color: _unit.status.backgroundColour,
-              child: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Text(
-                  _unit.callsign,
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: _unit.status.textColour,
-                  ),
-                  textAlign: TextAlign.center,
-                  softWrap: false,
+    singleEventScreenViewModel: _singleEventScreenViewModel,
+    child: Container(
+      // height: 100,
+      // width: 80,
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Gap(4),
+          Container(
+            color: _unit.status.backgroundColour,
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Text(
+                _unit.callsign,
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: _unit.status.textColour,
                 ),
+                textAlign: TextAlign.center,
+                softWrap: false,
               ),
             ),
+          ),
 
-            // Gap(4),
-            Image.asset(
-              _iconAsset,
-              height: 35,
-              // scale: 0.5,
-              width: 50,
-              // scale: 0.2,
-            ),
-          ],
-        ),
+          // Gap(4),
+          Image.asset(
+            _iconAsset,
+            height: 35,
+            // scale: 0.5,
+            width: 50,
+            // scale: 0.2,
+          ),
+        ],
       ),
     ),
   );
 
-  void _onDoubleTap() {
-    _log.fine('Double tapped map marker for ${_unit.callsign}');
-  }
-
-  void _onTap() {
-    _log.fine('Tapped map marker for ${_unit.callsign}');
-    // _viewModel.updateUnit(_unit);
-  }
-
   final AllEventsViewModel _eventsViewModel;
+
+  final SingleEventScreenViewModel _singleEventScreenViewModel;
 
   final UnitsViewModel _unitsViewModel;
 }
