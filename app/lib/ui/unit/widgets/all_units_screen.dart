@@ -72,32 +72,34 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (widget.viewModel.loadUnits.completed) {
-              _units = widget.viewModel.units;
-              // Sort the units in ascending order by unit status
-              _units.sort(
-                (a, b) => _sortAscending
-                    ? a.status.compareTo(b.status)
-                    : b.status.compareTo(a.status),
-              );
-            }
+            switch (widget.viewModel.loadUnits.result) {
+              case null:
+                return const Center(child: CircularProgressIndicator());
 
-            // If existing booking fails to load, tap to go /home
-            if (widget.viewModel.loadUnits.error) {
-              return Center(
-                child: ErrorWidget.withDetails(
-                  message: 'Error while loading units',
-                  error: FlutterError(
-                    (widget.viewModel.loadUnits.result as Error<List<Unit>>)
-                        .error
-                        .toString(),
+              case Ok<void> _:
+                _units = widget.viewModel.units;
+                // Sort the units in ascending order by unit status
+                _units.sort(
+                  (a, b) => _sortAscending
+                      ? a.status.compareTo(b.status)
+                      : b.status.compareTo(a.status),
+                );
+                return child!;
+
+              case Error<void> _:
+                return Center(
+                  child: ErrorWidget.withDetails(
+                    message: 'Error while loading units',
+                    error: FlutterError(
+                      (widget.viewModel.loadUnits.result as Error<List<Unit>>)
+                          .error
+                          .toString(),
+                    ),
                   ),
-                ),
-              );
+                );
             }
-            return child!;
           },
-          // TODO add toolbar with optional filters e.g. to only show C1-capable units (i.e. non-patient committed and not assigned to C1/L1), or just CFRs.
+          // TODO add toolbar with optional filters e.g. to only show C1-capable units (i.e. non-patient committed and not assigned to C1/L1), or just CFRs, or exclude HEMS units.
           child: DataTable(
             sortAscending: _sortAscending,
             // TODO implement sorting by status then by Time
