@@ -2,6 +2,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../event/event.dart';
 import '../location/scas_locations.dart';
+import '../person/crew_member.dart';
 import 'meal_break_window.dart';
 import 'unit_status.dart';
 
@@ -11,7 +12,8 @@ class Unit {
     required this.callsign,
     required this.location,
     this._vehicleType = VehicleType.dca,
-  }) {
+    required this._personnel,
+  }) : assert(_personnel.isNotEmpty) {
     _history.add(
       UnitHistoryEntry(unit: this, status: UnitStatus.pd, time: DateTime.now()),
     );
@@ -73,6 +75,12 @@ class Unit {
 
   MealBreakWindow? get mealBreakWindow => _mealBreakWindow;
   MealBreakWindow? _mealBreakWindow;
+
+  /// The number of crew members currently logged onto the unit.
+  int get numberOfPersonnel => _personnel.length;
+
+  List<CrewMember> get personnel => _personnel;
+  final List<CrewMember> _personnel;
 
   DateTime? get shiftStart => _shiftStart;
   DateTime? _shiftStart;
