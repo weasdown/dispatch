@@ -85,8 +85,8 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
               DataColumn(label: Text('Callsign')),
               // Type (vehicle type)
               DataColumn(label: Text('Type')),
-              // // TODO implement display of number of personnel on vehicle
-              // DataColumn(label: Text('# P')),
+              // Number of personnel on vehicle
+              DataColumn(label: Text('# P')),
               // MBW
               DataColumn(label: Text('MBW')),
               // EOS
@@ -137,6 +137,10 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
                   DataCell(textColouredByStatus(unit.callsign)),
                   // Vehicle type
                   DataCell(textColouredByStatus(unit.vehicleType.abbreviation)),
+                  // Number of personnel on vehicle
+                  DataCell(
+                    textColouredByStatus(unit.numberOfPersonnel.toString()),
+                  ),
                   // MBW
                   DataCell(
                     textColouredByStatus(
