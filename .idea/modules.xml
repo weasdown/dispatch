@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/dispatch.iml" filepath="$PROJECT_DIR$/dispatch.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android/dispatch_android.iml" filepath="$PROJECT_DIR$/android/dispatch_android.iml" />
     </modules>
   </component>
 </project>
