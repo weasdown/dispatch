@@ -6,8 +6,8 @@ import '../../../domain/models/event/event.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
 
-class AllEventsVewModel extends ChangeNotifier {
-  AllEventsVewModel({required this._eventRepository}) {
+class AllEventsViewModel extends ChangeNotifier {
+  AllEventsViewModel({required this._eventRepository}) {
     loadEvents = Command0(_loadEvents)..execute();
   }
 

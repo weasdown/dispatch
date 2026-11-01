@@ -12,7 +12,7 @@ class AllEventsScreen extends StatefulWidget {
   const AllEventsScreen({super.key, required this.viewModel});
 
   // TODO consider merging AllEventsVewModel with SingleEventScreenViewModel and renaming to EventsViewModel or similar.
-  final AllEventsVewModel viewModel;
+  final AllEventsViewModel viewModel;
 
   @override
   State<AllEventsScreen> createState() => _AllEventsScreenState();
