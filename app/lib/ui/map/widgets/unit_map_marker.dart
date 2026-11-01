@@ -84,11 +84,11 @@ final class UnitMapMarker {
   );
 
   void _onDoubleTap() {
-    debugPrint('Double tapped AdvancedMarker for ${_unit.callsign}');
+    debugPrint('Double tapped map marker for ${_unit.callsign}');
   }
 
   void _onTap() {
-    debugPrint('Tapped AdvancedMarker for ${_unit.callsign}');
+    debugPrint('Tapped map marker for ${_unit.callsign}');
     // _viewModel.updateUnit(_unit);
   }
 }
