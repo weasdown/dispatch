@@ -1,4 +1,3 @@
-import 'package:dispatch/ui/unit/view_models/units_view_model.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -6,6 +5,7 @@ import '../../../domain/models/event/event.dart';
 import '../../../domain/models/location/scas_locations.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../ui/events/view_models/all_events_view_model.dart';
+import '../../../ui/unit/view_models/units_view_model.dart';
 import '../../events/view_models/single_event_screen_viewmodel.dart';
 import 'event_map_marker.dart';
 import 'map.dart';
