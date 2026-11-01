@@ -1,6 +1,7 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:gap/gap.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
@@ -35,6 +36,12 @@ final class UnitMapMarker {
 
   /// Longitude.
   double get lng => _unit.location.longitude;
+
+  Logger get _log {
+    final Logger log = Logger('UnitMapMarker (${_unit.callsign})');
+    log.level = Level.ALL;
+    return log;
+  }
 
   // // FIXME change _viewModel to correct class and use for setting selected unit
   // final SingleEventScreenViewModel _viewModel;
@@ -97,11 +104,11 @@ final class UnitMapMarker {
   );
 
   void _onDoubleTap() {
-    debugPrint('Double tapped map marker for ${_unit.callsign}');
+    _log.fine('Double tapped map marker for ${_unit.callsign}');
   }
 
   void _onTap() {
-    debugPrint('Tapped map marker for ${_unit.callsign}');
+    _log.fine('Tapped map marker for ${_unit.callsign}');
     // _viewModel.updateUnit(_unit);
   }
 
