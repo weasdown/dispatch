@@ -106,7 +106,10 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
               // Assigned event
               DataColumn(label: Text('Assigned event')),
               // Location
-              DataColumn(label: Text('Location')),
+              DataColumn(
+                label: Text('Location'),
+                columnWidth: FlexColumnWidth(),
+              ),
             ],
             rows: widget.viewModel.units.map((Unit unit) {
               final UnitStatus status = unit.status;
