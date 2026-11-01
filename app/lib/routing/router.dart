@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
+import '../../../ui/unit/view_models/units_view_model.dart';
 import '../data/repositories/auth/auth_repository.dart';
 import '../ui/events/view_models/all_events_view_model.dart';
 import '../ui/events/view_models/single_event_screen_viewmodel.dart';
@@ -52,6 +53,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
           allEventsViewModel: AllEventsViewModel(
             eventRepository: context.read(),
           ),
+          unitsViewModel: UnitsViewModel(unitRepository: context.read()),
         );
       },
       routes: [

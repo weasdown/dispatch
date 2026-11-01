@@ -7,8 +7,9 @@ import '../../../utils/result.dart';
 import '../../events/view_models/all_events_view_model.dart';
 import '../../events/view_models/single_event_screen_viewmodel.dart';
 import '../../events/widgets/all_events_screen.dart';
-// import '../../events/widgets/single_event_screen.dart';
 import '../../map/widgets/map.dart';
+import '../../unit/view_models/units_view_model.dart';
+import '../../unit/widgets/all_units_screen.dart';
 import '../view_models/home_viewmodel.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -17,6 +18,7 @@ class HomeScreen extends StatelessWidget {
     required this.homeViewModel,
     required this.singleEventScreenViewModel,
     required this.allEventsViewModel,
+    required this.unitsViewModel,
   });
 
   final AllEventsViewModel allEventsViewModel;
@@ -24,6 +26,8 @@ class HomeScreen extends StatelessWidget {
   final HomeViewModel homeViewModel;
 
   final SingleEventScreenViewModel singleEventScreenViewModel;
+
+  final UnitsViewModel unitsViewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +62,7 @@ class HomeScreen extends StatelessWidget {
 
               log.fine('Events and units loaded successfully');
 
+              // TODO convert this row of flexibles into tabs, with one tab being displayed on narrow screens, or two tabs side by side on laptop-sized screens.
               return Row(
                 children: [
                   Flexible(
@@ -76,9 +81,19 @@ class HomeScreen extends StatelessWidget {
                   //   ),
                   // ),
                   // VerticalDivider(width: 3, thickness: 3),
+                  // Flexible(
+                  //   flex: 1,
+                  //   child: SingleEventScreen(
+                  //     viewModel: singleEventScreenViewModel,
+                  //   ),
+                  // ),
+                  // Flexible(
+                  //   flex: 1,
+                  //   child: AllEventsScreen(viewModel: allEventsViewModel),
+                  // ),
                   Flexible(
                     flex: 1,
-                    child: AllEventsScreen(viewModel: allEventsViewModel),
+                    child: AllUnitsScreen(viewModel: unitsViewModel),
                   ),
                 ],
               );
