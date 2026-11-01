@@ -1,8 +1,6 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:gap/gap.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' hide Marker;
-import 'package:google_maps_marker_widgets/google_maps_marker_widgets.dart';
-import 'package:latlong2/latlong.dart' as ll2;
+import 'package:latlong2/latlong.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
@@ -92,45 +90,5 @@ final class UnitMapMarker {
   void _onTap() {
     debugPrint('Tapped AdvancedMarker for ${_unit.callsign}');
     // _viewModel.updateUnit(_unit);
-  }
-}
-
-class UnitGoogleMapsMarker extends UnitMapMarker {
-  UnitGoogleMapsMarker({super.key, required super.unit})
-    : markerId = MarkerId(unit.callsign);
-
-  // void addToMap(MarkerWidgetsController markerWidgetsController) {
-  //   markerWidgetsController.addMarkerWidget(
-  //     markerWidget: MarkerWidget(markerId: markerId, child: this),
-  //     marker: Marker(
-  //       markerId: markerId,
-  //       anchor: Offset(0.5, 0.5),
-  //       position: LatLng(_unit.location.latitude, _unit.location.longitude),
-  //     ),
-  //   );
-  // }
-
-  // AssetMapBitmap _markerIcon(String asset) => AssetMapBitmap(asset, height: 40);
-
-  // TODO move onTap to markerWidget
-  /// Gets an [AdvancedMarker] for showing this [Unit] on a map.
-  AdvancedMarker get advancedMapMarker => AdvancedMarker(
-    onTap: _onTap,
-    markerId: markerId,
-    position: LatLng(lat, lng),
-    // infoWindow: InfoWindow(
-    //   title: _unit.callsign,
-    //   snippet: _unit.vehicleType.name,
-    // ),
-  );
-
-  final MarkerId markerId;
-
-  MarkerWidget markerWidget(BuildContext context) =>
-      MarkerWidget(markerId: markerId, child: _body(context));
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }
