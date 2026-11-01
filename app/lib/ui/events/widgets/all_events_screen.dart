@@ -112,6 +112,12 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),
+      // drawer: NavigationDrawer(
+      //   children: [
+      //     DrawerHeader(child: Text('Drawer Header')),
+      //     Container(color: Colors.grey, child: Text('First item')),
+      //   ],
+      // ),
       body: ListenableBuilder(
         listenable: widget.viewModel.loadEvents,
         builder: (context, _) {
