@@ -1,16 +1,24 @@
+import 'package:dispatch/ui/events/view_models/single_event_screen_viewmodel.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:gap/gap.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' hide Marker;
-import 'package:google_maps_marker_widgets/google_maps_marker_widgets.dart';
-import 'package:latlong2/latlong.dart' as ll2;
+import 'package:latlong2/latlong.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../events/view_models/all_events_view_model.dart';
 import '../../unit/unit_status_colour.dart';
+import '../../unit/view_models/units_view_model.dart';
+import '../../unit/widgets/unit_context_menu.dart';
 
-class UnitMapMarker extends StatelessWidget {
-  const UnitMapMarker({super.key, required this._unit});
+final class UnitMapMarker {
+  const UnitMapMarker({
+    required this._unit,
+    required this.menuController,
+    required this._eventsViewModel,
+    required this._unitsViewModel,
+    required this._singleEventScreenViewModel,
+  });
 
   final double height = 60;
 
@@ -18,8 +26,10 @@ class UnitMapMarker extends StatelessWidget {
 
   final double width = 52;
 
-  Marker flutterMapMarker(BuildContext context) => Marker(
-    point: ll2.LatLng(lat, lng),
+  final ContextMenuController menuController;
+
+  Marker marker(BuildContext context) => Marker(
+    point: LatLng(lat, lng),
     height: height,
     width: width,
     child: _body(context),
@@ -45,9 +55,12 @@ class UnitMapMarker extends StatelessWidget {
     VehicleType.coResponder => 'assets/images/rrv.png',
   };
 
-  Widget _body(BuildContext context) => GestureDetector(
-    onTap: _onTap,
-    onDoubleTap: _onDoubleTap,
+  Widget _body(BuildContext context) => UnitContextMenuRegion(
+    unit: _unit,
+    controller: menuController,
+    eventsViewModel: _eventsViewModel,
+    unitsViewModel: _unitsViewModel,
+    singleEventScreenViewModel: _singleEventScreenViewModel,
     child: Container(
       // height: 100,
       // width: 80,
@@ -85,59 +98,9 @@ class UnitMapMarker extends StatelessWidget {
     ),
   );
 
-  void _onDoubleTap() {
-    debugPrint('Double tapped AdvancedMarker for ${_unit.callsign}');
-  }
+  final AllEventsViewModel _eventsViewModel;
 
-  void _onTap() {
-    debugPrint('Tapped AdvancedMarker for ${_unit.callsign}');
-    // _viewModel.updateUnit(_unit);
-  }
+  final SingleEventScreenViewModel _singleEventScreenViewModel;
 
-  @override
-  Widget build(BuildContext context) {
-    final String icon = _iconAsset;
-    debugPrint('Unit icon: $icon');
-    return _body(context);
-  }
-}
-
-class UnitGoogleMapsMarker extends UnitMapMarker {
-  UnitGoogleMapsMarker({super.key, required super.unit})
-    : markerId = MarkerId(unit.callsign);
-
-  // void addToMap(MarkerWidgetsController markerWidgetsController) {
-  //   markerWidgetsController.addMarkerWidget(
-  //     markerWidget: MarkerWidget(markerId: markerId, child: this),
-  //     marker: Marker(
-  //       markerId: markerId,
-  //       anchor: Offset(0.5, 0.5),
-  //       position: LatLng(_unit.location.latitude, _unit.location.longitude),
-  //     ),
-  //   );
-  // }
-
-  // AssetMapBitmap _markerIcon(String asset) => AssetMapBitmap(asset, height: 40);
-
-  // TODO move onTap to markerWidget
-  /// Gets an [AdvancedMarker] for showing this [Unit] on a map.
-  AdvancedMarker get advancedMapMarker => AdvancedMarker(
-    onTap: _onTap,
-    markerId: markerId,
-    position: LatLng(lat, lng),
-    // infoWindow: InfoWindow(
-    //   title: _unit.callsign,
-    //   snippet: _unit.vehicleType.name,
-    // ),
-  );
-
-  final MarkerId markerId;
-
-  MarkerWidget markerWidget(BuildContext context) =>
-      MarkerWidget(markerId: markerId, child: _body(context));
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
+  final UnitsViewModel _unitsViewModel;
 }

@@ -4,17 +4,21 @@ import 'package:material_ui/material_ui.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/location/scas_locations.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../../ui/events/view_models/all_events_view_model.dart';
+import '../../../ui/unit/view_models/units_view_model.dart';
 import '../../events/view_models/single_event_screen_viewmodel.dart';
 import 'event_map_marker.dart';
 import 'map.dart';
 import 'unit_map_marker.dart';
 
-class FlutterMapPage extends StatelessWidget {
+class FlutterMapPage extends StatefulWidget {
   const FlutterMapPage({
     super.key,
     required this.events,
     required this.units,
+    required this.eventsViewModel,
     required this.singleEventScreenViewModel,
+    required this.unitsViewModel,
     required this.showAmbulanceStations,
     required this.showEOCs,
   });
@@ -22,37 +26,63 @@ class FlutterMapPage extends StatelessWidget {
   /// The [Event]s that will be displayed on the map.
   final List<Event> events;
 
+  final AllEventsViewModel eventsViewModel;
+
   final SingleEventScreenViewModel singleEventScreenViewModel;
 
   /// The [Unit]s that are currently in the SCAS fleet.
   final List<Unit> units;
 
+  final bool showAmbulanceStations;
+
+  final bool showEOCs;
+
+  final UnitsViewModel unitsViewModel;
+
+  @override
+  State<FlutterMapPage> createState() => _FlutterMapPageState();
+}
+
+class _FlutterMapPageState extends State<FlutterMapPage> {
+  final ContextMenuController contextMenuController = ContextMenuController();
+
   List<Marker> get eventMarkers {
-    final List<Event> nonNullLocations = events
+    final List<Event> nonNullLocations = widget.events
         .where((Event event) => event.location != null)
         .toList();
     final List<Marker> markers = nonNullLocations.map((Event event) {
       return EventMapMarker(
         event: event,
-        viewModel: singleEventScreenViewModel,
+        viewModel: widget.singleEventScreenViewModel,
       ).flutterMapMarker;
     }).toList();
     return markers;
   }
 
-  final bool showAmbulanceStations;
-
-  final bool showEOCs;
-
-  List<Marker> unitMarkers(BuildContext context) => units
-      .map((Unit unit) => UnitMapMarker(unit: unit).flutterMapMarker(context))
+  List<Marker> unitMarkers(BuildContext context) => widget.units
+      .map(
+        (Unit unit) => UnitMapMarker(
+          unit: unit,
+          menuController: contextMenuController,
+          eventsViewModel: widget.eventsViewModel,
+          unitsViewModel: widget.unitsViewModel,
+          singleEventScreenViewModel: widget.singleEventScreenViewModel,
+        ).marker(context),
+      )
       .toList();
 
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
-      options: MapOptions(initialCenter: MapPage.scasCentre, initialZoom: 9),
-      children: [
+      options: MapOptions(
+        initialCenter: MapPage.scasCentre,
+        initialZoom: 9,
+        onTap: (tapPosition, point) {
+          debugPrint('MapOptions onTap');
+          contextMenuController.remove();
+        },
+      ),
+      children: <Widget>[
         // Base layer
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // For demonstration only
@@ -67,7 +97,7 @@ class FlutterMapPage extends StatelessWidget {
 
         // EOCs layer
         MarkerLayer(
-          markers: showEOCs
+          markers: widget.showEOCs
               ? EmergencyOperationsCentre.values
                     .map((EmergencyOperationsCentre eoc) => eoc.marker)
                     .toList()
@@ -76,7 +106,7 @@ class FlutterMapPage extends StatelessWidget {
 
         // Ambulance Stations layer
         MarkerLayer(
-          markers: showAmbulanceStations
+          markers: widget.showAmbulanceStations
               ? AmbulanceStation.values
                     .map((AmbulanceStation station) => station.marker)
                     .toList()

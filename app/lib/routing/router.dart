@@ -45,6 +45,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         );
         return HomeScreen(
           homeViewModel: homeViewModel,
+          eventsViewModel: AllEventsViewModel(eventRepository: context.read()),
           singleEventScreenViewModel: SingleEventScreenViewModel(
             eventRepository: context.read(),
             // eventModeRepository: context.read(),

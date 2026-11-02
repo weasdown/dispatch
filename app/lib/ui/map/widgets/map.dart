@@ -1,9 +1,13 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../../ui/unit/view_models/units_view_model.dart';
+import '../../events/view_models/all_events_view_model.dart';
 import '../../events/view_models/single_event_screen_viewmodel.dart';
 import 'flutter_map.dart';
 
@@ -12,8 +16,9 @@ class MapPage extends StatefulWidget {
   // TODO get events and units from a MapViewModel (will need to create MapViewModel)
   const MapPage({
     super.key,
-    // required this.viewModel,
+    required this.eventsViewModel,
     required this.singleEventScreenViewModel,
+    required this.unitsViewModel,
     this.centre = MapPage.scasCentre,
     required this.events,
     required this.units,
@@ -33,9 +38,11 @@ class MapPage extends StatefulWidget {
   /// The [Unit]s that are currently in the SCAS fleet.
   final List<Unit> units;
 
-  // final MapViewModel viewModel;
+  final AllEventsViewModel eventsViewModel;
 
   final SingleEventScreenViewModel singleEventScreenViewModel;
+
+  final UnitsViewModel unitsViewModel;
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -46,6 +53,24 @@ class _MapPageState extends State<MapPage> {
   bool showUnits = true;
   bool showEOCs = true;
   bool showBases = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // On web, disable the browser's context menu to instead use a custom
+    // Flutter-rendered context menu.
+    if (kIsWeb) {
+      BrowserContextMenu.disableContextMenu();
+    }
+  }
+
+  @override
+  void dispose() {
+    if (kIsWeb) {
+      BrowserContextMenu.enableContextMenu();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +129,9 @@ class _MapPageState extends State<MapPage> {
       body: FlutterMapPage(
         events: showEvents ? widget.events : [],
         units: showUnits ? widget.units : [],
+        eventsViewModel: widget.eventsViewModel,
         singleEventScreenViewModel: widget.singleEventScreenViewModel,
+        unitsViewModel: widget.unitsViewModel,
         showAmbulanceStations: showBases,
         showEOCs: showEOCs,
       ),
