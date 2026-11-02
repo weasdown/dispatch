@@ -189,11 +189,17 @@ class _ContextMenuRegionState extends State<ContextMenuRegion> {
 }
 
 final class UnitContextMenuButtonItem extends ContextMenuButtonItem {
-  new({required void Function() onPressed, required super.label})
-    : super(
-        onPressed: () {
-          ContextMenuController.removeAny();
-          onPressed();
-        },
-      );
+  UnitContextMenuButtonItem({
+    required void Function() onPressed,
+    required super.label,
+  }) : super(
+         onPressed: () {
+           ContextMenuController.removeAny();
+           onPressed();
+         },
+       );
+
+  /// An item without a label that simply closes the menu, for adding a blank line between menu items.
+  UnitContextMenuButtonItem.spacer()
+    : super(onPressed: () => ContextMenuController.removeAny());
 }
