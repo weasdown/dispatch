@@ -24,17 +24,300 @@ final class UnitContextMenuRegion extends StatelessWidget {
 
   final AllEventsViewModel eventsViewModel;
 
-  List<ContextMenuButtonItem> items(BuildContext context) =>
-      <ContextMenuButtonItem>[
-        // Dispatch unit
-        UnitContextMenuButtonItem(
-          label: 'Dispatch ${unit.callsign}',
-          onPressed: () {
-            _log.info('Dispatching ${unit.callsign} via context menu');
-            singleEventScreenViewModel.dispatchUnit(unit);
-          },
-        ),
-      ];
+  /// Contains a [ContextMenuButtonItem] for actions on units.
+  List<ContextMenuButtonItem> items(
+    BuildContext context,
+  ) => <ContextMenuButtonItem>[
+    // Dispatch
+    UnitContextMenuButtonItem(
+      label: 'Dispatch ${unit.callsign}',
+      onPressed: () {
+        _log.info('Dispatching ${unit.callsign} via context menu');
+        singleEventScreenViewModel.dispatchUnit(unit);
+      },
+    ),
+    // Mobile
+    UnitContextMenuButtonItem(
+      label: 'Mobile',
+      onPressed: () {
+        _log.info('Setting ${unit.callsign} as Mobile via context menu');
+        singleEventScreenViewModel.dispatchUnit(unit);
+      },
+    ),
+    // At Scene
+    UnitContextMenuButtonItem(
+      label: 'At Scene',
+      onPressed: () {
+        _log.info('Setting ${unit.callsign} as At Scene via context menu');
+        singleEventScreenViewModel.dispatchUnit(unit);
+      },
+    ),
+    // With Patient
+    UnitContextMenuButtonItem(
+      label: 'With Patient',
+      onPressed: () {
+        _log.info('Setting ${unit.callsign} as With Patient via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // At RV Point
+    UnitContextMenuButtonItem(
+      label: 'At RV Point',
+      onPressed: () {
+        _log.info('Setting ${unit.callsign} as At RV Point via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Request Transport
+    UnitContextMenuButtonItem(
+      label: 'Request Transport',
+      onPressed: () {
+        _log.info(
+          'Setting ${unit.callsign} as Request Transport via context menu',
+        );
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // No Transport Required
+    UnitContextMenuButtonItem(
+      label: 'No Transport Required',
+      onPressed: () {
+        _log.info(
+          'Setting ${unit.callsign} as No Transport Required via context menu',
+        );
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Leaving Scene
+    UnitContextMenuButtonItem(
+      label: 'Leaving Scene',
+      onPressed: () {
+        _log.info('Setting ${unit.callsign} as Leaving Scene via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // At Hospital
+    UnitContextMenuButtonItem(
+      label: 'At Hospital',
+      onPressed: () {
+        _log.info('Setting ${unit.callsign} as At Hospital via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Clear Unit
+    UnitContextMenuButtonItem(
+      label: 'Clear Unit',
+      onPressed: () {
+        _log.info('Clearing down ${unit.callsign} via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // TODO once UnitContextMenuButtonItem refactored for nesting (see TODO on its class), add nesting menu for Available statuses
+    // Available Returning
+    UnitContextMenuButtonItem(
+      label: 'Available Returning',
+      onPressed: () {
+        _log.info(
+          'Setting ${unit.callsign} as Available Returning via context menu',
+        );
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Available Base
+    UnitContextMenuButtonItem(
+      label: 'Available Base',
+      onPressed: () {
+        _log.info(
+          'Setting ${unit.callsign} as Available Base via context menu',
+        );
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Available Other
+    UnitContextMenuButtonItem(
+      label: 'Available Other',
+      onPressed: () {
+        _log.info(
+          'Setting ${unit.callsign} as Available Other via context menu',
+        );
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Mobile to Standby
+    UnitContextMenuButtonItem(
+      label: 'Mobile to Standby',
+      onPressed: () {
+        _log.info(
+          'Setting ${unit.callsign} as Mobile to Standby via context menu',
+        );
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Available Standby
+    UnitContextMenuButtonItem(
+      label: 'Available Standby',
+      onPressed: () {
+        _log.info(
+          'Setting ${unit.callsign} as Available Standby via context menu',
+        );
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Available Voice
+    UnitContextMenuButtonItem(
+      label: 'Available Voice',
+      onPressed: () {
+        _log.info(
+          'Setting ${unit.callsign} as Available Voice via context menu',
+        );
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Pre Duty
+    UnitContextMenuButtonItem(
+      label: 'Pre Duty',
+      onPressed: () {
+        _log.info('Setting ${unit.callsign} as Pre Duty via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Dispatch Assign
+    UnitContextMenuButtonItem(
+      label: 'Dispatch Assign to ${unit.callsign}',
+      onPressed: () {
+        _log.info('Dispatch Assigning to ${unit.callsign} via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+
+    UnitContextMenuButtonItem.spacer(),
+
+    // Send MDT Message
+    UnitContextMenuButtonItem(
+      label: 'Send Message to ${unit.callsign}',
+      onPressed: () {
+        _log.info('Sending message to ${unit.callsign} via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+
+    UnitContextMenuButtonItem.spacer(),
+
+    // Standdown unit
+    UnitContextMenuButtonItem(
+      label: 'Standdown ${unit.callsign}',
+      onPressed: () {
+        _log.info('Standing down ${unit.callsign} via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+
+    UnitContextMenuButtonItem.spacer(),
+
+    // Out of Service
+    UnitContextMenuButtonItem(
+      label: 'Out of Service',
+      onPressed: () {
+        _log.info('Putting ${unit.callsign} out of service via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Into Service
+    UnitContextMenuButtonItem(
+      label: 'Into Service',
+      onPressed: () {
+        _log.info(
+          'Putting ${unit.callsign} back into service via context menu',
+        );
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Create Running Call
+    UnitContextMenuButtonItem(
+      label: 'Create Running Call',
+      onPressed: () {
+        _log.info(
+          'Creating Running Call for ${unit.callsign} via context menu',
+        );
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Window Unit...
+    UnitContextMenuButtonItem(
+      label: 'Window Unit...',
+      onPressed: () {
+        _log.info('Windowing unit via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Change Location
+    UnitContextMenuButtonItem(
+      label: 'Change ${unit.callsign}\'s Location',
+      onPressed: () {
+        _log.info('Changing location for ${unit.callsign} via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Relocate Unit
+    UnitContextMenuButtonItem(
+      label: 'Relocate ${unit.callsign}',
+      onPressed: () {
+        _log.info('Relocating ${unit.callsign} via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Transfer Unit
+    UnitContextMenuButtonItem(
+      label: 'Transfer ${unit.callsign}',
+      onPressed: () {
+        _log.info('Transferring ${unit.callsign} via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+
+    UnitContextMenuButtonItem.spacer(),
+
+    // Put on Break
+    UnitContextMenuButtonItem(
+      label: 'Put ${unit.callsign} on Break',
+      onPressed: () {
+        _log.info('Putting ${unit.callsign} on break via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+    // Disturb Break
+    UnitContextMenuButtonItem(
+      label: 'Disturb ${unit.callsign}\'s Break',
+      onPressed: () {
+        _log.info('Disturbing ${unit.callsign}\'s break via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+
+    UnitContextMenuButtonItem.spacer(),
+
+    // Unit Properties
+    UnitContextMenuButtonItem(
+      label: 'Unit Properties',
+      onPressed: () {
+        _log.info(
+          'Opening Unit Properties for ${unit.callsign} via context menu',
+        );
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+
+    UnitContextMenuButtonItem.spacer(),
+
+    // Log Off
+    UnitContextMenuButtonItem(
+      label: 'Log Off',
+      onPressed: () {
+        _log.info('Logging off ${unit.callsign} via context menu');
+        throw UnimplementedError(); // TODO implement action
+      },
+    ),
+  ];
 
   Logger get _log {
     final Logger log = Logger('UnitContextMenu');
@@ -188,6 +471,7 @@ class _ContextMenuRegionState extends State<ContextMenuRegion> {
   }
 }
 
+// TODO refactor context menu to base it on MenuItemButton/Menu Entry to allow sub-options - see example: https://api.flutter.dev/flutter/material/MenuItemButton-class.html#material.MenuBar.1
 final class UnitContextMenuButtonItem extends ContextMenuButtonItem {
   UnitContextMenuButtonItem({
     required void Function() onPressed,
