@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../ui/unit/view_models/units_view_model.dart';
+import '../../../utils/result.dart';
 import '../../events/view_models/all_events_view_model.dart';
 import '../../events/view_models/single_event_screen_viewmodel.dart';
 import 'flutter_map.dart';
@@ -74,63 +75,97 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 2,
-        actions: [
-          Row(
-            children: [
-              Row(
-                children: [
-                  Text('Show Events? '),
-                  _ShowEventsSwitch(
-                    showEvents: showEvents,
-                    onToggle: (bool value) =>
-                        setState(() => showEvents = value),
-                  ),
-                ],
-              ), // Show Events switch
-              Gap(8),
-              Row(
-                children: [
-                  Text('Show Units? '),
-                  _ShowUnitsSwitch(
-                    showUnits: showUnits,
-                    onToggle: (bool value) => setState(() => showUnits = value),
-                  ),
-                ],
-              ), // Show Units switch
-              Gap(8),
-              Row(
-                children: [
-                  Text('Show EOCs? '),
-                  _ShowEOCsSwitch(
-                    showEOCs: showEOCs,
-                    onToggle: (bool value) => setState(() => showEOCs = value),
-                  ),
-                ],
-              ), // Show EOCs switch
-              Gap(8),
-              Row(
-                children: [
-                  Text('Show bases? '),
-                  _ShowAmbulanceStationsSwitch(
-                    showBases: showBases,
-                    onToggle: (bool value) => setState(() => showBases = value),
-                  ),
-                ],
-              ), // Show EOCs switch
-            ],
-          ),
-        ],
-      ),
-      // endDrawer: NavigationDrawer(children: [Text('Event details')]),
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        widget.eventsViewModel.loadEvents,
+        widget.unitsViewModel.loadUnits,
+      ]),
+      builder: (BuildContext context, Widget? child) {
+        // If either command is running, show progress indicator
+        if (widget.eventsViewModel.loadEvents.running ||
+            widget.unitsViewModel.loadUnits.running) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-      // body: GoogleMapsPage(
-      //   singleEventScreenViewModel: widget.singleEventScreenViewModel,
-      //   events: widget.events,
-      //   units: widget.units,
-      // ),
+        // If fails to load events, tap to try again
+        if (widget.eventsViewModel.loadEvents.error) {
+          return Center(
+            // TODO implement proper display of error that enables user to retry load
+            child: ErrorWidget(
+              (widget.eventsViewModel.loadEvents.result as Error<List<Event>>)
+                  .error,
+            ),
+          );
+        }
+
+        // If fails to load units, tap to go /home
+        if (widget.unitsViewModel.loadUnits.error) {
+          return Center(
+            // TODO implement proper display of error that enables user to retry load
+            child: ErrorWidget(
+              (widget.unitsViewModel.loadUnits.result as Error<List<Unit>?>)
+                  .error,
+            ),
+          );
+        }
+
+        return child!;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 2,
+          actions: [
+            Row(
+              children: [
+                Row(
+                  children: [
+                    Text('Show Events? '),
+                    _ShowEventsSwitch(
+                      showEvents: showEvents,
+                      onToggle: (bool value) =>
+                          setState(() => showEvents = value),
+                    ),
+                  ],
+                ), // Show Events switch
+                Gap(8),
+                Row(
+                  children: [
+                    Text('Show Units? '),
+                    _ShowUnitsSwitch(
+                      showUnits: showUnits,
+                      onToggle: (bool value) =>
+                          setState(() => showUnits = value),
+                    ),
+                  ],
+                ), // Show Units switch
+                Gap(8),
+                Row(
+                  children: [
+                    Text('Show EOCs? '),
+                    _ShowEOCsSwitch(
+                      showEOCs: showEOCs,
+                      onToggle: (bool value) =>
+                          setState(() => showEOCs = value),
+                    ),
+                  ],
+                ), // Show EOCs switch
+                Gap(8),
+                Row(
+                  children: [
+                    Text('Show bases? '),
+                    _ShowAmbulanceStationsSwitch(
+                      showBases: showBases,
+                      onToggle: (bool value) =>
+                          setState(() => showBases = value),
+                    ),
+                  ],
+                ), // Show EOCs switch
+              ],
+            ),
+          ],
+        ),
+        // endDrawer: NavigationDrawer(children: [Text('Event details')]),
+
         body: _MapBody(
           eventsViewModel: widget.eventsViewModel,
           singleEventScreenViewModel: widget.singleEventScreenViewModel,
@@ -140,6 +175,12 @@ class _MapPageState extends State<MapPage> {
           showBases: showBases,
           showEOCs: showEOCs,
         ),
+        // body: GoogleMapsPage(
+        //   singleEventScreenViewModel: widget.singleEventScreenViewModel,
+        //   events: widget.events,
+        //   units: widget.units,
+        // ),
+      ),
     );
   }
 }
