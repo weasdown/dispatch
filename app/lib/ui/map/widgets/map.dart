@@ -126,20 +126,53 @@ class _MapPageState extends State<MapPage> {
       ),
       // endDrawer: NavigationDrawer(children: [Text('Event details')]),
 
-      body: FlutterMapPage(
-        events: showEvents ? widget.events : [],
-        units: showUnits ? widget.units : [],
-        eventsViewModel: widget.eventsViewModel,
-        singleEventScreenViewModel: widget.singleEventScreenViewModel,
-        unitsViewModel: widget.unitsViewModel,
-        showAmbulanceStations: showBases,
-        showEOCs: showEOCs,
-      ),
       // body: GoogleMapsPage(
       //   singleEventScreenViewModel: widget.singleEventScreenViewModel,
       //   events: widget.events,
       //   units: widget.units,
       // ),
+        body: _MapBody(
+          eventsViewModel: widget.eventsViewModel,
+          singleEventScreenViewModel: widget.singleEventScreenViewModel,
+          unitsViewModel: widget.unitsViewModel,
+          showEvents: showEvents,
+          showUnits: showUnits,
+          showBases: showBases,
+          showEOCs: showEOCs,
+        ),
+    );
+  }
+}
+
+class _MapBody extends StatelessWidget {
+  const _MapBody({
+    required this.eventsViewModel,
+    required this.singleEventScreenViewModel,
+    required this.unitsViewModel,
+    required this.showEvents,
+    required this.showUnits,
+    required this.showBases,
+    required this.showEOCs,
+  });
+
+  final AllEventsViewModel eventsViewModel;
+  final bool showBases;
+  final bool showEOCs;
+  final bool showEvents;
+  final bool showUnits;
+  final SingleEventScreenViewModel singleEventScreenViewModel;
+  final UnitsViewModel unitsViewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return FlutterMapPage(
+      events: showEvents ? eventsViewModel.events : [],
+      units: showUnits ? unitsViewModel.units : [],
+      eventsViewModel: eventsViewModel,
+      singleEventScreenViewModel: singleEventScreenViewModel,
+      unitsViewModel: unitsViewModel,
+      showAmbulanceStations: showBases,
+      showEOCs: showEOCs,
     );
   }
 }
