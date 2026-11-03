@@ -1,0 +1,68 @@
+import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
+
+import '../../../data/repositories/event/event_repository.dart';
+import '../../../data/repositories/unit/unit_repository.dart';
+import '../../../domain/models/event/event.dart';
+import '../../../domain/models/unit/unit.dart';
+import '../../../utils/command.dart';
+import '../../../utils/result.dart';
+
+// TODO finish implementing MapViewModel
+class MapViewModel extends ChangeNotifier {
+  MapViewModel({
+    required this._eventRepository,
+    required this._unitRepository,
+  }) {
+    loadMarkers = Command0(_load);
+  }
+
+  List<Event> get events => _events;
+  List<Event> _events = [];
+
+  final EventRepository _eventRepository;
+
+  final UnitRepository _unitRepository;
+
+  Future<Result<void>> _load() async {
+    final List<Exception> errors = [];
+
+    final Result<List<Event>> eventsResult = await _eventRepository.allEvents;
+    switch (eventsResult) {
+      case Ok<List<Event>>():
+        final eventsValue = eventsResult.value;
+        _log.fine('Loaded ${eventsValue.length} events');
+        _events = eventsValue;
+        notifyListeners();
+      case Error<List<Event>>():
+        _log.warning('Failed to load events');
+        errors.add(eventsResult.error);
+    }
+
+    final Result<List<Unit>> unitsResult = await _unitRepository.allUnits;
+    switch (unitsResult) {
+      case Ok<List<Unit>>():
+        final unitsValue = unitsResult.value;
+        _log.fine('Loaded ${unitsValue.length} units');
+        _units = unitsValue;
+        notifyListeners();
+      case Error<List<Unit>>():
+        _log.warning('Failed to load units');
+        errors.add(unitsResult.error);
+    }
+
+    if (errors.isNotEmpty) {
+      return Result.error(Exception(errors));
+    } else {
+      return Result.ok(null);
+    }
+  }
+
+  /// Loads map markers for events and units.
+  late final Command0<void> loadMarkers;
+
+  final _log = Logger('MapViewModel')..level = Level.ALL;
+
+  List<Unit> get units => _units;
+  List<Unit> _units = [];
+}
