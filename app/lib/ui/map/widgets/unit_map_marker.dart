@@ -1,4 +1,3 @@
-import 'package:dispatch/ui/events/view_models/single_event_screen_viewmodel.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:gap/gap.dart';
 import 'package:latlong2/latlong.dart';
@@ -6,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../../ui/map/view_models/map_view_model.dart';
 import '../../events/view_models/all_events_view_model.dart';
 import '../../unit/unit_status_colour.dart';
 import '../../unit/view_models/units_view_model.dart';
@@ -17,7 +17,7 @@ final class UnitMapMarker {
     required this.menuController,
     required this._eventsViewModel,
     required this._unitsViewModel,
-    required this._singleEventScreenViewModel,
+    required this._mapViewModel,
   });
 
   final double height = 60;
@@ -60,7 +60,7 @@ final class UnitMapMarker {
     controller: menuController,
     eventsViewModel: _eventsViewModel,
     unitsViewModel: _unitsViewModel,
-    singleEventScreenViewModel: _singleEventScreenViewModel,
+    mapViewModel: _mapViewModel,
     child: Container(
       // height: 100,
       // width: 80,
@@ -100,7 +100,8 @@ final class UnitMapMarker {
 
   final AllEventsViewModel _eventsViewModel;
 
-  final SingleEventScreenViewModel _singleEventScreenViewModel;
+  // TODO convert to MapViewModel
+  final MapViewModel _mapViewModel;
 
   final UnitsViewModel _unitsViewModel;
 }

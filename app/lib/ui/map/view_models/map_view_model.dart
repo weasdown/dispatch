@@ -15,7 +15,18 @@ class MapViewModel extends ChangeNotifier {
   MapViewModel({required this._eventRepository, required this._unitRepository})
     : _eventEdited = false {
     selectEvent = Command0<void>(_selectEvent);
-    loadMarkers = Command0(_load);
+    loadMarkers = Command0(_load)..execute();
+  }
+
+  Future<Result<void>> dispatchUnit(Unit unit) async {
+    if (_event == null) {
+      return Result<void>.error(const NoSelectedEventException());
+    }
+
+    _log.fine('Dispatching ${unit.callsign} to event ${_event!.idLastFour}');
+    final result = _eventRepository.dispatchUnit(unit);
+    notifyListeners();
+    return result;
   }
 
   bool get eventEdited => _eventEdited;
@@ -45,6 +56,19 @@ class MapViewModel extends ChangeNotifier {
 
   Future<Result<void>> _load() async {
     final List<Exception> errors = [];
+
+    final Result<Event?> selectedEventResult =
+        await _eventRepository.selectedEvent;
+    switch (selectedEventResult) {
+      case Ok<Event?>():
+        final selectedEventValue = selectedEventResult.value;
+        _log.fine('Loaded selected event');
+        _event = selectedEventValue;
+        notifyListeners();
+      case Error<Event?>():
+        _log.warning('Failed to load selected event');
+        errors.add(selectedEventResult.error);
+    }
 
     final Result<List<Event>> eventsResult = await _eventRepository.allEvents;
     switch (eventsResult) {

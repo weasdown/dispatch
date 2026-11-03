@@ -56,9 +56,13 @@ class EventRepositoryLocal extends EventRepository {
   @override
   Future<Result<void>> dispatchUnit(Unit unit) async {
     if (_selectedEvent == null) {
+      _log.warning('Cannot dispatch ${unit.callsign} as no event is selected');
       return Result.error(const NoSelectedEventException());
     }
 
+    _log.info(
+      'Dispatching ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
+    );
     return Result.ok(_selectedEvent!.dispatchUnit(unit));
   }
 

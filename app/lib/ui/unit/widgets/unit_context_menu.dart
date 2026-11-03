@@ -3,7 +3,8 @@ import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/unit/unit.dart';
-import '../../../ui/events/view_models/single_event_screen_viewmodel.dart';
+import '../../../ui/map/view_models/map_view_model.dart';
+import '../../../utils/result.dart';
 import '../../events/view_models/all_events_view_model.dart';
 import '../view_models/units_view_model.dart';
 
@@ -13,7 +14,7 @@ final class UnitContextMenuRegion extends StatelessWidget {
     required this.unit,
     required this.controller,
     required this.child,
-    required this.singleEventScreenViewModel,
+    required this._mapViewModel,
     required this.eventsViewModel,
     required this.unitsViewModel,
   });
@@ -31,9 +32,17 @@ final class UnitContextMenuRegion extends StatelessWidget {
     // Dispatch
     UnitContextMenuButtonItem(
       label: 'Dispatch ${unit.callsign}',
-      onPressed: () {
+      onPressed: () async {
         _log.info('Dispatching ${unit.callsign} via context menu');
-        singleEventScreenViewModel.dispatchUnit(unit);
+        final result = await _mapViewModel.dispatchUnit(unit);
+
+        switch (result) {
+          case Ok<void>():
+            _log.info('Successfully dispatched ${unit.callsign}');
+          // TODO trigger rebuilding of unit map marker to show new status
+          case Error<void>():
+            _log.severe('Failed to dispatch ${unit.callsign}: ${result.error}');
+        }
       },
     ),
     // // Mobile
@@ -327,7 +336,7 @@ final class UnitContextMenuRegion extends StatelessWidget {
 
   final Unit unit;
 
-  final SingleEventScreenViewModel singleEventScreenViewModel;
+  final MapViewModel _mapViewModel;
 
   final UnitsViewModel unitsViewModel;
 

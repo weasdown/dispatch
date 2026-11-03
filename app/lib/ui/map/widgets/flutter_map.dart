@@ -71,7 +71,7 @@ class _FlutterMapPageState extends State<FlutterMapPage> {
           menuController: contextMenuController,
           eventsViewModel: widget.eventsViewModel,
           unitsViewModel: widget.unitsViewModel,
-          singleEventScreenViewModel: widget.singleEventScreenViewModel,
+          mapViewModel: widget.mapViewModel,
         ).marker(context),
       )
       .toList();
