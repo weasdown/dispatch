@@ -1,24 +1,43 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:logging/logging.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
 import '../../../data/repositories/unit/unit_repository.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../../ui/map/widgets/event_map_marker.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
 
 // TODO finish implementing MapViewModel
 class MapViewModel extends ChangeNotifier {
-  MapViewModel({
-    required this._eventRepository,
-    required this._unitRepository,
-  }) {
+  MapViewModel({required this._eventRepository, required this._unitRepository})
+    : _eventEdited = false {
+    selectEvent = Command0<void>(_selectEvent);
     loadMarkers = Command0(_load);
   }
 
+  bool get eventEdited => _eventEdited;
+  bool _eventEdited;
+  void setEventEdited() {
+    _log.finer('In setEventEdited');
+    _eventEdited = true;
+    // notifyListeners();
+  }
+
+  Event? get event => _event;
+  Event? _event;
+
   List<Event> get events => _events;
   List<Event> _events = [];
+
+  List<Marker> get eventMarkers => events
+      .map(
+        (Event event) =>
+            EventMapMarker(event: event, viewModel: this).flutterMapMarker,
+      )
+      .toList();
 
   final EventRepository _eventRepository;
 
@@ -62,6 +81,22 @@ class MapViewModel extends ChangeNotifier {
   late final Command0<void> loadMarkers;
 
   final _log = Logger('MapViewModel')..level = Level.ALL;
+
+  late final Command0<void> selectEvent;
+  Future<Result<void>> _selectEvent() async {
+    _eventEdited = true;
+    final result = await _eventRepository.setEvent(_event!);
+    switch (result) {
+      case Ok<void>():
+        _log.fine('Event selected');
+      case Error<void>():
+        _log.warning('Failed to select Event', result.error);
+    }
+    notifyListeners();
+    return result;
+  }
+
+  // final SingleEventScreenViewModel _singleEventScreenViewModel;
 
   List<Unit> get units => _units;
   List<Unit> _units = [];

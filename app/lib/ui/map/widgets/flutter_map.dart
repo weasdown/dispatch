@@ -5,6 +5,7 @@ import '../../../domain/models/event/event.dart';
 import '../../../domain/models/location/scas_locations.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../ui/events/view_models/all_events_view_model.dart';
+import '../../../ui/map/view_models/map_view_model.dart';
 import '../../../ui/unit/view_models/units_view_model.dart';
 import '../../events/view_models/single_event_screen_viewmodel.dart';
 import 'event_map_marker.dart';
@@ -17,6 +18,7 @@ class FlutterMapPage extends StatefulWidget {
     required this.events,
     required this.units,
     required this.eventsViewModel,
+    required this.mapViewModel,
     required this.singleEventScreenViewModel,
     required this.unitsViewModel,
     required this.showAmbulanceStations,
@@ -28,6 +30,9 @@ class FlutterMapPage extends StatefulWidget {
 
   final AllEventsViewModel eventsViewModel;
 
+  final MapViewModel mapViewModel;
+
+  // FIXME remove singleEventScreenViewModel and move necessary methods to mapViewModel
   final SingleEventScreenViewModel singleEventScreenViewModel;
 
   /// The [Unit]s that are currently in the SCAS fleet.
@@ -53,7 +58,7 @@ class _FlutterMapPageState extends State<FlutterMapPage> {
     final List<Marker> markers = nonNullLocations.map((Event event) {
       return EventMapMarker(
         event: event,
-        viewModel: widget.singleEventScreenViewModel,
+        viewModel: widget.mapViewModel,
       ).flutterMapMarker;
     }).toList();
     return markers;

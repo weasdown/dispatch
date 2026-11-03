@@ -1,3 +1,4 @@
+import 'package:dispatch/ui/map/view_models/map_view_model.dart';
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -17,6 +18,7 @@ class HomeScreen extends StatelessWidget {
     required this.homeViewModel,
     required this.eventsViewModel,
     required this.singleEventScreenViewModel,
+    required this.mapViewModel,
     required this.allEventsViewModel,
     required this.unitsViewModel,
   });
@@ -26,6 +28,8 @@ class HomeScreen extends StatelessWidget {
   final HomeViewModel homeViewModel;
 
   final AllEventsViewModel eventsViewModel;
+
+  final MapViewModel mapViewModel;
 
   final SingleEventScreenViewModel singleEventScreenViewModel;
 
@@ -70,6 +74,7 @@ class HomeScreen extends StatelessWidget {
                   Flexible(
                     flex: 1,
                     child: MapPage(
+                      mapViewModel: mapViewModel,
                       eventsViewModel: eventsViewModel,
                       singleEventScreenViewModel: singleEventScreenViewModel,
                       unitsViewModel: unitsViewModel,

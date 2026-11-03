@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../events/priority_colour.dart';
-import '../../events/view_models/single_event_screen_viewmodel.dart';
+import '../view_models/map_view_model.dart';
 
 class EventMapMarker extends StatelessWidget {
   const EventMapMarker({
@@ -29,7 +29,7 @@ class EventMapMarker extends StatelessWidget {
   /// Longitude.
   double? get lng => _event.location?.longitude;
 
-  final SingleEventScreenViewModel _viewModel;
+  final MapViewModel _viewModel;
 
   Widget get _body => GestureDetector(
     onTap: () => debugPrint('Tapped event ${_event.idLastFour}'),

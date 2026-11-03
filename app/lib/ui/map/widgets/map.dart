@@ -1,3 +1,4 @@
+import 'package:dispatch/ui/map/view_models/map_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -17,6 +18,7 @@ class MapPage extends StatefulWidget {
   // TODO get events and units from a MapViewModel (will need to create MapViewModel)
   const MapPage({
     super.key,
+    required this.mapViewModel,
     required this.eventsViewModel,
     required this.singleEventScreenViewModel,
     required this.unitsViewModel,
@@ -40,6 +42,8 @@ class MapPage extends StatefulWidget {
   final List<Unit> units;
 
   final AllEventsViewModel eventsViewModel;
+
+  final MapViewModel mapViewModel;
 
   final SingleEventScreenViewModel singleEventScreenViewModel;
 
@@ -167,6 +171,7 @@ class _MapPageState extends State<MapPage> {
         // endDrawer: NavigationDrawer(children: [Text('Event details')]),
 
         body: _MapBody(
+          mapViewModel: widget.mapViewModel,
           eventsViewModel: widget.eventsViewModel,
           singleEventScreenViewModel: widget.singleEventScreenViewModel,
           unitsViewModel: widget.unitsViewModel,
@@ -187,6 +192,7 @@ class _MapPageState extends State<MapPage> {
 
 class _MapBody extends StatelessWidget {
   const _MapBody({
+    required this.mapViewModel,
     required this.eventsViewModel,
     required this.singleEventScreenViewModel,
     required this.unitsViewModel,
@@ -197,6 +203,7 @@ class _MapBody extends StatelessWidget {
   });
 
   final AllEventsViewModel eventsViewModel;
+  final MapViewModel mapViewModel;
   final bool showBases;
   final bool showEOCs;
   final bool showEvents;
@@ -210,6 +217,7 @@ class _MapBody extends StatelessWidget {
       events: showEvents ? eventsViewModel.events : [],
       units: showUnits ? unitsViewModel.units : [],
       eventsViewModel: eventsViewModel,
+      mapViewModel: mapViewModel,
       singleEventScreenViewModel: singleEventScreenViewModel,
       unitsViewModel: unitsViewModel,
       showAmbulanceStations: showBases,
