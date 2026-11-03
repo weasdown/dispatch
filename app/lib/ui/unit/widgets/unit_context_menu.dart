@@ -36,74 +36,74 @@ final class UnitContextMenuRegion extends StatelessWidget {
         singleEventScreenViewModel.dispatchUnit(unit);
       },
     ),
-    // Mobile
-    UnitContextMenuButtonItem(
-      label: 'Mobile',
-      onPressed: () {
-        _log.info('Setting ${unit.callsign} as Mobile via context menu');
-        singleEventScreenViewModel.dispatchUnit(unit);
-      },
-    ),
-    // At Scene
-    UnitContextMenuButtonItem(
-      label: 'At Scene',
-      onPressed: () {
-        _log.info('Setting ${unit.callsign} as At Scene via context menu');
-        singleEventScreenViewModel.dispatchUnit(unit);
-      },
-    ),
-    // With Patient
-    UnitContextMenuButtonItem(
-      label: 'With Patient',
-      onPressed: () {
-        _log.info('Setting ${unit.callsign} as With Patient via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // At RV Point
-    UnitContextMenuButtonItem(
-      label: 'At RV Point',
-      onPressed: () {
-        _log.info('Setting ${unit.callsign} as At RV Point via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Request Transport
-    UnitContextMenuButtonItem(
-      label: 'Request Transport',
-      onPressed: () {
-        _log.info(
-          'Setting ${unit.callsign} as Request Transport via context menu',
-        );
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // No Transport Required
-    UnitContextMenuButtonItem(
-      label: 'No Transport Required',
-      onPressed: () {
-        _log.info(
-          'Setting ${unit.callsign} as No Transport Required via context menu',
-        );
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Leaving Scene
-    UnitContextMenuButtonItem(
-      label: 'Leaving Scene',
-      onPressed: () {
-        _log.info('Setting ${unit.callsign} as Leaving Scene via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // At Hospital
-    UnitContextMenuButtonItem(
-      label: 'At Hospital',
-      onPressed: () {
-        _log.info('Setting ${unit.callsign} as At Hospital via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
+    // // Mobile
+    // UnitContextMenuButtonItem(
+    //   label: 'Mobile',
+    //   onPressed: () {
+    //     _log.info('Setting ${unit.callsign} as Mobile via context menu');
+    //     singleEventScreenViewModel.dispatchUnit(unit);
+    //   },
+    // ),
+    // // At Scene
+    // UnitContextMenuButtonItem(
+    //   label: 'At Scene',
+    //   onPressed: () {
+    //     _log.info('Setting ${unit.callsign} as At Scene via context menu');
+    //     singleEventScreenViewModel.dispatchUnit(unit);
+    //   },
+    // ),
+    // // With Patient
+    // UnitContextMenuButtonItem(
+    //   label: 'With Patient',
+    //   onPressed: () {
+    //     _log.info('Setting ${unit.callsign} as With Patient via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // At RV Point
+    // UnitContextMenuButtonItem(
+    //   label: 'At RV Point',
+    //   onPressed: () {
+    //     _log.info('Setting ${unit.callsign} as At RV Point via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Request Transport
+    // UnitContextMenuButtonItem(
+    //   label: 'Request Transport',
+    //   onPressed: () {
+    //     _log.info(
+    //       'Setting ${unit.callsign} as Request Transport via context menu',
+    //     );
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // No Transport Required
+    // UnitContextMenuButtonItem(
+    //   label: 'No Transport Required',
+    //   onPressed: () {
+    //     _log.info(
+    //       'Setting ${unit.callsign} as No Transport Required via context menu',
+    //     );
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Leaving Scene
+    // UnitContextMenuButtonItem(
+    //   label: 'Leaving Scene',
+    //   onPressed: () {
+    //     _log.info('Setting ${unit.callsign} as Leaving Scene via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // At Hospital
+    // UnitContextMenuButtonItem(
+    //   label: 'At Hospital',
+    //   onPressed: () {
+    //     _log.info('Setting ${unit.callsign} as At Hospital via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
     // Clear Unit
     UnitContextMenuButtonItem(
       label: 'Clear Unit',
@@ -112,94 +112,94 @@ final class UnitContextMenuRegion extends StatelessWidget {
         throw UnimplementedError(); // TODO implement action
       },
     ),
-    // TODO once UnitContextMenuButtonItem refactored for nesting (see TODO on its class), add nesting menu for Available statuses
-    // Available Returning
-    UnitContextMenuButtonItem(
-      label: 'Available Returning',
-      onPressed: () {
-        _log.info(
-          'Setting ${unit.callsign} as Available Returning via context menu',
-        );
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Available Base
-    UnitContextMenuButtonItem(
-      label: 'Available Base',
-      onPressed: () {
-        _log.info(
-          'Setting ${unit.callsign} as Available Base via context menu',
-        );
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Available Other
-    UnitContextMenuButtonItem(
-      label: 'Available Other',
-      onPressed: () {
-        _log.info(
-          'Setting ${unit.callsign} as Available Other via context menu',
-        );
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Mobile to Standby
-    UnitContextMenuButtonItem(
-      label: 'Mobile to Standby',
-      onPressed: () {
-        _log.info(
-          'Setting ${unit.callsign} as Mobile to Standby via context menu',
-        );
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Available Standby
-    UnitContextMenuButtonItem(
-      label: 'Available Standby',
-      onPressed: () {
-        _log.info(
-          'Setting ${unit.callsign} as Available Standby via context menu',
-        );
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Available Voice
-    UnitContextMenuButtonItem(
-      label: 'Available Voice',
-      onPressed: () {
-        _log.info(
-          'Setting ${unit.callsign} as Available Voice via context menu',
-        );
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Pre Duty
-    UnitContextMenuButtonItem(
-      label: 'Pre Duty',
-      onPressed: () {
-        _log.info('Setting ${unit.callsign} as Pre Duty via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Dispatch Assign
-    UnitContextMenuButtonItem(
-      label: 'Dispatch Assign to ${unit.callsign}',
-      onPressed: () {
-        _log.info('Dispatch Assigning to ${unit.callsign} via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-
-    UnitContextMenuButtonItem.spacer(),
-
-    // Send MDT Message
-    UnitContextMenuButtonItem(
-      label: 'Send Message to ${unit.callsign}',
-      onPressed: () {
-        _log.info('Sending message to ${unit.callsign} via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
+    // // TODO once UnitContextMenuButtonItem refactored for nesting (see TODO on its class), add nesting menu for Available statuses
+    // // Available Returning
+    // UnitContextMenuButtonItem(
+    //   label: 'Available Returning',
+    //   onPressed: () {
+    //     _log.info(
+    //       'Setting ${unit.callsign} as Available Returning via context menu',
+    //     );
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Available Base
+    // UnitContextMenuButtonItem(
+    //   label: 'Available Base',
+    //   onPressed: () {
+    //     _log.info(
+    //       'Setting ${unit.callsign} as Available Base via context menu',
+    //     );
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Available Other
+    // UnitContextMenuButtonItem(
+    //   label: 'Available Other',
+    //   onPressed: () {
+    //     _log.info(
+    //       'Setting ${unit.callsign} as Available Other via context menu',
+    //     );
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Mobile to Standby
+    // UnitContextMenuButtonItem(
+    //   label: 'Mobile to Standby',
+    //   onPressed: () {
+    //     _log.info(
+    //       'Setting ${unit.callsign} as Mobile to Standby via context menu',
+    //     );
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Available Standby
+    // UnitContextMenuButtonItem(
+    //   label: 'Available Standby',
+    //   onPressed: () {
+    //     _log.info(
+    //       'Setting ${unit.callsign} as Available Standby via context menu',
+    //     );
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Available Voice
+    // UnitContextMenuButtonItem(
+    //   label: 'Available Voice',
+    //   onPressed: () {
+    //     _log.info(
+    //       'Setting ${unit.callsign} as Available Voice via context menu',
+    //     );
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Pre Duty
+    // UnitContextMenuButtonItem(
+    //   label: 'Pre Duty',
+    //   onPressed: () {
+    //     _log.info('Setting ${unit.callsign} as Pre Duty via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Dispatch Assign
+    // UnitContextMenuButtonItem(
+    //   label: 'Dispatch Assign to ${unit.callsign}',
+    //   onPressed: () {
+    //     _log.info('Dispatch Assigning to ${unit.callsign} via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    //
+    // UnitContextMenuButtonItem.spacer(),
+    //
+    // // Send MDT Message
+    // UnitContextMenuButtonItem(
+    //   label: 'Send Message to ${unit.callsign}',
+    //   onPressed: () {
+    //     _log.info('Sending message to ${unit.callsign} via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
 
     UnitContextMenuButtonItem.spacer(),
 
