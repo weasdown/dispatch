@@ -6,6 +6,7 @@ import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/event/status.dart';
 import '../../../domain/models/location/address.dart';
 import '../../../domain/models/person/patient.dart';
+import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
 import 'event_repository.dart';
@@ -51,6 +52,15 @@ class EventRepositoryLocal extends EventRepository {
   }
 
   int _currentIDNum;
+
+  @override
+  Future<Result<void>> dispatchUnit(Unit unit) async {
+    if (_selectedEvent == null) {
+      return Result.error(const NoSelectedEventException());
+    }
+
+    return Result.ok(_selectedEvent!.dispatchUnit(unit));
+  }
 
   @override
   Future<Result<Event>> eventByID(EventID id) async {
@@ -112,7 +122,7 @@ class EventRepositoryLocal extends EventRepository {
   Future<Result<void>> updatePatientForEvent(Patient patient) async {
     if (_selectedEvent == null) {
       // TODO test how this branch would be handled
-      return Result.error(NoSelectedEventException());
+      return Result.error(const NoSelectedEventException());
     }
 
     final Iterable<String> currentIDs = _selectedEvent!.patients.map(

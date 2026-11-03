@@ -1,6 +1,7 @@
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/person/patient.dart';
+import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
 
 /// Data source for events.
@@ -10,6 +11,8 @@ abstract class EventRepository {
   Future<Result<void>> addPatientToEvent(EventID eventID, Patient patient);
 
   Future<Result<void>> addRemark(Remark remark);
+
+  Future<Result<void>> dispatchUnit(Unit unit);
 
   /// Get an event by its ID.
   Future<Result<Event>> eventByID(EventID id);
