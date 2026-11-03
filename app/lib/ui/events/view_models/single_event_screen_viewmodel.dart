@@ -70,13 +70,14 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   }
 
   Future<Result<void>> dispatchUnit(Unit unit) async {
-    if (_event != null) {
-      _event!.dispatchUnit(unit);
-      _log.fine('Dispatched ${unit.callsign} to event ${_event!.idLastFour}');
-      return Result.ok(null);
-    } else {
-      return Result.error(NoSelectedEventException());
+    if (_event == null) {
+      return Result.error(const NoSelectedEventException());
     }
+
+    _eventRepository.dispatchUnit(unit);
+    _log.fine('Dispatched ${unit.callsign} to event ${_event!.idLastFour}');
+    notifyListeners();
+    return Result.ok(null);
   }
 
   final EventRepository _eventRepository;
