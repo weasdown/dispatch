@@ -1,4 +1,5 @@
 import 'package:latlong2/latlong.dart';
+import 'package:logging/logging.dart';
 
 import '../event/event.dart';
 import '../location/scas_locations.dart';
@@ -109,6 +110,8 @@ class Unit {
   String toString() => callsign;
 
   UnitHistoryEntry get _latestHistoryEntry => _history.last;
+
+  final _log = Logger('Unit')..level = Level.ALL;
 
   List<UnitHistoryEntry> get history => _history;
   final List<UnitHistoryEntry> _history = List.empty(growable: true);
