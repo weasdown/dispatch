@@ -28,11 +28,10 @@ class UnitRepositoryLocal extends UnitRepository {
 
   @override
   Future<Result<Unit>> unitByCallsign(String callsign) async {
-    final unit = _units.where((unit) => unit.callsign == callsign).firstOrNull;
-    if (unit == null) {
-      return Result.error(Exception('Unit not found'));
-    }
-    return Result.ok(unit);
+    final unit = _getUnitByCallsign(callsign);
+    return (unit != null)
+        ? Result.ok(unit)
+        : Result.error(Exception('Unit not found'));
   }
 
   Future<Result<List<Unit>>> get unitsList async {
