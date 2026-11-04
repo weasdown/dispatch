@@ -32,6 +32,21 @@ abstract class EventRepository {
   Future<Result<void>> updatePatientForEvent(Patient patient);
 }
 
+final class EventAlreadyExistsException implements Exception {
+  const EventAlreadyExistsException({required this._eventID, this.error});
+
+  final Error? error;
+  final EventID _eventID;
+
+  @override
+  String toString() {
+    final String optional = (error == null)
+        ? ''
+        : ', which caused the following error: ${error.toString()}';
+    return 'Event $_eventID already exists in event repository$optional';
+  }
+}
+
 final class EventNotFoundException implements Exception {
   const EventNotFoundException({required this.eventID, this.error});
 
