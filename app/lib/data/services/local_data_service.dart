@@ -17,7 +17,7 @@ class LocalDataService {
     : _events = _defaultEvents,
       _units = DefaultUnits._defaultUnits,
       _crewMembers = _defaultCrewMembers {
-    _setInitialEventUnitAllocations();
+    _setInitialUnitStatuses();
   }
 
   List<CrewMember> get crewMembers => _crewMembers;
@@ -289,7 +289,7 @@ class LocalDataService {
 
   List<Unit> get units => _units;
 
-  void _setInitialEventUnitAllocations() {
+  void _setInitialUnitStatuses() {
     // Default Cat 1
     _units[0].dispatchToEvent(event: _events[0]); // NA136
     _units[4].dispatchToEvent(event: _events[0]); // NF159
