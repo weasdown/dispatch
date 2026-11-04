@@ -1,5 +1,6 @@
-import 'dart:math';
+import 'dart:math' show Random;
 
+import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
@@ -19,12 +20,30 @@ class UnitRepositoryLocal extends UnitRepository {
   Future<Result<List<Unit>>> get allUnits => unitsList;
 
   Unit? _getUnitByCallsign(String callsign) =>
-      _units.where((unit) => unit.callsign == callsign).firstOrNull;
+      _units.where((Unit unit) => unit.callsign == callsign).firstOrNull;
 
   /// Gets a [Result.ok] holding a random unit from `_units`.
   @override
   Future<Result<Unit?>> get selectedUnit async =>
       Result.ok(_units[Random().nextInt(_units.length)]);
+
+  @override
+  Future<Result<void>> standdownUnit(Unit unit) async {
+    final Unit? foundUnit = _getUnitByCallsign(unit.callsign);
+    if (foundUnit == null) {
+      return Result<void>.error(UnitNotFoundException(unit: unit));
+    }
+
+    final Event? assignedEvent = foundUnit.assignedEvent;
+    if (assignedEvent == null) {
+      return Result<void>.error(NoAllocatedEventException(unit: unit));
+    }
+
+    log.fine(
+      'Standing down ${unit.callsign} from event ${assignedEvent.idLastFour}',
+    );
+    return Result<void>.ok(foundUnit.standdown());
+  }
 
   @override
   Future<Result<Unit>> unitByCallsign(String callsign) async {
@@ -42,5 +61,20 @@ class UnitRepositoryLocal extends UnitRepository {
     }
 
     return Result.ok(_units);
+  }
+}
+
+final class UnitNotFoundException implements Exception {
+  const UnitNotFoundException({required this.unit, this.error});
+
+  final Error? error;
+  final Unit unit;
+
+  @override
+  String toString() {
+    final String optional = (error == null)
+        ? ''
+        : ', which caused the following error: ${error.toString()}';
+    return 'Unit ${unit.callsign} not found in unit repository$optional';
   }
 }
