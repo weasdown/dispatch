@@ -377,10 +377,11 @@ interface class _DefaultUnits {
 }
 
 interface class _DefaultEvents {
-  static Event get _defaultC1 => Event.preAlert(
+  static Event get _defaultC1 => Event.withNOC(
     idNum: 1025,
     address: Address(county: 'Oxfordshire'),
     location: LatLng(51.57770580851515, -1.5679285114893033),
+    noc: Cat1NOC.c1ArrestPeriArrest(),
   );
 
   static Event get _greenwayC1 {
