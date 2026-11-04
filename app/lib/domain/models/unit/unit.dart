@@ -205,6 +205,28 @@ extension ToSimpleString on LatLng {
       '${latitude.toStringAsFixed(decimalPlaces)}, ${longitude.toStringAsFixed(decimalPlaces)}';
 }
 
+final class MoreThanOneAllocatedEventException implements Exception {
+  final Error? error;
+  final String message;
+  final int numAllocatedEvents;
+  final Unit unit;
+
+  MoreThanOneAllocatedEventException({
+    required this.numAllocatedEvents,
+    required this.unit,
+    this.error,
+  }) : message =
+           'Unit ${unit.callsign} is assigned to $numAllocatedEvents events  but should only be allocated to zero or one';
+
+  @override
+  String toString() {
+    final String optional = (error == null)
+        ? ''
+        : ', which caused the following error: ${error.toString()}';
+    return message + optional;
+  }
+}
+
 final class NoAllocatedEventException implements Exception {
   final Error? error;
   final String message;
