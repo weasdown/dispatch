@@ -10,11 +10,11 @@ import '../../../utils/result.dart';
 
 final class UnitsViewModel extends ChangeNotifier {
   UnitsViewModel({required this._unitRepository}) {
-    loadUnits = Command0(_loadUnits)..execute();
+    loadUnits = Command0<void>(_loadUnits)..execute();
   }
 
   late final Command0<void> loadUnits;
-  Future<Result<List<Unit>?>> _loadUnits() async {
+  Future<Result<List<Unit>>> _loadUnits() async {
     try {
       final unitResult = await _unitRepository.allUnits;
 

@@ -15,13 +15,15 @@ import '../../domain/models/unit/unit_status.dart';
 class LocalDataService {
   LocalDataService()
     : _events = _defaultEvents,
-      _units = DefaultUnits._defaultUnits,
+      _units = _DefaultUnits._defaultUnits,
       _crewMembers = _defaultCrewMembers {
     _setInitialUnitStatuses();
   }
 
   List<CrewMember> get crewMembers => _crewMembers;
   final List<CrewMember> _crewMembers;
+
+  Event get defaultC1 => _DefaultEvents._defaultC1;
 
   /// A default list of crew members who can be crewed on units.
   static List<CrewMember> get _defaultCrewMembers {
@@ -71,38 +73,18 @@ class LocalDataService {
 
   /// A default list of events.
   static List<Event> get _defaultEvents {
-    final Event defaultC1 =
-        Event.withNOC(
-            idNum: 3127,
-            address: Address(
-              buildingNumber: '6',
-              street: 'The Greenway',
-              county: 'Oxfordshire',
-            ),
-            location: LatLng(51.59799446397092, -1.3537030950825775),
-            noc: Cat1NOC.c1ArrestPeriArrest(),
-          )
-          .._addRemarks([
-            Remark(
-              author: _defaultUser,
-              message:
-                  'CPR was already in progress before the call was started.',
-            ),
-            Remark(author: _defaultUser, message: 'NA136 DP Didcot RC'),
-            Remark(
-              author: _defaultUser,
-              message: 'NF159 DP Smith\'s Wharf, Wantage',
-            ),
-            Remark(
-              author: _defaultUser,
-              message: 'ND027 DP Stokenchurch HEMS base',
-            ),
-            Remark(author: _defaultUser, message: 'NT431 DP Oxford City RC'),
-          ])
-          ..addPatient(_defaultPatient);
-
     List<Event> defaults = [
-      defaultC1,
+      Event.withNOC(
+        idNum: 3130,
+        address: Address(
+          flatNumberOrName: 'Next',
+          buildingName: 'Westgate Shopping Centre',
+          townOrCity: 'Oxford',
+        ),
+        location: LatLng(51.748863260384894, -1.261667647754695),
+        noc: Cat3NOC.fallInjuriesUnknown(),
+      ),
+      _DefaultEvents._greenwayC1,
       Event.preAlert(
         idNum: 3120,
         address: Address(buildingName: 'Sainsbury\'s Kidlington'),
@@ -138,16 +120,6 @@ class LocalDataService {
         address: Address(buildingName: 'Thatcham Station'),
         location: LatLng(51.393901, -1.242779),
         noc: Cat4NOC.mentalHealth(),
-      ),
-      Event.withNOC(
-        idNum: 3130,
-        address: Address(
-          flatNumberOrName: 'Next',
-          buildingName: 'Westgate Shopping Centre',
-          townOrCity: 'Oxford',
-        ),
-        location: LatLng(51.748863260384894, -1.261667647754695),
-        noc: Cat3NOC.fallInjuriesUnknown(),
       ),
     ];
 
@@ -281,6 +253,13 @@ class LocalDataService {
     return randomCrewMembers;
   }
 
+  Event? getEvent(Event event) =>
+      _events.where((dbEvent) => dbEvent == event).firstOrNull;
+
+  // FIXME doesn't uniquely identify events as would find ones from other days with same last four.
+  Event? getEventByID(String idLastFour) =>
+      _events.where((dbEvent) => dbEvent.idLastFour == idLastFour).firstOrNull;
+
   Patient getPatient() => _defaultPatient;
 
   Unit? getUnit(Unit unit) =>
@@ -294,20 +273,20 @@ class LocalDataService {
 
   void _setInitialUnitStatuses() {
     // Make some units available.
-    getUnit(DefaultUnits.nf159())?.updateStatus(newStatus: UnitStatus.am);
-    getUnit(DefaultUnits.nd027())?.updateStatus(newStatus: UnitStatus.ab);
-    getUnit(DefaultUnits.nt431())?.updateStatus(newStatus: UnitStatus.ab);
-    getUnit(DefaultUnits.hm24())?.updateStatus(newStatus: UnitStatus.ab);
+    getUnit(_DefaultUnits.nf159)?.updateStatus(newStatus: UnitStatus.am);
+    getUnit(_DefaultUnits.nd027)?.updateStatus(newStatus: UnitStatus.ab);
+    getUnit(_DefaultUnits.nt431)?.updateStatus(newStatus: UnitStatus.ab);
+    getUnit(_DefaultUnits.hm24)?.updateStatus(newStatus: UnitStatus.ab);
 
     // Assign some units to events.
-    getUnit(DefaultUnits.na283())
-        ?.assignToEvent(event: _events[3], status: UnitStatus.as);
-    getUnit(DefaultUnits.na402())
-        ?.assignToEvent(event: _events[4], status: UnitStatus.ls);
-    getUnit(DefaultUnits.nr154())
-        ?.assignToEvent(event: _events[5], status: UnitStatus.as);
-    getUnit(DefaultUnits.na172())
-        ?.assignToEvent(event: _events[6], status: UnitStatus.mo);
+    getUnit(_DefaultUnits.na283)
+        ?.assignToEvent(event: getEventByID('3129')!, status: UnitStatus.as);
+    getUnit(_DefaultUnits.na402)
+        ?.assignToEvent(event: getEventByID('3126')!, status: UnitStatus.ls);
+    getUnit(_DefaultUnits.nr154)
+        ?.assignToEvent(event: getEventByID('3128')!, status: UnitStatus.as);
+    getUnit(_DefaultUnits.na172)
+        ?.assignToEvent(event: getEventByID('3130')!, status: UnitStatus.mo);
   }
 }
 
@@ -322,52 +301,52 @@ extension AddRemarks on Event {
 DateTime _todayAtTime({required int hour, int? minute}) =>
     DateTime.now().copyWith(hour: hour, minute: minute ?? 0);
 
-interface class DefaultUnits {
-  static Unit na136() => Unit(
+interface class _DefaultUnits {
+  static Unit get na136 => Unit(
     callsign: 'NA136',
     location: LatLng(51.607539604000266, -1.237806756282358),
     personnel: _defaultCrewMembers.sublist(0, 2),
   )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800);
-  static Unit na402() => Unit(
+  static Unit get na402 => Unit(
     callsign: 'NA402',
     location: LatLng(51.605, -1.238),
     personnel: _defaultCrewMembers.sublist(2, 4),
   )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800);
-  static Unit na283() => Unit(
+  static Unit get na283 => Unit(
     callsign: 'NA283',
     location: LatLng(51.616072911907786, -1.2536017723108663),
     personnel: _defaultCrewMembers.sublist(4, 6),
   )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800);
-  static Unit na172() => Unit(
+  static Unit get na172 => Unit(
     callsign: 'NA172',
     location: LatLng(51.8296012219854, -1.3134667111590494),
     personnel: _defaultCrewMembers.sublist(6, 8),
   )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000);
-  static Unit nf159() => Unit(
+  static Unit get nf159 => Unit(
     callsign: 'NF159',
     location: LatLng(51.62832936052779, -1.1854888181805424),
     vehicleType: VehicleType.communityFirstResponder,
     personnel: [_defaultCrewMembers[8]],
   )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2200);
-  static Unit nr154() => Unit(
+  static Unit get nr154 => Unit(
     callsign: 'NR154',
     location: LatLng(51.66706110914126, -1.3082872829130447),
     vehicleType: VehicleType.rrv,
     personnel: [_defaultCrewMembers[9]],
   )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000);
-  static Unit nd027() => Unit(
+  static Unit get nd027 => Unit(
     callsign: 'ND027',
     location: LatLng(51.66182910219628, -0.9084334753014697),
     vehicleType: VehicleType.criticalCareCar,
     personnel: _defaultCrewMembers.sublist(10, 12),
   )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000);
-  static Unit nt431() => Unit(
+  static Unit get nt431 => Unit(
     callsign: 'NT431',
     location: LatLng(51.397809576171085, -1.3230646597735394),
     vehicleType: VehicleType.rrv,
     personnel: [_defaultCrewMembers[12]],
   )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000);
-  static Unit hm24() => Unit(
+  static Unit get hm24 => Unit(
     callsign: '0024',
     location: LatLng(51.61832936052779, -1.0854888181805424),
     vehicleType: VehicleType.helicopter,
@@ -385,14 +364,51 @@ interface class DefaultUnits {
 
   /// A default list of units.
   static List<Unit> get _defaultUnits => [
-    DefaultUnits.na136(),
-    DefaultUnits.na402(),
-    DefaultUnits.na283(),
-    DefaultUnits.na172(),
-    DefaultUnits.nf159(),
-    DefaultUnits.nr154(),
-    DefaultUnits.nd027(),
-    DefaultUnits.nt431(),
-    DefaultUnits.hm24(),
+    _DefaultUnits.na136,
+    _DefaultUnits.na402,
+    _DefaultUnits.na283,
+    _DefaultUnits.na172,
+    _DefaultUnits.nf159,
+    _DefaultUnits.nr154,
+    _DefaultUnits.nd027,
+    _DefaultUnits.nt431,
+    _DefaultUnits.hm24,
   ];
+}
+
+interface class _DefaultEvents {
+  static Event get _defaultC1 => Event.withNOC(
+    idNum: 1025,
+    address: Address(county: 'Oxfordshire'),
+    location: LatLng(51.57770580851515, -1.5679285114893033),
+    noc: Cat1NOC.c1ArrestPeriArrest(),
+  );
+
+  static Event get _greenwayC1 {
+    final User user = LocalDataService._defaultUser;
+    return Event.withNOC(
+        idNum: 3127,
+        address: Address(
+          buildingNumber: '6',
+          street: 'The Greenway',
+          county: 'Oxfordshire',
+        ),
+        location: LatLng(51.59799446397092, -1.3537030950825775),
+        noc: Cat1NOC.c1ArrestPeriArrest(),
+      )
+      .._addRemarks([
+        Remark(
+          author: user,
+          message: 'CPR was already in progress before the call was started.',
+        ),
+        Remark(author: user, message: 'NA136 DP Didcot RC'),
+        Remark(author: user, message: 'NF159 DP Smith\'s Wharf, Wantage'),
+        Remark(author: user, message: 'ND027 DP Stokenchurch HEMS base'),
+        Remark(author: user, message: 'NT431 DP Oxford City RC'),
+      ])
+      ..addPatient(LocalDataService._defaultPatient)
+    // // FIXME dispatch doesn't work here
+    // ..dispatchUnit(DefaultUnits.nt431())
+    ;
+  }
 }

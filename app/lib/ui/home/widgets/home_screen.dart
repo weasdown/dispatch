@@ -1,18 +1,21 @@
-import 'package:dispatch/ui/map/view_models/map_view_model.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../domain/models/event/category.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
+import '../../events/priority_colour.dart';
 import '../../events/view_models/all_events_view_model.dart';
 import '../../events/view_models/single_event_screen_viewmodel.dart';
 import '../../events/widgets/single_event_screen.dart';
+import '../../map/view_models/map_view_model.dart';
 import '../../map/widgets/map.dart';
 import '../../unit/view_models/units_view_model.dart';
 import '../view_models/home_viewmodel.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
     required this.homeViewModel,
@@ -36,75 +39,112 @@ class HomeScreen extends StatelessWidget {
   final UnitsViewModel unitsViewModel;
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final Logger _log = Logger('HomeScreen');
+
+  // When a new C1/L1 event is received, it will be sent over the homeViewModel's newC1L1Stream.
+  // When a new event is received from the stream, show a snackbar with a button to select the event.
+  void _onNewC1L1(Event newC1L1) {
+    SchedulerBinding.instance.addPostFrameCallback(
+      (_) => ScaffoldMessenger.of(context).showSnackBar(
+        C1L1PurpleBanner(
+          newC1L1: newC1L1,
+          context: context,
+          eventsViewModel: widget.eventsViewModel,
+          singleEventScreenViewModel: widget.singleEventScreenViewModel,
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final Logger log = Logger('HomeScreen');
     hierarchicalLoggingEnabled = true;
 
-    // FIXME use ListenableBuilder instead of FutureBuilder (e.g. see AllUnitsScreen)
-    return FutureBuilder(
-      future: Future.wait([
-        singleEventScreenViewModel.events,
-        singleEventScreenViewModel.units,
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        widget.singleEventScreenViewModel.load,
+        widget.eventsViewModel.loadEvents,
       ]),
-      builder:
-          (
-            BuildContext context,
-            AsyncSnapshot<List<Result<List<Object>>>> snapshot,
-          ) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              final Result<List<Event>> eventsResult =
-                  snapshot.data![0] as Result<List<Event>>;
-              final Result<List<Unit>> unitsResult =
-                  snapshot.data![1] as Result<List<Unit>>;
+      builder: (context, child) {
+        if (widget.singleEventScreenViewModel.load.running ||
+            widget.eventsViewModel.loadEvents.running) {
+          _log.finer('HomeScreen viewModels are still loading...');
+          return const Center(child: CircularProgressIndicator());
+        }
 
-              // Events and units loaded successfully.
-              if (eventsResult is! Ok<List<Event>> ||
-                  unitsResult is! Ok<List<Unit>>) {
-                return _HomeErrorDisplay(
-                  eventsResult: eventsResult,
-                  unitsResult: unitsResult,
-                );
+        if (widget.singleEventScreenViewModel.load.error ||
+            widget.eventsViewModel.loadEvents.error) {
+          _log.finer('HomeScreen viewModel(s) received an error');
+          return _HomeErrorDisplay(
+            eventsResult:
+                widget.eventsViewModel.loadEvents.result as Result<List<Event>>,
+            unitsResult:
+                widget.unitsViewModel.loadUnits.result as Result<List<Unit>>,
+          );
+        } else {
+          _log.finer('HomeScreen viewModels successfully completed loading');
+          return child!;
+        }
+      },
+      child: Scaffold(
+        body: StreamBuilder(
+          stream: widget.homeViewModel.newC1L1Stream,
+          builder: (BuildContext context, AsyncSnapshot<Event> snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data == null) {
+                _log.severe('Received null C1/L1 event from stream');
               }
-
-              log.fine('Events and units loaded successfully');
-
-              // TODO convert this row of flexibles into tabs, with one tab being displayed on narrow screens, or two tabs side by side on laptop-sized screens.
-              return Row(
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: MapPage(
-                      mapViewModel: mapViewModel,
-                      eventsViewModel: eventsViewModel,
-                      singleEventScreenViewModel: singleEventScreenViewModel,
-                      unitsViewModel: unitsViewModel,
-                      events: eventsResult.value,
-                      units: unitsResult.value,
-                    ),
-                  ),
-                  VerticalDivider(width: 3, thickness: 3),
-                  Flexible(
-                    flex: 1,
-                    child: SingleEventScreen(
-                      viewModel: singleEventScreenViewModel,
-                    ),
-                  ),
-                  // Flexible(
-                  //   flex: 1,
-                  //   child: AllEventsScreen(viewModel: allEventsViewModel),
-                  // ),
-                  // Flexible(
-                  //   flex: 1,
-                  //   child: AllUnitsScreen(viewModel: unitsViewModel),
-                  // ),
-                ],
+              final Event newC1L1 = snapshot.data!;
+              _log.warning(
+                'Received new C1 ${newC1L1.idLastFour}! Showing purple banner',
               );
+              _onNewC1L1(newC1L1);
             }
-            // snapshot is not done
-            else {
-              return Center(child: CircularProgressIndicator());
-            }
+
+            final Ok<List<Event>> eventsResult =
+                widget.eventsViewModel.loadEvents.result as Ok<List<Event>>;
+            final Ok<List<Unit>> unitsResult =
+                widget.unitsViewModel.loadUnits.result as Ok<List<Unit>>;
+
+            // TODO convert this row of flexibles into tabs, with one tab being displayed on narrow screens, or two tabs side by side on laptop-sized screens.
+            return Row(
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: MapPage(
+                    mapViewModel: widget.mapViewModel,
+                    eventsViewModel: widget.eventsViewModel,
+                    singleEventScreenViewModel:
+                        widget.singleEventScreenViewModel,
+                    unitsViewModel: widget.unitsViewModel,
+                    events: eventsResult.value,
+                    units: unitsResult.value,
+                  ),
+                ),
+                VerticalDivider(width: 3, thickness: 3),
+                Flexible(
+                  flex: 1,
+                  child: SingleEventScreen(
+                    viewModel: widget.singleEventScreenViewModel,
+                  ),
+                ),
+                // Flexible(
+                //   flex: 1,
+                //   child: AllEventsScreen(viewModel: allEventsViewModel),
+                // ),
+                // Flexible(
+                //   flex: 1,
+                //   child: AllUnitsScreen(viewModel: unitsViewModel),
+                // ),
+              ],
+            );
           },
+        ),
+      ),
     );
   }
 }
@@ -147,4 +187,37 @@ class _HomeErrorDisplay extends StatelessWidget {
       error: FlutterError(error.toString()),
     );
   }
+}
+
+/// A purple snackbar that's displayed when a new C1/L1 event is received from the [HomeViewModel.newC1L1Stream].
+class C1L1PurpleBanner extends SnackBar {
+  C1L1PurpleBanner({
+    super.key,
+    required BuildContext context,
+    required AllEventsViewModel eventsViewModel,
+    required SingleEventScreenViewModel singleEventScreenViewModel,
+    required Event newC1L1,
+  }) : super(
+         content: Text(
+           'New C1/L1: ${newC1L1.idLastFour}',
+           style: Theme.of(context).textTheme.bodyLarge!
+               .copyWith(color: _textColour),
+         ),
+         backgroundColor: Category.one.priority.backgroundColour,
+         showCloseIcon: true,
+         persist: true,
+         action: SnackBarAction(
+           label: 'Show event',
+           textColor: _textColour,
+           onPressed: () {
+             (Logger('C1L1PurpleBanner')..level = Level.ALL).fine(
+               'Selecting new C1/L1 ${newC1L1.idLastFour} from snackbar',
+             );
+             eventsViewModel.selectEvent.execute(newC1L1);
+             singleEventScreenViewModel.displayEvent.execute(newC1L1);
+           },
+         ),
+       );
+
+  static final Color _textColour = Colors.white;
 }

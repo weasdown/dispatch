@@ -119,14 +119,14 @@ class _RemarksLogState extends State<RemarksLog> {
 
   @override
   void didUpdateWidget(covariant RemarksLog oldWidget) {
-    oldWidget.viewModel.selectEvent.removeListener(_onResult);
-    widget.viewModel.selectEvent.addListener(_onResult);
+    oldWidget.viewModel.refreshEvent.removeListener(_onResult);
+    widget.viewModel.refreshEvent.addListener(_onResult);
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   void dispose() {
-    widget.viewModel.selectEvent.removeListener(_onResult);
+    widget.viewModel.refreshEvent.removeListener(_onResult);
     // Clean up the controller when the widget is disposed.
     _textController.dispose();
     super.dispose();
@@ -135,22 +135,22 @@ class _RemarksLogState extends State<RemarksLog> {
   @override
   void initState() {
     super.initState();
-    widget.viewModel.selectEvent.addListener(_onResult);
+    widget.viewModel.refreshEvent.addListener(_onResult);
   }
 
   void _onResult() {
-    if (widget.viewModel.selectEvent.completed) {
-      widget.viewModel.selectEvent.clearResult();
+    if (widget.viewModel.refreshEvent.completed) {
+      widget.viewModel.refreshEvent.clearResult();
     }
 
-    if (widget.viewModel.selectEvent.error) {
-      widget.viewModel.selectEvent.clearResult();
+    if (widget.viewModel.refreshEvent.error) {
+      widget.viewModel.refreshEvent.clearResult();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error while setting event'),
           action: SnackBarAction(
             label: 'Try again',
-            onPressed: widget.viewModel.selectEvent.execute,
+            onPressed: widget.viewModel.refreshEvent.execute,
           ),
         ),
       );

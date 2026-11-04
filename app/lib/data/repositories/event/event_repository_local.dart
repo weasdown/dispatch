@@ -2,6 +2,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/event/priority.dart';
 import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/event/status.dart';
 import '../../../domain/models/location/address.dart';
@@ -14,6 +15,22 @@ import 'event_repository.dart';
 /// Local implementation of EventRepository
 class EventRepositoryLocal extends EventRepository {
   EventRepositoryLocal({required this._localDataService}) : _currentIDNum = 100;
+
+  @override
+  Future<Result<void>> addEvent(Event event) async {
+    if (!_events.contains(event)) {
+      _events.add(event);
+
+      // Trigger purple banner for new C1/L1.
+      if (event.priority == Priority.zero) {
+        newC1StreamController.sink.add(event);
+      }
+
+      return Result.ok(null);
+    } else {
+      return Result.error(EventAlreadyExistsException(eventID: event.id));
+    }
+  }
 
   @override
   Future<Result<void>> addPatientToEvent(
@@ -52,6 +69,9 @@ class EventRepositoryLocal extends EventRepository {
   }
 
   int _currentIDNum;
+
+  @override
+  Event get defaultC1 => _localDataService.defaultC1;
 
   @override
   Future<Result<void>> dispatchUnit(Unit unit) async {
@@ -111,11 +131,7 @@ class EventRepositoryLocal extends EventRepository {
 
   final LocalDataService _localDataService;
 
-  Logger get _log {
-    final Logger log = Logger('EventRepositoryLocal');
-    log.level = Level.ALL;
-    return log;
-  }
+  Logger get _log => Logger('EventRepositoryLocal')..level = Level.ALL;
 
   @override
   int get nextIDNum {
@@ -208,5 +224,15 @@ class EventRepositoryLocal extends EventRepository {
         ),
       );
     }
+  }
+
+  @override
+  void onAutoCat1() {
+    _log.fine('Sending new C1 to stream');
+
+    final Event newC1 = _localDataService.defaultC1;
+
+    addEvent(newC1);
+    newC1StreamController.sink.add(newC1);
   }
 }
