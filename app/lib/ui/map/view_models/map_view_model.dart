@@ -120,8 +120,6 @@ class MapViewModel extends ChangeNotifier {
     return result;
   }
 
-  // final SingleEventScreenViewModel _singleEventScreenViewModel;
-
   List<Unit> get units => _units;
   List<Unit> _units = [];
 }
