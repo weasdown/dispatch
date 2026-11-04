@@ -48,24 +48,24 @@ final class EventAlreadyExistsException implements Exception {
 }
 
 final class EventNotFoundException implements Exception {
-  const EventNotFoundException({required this.eventID, this.error});
+  const EventNotFoundException({required this._eventID, this.error});
 
   final Error? error;
-  final EventID eventID;
+  final EventID _eventID;
 
   @override
   String toString() {
     final String optional = (error == null)
         ? ''
         : ', which caused the following error: ${error.toString()}';
-    return 'Event $eventID not found in event repository$optional';
+    return 'Event $_eventID not found in event repository$optional';
   }
 }
 
 final class NoSelectedEventException implements Exception {
   final Error? error;
 
-  final String message;
+  final String _message;
 
   const NoSelectedEventException([this.error])
     : _message = 'No event is selected';
