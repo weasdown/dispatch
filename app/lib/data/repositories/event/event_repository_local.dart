@@ -57,22 +57,42 @@ class EventRepositoryLocal extends EventRepository {
   Future<Result<void>> dispatchUnit(Unit unit) async {
     if (_selectedEvent == null) {
       _log.warning('Cannot dispatch ${unit.callsign} as no event is selected');
-      return Result.error(const NoSelectedEventException());
+      return Result<void>.error(const NoSelectedEventException());
     }
 
     _log.info(
       'Dispatching ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
     );
-    return Result.ok(_selectedEvent!.dispatchUnit(unit));
+    return Result<void>.ok(_selectedEvent!.dispatchUnit(unit));
   }
 
   @override
   Future<Result<Event>> eventByID(EventID id) async {
     final event = _events.where((event) => event.id == id).firstOrNull;
     if (event == null) {
-      return Result.error(Exception('Event not found'));
+      return Result<Event>.error(EventNotFoundException(eventID: id));
     }
-    return Result.ok(event);
+    return Result<Event>.ok(event);
+  }
+
+  @override
+  Event? eventForUnit(Unit unit) {
+    final Iterable<Event> allocatedEvents = _events.where(
+      (Event event) => event.assignedUnits.contains(unit),
+    );
+
+    final int numAllocatedEvents = allocatedEvents.length;
+    if (numAllocatedEvents != 1) {
+      _log.severe(
+        MoreThanOneAllocatedEventException(
+          numAllocatedEvents: numAllocatedEvents,
+          unit: unit,
+        ),
+      );
+      return null;
+    } else {
+      return allocatedEvents.first;
+    }
   }
 
   final _events = List<Event>.empty(growable: true);
@@ -120,6 +140,22 @@ class EventRepositoryLocal extends EventRepository {
   Future<Result<bool>> setEvent(Event event) async {
     _selectedEvent = event;
     return const Result.ok(true);
+  }
+
+  @override
+  Future<Result<void>> standdownUnit(Unit unit) async {
+    final Event? allocatedEvent = eventForUnit(unit);
+    if (allocatedEvent == null) {
+      _log.warning(
+        'Cannot stand down ${unit.callsign} as it is not allocated to an event',
+      );
+      return Result<void>.error(NoAllocatedEventException(unit: unit));
+    }
+
+    _log.info(
+      'Standing down ${unit.callsign} from event ${allocatedEvent.idLastFour}',
+    );
+    return Result<void>.ok(unit.standdown());
   }
 
   @override

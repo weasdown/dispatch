@@ -17,6 +17,8 @@ abstract class EventRepository {
   /// Get an event by its ID.
   Future<Result<Event>> eventByID(EventID id);
 
+  Event? eventForUnit(Unit unit);
+
   int get nextIDNum;
 
   Event? _selectedEvent;
@@ -25,7 +27,24 @@ abstract class EventRepository {
 
   Future<Result<void>> setEvent(Event event);
 
+  Future<Result<void>> standdownUnit(Unit unit);
+
   Future<Result<void>> updatePatientForEvent(Patient patient);
+}
+
+final class EventNotFoundException implements Exception {
+  const EventNotFoundException({required this.eventID, this.error});
+
+  final Error? error;
+  final EventID eventID;
+
+  @override
+  String toString() {
+    final String optional = (error == null)
+        ? ''
+        : ', which caused the following error: ${error.toString()}';
+    return 'Event $eventID not found in event repository$optional';
+  }
 }
 
 final class NoSelectedEventException implements Exception {
