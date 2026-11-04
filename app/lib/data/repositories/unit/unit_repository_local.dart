@@ -63,18 +63,3 @@ class UnitRepositoryLocal extends UnitRepository {
     return Result.ok(_units);
   }
 }
-
-final class UnitNotFoundException implements Exception {
-  const UnitNotFoundException({required this.unit, this.error});
-
-  final Error? error;
-  final Unit unit;
-
-  @override
-  String toString() {
-    final String optional = (error == null)
-        ? ''
-        : ', which caused the following error: ${error.toString()}';
-    return 'Unit ${unit.callsign} not found in unit repository$optional';
-  }
-}
