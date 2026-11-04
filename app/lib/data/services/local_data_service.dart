@@ -23,6 +23,8 @@ class LocalDataService {
   List<CrewMember> get crewMembers => _crewMembers;
   final List<CrewMember> _crewMembers;
 
+  Event get defaultC1 => _DefaultEvents._defaultC1;
+
   /// A default list of crew members who can be crewed on units.
   static List<CrewMember> get _defaultCrewMembers {
     List<CrewMember> crewMembers = _generateCrewMembers();
@@ -71,38 +73,8 @@ class LocalDataService {
 
   /// A default list of events.
   static List<Event> get _defaultEvents {
-    final Event defaultC1 =
-        Event.withNOC(
-            idNum: 3127,
-            address: Address(
-              buildingNumber: '6',
-              street: 'The Greenway',
-              county: 'Oxfordshire',
-            ),
-            location: LatLng(51.59799446397092, -1.3537030950825775),
-            noc: Cat1NOC.c1ArrestPeriArrest(),
-          )
-          .._addRemarks([
-            Remark(
-              author: _defaultUser,
-              message:
-                  'CPR was already in progress before the call was started.',
-            ),
-            Remark(author: _defaultUser, message: 'NA136 DP Didcot RC'),
-            Remark(
-              author: _defaultUser,
-              message: 'NF159 DP Smith\'s Wharf, Wantage',
-            ),
-            Remark(
-              author: _defaultUser,
-              message: 'ND027 DP Stokenchurch HEMS base',
-            ),
-            Remark(author: _defaultUser, message: 'NT431 DP Oxford City RC'),
-          ])
-          ..addPatient(_defaultPatient);
-
     List<Event> defaults = [
-      defaultC1,
+      _DefaultEvents._greenwayC1,
       Event.preAlert(
         idNum: 3120,
         address: Address(buildingName: 'Sainsbury\'s Kidlington'),
