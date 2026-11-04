@@ -283,6 +283,16 @@ class LocalDataService {
 
   Patient getPatient() => _defaultPatient;
 
+  Unit? getUnit(Unit unit) {
+    try {
+      final Unit foundUnit = _units.firstWhere((Unit dbUnit) => dbUnit == unit);
+      return foundUnit;
+    } on StateError {
+      // Return null if no unit in _units matches unit.
+      return null;
+    }
+  }
+
   User getUser() => _defaultUser;
 
   final List<Unit> _units;
