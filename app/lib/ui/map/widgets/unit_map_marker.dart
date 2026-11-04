@@ -55,45 +55,48 @@ final class UnitMapMarker {
     VehicleType.coResponder => 'assets/images/rrv.png',
   };
 
-  Widget _body(BuildContext context) => UnitContextMenuRegion(
-    unit: _unit,
-    controller: menuController,
-    eventsViewModel: _eventsViewModel,
-    unitsViewModel: _unitsViewModel,
-    mapViewModel: _mapViewModel,
-    child: Container(
-      // height: 100,
-      // width: 80,
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Gap(4),
-          Container(
-            color: _unit.status.backgroundColour,
-            child: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Text(
-                _unit.callsign,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: _unit.status.textColour,
+  Widget _body(BuildContext context) => ListenableBuilder(
+    listenable: _mapViewModel,
+    builder: (BuildContext context, Widget? child) => UnitContextMenuRegion(
+      unit: _unit,
+      controller: menuController,
+      eventsViewModel: _eventsViewModel,
+      unitsViewModel: _unitsViewModel,
+      mapViewModel: _mapViewModel,
+      child: Container(
+        // height: 100,
+        // width: 80,
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Gap(4),
+            Container(
+              color: _unit.status.backgroundColour,
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Text(
+                  _unit.callsign,
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: _unit.status.textColour,
+                  ),
+                  textAlign: TextAlign.center,
+                  softWrap: false,
                 ),
-                textAlign: TextAlign.center,
-                softWrap: false,
               ),
             ),
-          ),
 
-          // Gap(4),
-          Image.asset(
-            _iconAsset,
-            height: 35,
-            // scale: 0.5,
-            width: 50,
-            // scale: 0.2,
-          ),
-        ],
+            // Gap(4),
+            Image.asset(
+              _iconAsset,
+              height: 35,
+              // scale: 0.5,
+              width: 50,
+              // scale: 0.2,
+            ),
+          ],
+        ),
       ),
     ),
   );
