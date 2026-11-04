@@ -83,7 +83,6 @@ class _FlutterMapPageState extends State<FlutterMapPage> {
         initialCenter: MapPage.scasCentre,
         initialZoom: 9,
         onTap: (tapPosition, point) {
-          debugPrint('MapOptions onTap');
           contextMenuController.remove();
         },
       ),
