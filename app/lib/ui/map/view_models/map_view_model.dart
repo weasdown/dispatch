@@ -24,8 +24,18 @@ class MapViewModel extends ChangeNotifier {
     }
 
     _log.fine('Dispatching ${unit.callsign} to event ${_event!.idLastFour}');
-    final result = _eventRepository.dispatchUnit(unit);
-    notifyListeners();
+    final result = await _eventRepository.dispatchUnit(unit);
+    switch (result) {
+      case Ok<void>():
+        _log.info(
+          'Successfully dispatched ${unit.callsign} to event ${_event!.idLastFour}',
+        );
+        notifyListeners();
+      case Error<void>():
+        _log.severe(
+          'Failed to dispatch ${unit.callsign} to event ${_event!.idLastFour}: ${result.error}',
+        );
+    }
     return result;
   }
 
