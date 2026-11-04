@@ -68,14 +68,13 @@ final class NoSelectedEventException implements Exception {
   final String message;
 
   const NoSelectedEventException([this.error])
-    : message = 'No event is selected';
+    : _message = 'No event is selected';
 
   @override
   String toString() {
-    final String base = 'no event is selected';
     final String optional = (error == null)
         ? ''
         : ', which caused the following error: ${error.toString()}';
-    return base + optional;
+    return _message + optional;
   }
 }
