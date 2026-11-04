@@ -74,6 +74,16 @@ class LocalDataService {
   /// A default list of events.
   static List<Event> get _defaultEvents {
     List<Event> defaults = [
+      Event.withNOC(
+        idNum: 3130,
+        address: Address(
+          flatNumberOrName: 'Next',
+          buildingName: 'Westgate Shopping Centre',
+          townOrCity: 'Oxford',
+        ),
+        location: LatLng(51.748863260384894, -1.261667647754695),
+        noc: Cat3NOC.fallInjuriesUnknown(),
+      ),
       _DefaultEvents._greenwayC1,
       Event.preAlert(
         idNum: 3120,
@@ -110,16 +120,6 @@ class LocalDataService {
         address: Address(buildingName: 'Thatcham Station'),
         location: LatLng(51.393901, -1.242779),
         noc: Cat4NOC.mentalHealth(),
-      ),
-      Event.withNOC(
-        idNum: 3130,
-        address: Address(
-          flatNumberOrName: 'Next',
-          buildingName: 'Westgate Shopping Centre',
-          townOrCity: 'Oxford',
-        ),
-        location: LatLng(51.748863260384894, -1.261667647754695),
-        noc: Cat3NOC.fallInjuriesUnknown(),
       ),
     ];
 
