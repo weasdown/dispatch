@@ -19,6 +19,10 @@ class Unit {
     );
   }
 
+  @override
+  bool operator ==(Object other) =>
+      (other is Unit) && (other.callsign == callsign);
+
   // TODO add another attribute to handle when a unit is Dispatch Assigned to one or more other events at the same time as _assignedEvent being set.
   Event? get assignedEvent => _assignedEvent;
   Event? _assignedEvent;
@@ -42,6 +46,9 @@ class Unit {
       assignToEvent(event: event, status: UnitStatus.dp);
 
   DateTime? get endOfShift => shiftEnd;
+
+  @override
+  int get hashCode => Object.hashAll([callsign, vehicleType]);
 
   bool get isHEMSUnit => switch (vehicleType) {
     VehicleType.helicopter || VehicleType.criticalCareCar => true,
