@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/person/patient.dart';
@@ -6,11 +8,20 @@ import '../../../utils/result.dart';
 
 /// Data source for events.
 abstract class EventRepository {
+  EventRepository()
+    : newC1StreamController = StreamController<Event>.broadcast() {
+    Timer(Duration(seconds: 5), onAutoCat1);
+  }
+
   Future<Result<List<Event>>> get allEvents;
 
   Future<Result<void>> addPatientToEvent(EventID eventID, Patient patient);
 
+  Future<Result<void>> addEvent(Event event);
+
   Future<Result<void>> addRemark(Remark remark);
+
+  Event get defaultC1;
 
   Future<Result<void>> dispatchUnit(Unit unit);
 
@@ -21,9 +32,15 @@ abstract class EventRepository {
 
   int get nextIDNum;
 
-  Event? _selectedEvent;
+  final StreamController<Event> newC1StreamController;
+
+  Stream<Event> get newC1Stream => newC1StreamController.stream;
+
+  void onAutoCat1();
 
   Future<Result<Event?>> get selectedEvent async => Result.ok(_selectedEvent);
+
+  Event? _selectedEvent;
 
   Future<Result<void>> setEvent(Event event);
 
