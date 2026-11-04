@@ -39,7 +39,6 @@ final class UnitContextMenuRegion extends StatelessWidget {
         switch (result) {
           case Ok<void>():
             _log.info('Successfully dispatched ${unit.callsign}');
-          // TODO trigger rebuilding of unit map marker to show new status
           case Error<void>():
             _log.severe('Failed to dispatch ${unit.callsign}: ${result.error}');
         }
@@ -215,9 +214,18 @@ final class UnitContextMenuRegion extends StatelessWidget {
     // Standdown unit
     UnitContextMenuButtonItem(
       label: 'Standdown ${unit.callsign}',
-      onPressed: () {
+      onPressed: () async {
         _log.info('Standing down ${unit.callsign} via context menu');
-        throw UnimplementedError(); // TODO implement action
+        final result = await _mapViewModel.standdownUnit(unit);
+
+        switch (result) {
+          case Ok<void>():
+            _log.info('Successfully stood down ${unit.callsign}');
+          case Error<void>():
+            _log.severe(
+              'Failed to stand down ${unit.callsign}: ${result.error}',
+            );
+        }
       },
     ),
 
