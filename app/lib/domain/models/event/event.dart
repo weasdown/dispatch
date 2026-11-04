@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:latlong2/latlong.dart';
+import 'package:logging/logging.dart';
 
 import '../location/address.dart';
 import '../person/patient.dart';
@@ -251,6 +252,8 @@ class Event {
   /// The latitude and longitude of the emergency.
   LatLng? location;
 
+  final _log = Logger('Event')..level = Level.ALL;
+
   // /// Returns the latitude and longitude of a given street [address].
   // Future<Location> _locationFromAddress() async {
   //   GeocodingResponse info = await geocoding.searchByAddress(address);
@@ -285,6 +288,20 @@ class Event {
   final List<Remark> _remarks = [];
 
   UnmodifiableListView<Remark> get remarks => UnmodifiableListView(_remarks);
+
+  void standdownUnit(Unit unit) {
+    _log.fine('Standing down unit ${unit.callsign} from event $idLastFour');
+    final bool unitWasAssigned = assignedUnits.remove(unit);
+    if (!unitWasAssigned) {
+      _log.warning(
+        'Unit ${unit.callsign} was not assigned to event $idLastFour',
+      );
+    }
+
+    if (unit.assignedEvent == this) {
+      unit.standdown();
+    }
+  }
 
   EventStatus status;
 

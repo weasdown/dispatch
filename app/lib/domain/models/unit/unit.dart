@@ -1,4 +1,5 @@
 import 'package:latlong2/latlong.dart';
+import 'package:logging/logging.dart';
 
 import '../event/event.dart';
 import '../location/scas_locations.dart';
@@ -18,6 +19,10 @@ class Unit {
       UnitHistoryEntry(unit: this, status: UnitStatus.pd, time: DateTime.now()),
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      (other is Unit) && (other.callsign == callsign);
 
   // TODO add another attribute to handle when a unit is Dispatch Assigned to one or more other events at the same time as _assignedEvent being set.
   Event? get assignedEvent => _assignedEvent;
@@ -42,6 +47,9 @@ class Unit {
       assignToEvent(event: event, status: UnitStatus.dp);
 
   DateTime? get endOfShift => shiftEnd;
+
+  @override
+  int get hashCode => Object.hashAll([callsign, vehicleType]);
 
   bool get isHEMSUnit => switch (vehicleType) {
     VehicleType.helicopter || VehicleType.criticalCareCar => true,
@@ -103,8 +111,22 @@ class Unit {
 
   UnitHistoryEntry get _latestHistoryEntry => _history.last;
 
+  final _log = Logger('Unit')..level = Level.ALL;
+
   List<UnitHistoryEntry> get history => _history;
   final List<UnitHistoryEntry> _history = List.empty(growable: true);
+
+  void standdown() {
+    final Event? currentEvent = _assignedEvent;
+    if (currentEvent == null) {
+      throw NoAllocatedEventException(unit: this);
+    }
+
+    _assignedEvent = null;
+    currentEvent.standdownUnit(this);
+    updateStatus(newStatus: UnitStatus.am);
+    _log.fine('Stood down $callsign from ${currentEvent.idLastFour}');
+  }
 
   void updateBase(AmbulanceStation newBase) => _base = newBase;
 
@@ -181,4 +203,43 @@ extension ToHMS on Duration {
 extension ToSimpleString on LatLng {
   String toSimpleString([int decimalPlaces = 5]) =>
       '${latitude.toStringAsFixed(decimalPlaces)}, ${longitude.toStringAsFixed(decimalPlaces)}';
+}
+
+final class MoreThanOneAllocatedEventException implements Exception {
+  final Error? error;
+  final String message;
+  final int numAllocatedEvents;
+  final Unit unit;
+
+  MoreThanOneAllocatedEventException({
+    required this.numAllocatedEvents,
+    required this.unit,
+    this.error,
+  }) : message =
+           'Unit ${unit.callsign} is assigned to $numAllocatedEvents events  but should only be allocated to zero or one';
+
+  @override
+  String toString() {
+    final String optional = (error == null)
+        ? ''
+        : ', which caused the following error: ${error.toString()}';
+    return message + optional;
+  }
+}
+
+final class NoAllocatedEventException implements Exception {
+  final Error? error;
+  final String message;
+  final Unit unit;
+
+  NoAllocatedEventException({required this.unit, this.error})
+    : message = 'Unit ${unit.callsign} is not assigned to any events';
+
+  @override
+  String toString() {
+    final String optional = (error == null)
+        ? ''
+        : ', which caused the following error: ${error.toString()}';
+    return message + optional;
+  }
 }

@@ -34,6 +34,21 @@ final class UnitsViewModel extends ChangeNotifier {
 
   final Logger _log = Logger('UnitsViewModel')..level = Level.ALL;
 
+  // TODO use UnitsViewModel.standdownUnit() when standing down a unit from the AllUnitsScreen
+  Future<Result<void>> standdownUnit(Unit unit) async {
+    _log.fine('Standing down ${unit.callsign}');
+    final result = await _unitRepository.standdownUnit(unit);
+    switch (result) {
+      case Ok<void>():
+        _log.info('Successfully stood down ${unit.callsign}');
+      case Error<void>():
+        _log.severe('Failed to stand down ${unit.callsign}: ${result.error}');
+    }
+
+    notifyListeners();
+    return result;
+  }
+
   List<Unit> get units => _units;
   List<Unit> _units = [];
 

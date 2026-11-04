@@ -1,4 +1,3 @@
-import 'package:dispatch/ui/events/view_models/single_event_screen_viewmodel.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:gap/gap.dart';
 import 'package:latlong2/latlong.dart';
@@ -6,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../../ui/map/view_models/map_view_model.dart';
 import '../../events/view_models/all_events_view_model.dart';
 import '../../unit/unit_status_colour.dart';
 import '../../unit/view_models/units_view_model.dart';
@@ -17,7 +17,7 @@ final class UnitMapMarker {
     required this.menuController,
     required this._eventsViewModel,
     required this._unitsViewModel,
-    required this._singleEventScreenViewModel,
+    required this._mapViewModel,
   });
 
   final double height = 60;
@@ -55,52 +55,56 @@ final class UnitMapMarker {
     VehicleType.coResponder => 'assets/images/rrv.png',
   };
 
-  Widget _body(BuildContext context) => UnitContextMenuRegion(
-    unit: _unit,
-    controller: menuController,
-    eventsViewModel: _eventsViewModel,
-    unitsViewModel: _unitsViewModel,
-    singleEventScreenViewModel: _singleEventScreenViewModel,
-    child: Container(
-      // height: 100,
-      // width: 80,
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Gap(4),
-          Container(
-            color: _unit.status.backgroundColour,
-            child: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Text(
-                _unit.callsign,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: _unit.status.textColour,
+  Widget _body(BuildContext context) => ListenableBuilder(
+    listenable: _mapViewModel,
+    builder: (BuildContext context, Widget? child) => UnitContextMenuRegion(
+      unit: _unit,
+      controller: menuController,
+      eventsViewModel: _eventsViewModel,
+      unitsViewModel: _unitsViewModel,
+      mapViewModel: _mapViewModel,
+      child: Container(
+        // height: 100,
+        // width: 80,
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Gap(4),
+            Container(
+              color: _unit.status.backgroundColour,
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Text(
+                  _unit.callsign,
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: _unit.status.textColour,
+                  ),
+                  textAlign: TextAlign.center,
+                  softWrap: false,
                 ),
-                textAlign: TextAlign.center,
-                softWrap: false,
               ),
             ),
-          ),
 
-          // Gap(4),
-          Image.asset(
-            _iconAsset,
-            height: 35,
-            // scale: 0.5,
-            width: 50,
-            // scale: 0.2,
-          ),
-        ],
+            // Gap(4),
+            Image.asset(
+              _iconAsset,
+              height: 35,
+              // scale: 0.5,
+              width: 50,
+              // scale: 0.2,
+            ),
+          ],
+        ),
       ),
     ),
   );
 
   final AllEventsViewModel _eventsViewModel;
 
-  final SingleEventScreenViewModel _singleEventScreenViewModel;
+  // TODO convert to MapViewModel
+  final MapViewModel _mapViewModel;
 
   final UnitsViewModel _unitsViewModel;
 }

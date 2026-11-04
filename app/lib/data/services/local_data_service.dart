@@ -15,9 +15,9 @@ import '../../domain/models/unit/unit_status.dart';
 class LocalDataService {
   LocalDataService()
     : _events = _defaultEvents,
-      _units = _defaultUnits,
+      _units = DefaultUnits._defaultUnits,
       _crewMembers = _defaultCrewMembers {
-    _setInitialEventUnitAllocations();
+    _setInitialUnitStatuses();
   }
 
   List<CrewMember> get crewMembers => _crewMembers;
@@ -156,81 +156,6 @@ class LocalDataService {
 
   static final Patient _defaultPatient = Patient(name: 'Joe Bloggs');
 
-  /// A default list of units.
-  static List<Unit> get _defaultUnits {
-    final DateTime today0800 = _todayAtTime(hour: 8);
-    final DateTime today1000 = _todayAtTime(hour: 10);
-    final DateTime today1800 = _todayAtTime(hour: 18);
-    final DateTime today2000 = _todayAtTime(hour: 20);
-
-    final List<Unit> units = [
-      // NA136
-      Unit(
-        callsign: 'NA136',
-        location: LatLng(51.607539604000266, -1.237806756282358),
-        personnel: _defaultCrewMembers.sublist(0, 2),
-      )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800),
-      // NA402
-      Unit(
-        callsign: 'NA402',
-        location: LatLng(51.605, -1.238),
-        personnel: _defaultCrewMembers.sublist(2, 4),
-      )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800),
-      // NA283
-      Unit(
-        callsign: 'NA283',
-        location: LatLng(51.616072911907786, -1.2536017723108663),
-        personnel: _defaultCrewMembers.sublist(4, 6),
-      )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800),
-      // NA172
-      Unit(
-        callsign: 'NA172',
-        location: LatLng(51.8296012219854, -1.3134667111590494),
-        personnel: _defaultCrewMembers.sublist(6, 8),
-      )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000),
-      // NF159
-      Unit(
-        callsign: 'NF159',
-        location: LatLng(51.62832936052779, -1.1854888181805424),
-        vehicleType: VehicleType.communityFirstResponder,
-        personnel: [_defaultCrewMembers[8]],
-      )..updateShiftTimes(
-        shiftStart: today1000,
-        shiftEnd: _todayAtTime(hour: 22),
-      ),
-      // NR154
-      Unit(
-        callsign: 'NR154',
-        location: LatLng(51.66706110914126, -1.3082872829130447),
-        vehicleType: VehicleType.rrv,
-        personnel: [_defaultCrewMembers[9]],
-      )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000),
-      // ND027
-      Unit(
-        callsign: 'ND027',
-        location: LatLng(51.66182910219628, -0.9084334753014697),
-        vehicleType: VehicleType.criticalCareCar,
-        personnel: _defaultCrewMembers.sublist(10, 12),
-      )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000),
-      // NT431
-      Unit(
-        callsign: 'NT431',
-        location: LatLng(51.397809576171085, -1.3230646597735394),
-        vehicleType: VehicleType.rrv,
-        personnel: [_defaultCrewMembers[12]],
-      )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000),
-      // 0024
-      Unit(
-        callsign: '0024',
-        location: LatLng(51.61832936052779, -1.0854888181805424),
-        vehicleType: VehicleType.helicopter,
-        personnel: _defaultCrewMembers.sublist(13, 16),
-      )..updateShiftTimes(shiftStart: today0800, shiftEnd: today2000),
-    ];
-
-    return units;
-  }
-
   static final User _defaultUser = const User(
     name: 'Sophie Williamson',
     esr: 12353248763,
@@ -358,24 +283,31 @@ class LocalDataService {
 
   Patient getPatient() => _defaultPatient;
 
+  Unit? getUnit(Unit unit) =>
+      _units.where((dbUnit) => dbUnit == unit).firstOrNull;
+
   User getUser() => _defaultUser;
 
   final List<Unit> _units;
 
   List<Unit> get units => _units;
 
-  void _setInitialEventUnitAllocations() {
-    // Default Cat 1
-    _units[0].dispatchToEvent(event: _events[0]); // NA136
-    _units[4].dispatchToEvent(event: _events[0]); // NF159
-    _units[6].dispatchToEvent(event: _events[0]); // ND027
-    _units[7].dispatchToEvent(event: _events[0]); // NT431
-    _units[8].dispatchToEvent(event: _events[0]); // 0024
+  void _setInitialUnitStatuses() {
+    // Make some units available.
+    getUnit(DefaultUnits.nf159())?.updateStatus(newStatus: UnitStatus.am);
+    getUnit(DefaultUnits.nd027())?.updateStatus(newStatus: UnitStatus.ab);
+    getUnit(DefaultUnits.nt431())?.updateStatus(newStatus: UnitStatus.ab);
+    getUnit(DefaultUnits.hm24())?.updateStatus(newStatus: UnitStatus.ab);
 
-    _units[2].assignToEvent(event: _events[3], status: UnitStatus.as); // NA283
-    _units[1].assignToEvent(event: _events[4], status: UnitStatus.ls); // NA402
-    _units[5].assignToEvent(event: _events[5], status: UnitStatus.as); // NR154
-    _units[3].assignToEvent(event: _events[6], status: UnitStatus.mo); // NA172
+    // Assign some units to events.
+    getUnit(DefaultUnits.na283())
+        ?.assignToEvent(event: _events[3], status: UnitStatus.as);
+    getUnit(DefaultUnits.na402())
+        ?.assignToEvent(event: _events[4], status: UnitStatus.ls);
+    getUnit(DefaultUnits.nr154())
+        ?.assignToEvent(event: _events[5], status: UnitStatus.as);
+    getUnit(DefaultUnits.na172())
+        ?.assignToEvent(event: _events[6], status: UnitStatus.mo);
   }
 }
 
@@ -389,3 +321,78 @@ extension AddRemarks on Event {
 
 DateTime _todayAtTime({required int hour, int? minute}) =>
     DateTime.now().copyWith(hour: hour, minute: minute ?? 0);
+
+interface class DefaultUnits {
+  static Unit na136() => Unit(
+    callsign: 'NA136',
+    location: LatLng(51.607539604000266, -1.237806756282358),
+    personnel: _defaultCrewMembers.sublist(0, 2),
+  )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800);
+  static Unit na402() => Unit(
+    callsign: 'NA402',
+    location: LatLng(51.605, -1.238),
+    personnel: _defaultCrewMembers.sublist(2, 4),
+  )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800);
+  static Unit na283() => Unit(
+    callsign: 'NA283',
+    location: LatLng(51.616072911907786, -1.2536017723108663),
+    personnel: _defaultCrewMembers.sublist(4, 6),
+  )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800);
+  static Unit na172() => Unit(
+    callsign: 'NA172',
+    location: LatLng(51.8296012219854, -1.3134667111590494),
+    personnel: _defaultCrewMembers.sublist(6, 8),
+  )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000);
+  static Unit nf159() => Unit(
+    callsign: 'NF159',
+    location: LatLng(51.62832936052779, -1.1854888181805424),
+    vehicleType: VehicleType.communityFirstResponder,
+    personnel: [_defaultCrewMembers[8]],
+  )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2200);
+  static Unit nr154() => Unit(
+    callsign: 'NR154',
+    location: LatLng(51.66706110914126, -1.3082872829130447),
+    vehicleType: VehicleType.rrv,
+    personnel: [_defaultCrewMembers[9]],
+  )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000);
+  static Unit nd027() => Unit(
+    callsign: 'ND027',
+    location: LatLng(51.66182910219628, -0.9084334753014697),
+    vehicleType: VehicleType.criticalCareCar,
+    personnel: _defaultCrewMembers.sublist(10, 12),
+  )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000);
+  static Unit nt431() => Unit(
+    callsign: 'NT431',
+    location: LatLng(51.397809576171085, -1.3230646597735394),
+    vehicleType: VehicleType.rrv,
+    personnel: [_defaultCrewMembers[12]],
+  )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000);
+  static Unit hm24() => Unit(
+    callsign: '0024',
+    location: LatLng(51.61832936052779, -1.0854888181805424),
+    vehicleType: VehicleType.helicopter,
+    personnel: _defaultCrewMembers.sublist(13, 16),
+  )..updateShiftTimes(shiftStart: today0800, shiftEnd: today2000);
+
+  static DateTime get today0800 => _todayAtTime(hour: 8);
+  static DateTime get today1000 => _todayAtTime(hour: 10);
+  static DateTime get today1800 => _todayAtTime(hour: 18);
+  static DateTime get today2000 => _todayAtTime(hour: 20);
+  static DateTime get today2200 => _todayAtTime(hour: 22);
+
+  static List<CrewMember> get _defaultCrewMembers =>
+      LocalDataService._defaultCrewMembers;
+
+  /// A default list of units.
+  static List<Unit> get _defaultUnits => [
+    DefaultUnits.na136(),
+    DefaultUnits.na402(),
+    DefaultUnits.na283(),
+    DefaultUnits.na172(),
+    DefaultUnits.nf159(),
+    DefaultUnits.nr154(),
+    DefaultUnits.nd027(),
+    DefaultUnits.nt431(),
+    DefaultUnits.hm24(),
+  ];
+}

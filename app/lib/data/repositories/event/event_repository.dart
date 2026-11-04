@@ -1,6 +1,7 @@
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/person/patient.dart';
+import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
 
 /// Data source for events.
@@ -11,8 +12,12 @@ abstract class EventRepository {
 
   Future<Result<void>> addRemark(Remark remark);
 
+  Future<Result<void>> dispatchUnit(Unit unit);
+
   /// Get an event by its ID.
   Future<Result<Event>> eventByID(EventID id);
+
+  Event? eventForUnit(Unit unit);
 
   int get nextIDNum;
 
@@ -22,7 +27,24 @@ abstract class EventRepository {
 
   Future<Result<void>> setEvent(Event event);
 
+  Future<Result<void>> standdownUnit(Unit unit);
+
   Future<Result<void>> updatePatientForEvent(Patient patient);
+}
+
+final class EventNotFoundException implements Exception {
+  const EventNotFoundException({required this.eventID, this.error});
+
+  final Error? error;
+  final EventID eventID;
+
+  @override
+  String toString() {
+    final String optional = (error == null)
+        ? ''
+        : ', which caused the following error: ${error.toString()}';
+    return 'Event $eventID not found in event repository$optional';
+  }
 }
 
 final class NoSelectedEventException implements Exception {

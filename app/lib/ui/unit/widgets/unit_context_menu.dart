@@ -3,7 +3,8 @@ import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/unit/unit.dart';
-import '../../../ui/events/view_models/single_event_screen_viewmodel.dart';
+import '../../../ui/map/view_models/map_view_model.dart';
+import '../../../utils/result.dart';
 import '../../events/view_models/all_events_view_model.dart';
 import '../view_models/units_view_model.dart';
 
@@ -13,7 +14,7 @@ final class UnitContextMenuRegion extends StatelessWidget {
     required this.unit,
     required this.controller,
     required this.child,
-    required this.singleEventScreenViewModel,
+    required this._mapViewModel,
     required this.eventsViewModel,
     required this.unitsViewModel,
   });
@@ -31,9 +32,16 @@ final class UnitContextMenuRegion extends StatelessWidget {
     // Dispatch
     UnitContextMenuButtonItem(
       label: 'Dispatch ${unit.callsign}',
-      onPressed: () {
+      onPressed: () async {
         _log.info('Dispatching ${unit.callsign} via context menu');
-        singleEventScreenViewModel.dispatchUnit(unit);
+        final result = await _mapViewModel.dispatchUnit(unit);
+
+        switch (result) {
+          case Ok<void>():
+            _log.info('Successfully dispatched ${unit.callsign}');
+          case Error<void>():
+            _log.severe('Failed to dispatch ${unit.callsign}: ${result.error}');
+        }
       },
     ),
     // // Mobile
@@ -105,13 +113,13 @@ final class UnitContextMenuRegion extends StatelessWidget {
     //   },
     // ),
     // Clear Unit
-    UnitContextMenuButtonItem(
-      label: 'Clear Unit',
-      onPressed: () {
-        _log.info('Clearing down ${unit.callsign} via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
+    // UnitContextMenuButtonItem(
+    //   label: 'Clear Unit',
+    //   onPressed: () {
+    //     _log.info('Clearing down ${unit.callsign} via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
     // // TODO once UnitContextMenuButtonItem refactored for nesting (see TODO on its class), add nesting menu for Available statuses
     // // Available Returning
     // UnitContextMenuButtonItem(
@@ -206,117 +214,126 @@ final class UnitContextMenuRegion extends StatelessWidget {
     // Standdown unit
     UnitContextMenuButtonItem(
       label: 'Standdown ${unit.callsign}',
-      onPressed: () {
+      onPressed: () async {
         _log.info('Standing down ${unit.callsign} via context menu');
-        throw UnimplementedError(); // TODO implement action
+        final result = await _mapViewModel.standdownUnit(unit);
+
+        switch (result) {
+          case Ok<void>():
+            _log.info('Successfully stood down ${unit.callsign}');
+          case Error<void>():
+            _log.severe(
+              'Failed to stand down ${unit.callsign}: ${result.error}',
+            );
+        }
       },
     ),
 
-    UnitContextMenuButtonItem.spacer(),
-
-    // Out of Service
-    UnitContextMenuButtonItem(
-      label: 'Out of Service',
-      onPressed: () {
-        _log.info('Putting ${unit.callsign} out of service via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Into Service
-    UnitContextMenuButtonItem(
-      label: 'Into Service',
-      onPressed: () {
-        _log.info(
-          'Putting ${unit.callsign} back into service via context menu',
-        );
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Create Running Call
-    UnitContextMenuButtonItem(
-      label: 'Create Running Call',
-      onPressed: () {
-        _log.info(
-          'Creating Running Call for ${unit.callsign} via context menu',
-        );
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Window Unit...
-    UnitContextMenuButtonItem(
-      label: 'Window Unit...',
-      onPressed: () {
-        _log.info('Windowing unit via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Change Location
-    UnitContextMenuButtonItem(
-      label: 'Change ${unit.callsign}\'s Location',
-      onPressed: () {
-        _log.info('Changing location for ${unit.callsign} via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Relocate Unit
-    UnitContextMenuButtonItem(
-      label: 'Relocate ${unit.callsign}',
-      onPressed: () {
-        _log.info('Relocating ${unit.callsign} via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Transfer Unit
-    UnitContextMenuButtonItem(
-      label: 'Transfer ${unit.callsign}',
-      onPressed: () {
-        _log.info('Transferring ${unit.callsign} via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-
-    UnitContextMenuButtonItem.spacer(),
-
-    // Put on Break
-    UnitContextMenuButtonItem(
-      label: 'Put ${unit.callsign} on Break',
-      onPressed: () {
-        _log.info('Putting ${unit.callsign} on break via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-    // Disturb Break
-    UnitContextMenuButtonItem(
-      label: 'Disturb ${unit.callsign}\'s Break',
-      onPressed: () {
-        _log.info('Disturbing ${unit.callsign}\'s break via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-
-    UnitContextMenuButtonItem.spacer(),
-
-    // Unit Properties
-    UnitContextMenuButtonItem(
-      label: 'Unit Properties',
-      onPressed: () {
-        _log.info(
-          'Opening Unit Properties for ${unit.callsign} via context menu',
-        );
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
-
-    UnitContextMenuButtonItem.spacer(),
-
-    // Log Off
-    UnitContextMenuButtonItem(
-      label: 'Log Off',
-      onPressed: () {
-        _log.info('Logging off ${unit.callsign} via context menu');
-        throw UnimplementedError(); // TODO implement action
-      },
-    ),
+    // UnitContextMenuButtonItem.spacer(),
+    //
+    // // Out of Service
+    // UnitContextMenuButtonItem(
+    //   label: 'Out of Service',
+    //   onPressed: () {
+    //     _log.info('Putting ${unit.callsign} out of service via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Into Service
+    // UnitContextMenuButtonItem(
+    //   label: 'Into Service',
+    //   onPressed: () {
+    //     _log.info(
+    //       'Putting ${unit.callsign} back into service via context menu',
+    //     );
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Create Running Call
+    // UnitContextMenuButtonItem(
+    //   label: 'Create Running Call',
+    //   onPressed: () {
+    //     _log.info(
+    //       'Creating Running Call for ${unit.callsign} via context menu',
+    //     );
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Window Unit...
+    // UnitContextMenuButtonItem(
+    //   label: 'Window Unit...',
+    //   onPressed: () {
+    //     _log.info('Windowing unit via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Change Location
+    // UnitContextMenuButtonItem(
+    //   label: 'Change ${unit.callsign}\'s Location',
+    //   onPressed: () {
+    //     _log.info('Changing location for ${unit.callsign} via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Relocate Unit
+    // UnitContextMenuButtonItem(
+    //   label: 'Relocate ${unit.callsign}',
+    //   onPressed: () {
+    //     _log.info('Relocating ${unit.callsign} via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Transfer Unit
+    // UnitContextMenuButtonItem(
+    //   label: 'Transfer ${unit.callsign}',
+    //   onPressed: () {
+    //     _log.info('Transferring ${unit.callsign} via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    //
+    // UnitContextMenuButtonItem.spacer(),
+    //
+    // // Put on Break
+    // UnitContextMenuButtonItem(
+    //   label: 'Put ${unit.callsign} on Break',
+    //   onPressed: () {
+    //     _log.info('Putting ${unit.callsign} on break via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    // // Disturb Break
+    // UnitContextMenuButtonItem(
+    //   label: 'Disturb ${unit.callsign}\'s Break',
+    //   onPressed: () {
+    //     _log.info('Disturbing ${unit.callsign}\'s break via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    //
+    // UnitContextMenuButtonItem.spacer(),
+    //
+    // // Unit Properties
+    // UnitContextMenuButtonItem(
+    //   label: 'Unit Properties',
+    //   onPressed: () {
+    //     _log.info(
+    //       'Opening Unit Properties for ${unit.callsign} via context menu',
+    //     );
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
+    //
+    // UnitContextMenuButtonItem.spacer(),
+    //
+    // // Log Off
+    // UnitContextMenuButtonItem(
+    //   label: 'Log Off',
+    //   onPressed: () {
+    //     _log.info('Logging off ${unit.callsign} via context menu');
+    //     throw UnimplementedError(); // TODO implement action
+    //   },
+    // ),
   ];
 
   Logger get _log {
@@ -327,7 +344,7 @@ final class UnitContextMenuRegion extends StatelessWidget {
 
   final Unit unit;
 
-  final SingleEventScreenViewModel singleEventScreenViewModel;
+  final MapViewModel _mapViewModel;
 
   final UnitsViewModel unitsViewModel;
 

@@ -6,6 +6,7 @@ import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/event/status.dart';
 import '../../../domain/models/location/address.dart';
 import '../../../domain/models/person/patient.dart';
+import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
 import 'event_repository.dart';
@@ -28,29 +29,12 @@ class EventRepositoryLocal extends EventRepository {
       ? Result.error(Exception('Attempted to add remark to null event'))
       : Result.ok(_selectedEvent!.addRemark(remark));
 
-  bool _isInitialized = false; // Only create default event once.
-
-  int _sequentialId = 0; // Used to generate IDs for events.
-
-  final _events = List<Event>.empty(growable: true);
-  final LocalDataService _localDataService;
-
   @override
   Future<Result<List<Event>>> get allEvents => eventsList;
 
   // TODO implement allEvents getter (may need to be a List<Event> from a provider rather than a Stream)
   // /// Get a continuous stream of all the events.
   // Stream<Event> get allEvents;
-
-  Future<Result<List<Event>>> get eventsList async {
-    // Initialize the repository with default events.
-    if (!_isInitialized) {
-      _events.addAll(_localDataService.events);
-      _isInitialized = true;
-    }
-
-    return Result.ok(_events);
-  }
 
   Future<void> createEvent({
     required Address address,
@@ -67,16 +51,65 @@ class EventRepositoryLocal extends EventRepository {
     );
   }
 
+  int _currentIDNum;
+
+  @override
+  Future<Result<void>> dispatchUnit(Unit unit) async {
+    if (_selectedEvent == null) {
+      _log.warning('Cannot dispatch ${unit.callsign} as no event is selected');
+      return Result<void>.error(const NoSelectedEventException());
+    }
+
+    _log.info(
+      'Dispatching ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
+    );
+    return Result<void>.ok(_selectedEvent!.dispatchUnit(unit));
+  }
+
   @override
   Future<Result<Event>> eventByID(EventID id) async {
     final event = _events.where((event) => event.id == id).firstOrNull;
     if (event == null) {
-      return Result.error(Exception('Event not found'));
+      return Result<Event>.error(EventNotFoundException(eventID: id));
     }
-    return Result.ok(event);
+    return Result<Event>.ok(event);
   }
 
-  int _currentIDNum;
+  @override
+  Event? eventForUnit(Unit unit) {
+    final Iterable<Event> allocatedEvents = _events.where(
+      (Event event) => event.assignedUnits.contains(unit),
+    );
+
+    final int numAllocatedEvents = allocatedEvents.length;
+    if (numAllocatedEvents != 1) {
+      _log.severe(
+        MoreThanOneAllocatedEventException(
+          numAllocatedEvents: numAllocatedEvents,
+          unit: unit,
+        ),
+      );
+      return null;
+    } else {
+      return allocatedEvents.first;
+    }
+  }
+
+  final _events = List<Event>.empty(growable: true);
+
+  Future<Result<List<Event>>> get eventsList async {
+    // Initialize the repository with default events.
+    if (!_isInitialized) {
+      _events.addAll(_localDataService.events);
+      _isInitialized = true;
+    }
+
+    return Result.ok(_events);
+  }
+
+  bool _isInitialized = false; // Only create default event once.
+
+  final LocalDataService _localDataService;
 
   Logger get _log {
     final Logger log = Logger('EventRepositoryLocal');
@@ -91,8 +124,6 @@ class EventRepositoryLocal extends EventRepository {
     return newIDNum;
   }
 
-  Event? _selectedEvent;
-
   /// Gets a [Result.ok] holding a random event from `_events`.
   @override
   Future<Result<Event?>> get selectedEvent async {
@@ -101,6 +132,10 @@ class EventRepositoryLocal extends EventRepository {
     return Result.ok(_selectedEvent);
   }
 
+  Event? _selectedEvent;
+
+  int _sequentialId = 0; // Used to generate IDs for events.
+
   @override
   Future<Result<bool>> setEvent(Event event) async {
     _selectedEvent = event;
@@ -108,10 +143,26 @@ class EventRepositoryLocal extends EventRepository {
   }
 
   @override
+  Future<Result<void>> standdownUnit(Unit unit) async {
+    final Event? allocatedEvent = eventForUnit(unit);
+    if (allocatedEvent == null) {
+      _log.warning(
+        'Cannot stand down ${unit.callsign} as it is not allocated to an event',
+      );
+      return Result<void>.error(NoAllocatedEventException(unit: unit));
+    }
+
+    _log.info(
+      'Standing down ${unit.callsign} from event ${allocatedEvent.idLastFour}',
+    );
+    return Result<void>.ok(unit.standdown());
+  }
+
+  @override
   Future<Result<void>> updatePatientForEvent(Patient patient) async {
     if (_selectedEvent == null) {
       // TODO test how this branch would be handled
-      return Result.error(NoSelectedEventException());
+      return Result.error(const NoSelectedEventException());
     }
 
     final Iterable<String> currentIDs = _selectedEvent!.patients.map(

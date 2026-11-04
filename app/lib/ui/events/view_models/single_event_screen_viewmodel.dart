@@ -31,7 +31,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     createPatient = Command1<void, Patient>(_createPatient);
     updatePatient = Command1<void, Patient>(_updatePatient);
 
-    load = Command0(_load)..execute();
+    load = Command0<Event?>(_load)..execute();
   }
 
   late Command0<Event> acceptEvent;
@@ -70,13 +70,14 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   }
 
   Future<Result<void>> dispatchUnit(Unit unit) async {
-    if (_event != null) {
-      _event!.dispatchUnit(unit);
-      _log.fine('Dispatched ${unit.callsign} to event ${_event!.idLastFour}');
-      return Result.ok(null);
-    } else {
-      return Result.error(NoSelectedEventException());
+    if (_event == null) {
+      return Result.error(const NoSelectedEventException());
     }
+
+    _eventRepository.dispatchUnit(unit);
+    _log.fine('Dispatched ${unit.callsign} to event ${_event!.idLastFour}');
+    notifyListeners();
+    return Result.ok(null);
   }
 
   final EventRepository _eventRepository;
@@ -116,7 +117,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   late final Command0<EventMode> getMode;
   Future<Result<EventMode>> _getMode() async => Result.ok(_eventMode);
 
-  late Command0 load;
+  late Command0<Event?> load;
   Future<Result<Event?>> _load() async {
     try {
       final eventResult = await _eventRepository.selectedEvent;
