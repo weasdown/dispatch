@@ -396,3 +396,39 @@ interface class DefaultUnits {
     DefaultUnits.hm24(),
   ];
 }
+
+interface class _DefaultEvents {
+  static Event get _defaultC1 => Event.preAlert(
+    idNum: 1025,
+    address: Address(county: 'Oxfordshire'),
+    location: LatLng(51.57770580851515, -1.5679285114893033),
+  );
+
+  static Event get _greenwayC1 {
+    final User user = LocalDataService._defaultUser;
+    return Event.withNOC(
+        idNum: 3127,
+        address: Address(
+          buildingNumber: '6',
+          street: 'The Greenway',
+          county: 'Oxfordshire',
+        ),
+        location: LatLng(51.59799446397092, -1.3537030950825775),
+        noc: Cat1NOC.c1ArrestPeriArrest(),
+      )
+      .._addRemarks([
+        Remark(
+          author: user,
+          message: 'CPR was already in progress before the call was started.',
+        ),
+        Remark(author: user, message: 'NA136 DP Didcot RC'),
+        Remark(author: user, message: 'NF159 DP Smith\'s Wharf, Wantage'),
+        Remark(author: user, message: 'ND027 DP Stokenchurch HEMS base'),
+        Remark(author: user, message: 'NT431 DP Oxford City RC'),
+      ])
+      ..addPatient(LocalDataService._defaultPatient)
+    // // FIXME dispatch doesn't work here
+    // ..dispatchUnit(DefaultUnits.nt431())
+    ;
+  }
+}

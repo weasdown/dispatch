@@ -8,7 +8,8 @@ import '../../../utils/result.dart';
 
 class AllEventsViewModel extends ChangeNotifier {
   AllEventsViewModel({required this._eventRepository}) {
-    loadEvents = Command0(_loadEvents)..execute();
+    selectEvent = Command1<void, Event>(_selectEvent);
+    loadEvents = Command0<List<Event>>(_loadEvents)..execute();
   }
 
   final EventRepository _eventRepository;
@@ -37,4 +38,12 @@ class AllEventsViewModel extends ChangeNotifier {
   }
 
   final Logger _log = Logger('AllEventsVewModel')..level = Level.ALL;
+
+  late final Command1<void, Event> selectEvent;
+  Future<Result<void>> _selectEvent(Event eventToSelect) {
+    _log.fine('Selecting event ${eventToSelect.idLastFour}');
+    final result = _eventRepository.setEvent(eventToSelect);
+    notifyListeners();
+    return result;
+  }
 }
