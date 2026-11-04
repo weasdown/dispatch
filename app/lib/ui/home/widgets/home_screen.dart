@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
+import '../../events/priority_colour.dart';
 import '../../events/view_models/all_events_view_model.dart';
 import '../../events/view_models/single_event_screen_viewmodel.dart';
 import '../../events/widgets/single_event_screen.dart';
@@ -147,4 +148,37 @@ class _HomeErrorDisplay extends StatelessWidget {
       error: FlutterError(error.toString()),
     );
   }
+}
+
+/// A purple snackbar that's displayed when a new C1/L1 event is received from the [HomeViewModel.newC1L1Stream].
+class C1L1PurpleBanner extends SnackBar {
+  C1L1PurpleBanner({
+    super.key,
+    required BuildContext context,
+    required AllEventsViewModel eventsViewModel,
+    required SingleEventScreenViewModel singleEventScreenViewModel,
+    required Event newC1L1,
+  }) : super(
+         content: Text(
+           'New C1/L1: ${newC1L1.idLastFour}',
+           style: Theme.of(context).textTheme.bodyLarge!
+               .copyWith(color: _textColour),
+         ),
+         backgroundColor: Category.one.priority.backgroundColour,
+         showCloseIcon: true,
+         persist: true,
+         action: SnackBarAction(
+           label: 'Show event',
+           textColor: _textColour,
+           onPressed: () {
+             (Logger('C1L1PurpleBanner')..level = Level.ALL).fine(
+               'Selecting new C1/L1 ${newC1L1.idLastFour} from snackbar',
+             );
+             eventsViewModel.selectEvent.execute(newC1L1);
+             singleEventScreenViewModel.displayEvent.execute(newC1L1);
+           },
+         ),
+       );
+
+  static final Color _textColour = Colors.white;
 }
