@@ -116,6 +116,18 @@ class Unit {
   List<UnitHistoryEntry> get history => _history;
   final List<UnitHistoryEntry> _history = List.empty(growable: true);
 
+  void standdown() {
+    final Event? currentEvent = _assignedEvent;
+    if (currentEvent == null) {
+      throw NoAllocatedEventException(unit: this);
+    }
+
+    _assignedEvent = null;
+    currentEvent.standdownUnit(this);
+    updateStatus(newStatus: UnitStatus.am);
+    _log.fine('Stood down $callsign from ${currentEvent.idLastFour}');
+  }
+
   void updateBase(AmbulanceStation newBase) => _base = newBase;
 
   void updateShiftTimes({
@@ -191,4 +203,21 @@ extension ToHMS on Duration {
 extension ToSimpleString on LatLng {
   String toSimpleString([int decimalPlaces = 5]) =>
       '${latitude.toStringAsFixed(decimalPlaces)}, ${longitude.toStringAsFixed(decimalPlaces)}';
+}
+
+final class NoAllocatedEventException implements Exception {
+  final Error? error;
+  final String message;
+  final Unit unit;
+
+  NoAllocatedEventException({required this.unit, this.error})
+    : message = 'Unit ${unit.callsign} is not assigned to any events';
+
+  @override
+  String toString() {
+    final String optional = (error == null)
+        ? ''
+        : ', which caused the following error: ${error.toString()}';
+    return message + optional;
+  }
 }
