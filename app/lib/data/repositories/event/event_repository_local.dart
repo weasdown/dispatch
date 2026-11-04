@@ -131,11 +131,7 @@ class EventRepositoryLocal extends EventRepository {
 
   final LocalDataService _localDataService;
 
-  Logger get _log {
-    final Logger log = Logger('EventRepositoryLocal');
-    log.level = Level.ALL;
-    return log;
-  }
+  Logger get _log => Logger('EventRepositoryLocal')..level = Level.ALL;
 
   @override
   int get nextIDNum {
