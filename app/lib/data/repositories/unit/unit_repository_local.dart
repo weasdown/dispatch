@@ -18,6 +18,9 @@ class UnitRepositoryLocal extends UnitRepository {
   @override
   Future<Result<List<Unit>>> get allUnits => unitsList;
 
+  Unit? _getUnitByCallsign(String callsign) =>
+      _units.where((unit) => unit.callsign == callsign).firstOrNull;
+
   /// Gets a [Result.ok] holding a random unit from `_units`.
   @override
   Future<Result<Unit?>> get selectedUnit async =>
