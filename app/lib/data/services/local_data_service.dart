@@ -300,17 +300,21 @@ class LocalDataService {
   List<Unit> get units => _units;
 
   void _setInitialUnitStatuses() {
-    // Default Cat 1
-    _units[0].dispatchToEvent(event: _events[0]); // NA136
-    _units[4].dispatchToEvent(event: _events[0]); // NF159
-    _units[6].dispatchToEvent(event: _events[0]); // ND027
-    _units[7].dispatchToEvent(event: _events[0]); // NT431
-    _units[8].dispatchToEvent(event: _events[0]); // 0024
+    // Make some units available.
+    getUnit(DefaultUnits.nf159())?.updateStatus(newStatus: UnitStatus.am);
+    getUnit(DefaultUnits.nd027())?.updateStatus(newStatus: UnitStatus.ab);
+    getUnit(DefaultUnits.nt431())?.updateStatus(newStatus: UnitStatus.ab);
+    getUnit(DefaultUnits.hm24())?.updateStatus(newStatus: UnitStatus.ab);
 
-    _units[2].assignToEvent(event: _events[3], status: UnitStatus.as); // NA283
-    _units[1].assignToEvent(event: _events[4], status: UnitStatus.ls); // NA402
-    _units[5].assignToEvent(event: _events[5], status: UnitStatus.as); // NR154
-    _units[3].assignToEvent(event: _events[6], status: UnitStatus.mo); // NA172
+    // Assign some units to events.
+    getUnit(DefaultUnits.na283())
+        ?.assignToEvent(event: _events[3], status: UnitStatus.as);
+    getUnit(DefaultUnits.na402())
+        ?.assignToEvent(event: _events[4], status: UnitStatus.ls);
+    getUnit(DefaultUnits.nr154())
+        ?.assignToEvent(event: _events[5], status: UnitStatus.as);
+    getUnit(DefaultUnits.na172())
+        ?.assignToEvent(event: _events[6], status: UnitStatus.mo);
   }
 }
 
