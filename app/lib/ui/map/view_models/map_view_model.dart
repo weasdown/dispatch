@@ -130,6 +130,20 @@ class MapViewModel extends ChangeNotifier {
     return result;
   }
 
+  Future<Result<void>> standdownUnit(Unit unit) async {
+    _log.fine('Standing down ${unit.callsign}');
+    final result = await _unitRepository.standdownUnit(unit);
+    switch (result) {
+      case Ok<void>():
+        _log.info('Successfully stood down ${unit.callsign}');
+        notifyListeners();
+      case Error<void>():
+        _log.severe('Failed to stand down ${unit.callsign}: ${result.error}');
+    }
+
+    return result;
+  }
+
   List<Unit> get units => _units;
   List<Unit> _units = [];
 }
