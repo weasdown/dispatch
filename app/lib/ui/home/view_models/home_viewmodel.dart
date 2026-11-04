@@ -7,6 +7,7 @@ import '../../../utils/result.dart';
 
 class HomeViewModel extends ChangeNotifier {
   HomeViewModel({required this._eventRepository}) {
+    viewNewC1L1 = Command0<void>(_viewNewC1L1);
     load = Command0(_load)..execute();
   }
 
@@ -28,6 +29,29 @@ class HomeViewModel extends ChangeNotifier {
       }
     } finally {
       notifyListeners();
+      // TODO confirm whether it'd be better to use this rather than the HomeScreen's StreamBuilder
+      // // Listen to the stream for new C1/L1 events.
+      // _eventRepository.newC1Stream.listen(onNewC1);
     }
+  }
+
+  bool get newC1Viewed => _newC1Viewed;
+  bool _newC1Viewed = true;
+
+  // /// Called when the view model receives a new C1/L1 event from the [_eventRepository].
+  // EventID onNewC1(Event newC1L1) {
+  //   _newC1Viewed = false;
+  //   _log.warning('New C1/L1 event received!');
+  //   notifyListeners();
+  //   return newC1L1.id;
+  // }
+
+  Stream<Event> get newC1L1Stream => _eventRepository.newC1Stream;
+
+  late final Command0<void> viewNewC1L1;
+  Future<Result<void>> _viewNewC1L1() async {
+    _newC1Viewed = true;
+    notifyListeners();
+    return Result.ok(null);
   }
 }

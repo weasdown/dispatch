@@ -23,8 +23,9 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     getMode = Command0<EventMode>(_getMode);
 
     acceptEvent = Command0<Event>(_acceptEvent);
+    displayEvent = Command1<void, Event>(_displayEvent);
     newEvent = Command0<Event>(_newEvent);
-    selectEvent = Command0<void>(_selectEvent);
+    refreshEvent = Command0<void>(_refreshEvent);
     // FIXME swap ordering of Command1 type parameters - arg first, then return
     updateEvent = Command1<void, Event>(_updateEvent);
 
@@ -78,6 +79,21 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     _log.fine('Dispatched ${unit.callsign} to event ${_event!.idLastFour}');
     notifyListeners();
     return Result.ok(null);
+  }
+
+  late final Command1<void, Event> displayEvent;
+  Future<Result<void>> _displayEvent(Event event) async {
+    final result = await _eventRepository.setEvent(event);
+
+    switch (result) {
+      case Ok<void>():
+        _event = event;
+        notifyListeners();
+
+      case Error<void>():
+        _log.severe('Failed to set event');
+    }
+    return result;
   }
 
   final EventRepository _eventRepository;
@@ -191,8 +207,8 @@ class SingleEventScreenViewModel extends ChangeNotifier {
 
   Future<Result<List<Unit>>> get units => _unitRepository.allUnits;
 
-  late final Command0<void> selectEvent;
-  Future<Result<void>> _selectEvent() async {
+  late final Command0<void> refreshEvent;
+  Future<Result<void>> _refreshEvent() async {
     _eventEdited = true;
     final result = await _eventRepository.setEvent(_event!);
     switch (result) {

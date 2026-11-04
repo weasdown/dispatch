@@ -346,13 +346,18 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     // );
 
     return ListenableBuilder(
-      listenable: widget.viewModel.load,
+      listenable: Listenable.merge([
+        widget.viewModel.load,
+        widget.viewModel.displayEvent,
+      ]),
       builder: (BuildContext context, Widget? child) {
-        if (widget.viewModel.load.running) {
+        if (widget.viewModel.load.running ||
+            widget.viewModel.displayEvent.running) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (widget.viewModel.load.error) {
+        if (widget.viewModel.load.error ||
+            widget.viewModel.displayEvent.error) {
           // TODO implement proper display of error that enables user to retry load
           return ErrorWidget.withDetails(
             message: 'Event loading failed',
@@ -362,68 +367,79 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
           );
         }
 
+        if (widget.viewModel.load.completed) {
+          _event = widget.viewModel.event;
+
+          _log.finer(
+            'Load has completed with event ${_event?.idLastFour ?? 'null'}',
+          );
+        }
+
         _eventMode = widget.viewModel.eventMode;
-        _event = widget.viewModel.event;
 
-        return child!;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(_event != null ? 'Event ${_event!.idLastFour}' : 'Event'),
-          elevation: 8,
-          automaticallyImplyLeading: false,
-          actions: [
-            // Include the _AcceptEventButton if in EventMode.create/update
-            ...?(_eventMode.isEditable)
-                ? [
-                    _AcceptEventButton(
-                      eventControllers: _eventControllers,
-                      patientControllers: _patientControllers,
-                      eventModified: widget.viewModel.eventEdited,
-                      onPressed: onAcceptEvent,
-                      onUpdateEvent: onUpdateEvent,
-                      onUpdatePatient: onUpdatePatient,
-                      viewModel: widget.viewModel,
-                    ),
-                  ]
-                : null,
-            RadioGroup<EventMode>(
-              groupValue: _eventMode,
-              onChanged: (EventMode? mode) => onEventModeUpdate(mode!),
-              child: Row(
-                children: [
-                  // Select button
-                  EventModeButton(
-                    label: 'Select',
-                    value: EventMode.select,
-                    onEventModeUpdate: (EventMode? mode) =>
-                        onEventModeUpdate(mode!),
-                  ),
+        _log.finer('New _event: ${_event?.idLastFour ?? 'null'}');
 
-                  // Create button
-                  EventModeButton(
-                    label: 'Create',
-                    value: EventMode.create,
-                    onEventModeUpdate: (EventMode? mode) =>
-                        onEventModeUpdate(mode!),
-                  ),
+        if (_event == null) {
+          _log.warning('Null event');
+        }
 
-                  // Update button
-                  EventModeButton(
-                    label: 'Update',
-                    value: EventMode.update,
-                    onEventModeUpdate: (EventMode? mode) =>
-                        onEventModeUpdate(mode!),
-                    colourOnSelected: Colors.red,
-                  ),
-                ],
-              ),
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              _event != null ? 'Event ${_event!.idLastFour}' : 'Event',
             ),
-          ],
-        ),
-        body: ListenableBuilder(
-          listenable: widget.viewModel,
-          builder: (context, child) => (_event == null)
+            elevation: 8,
+            automaticallyImplyLeading: false,
+            actions: [
+              // Include the _AcceptEventButton if in EventMode.create/update
+              ...?(_eventMode.isEditable)
+                  ? [
+                      _AcceptEventButton(
+                        eventControllers: _eventControllers,
+                        patientControllers: _patientControllers,
+                        eventModified: widget.viewModel.eventEdited,
+                        onPressed: onAcceptEvent,
+                        onUpdateEvent: onUpdateEvent,
+                        onUpdatePatient: onUpdatePatient,
+                        viewModel: widget.viewModel,
+                      ),
+                    ]
+                  : null,
+              RadioGroup<EventMode>(
+                groupValue: _eventMode,
+                onChanged: (EventMode? mode) => onEventModeUpdate(mode!),
+                child: Row(
+                  children: [
+                    // Select button
+                    EventModeButton(
+                      label: 'Select',
+                      value: EventMode.select,
+                      onEventModeUpdate: (EventMode? mode) =>
+                          onEventModeUpdate(mode!),
+                    ),
+
+                    // Create button
+                    EventModeButton(
+                      label: 'Create',
+                      value: EventMode.create,
+                      onEventModeUpdate: (EventMode? mode) =>
+                          onEventModeUpdate(mode!),
+                    ),
+
+                    // Update button
+                    EventModeButton(
+                      label: 'Update',
+                      value: EventMode.update,
+                      onEventModeUpdate: (EventMode? mode) =>
+                          onEventModeUpdate(mode!),
+                      colourOnSelected: Colors.red,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          body: (_event == null)
               ? NullEvent(event: _event, log: _log)
               : NonNullEvent(
                   event: _event!,
@@ -431,8 +447,8 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
                   eventMode: _eventMode,
                   patientControllers: _patientControllers,
                 ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
