@@ -1,4 +1,3 @@
-import 'package:dispatch/ui/map/view_models/map_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -11,6 +10,7 @@ import '../../../ui/unit/view_models/units_view_model.dart';
 import '../../../utils/result.dart';
 import '../../events/view_models/all_events_view_model.dart';
 import '../../events/view_models/single_event_screen_viewmodel.dart';
+import '../view_models/map_view_model.dart';
 import 'flutter_map.dart';
 
 /// A page that displays a Google Maps map.
