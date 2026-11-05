@@ -59,7 +59,7 @@ class _FlutterMapPageState extends State<FlutterMapPage> {
       return EventMapMarker(
         event: event,
         viewModel: widget.mapViewModel,
-      ).flutterMapMarker;
+      ).marker;
     }).toList();
     return markers;
   }

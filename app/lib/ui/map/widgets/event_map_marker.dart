@@ -10,7 +10,7 @@ class EventMapMarker extends StatelessWidget {
   const EventMapMarker({
     super.key,
     required this._event,
-    required this._viewModel,
+    required this._mapViewModel,
     // this.onDoubleTap,
   });
 
@@ -29,7 +29,7 @@ class EventMapMarker extends StatelessWidget {
   /// Longitude.
   double? get lng => _event.location?.longitude;
 
-  final MapViewModel _viewModel;
+  final MapViewModel _mapViewModel;
 
   Widget get _body => GestureDetector(
     onTap: () => debugPrint('Tapped event ${_event.idLastFour}'),
@@ -57,7 +57,7 @@ class EventMapMarker extends StatelessWidget {
   void _onDoubleTap() {
     debugPrint('Double tapped event ${_event.idLastFour}');
     debugPrint('Setting event to ${_event.idLastFour}');
-    _viewModel.selectEvent.execute();
+    _mapViewModel.selectEvent.execute();
   }
 
   @override
