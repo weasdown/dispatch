@@ -24,6 +24,7 @@
       <excludeFolder url="file://$MODULE_DIR$/app/macos" />
       <excludeFolder url="file://$MODULE_DIR$/app/web" />
       <excludeFolder url="file://$MODULE_DIR$/app/windows" />
+      <excludeFolder url="file://$MODULE_DIR$/app/.idea/libraries" />
     </content>
     <content url="file://$MODULE_DIR$/server">
       <sourceFolder url="file://$MODULE_DIR$/server/lib" isTestSource="false" />
