@@ -47,11 +47,7 @@ class _AllUnitsScreenState extends State<AllUnitsScreen> {
     });
   }
 
-  Logger get _log {
-    final Logger log = Logger('_AllUnitsScreenState');
-    log.level = Level.ALL;
-    return log;
-  }
+  Logger get _log => Logger('_AllUnitsScreenState')..level = Level.ALL;
 
   // TODO on hovering over a # P entry, show a small window with the name and ESR of each crew member onboard
   void _onPersonnelHover(PointerEvent details, Unit unit) {
