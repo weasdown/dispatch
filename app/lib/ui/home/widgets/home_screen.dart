@@ -1,7 +1,10 @@
+import 'package:dispatch/data/repositories/event/event_repository.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:provider/provider.dart';
 
+import '../../../data/repositories/unit/unit_repository.dart';
 import '../../../domain/models/event/category.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
@@ -16,27 +19,19 @@ import '../../unit/view_models/units_view_model.dart';
 import '../view_models/home_viewmodel.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({
-    super.key,
-    required this.homeViewModel,
-    required this.eventsViewModel,
-    required this.singleEventScreenViewModel,
-    required this.mapViewModel,
-    required this.allEventsViewModel,
-    required this.unitsViewModel,
-  });
+  const HomeScreen({super.key, required this.homeViewModel});
 
-  final AllEventsViewModel allEventsViewModel;
+  // final AllEventsViewModel allEventsViewModel;
 
   final HomeViewModel homeViewModel;
 
-  final AllEventsViewModel eventsViewModel;
+  // final AllEventsViewModel eventsViewModel;
 
-  final MapViewModel mapViewModel;
+  // final MapViewModel mapViewModel;
 
-  final SingleEventScreenViewModel singleEventScreenViewModel;
+  // final SingleEventScreenViewModel singleEventScreenViewModel;
 
-  final UnitsViewModel unitsViewModel;
+  // final UnitsViewModel unitsViewModel;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -47,14 +42,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // When a new C1/L1 event is received, it will be sent over the homeViewModel's newC1L1Stream.
   // When a new event is received from the stream, show a snackbar with a button to select the event.
-  void _onNewC1L1(Event newC1L1) {
+  void _onNewC1L1({
+    required Event newC1L1,
+    required AllEventsViewModel allEventsViewModel,
+    required SingleEventScreenViewModel singleEventScreenViewModel,
+  }) {
     SchedulerBinding.instance.addPostFrameCallback(
       (_) => ScaffoldMessenger.of(context).showSnackBar(
         C1L1PurpleBanner(
           newC1L1: newC1L1,
           context: context,
-          eventsViewModel: widget.eventsViewModel,
-          singleEventScreenViewModel: widget.singleEventScreenViewModel,
+          eventsViewModel: allEventsViewModel,
+          singleEventScreenViewModel: singleEventScreenViewModel,
         ),
       ),
     );
@@ -64,26 +63,41 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     hierarchicalLoggingEnabled = true;
 
+    final eventRepository = context.read<EventRepository>();
+    final unitRepository = context.read<UnitRepository>();
+
+    final eventsViewModel = AllEventsViewModel(
+      eventRepository: eventRepository,
+    );
+    final mapViewModel = MapViewModel(
+      eventRepository: eventRepository,
+      unitRepository: unitRepository,
+    );
+    final singleEventScreenViewModel = SingleEventScreenViewModel(
+      eventRepository: eventRepository,
+      unitRepository: unitRepository,
+    );
+    final unitsViewModel = UnitsViewModel(unitRepository: unitRepository);
+
     return ListenableBuilder(
       listenable: Listenable.merge([
-        widget.singleEventScreenViewModel.load,
-        widget.eventsViewModel.loadEvents,
+        singleEventScreenViewModel.load,
+        eventsViewModel.loadEvents,
       ]),
       builder: (context, child) {
-        if (widget.singleEventScreenViewModel.load.running ||
-            widget.eventsViewModel.loadEvents.running) {
+        if (singleEventScreenViewModel.load.running ||
+            eventsViewModel.loadEvents.running) {
           _log.finer('HomeScreen viewModels are still loading...');
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (widget.singleEventScreenViewModel.load.error ||
-            widget.eventsViewModel.loadEvents.error) {
+        if (singleEventScreenViewModel.load.error ||
+            eventsViewModel.loadEvents.error) {
           _log.finer('HomeScreen viewModel(s) received an error');
           return _HomeErrorDisplay(
             eventsResult:
-                widget.eventsViewModel.loadEvents.result as Result<List<Event>>,
-            unitsResult:
-                widget.unitsViewModel.loadUnits.result as Result<List<Unit>>,
+                eventsViewModel.loadEvents.result as Result<List<Event>>,
+            unitsResult: unitsViewModel.loadUnits.result as Result<List<Unit>>,
           );
         } else {
           _log.finer('HomeScreen viewModels successfully completed loading');
@@ -102,13 +116,17 @@ class _HomeScreenState extends State<HomeScreen> {
               _log.warning(
                 'Received new C1 ${newC1L1.idLastFour}! Showing purple banner',
               );
-              _onNewC1L1(newC1L1);
+              _onNewC1L1(
+                newC1L1: newC1L1,
+                allEventsViewModel: eventsViewModel,
+                singleEventScreenViewModel: singleEventScreenViewModel,
+              );
             }
 
             final Ok<List<Event>> eventsResult =
-                widget.eventsViewModel.loadEvents.result as Ok<List<Event>>;
+                eventsViewModel.loadEvents.result as Ok<List<Event>>;
             final Ok<List<Unit>> unitsResult =
-                widget.unitsViewModel.loadUnits.result as Ok<List<Unit>>;
+                unitsViewModel.loadUnits.result as Ok<List<Unit>>;
 
             // TODO convert this row of flexibles into tabs, with one tab being displayed on narrow screens, or two tabs side by side on laptop-sized screens.
             return Row(
@@ -116,11 +134,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 Flexible(
                   flex: 1,
                   child: MapPage(
-                    mapViewModel: widget.mapViewModel,
-                    eventsViewModel: widget.eventsViewModel,
-                    singleEventScreenViewModel:
-                        widget.singleEventScreenViewModel,
-                    unitsViewModel: widget.unitsViewModel,
+                    mapViewModel: mapViewModel,
+                    eventsViewModel: eventsViewModel,
+                    singleEventScreenViewModel: singleEventScreenViewModel,
+                    unitsViewModel: unitsViewModel,
                     events: eventsResult.value,
                     units: unitsResult.value,
                   ),
@@ -129,16 +146,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 Flexible(
                   flex: 1,
                   child: SingleEventScreen(
-                    viewModel: widget.singleEventScreenViewModel,
+                    viewModel: singleEventScreenViewModel,
                   ),
                 ),
                 // Flexible(
                 //   flex: 1,
-                //   child: AllEventsScreen(viewModel: allEventsViewModel),
+                //   child: AllEventsScreen(viewModel: widget.allEventsViewModel),
                 // ),
                 // Flexible(
                 //   flex: 1,
-                //   child: AllUnitsScreen(viewModel: unitsViewModel),
+                //   child: AllUnitsScreen(viewModel: widget.unitsViewModel),
                 // ),
               ],
             );
