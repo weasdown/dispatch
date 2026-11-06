@@ -140,6 +140,16 @@ class EventRepositoryLocal extends EventRepository {
     return newIDNum;
   }
 
+  @override
+  void onAutoCat1() {
+    _log.fine('Sending new C1 to stream');
+
+    final Event newC1 = _localDataService.defaultC1;
+
+    addEvent(newC1);
+    newC1StreamController.sink.add(newC1);
+  }
+
   /// Gets a [Result.ok] holding a random event from `_events`.
   @override
   Future<Result<Event?>> get selectedEvent async {
@@ -224,15 +234,5 @@ class EventRepositoryLocal extends EventRepository {
         ),
       );
     }
-  }
-
-  @override
-  void onAutoCat1() {
-    _log.fine('Sending new C1 to stream');
-
-    final Event newC1 = _localDataService.defaultC1;
-
-    addEvent(newC1);
-    newC1StreamController.sink.add(newC1);
   }
 }
