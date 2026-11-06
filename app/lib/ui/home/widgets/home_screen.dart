@@ -198,10 +198,10 @@ class C1L1PurpleBanner extends SnackBar {
     required BuildContext context,
     required AllEventsViewModel eventsViewModel,
     required SingleEventScreenViewModel singleEventScreenViewModel,
-    required Event newC1L1,
+    required this.newC1L1,
   }) : super(
          content: Text(
-           'New C1/L1: ${newC1L1.idLastFour}',
+           label(newC1L1),
            style: Theme.of(context).textTheme.bodyLarge!
                .copyWith(color: _textColour),
          ),
@@ -220,6 +220,14 @@ class C1L1PurpleBanner extends SnackBar {
            },
          ),
        );
+
+  final Event newC1L1;
+
+  static String label(Event newC1L1) {
+    // Get "C1" or "L1" from the NOC.
+    final type = newC1L1.noc!.description.substring(0, 2);
+    return 'New $type: ${newC1L1.idLastFour}';
+  }
 
   static final Color _textColour = Colors.white;
 }
