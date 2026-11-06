@@ -10,7 +10,7 @@ import '../../../utils/result.dart';
 abstract class EventRepository {
   EventRepository()
     : newC1StreamController = StreamController<Event>.broadcast() {
-    Timer(Duration(seconds: 5), onAutoCat1);
+    autoCat1Timer = Timer(Duration(seconds: 5), onAutoCat1);
   }
 
   Future<Result<List<Event>>> get allEvents;
@@ -37,6 +37,7 @@ abstract class EventRepository {
   Stream<Event> get newC1Stream => newC1StreamController.stream;
 
   void onAutoCat1();
+  late final Timer autoCat1Timer;
 
   Future<Result<Event?>> get selectedEvent async => Result.ok(_selectedEvent);
 

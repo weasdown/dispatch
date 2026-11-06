@@ -20,22 +20,18 @@ class HomeScreen extends StatefulWidget {
     super.key,
     required this.homeViewModel,
     required this.eventsViewModel,
-    required this.singleEventScreenViewModel,
     required this.mapViewModel,
-    required this.allEventsViewModel,
+    required this.singleEventScreenViewModel,
     required this.unitsViewModel,
+    required this.contextMenuController,
   });
 
-  final AllEventsViewModel allEventsViewModel;
-
-  final HomeViewModel homeViewModel;
+  final ContextMenuController contextMenuController;
 
   final AllEventsViewModel eventsViewModel;
-
+  final HomeViewModel homeViewModel;
   final MapViewModel mapViewModel;
-
   final SingleEventScreenViewModel singleEventScreenViewModel;
-
   final UnitsViewModel unitsViewModel;
 
   @override
@@ -47,14 +43,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // When a new C1/L1 event is received, it will be sent over the homeViewModel's newC1L1Stream.
   // When a new event is received from the stream, show a snackbar with a button to select the event.
-  void _onNewC1L1(Event newC1L1) {
+  void _onNewC1L1({
+    required Event newC1L1,
+    required AllEventsViewModel allEventsViewModel,
+    required SingleEventScreenViewModel singleEventScreenViewModel,
+  }) {
     SchedulerBinding.instance.addPostFrameCallback(
       (_) => ScaffoldMessenger.of(context).showSnackBar(
         C1L1PurpleBanner(
           newC1L1: newC1L1,
           context: context,
-          eventsViewModel: widget.eventsViewModel,
-          singleEventScreenViewModel: widget.singleEventScreenViewModel,
+          eventsViewModel: allEventsViewModel,
+          singleEventScreenViewModel: singleEventScreenViewModel,
         ),
       ),
     );
@@ -66,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return ListenableBuilder(
       listenable: Listenable.merge([
+        // FIXME convert these and other listenables like them in _HomeScreenState to use widget.homeViewModel
         widget.singleEventScreenViewModel.load,
         widget.eventsViewModel.loadEvents,
       ]),
@@ -102,7 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
               _log.warning(
                 'Received new C1 ${newC1L1.idLastFour}! Showing purple banner',
               );
-              _onNewC1L1(newC1L1);
+              _onNewC1L1(
+                newC1L1: newC1L1,
+                allEventsViewModel: widget.eventsViewModel,
+                singleEventScreenViewModel: widget.singleEventScreenViewModel,
+              );
             }
 
             final Ok<List<Event>> eventsResult =
@@ -117,12 +122,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   flex: 1,
                   child: MapPage(
                     mapViewModel: widget.mapViewModel,
-                    eventsViewModel: widget.eventsViewModel,
-                    singleEventScreenViewModel:
-                        widget.singleEventScreenViewModel,
-                    unitsViewModel: widget.unitsViewModel,
                     events: eventsResult.value,
                     units: unitsResult.value,
+                    contextMenuController: widget.contextMenuController,
                   ),
                 ),
                 VerticalDivider(width: 3, thickness: 3),
@@ -134,11 +136,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 // Flexible(
                 //   flex: 1,
-                //   child: AllEventsScreen(viewModel: allEventsViewModel),
+                //   child: AllEventsScreen(viewModel: widget.allEventsViewModel),
                 // ),
                 // Flexible(
                 //   flex: 1,
-                //   child: AllUnitsScreen(viewModel: unitsViewModel),
+                //   child: AllUnitsScreen(viewModel: widget.unitsViewModel),
                 // ),
               ],
             );
@@ -196,10 +198,10 @@ class C1L1PurpleBanner extends SnackBar {
     required BuildContext context,
     required AllEventsViewModel eventsViewModel,
     required SingleEventScreenViewModel singleEventScreenViewModel,
-    required Event newC1L1,
+    required this.newC1L1,
   }) : super(
          content: Text(
-           'New C1/L1: ${newC1L1.idLastFour}',
+           label(newC1L1),
            style: Theme.of(context).textTheme.bodyLarge!
                .copyWith(color: _textColour),
          ),
@@ -218,6 +220,14 @@ class C1L1PurpleBanner extends SnackBar {
            },
          ),
        );
+
+  final Event newC1L1;
+
+  static String label(Event newC1L1) {
+    // Get "C1" or "L1" from the NOC.
+    final type = newC1L1.noc!.description.substring(0, 2);
+    return 'New $type: ${newC1L1.idLastFour}';
+  }
 
   static final Color _textColour = Colors.white;
 }
