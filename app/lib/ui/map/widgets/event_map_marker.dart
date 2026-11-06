@@ -1,4 +1,4 @@
-import 'package:flutter_map/flutter_map.dart' as fm;
+import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' as ll2;
 import 'package:material_ui/material_ui.dart';
 
@@ -7,16 +7,18 @@ import '../../events/priority_colour.dart';
 import '../view_models/map_view_model.dart';
 
 class EventMapMarker extends StatelessWidget {
-  const EventMapMarker({
+  EventMapMarker({
     super.key,
     required this._event,
     required this._mapViewModel,
     // this.onDoubleTap,
-  });
+  }) : isSelected = _mapViewModel.selectedEvent == _event;
 
   final Event _event;
 
-  fm.Marker get flutterMapMarker => fm.Marker(
+  final bool isSelected;
+
+  Marker get marker => Marker(
     point: ll2.LatLng(lat!, lng!),
     height: 20,
     width: 35,

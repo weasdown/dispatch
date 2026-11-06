@@ -3,9 +3,7 @@ import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/unit/unit.dart';
-import '../../../ui/map/view_models/map_view_model.dart';
 import '../../../utils/result.dart';
-import '../../events/view_models/all_events_view_model.dart';
 import '../view_models/units_view_model.dart';
 
 final class UnitContextMenuRegion extends StatelessWidget {
@@ -14,16 +12,12 @@ final class UnitContextMenuRegion extends StatelessWidget {
     required this.unit,
     required this.controller,
     required this.child,
-    required this._mapViewModel,
-    required this.eventsViewModel,
     required this.unitsViewModel,
   });
 
   final Widget child;
 
   final ContextMenuController controller;
-
-  final AllEventsViewModel eventsViewModel;
 
   /// Contains a [ContextMenuButtonItem] for actions on units.
   List<ContextMenuButtonItem> items(
@@ -34,8 +28,13 @@ final class UnitContextMenuRegion extends StatelessWidget {
       label: 'Dispatch ${unit.callsign}',
       onPressed: () async {
         _log.info('Dispatching ${unit.callsign} via context menu');
-        final result = await _mapViewModel.dispatchUnit(unit);
+        unitsViewModel.dispatchUnit.execute(unit);
 
+        while (unitsViewModel.dispatchUnit.running) {
+          _log.finer('Waiting for unitsViewModel.dispatchUnit to finish');
+        }
+
+        final Result<void> result = unitsViewModel.dispatchUnit.result!;
         switch (result) {
           case Ok<void>():
             _log.info('Successfully dispatched ${unit.callsign}');
@@ -216,8 +215,13 @@ final class UnitContextMenuRegion extends StatelessWidget {
       label: 'Standdown ${unit.callsign}',
       onPressed: () async {
         _log.info('Standing down ${unit.callsign} via context menu');
-        final result = await _mapViewModel.standdownUnit(unit);
+        unitsViewModel.standdownUnit.execute(unit);
 
+        while (unitsViewModel.standdownUnit.running) {
+          _log.finer('Waiting for unitsViewModel.standdownUnit to finish');
+        }
+
+        final Result<void> result = unitsViewModel.standdownUnit.result!;
         switch (result) {
           case Ok<void>():
             _log.info('Successfully stood down ${unit.callsign}');
@@ -343,8 +347,6 @@ final class UnitContextMenuRegion extends StatelessWidget {
   }
 
   final Unit unit;
-
-  final MapViewModel _mapViewModel;
 
   final UnitsViewModel unitsViewModel;
 
