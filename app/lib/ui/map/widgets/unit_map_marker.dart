@@ -2,13 +2,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:gap/gap.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:provider/provider.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../ui/map/view_models/map_view_model.dart';
 import '../../unit/unit_status_colour.dart';
-import '../../unit/view_models/units_view_model.dart';
 import '../../unit/widgets/unit_context_menu.dart';
 
 final class UnitMapMarker {
@@ -58,10 +56,7 @@ final class UnitMapMarker {
     builder: (BuildContext context, Widget? child) => UnitContextMenuRegion(
       unit: _unit,
       controller: contextMenuController,
-      unitsViewModel: UnitsViewModel(
-        unitRepository: context.read(),
-        eventRepository: context.read(),
-      ),
+      mapViewModel: _mapViewModel,
       child: Container(
         // height: 100,
         // width: 80,

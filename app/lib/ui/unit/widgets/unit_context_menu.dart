@@ -1,10 +1,10 @@
+import 'package:dispatch/ui/map/view_models/map_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
-import '../view_models/units_view_model.dart';
 
 final class UnitContextMenuRegion extends StatelessWidget {
   const UnitContextMenuRegion({
@@ -12,7 +12,7 @@ final class UnitContextMenuRegion extends StatelessWidget {
     required this.unit,
     required this.controller,
     required this.child,
-    required this.unitsViewModel,
+    required this._mapViewModel,
   });
 
   final Widget child;
@@ -28,13 +28,13 @@ final class UnitContextMenuRegion extends StatelessWidget {
       label: 'Dispatch ${unit.callsign}',
       onPressed: () async {
         _log.info('Dispatching ${unit.callsign} via context menu');
-        unitsViewModel.dispatchUnit.execute(unit);
+        _mapViewModel.dispatchUnit.execute(unit);
 
-        while (unitsViewModel.dispatchUnit.running) {
+        while (_mapViewModel.dispatchUnit.running) {
           _log.finer('Waiting for unitsViewModel.dispatchUnit to finish');
         }
 
-        final Result<void> result = unitsViewModel.dispatchUnit.result!;
+        final Result<void> result = _mapViewModel.dispatchUnit.result!;
         switch (result) {
           case Ok<void>():
             _log.info('Successfully dispatched ${unit.callsign}');
@@ -215,13 +215,13 @@ final class UnitContextMenuRegion extends StatelessWidget {
       label: 'Standdown ${unit.callsign}',
       onPressed: () async {
         _log.info('Standing down ${unit.callsign} via context menu');
-        unitsViewModel.standdownUnit.execute(unit);
+        _mapViewModel.standdownUnit.execute(unit);
 
-        while (unitsViewModel.standdownUnit.running) {
+        while (_mapViewModel.standdownUnit.running) {
           _log.finer('Waiting for unitsViewModel.standdownUnit to finish');
         }
 
-        final Result<void> result = unitsViewModel.standdownUnit.result!;
+        final Result<void> result = _mapViewModel.standdownUnit.result!;
         switch (result) {
           case Ok<void>():
             _log.info('Successfully stood down ${unit.callsign}');
@@ -346,9 +346,9 @@ final class UnitContextMenuRegion extends StatelessWidget {
     return log;
   }
 
-  final Unit unit;
+  final MapViewModel _mapViewModel;
 
-  final UnitsViewModel unitsViewModel;
+  final Unit unit;
 
   @override
   Widget build(BuildContext context) {
@@ -491,6 +491,7 @@ class _ContextMenuRegionState extends State<ContextMenuRegion> {
 }
 
 // TODO refactor context menu to base it on MenuItemButton/Menu Entry to allow sub-options - see example: https://api.flutter.dev/flutter/material/MenuItemButton-class.html#material.MenuBar.1
+/// Each of the items that appears in a unit context menu ([UnitContextMenuRegion]) is a [UnitContextMenuButtonItem].
 final class UnitContextMenuButtonItem extends ContextMenuButtonItem {
   UnitContextMenuButtonItem({
     required void Function() onPressed,
