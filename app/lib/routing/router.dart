@@ -50,6 +50,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
 
         final HomeViewModel homeViewModel = HomeViewModel(
           eventRepository: eventRepository,
+          unitRepository: unitRepository,
         );
         final AllEventsViewModel eventsViewModel = AllEventsViewModel(
           eventRepository: eventRepository,

@@ -1,12 +1,17 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
+import '../../../data/repositories/unit/unit_repository.dart';
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/unit/unit.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  HomeViewModel({required this._eventRepository}) {
+  HomeViewModel({
+    required this._eventRepository,
+    required this._unitRepository,
+  }) {
     viewNewC1L1 = Command0<void>(_viewNewC1L1);
     load = Command0(_load)..execute();
   }
@@ -19,14 +24,23 @@ class HomeViewModel extends ChangeNotifier {
   late final Command0<void> load;
   Future<Result<void>> _load() async {
     try {
-      final result = await _eventRepository.allEvents;
-      switch (result) {
+      final eventsResult = await _eventRepository.allEvents;
+      switch (eventsResult) {
         case Ok<List<Event>>():
-          _events = result.value;
-          return Result.ok(null);
+          _events = eventsResult.value;
         case Error<List<Event>>():
-          return result;
+          return eventsResult;
       }
+
+      final unitsResult = await _unitRepository.allUnits;
+      switch (unitsResult) {
+        case Ok<List<Unit>>():
+          _units = unitsResult.value;
+        case Error<List<Unit>>():
+          return unitsResult;
+      }
+
+      return Result.ok(null);
     } finally {
       notifyListeners();
       // TODO confirm whether it'd be better to use this rather than the HomeScreen's StreamBuilder
@@ -47,6 +61,11 @@ class HomeViewModel extends ChangeNotifier {
   // }
 
   Stream<Event> get newC1L1Stream => _eventRepository.newC1Stream;
+
+  final UnitRepository _unitRepository;
+
+  List<Unit> get units => _units;
+  List<Unit> _units = [];
 
   late final Command0<void> viewNewC1L1;
   Future<Result<void>> _viewNewC1L1() async {

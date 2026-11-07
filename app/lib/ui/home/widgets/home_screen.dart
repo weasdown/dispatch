@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return ListenableBuilder(
       listenable: Listenable.merge([
         // FIXME convert these and other listenables like them in _HomeScreenState to use widget.homeViewModel
-        widget.singleEventScreenViewModel.load,
+        widget.homeViewModel.load,
         widget.eventsViewModel.loadEvents,
       ]),
       builder: (context, child) {
@@ -110,11 +110,6 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
 
-            final Ok<List<Event>> eventsResult =
-                widget.eventsViewModel.loadEvents.result as Ok<List<Event>>;
-            final Ok<List<Unit>> unitsResult =
-                widget.unitsViewModel.loadUnits.result as Ok<List<Unit>>;
-
             // TODO convert this row of flexibles into tabs, with one tab being displayed on narrow screens, or two tabs side by side on laptop-sized screens.
             return Row(
               children: [
@@ -122,8 +117,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   flex: 1,
                   child: MapPage(
                     mapViewModel: widget.mapViewModel,
-                    events: eventsResult.value,
-                    units: unitsResult.value,
+                    events: widget.homeViewModel.events,
+                    units: widget.homeViewModel.units,
                     contextMenuController: widget.contextMenuController,
                   ),
                 ),
