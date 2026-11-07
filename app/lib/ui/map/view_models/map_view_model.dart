@@ -113,7 +113,7 @@ class MapViewModel extends ChangeNotifier {
           _events = eventsValue;
           _log.fine('Loaded ${eventsValue.length} events');
         case Error<List<Event>>():
-          _log.warning('Failed to load events');
+          _log.severe('Failed to load events');
           return eventsResult;
       }
 
@@ -124,7 +124,7 @@ class MapViewModel extends ChangeNotifier {
           _units = unitsValue;
           _log.fine('Loaded ${unitsValue.length} units');
         case Error<List<Unit>>():
-          _log.warning('Failed to load units');
+          _log.severe('Failed to load units');
           return unitsResult;
       }
 
