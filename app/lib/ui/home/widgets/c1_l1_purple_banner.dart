@@ -6,6 +6,7 @@ import '../../../domain/models/event/event.dart';
 import '../../events/priority_colour.dart';
 import '../../events/view_models/all_events_view_model.dart';
 import '../../events/view_models/single_event_screen_viewmodel.dart';
+import '../view_models/home_viewmodel.dart';
 
 /// A purple snackbar that's displayed when a new C1/L1 event is received from the [HomeViewModel.newC1L1Stream].
 class C1L1PurpleBanner extends SnackBar {
@@ -14,6 +15,7 @@ class C1L1PurpleBanner extends SnackBar {
     required BuildContext context,
     required AllEventsViewModel eventsViewModel,
     required SingleEventScreenViewModel singleEventScreenViewModel,
+    required this.homeViewModel,
     required this.newC1L1,
   }) : super(
          content: Text(
@@ -33,9 +35,12 @@ class C1L1PurpleBanner extends SnackBar {
              );
              eventsViewModel.selectEvent.execute(newC1L1);
              singleEventScreenViewModel.displayEvent.execute(newC1L1);
+             homeViewModel.selectEvent.execute(newC1L1);
            },
          ),
        );
+
+  final HomeViewModel homeViewModel;
 
   final Event newC1L1;
 

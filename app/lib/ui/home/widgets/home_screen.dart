@@ -54,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
               .where((Event event) => event == newC1L1)
               .firstOrNull!,
           context: context,
+          homeViewModel: widget.homeViewModel,
           eventsViewModel: allEventsViewModel,
           singleEventScreenViewModel: singleEventScreenViewModel,
         ),
