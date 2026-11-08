@@ -1,5 +1,4 @@
 import 'package:flutter_map/flutter_map.dart';
-import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
@@ -40,8 +39,6 @@ class FlutterMapPage extends StatefulWidget {
 }
 
 class _FlutterMapPageState extends State<FlutterMapPage> {
-  Logger get _log => Logger('_FlutterMapPageState')..level = Level.ALL;
-
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
@@ -92,7 +89,6 @@ class _FlutterMapPageState extends State<FlutterMapPage> {
                 // Rebuild marker when its event has been updated
                 listenable: widget.viewModel.rebuildMarkerForEventWithID,
                 builder: (BuildContext context, Widget? child) {
-                  _log.fine('Rebuilding marker for event');
                   while (widget.viewModel.rebuildMarkerForEventWithID.running) {
                     // Wait for new marker to be ready.
                   }
