@@ -1,5 +1,6 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' as ll2;
+import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
@@ -31,6 +32,8 @@ class EventMapMarker extends StatelessWidget {
   /// Longitude.
   double? get lng => _event.location?.longitude;
 
+  Logger get _log => Logger('EventMapMarker')..level = Level.ALL;
+
   final MapViewModel _mapViewModel;
 
   Widget get _body => GestureDetector(
@@ -60,8 +63,8 @@ class EventMapMarker extends StatelessWidget {
   }
 
   void _selectEvent() {
-    debugPrint('Double tapped event ${_event.idLastFour}');
-    debugPrint('Setting event to ${_event.idLastFour}');
+    _log.fine('Double tapped event ${_event.idLastFour}');
+    _log.fine('Setting event to ${_event.idLastFour}');
     _mapViewModel.selectEvent.execute();
   }
 
