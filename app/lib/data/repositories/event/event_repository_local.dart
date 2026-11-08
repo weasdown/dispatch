@@ -119,6 +119,9 @@ class EventRepositoryLocal extends EventRepository {
     }
   }
 
+  @override
+  List<EventID> get eventIDs => _events.map((Event event) => event.id).toList();
+
   final List<Event> _events = List<Event>.empty(growable: true);
 
   Future<Result<List<Event>>> get eventsList async {
@@ -189,10 +192,13 @@ class EventRepositoryLocal extends EventRepository {
   @override
   Future<Result<void>> setNOC(EventID id, NOC noc) async {
     final int eventIndex = _events.indexWhere((event) => event.id == id);
-    if (eventIndex == -1) {
+    if (!eventIDs.contains(id)) {
       return Result<Event>.error(EventNotFoundException(eventID: id));
     }
     _events[eventIndex].setNOC(noc);
+
+    _log.finer('Adding event ${id.lastFour} to updatedEventStream');
+    updatedEventStreamController.sink.add(_events[eventIndex]);
     return Result.ok(null);
   }
 
@@ -210,6 +216,19 @@ class EventRepositoryLocal extends EventRepository {
       'Standing down ${unit.callsign} from event ${allocatedEvent.idLastFour}',
     );
     return Result<void>.ok(unit.standdown());
+  }
+
+  @override
+  Future<Result<void>> updateEvent(EventID id, Event newEvent) async {
+    _log.finer('Updating event $id');
+    if (!eventIDs.contains(id)) {
+      return Result<void>.error(EventNotFoundException(eventID: id));
+    }
+
+    final int eventIndex = _events.indexWhere((Event event) => event.id == id);
+    _events[eventIndex] = newEvent;
+    updatedEventStreamController.sink.add(newEvent);
+    return Result.ok(null);
   }
 
   @override

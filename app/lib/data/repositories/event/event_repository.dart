@@ -12,6 +12,13 @@ import '../../../utils/result.dart';
 abstract class EventRepository {
   EventRepository() {
     autoCat1Timer = Timer(Duration(seconds: 5), onAutoCat1);
+
+    // When an event is updated, detect whether it has been upgraded to C1/L1. If so, add it to the newC1L1Stream.
+    updatedEventStream.listen(
+      (Event event) => event.priority == Priority.zero
+          ? newC1StreamController.sink.add(event)
+          : null,
+    );
   }
 
   Future<Result<void>> addPatientToEvent(EventID eventID, Patient patient);
@@ -32,6 +39,8 @@ abstract class EventRepository {
   Future<Result<Event>> eventByID(EventID id);
 
   Event? eventForUnit(Unit unit);
+
+  List<EventID> get eventIDs;
 
   int get nextIDNum;
 
@@ -58,6 +67,14 @@ abstract class EventRepository {
   Future<Result<void>> setNOC(EventID id, NOC noc);
 
   Future<Result<void>> standdownUnit(Unit unit);
+
+  /// Triggers the eventUpdateStream to fire an [EventID] when the corresponding [Event] has been updated.
+  final StreamController<Event> updatedEventStreamController =
+      StreamController<Event>.broadcast();
+
+  Stream<Event> get updatedEventStream => updatedEventStreamController.stream;
+
+  Future<Result<void>> updateEvent(EventID id, Event newEvent);
 
   Future<Result<void>> updatePatientForEvent(Patient patient);
 }
