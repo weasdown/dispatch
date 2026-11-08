@@ -115,7 +115,7 @@ class _Overview extends StatelessWidget {
             children: [
               Text(
                 (event.noc != null)
-                    ? '${event.category.toString()}: ${event.noc!.description}'
+                    ? event.noc!.description
                     : event.status.toString(),
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
