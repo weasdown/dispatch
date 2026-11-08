@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
+import '../../../ui/home/view_models/home_viewmodel.dart';
 import '../../events/priority_colour.dart';
 import '../view_models/map_view_model.dart';
 
@@ -12,10 +13,14 @@ class EventMapMarker extends StatelessWidget {
     super.key,
     required this._event,
     required this._mapViewModel,
+    required this._homeViewModel,
+    required this._onSelectEvent,
     // this.onDoubleTap,
   }) : isSelected = _mapViewModel.selectedEvent == _event;
 
   final Event _event;
+
+  final HomeViewModel _homeViewModel;
 
   final bool isSelected;
 
@@ -38,7 +43,7 @@ class EventMapMarker extends StatelessWidget {
 
   Widget get _body => GestureDetector(
     onTap: () => debugPrint('Tapped event ${_event.idLastFour}'),
-    onDoubleTap: _selectEvent,
+    onDoubleTap: () => _selectEvent(_homeViewModel),
     onSecondaryTap: _onRightClick,
     child: Container(
       color: _event.priority.backgroundColour,
@@ -62,10 +67,15 @@ class EventMapMarker extends StatelessWidget {
     debugPrint('Secondary tapped event ${_event.idLastFour}');
   }
 
-  void _selectEvent() {
+  /// Function that will be run when the event map marker is double clicked.
+  final void Function(Event event) _onSelectEvent;
+
+  void _selectEvent(HomeViewModel homeViewModel) {
     _log.fine('Double tapped event ${_event.idLastFour}');
     _log.fine('Setting event to ${_event.idLastFour}');
     _mapViewModel.selectEvent.execute(_event);
+    _onSelectEvent(_event);
+    homeViewModel.selectEvent.execute(_event);
   }
 
   @override

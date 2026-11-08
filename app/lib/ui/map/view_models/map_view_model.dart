@@ -6,6 +6,7 @@ import '../../../data/repositories/event/event_repository.dart';
 import '../../../data/repositories/unit/unit_repository.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../../ui/home/view_models/home_viewmodel.dart';
 import '../../../ui/map/widgets/event_map_marker.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
@@ -18,6 +19,7 @@ class MapViewModel extends ChangeNotifier {
     required this._unitRepository,
     required BuildContext context,
     required this.contextMenuController,
+    required this._homeViewModel,
   }) : _eventEdited = false {
     selectEvent = Command1<void, Event>(_selectEvent);
 
@@ -48,8 +50,12 @@ class MapViewModel extends ChangeNotifier {
   List<Marker> _buildEventMarkers() {
     _eventMarkers = _events
         .map(
-          (Event event) =>
-              EventMapMarker(event: event, mapViewModel: this).marker,
+          (Event event) => EventMapMarker(
+            event: event,
+            mapViewModel: this,
+            onSelectEvent: (Event newEvent) => selectEvent.execute(newEvent),
+            homeViewModel: _homeViewModel,
+          ).marker,
         )
         .toList();
     return _eventMarkers;
@@ -118,6 +124,8 @@ class MapViewModel extends ChangeNotifier {
 
   int _getEventIndexForID(EventID id) =>
       _events.indexWhere((Event event) => event.id == id);
+
+  final HomeViewModel _homeViewModel;
 
   // FIXME this is being called too often - several times on startup, perhaps at least once per event (as evidenced by number of log entries for "Loaded n units").
   /// Loads map markers for events and units.
@@ -255,8 +263,9 @@ class MapViewModel extends ChangeNotifier {
 
   late final Command1<void, Event> selectEvent;
   Future<Result<void>> _selectEvent(Event event) async {
+    _log.fine('Selecting event ${event.idLastFour}');
     try {
-      // _eventEdited = true;
+      _eventEdited = true;
       final result = await _eventRepository.selectEvent(event);
       switch (result) {
         case Ok<Event>():

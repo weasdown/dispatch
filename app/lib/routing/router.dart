@@ -60,6 +60,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
           unitRepository: unitRepository,
           context: context,
           contextMenuController: contextMenuController,
+          homeViewModel: homeViewModel,
         );
         final SingleEventScreenViewModel singleEventScreenViewModel =
             SingleEventScreenViewModel(

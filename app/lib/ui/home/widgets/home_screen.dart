@@ -151,8 +151,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         VerticalDivider(width: 3, thickness: 3),
                         Flexible(
                           flex: 1,
-                          child: SingleEventScreen(
-                            viewModel: widget.singleEventScreenViewModel,
+                          child: ListenableBuilder(
+                            listenable: widget.homeViewModel,
+                            builder: (BuildContext context, Widget? child) =>
+                                SingleEventScreen(
+                                  viewModel: widget.singleEventScreenViewModel,
+                                  homeViewModel: widget.homeViewModel,
+                                ),
                           ),
                         ),
                         // Flexible(

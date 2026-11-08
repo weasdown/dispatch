@@ -83,17 +83,20 @@ class SingleEventScreenViewModel extends ChangeNotifier {
 
   late final Command1<void, Event> displayEvent;
   Future<Result<void>> _displayEvent(Event event) async {
-    final result = await _eventRepository.selectEvent(event);
+    try {
+      final result = await _eventRepository.selectEvent(event);
 
-    switch (result) {
-      case Ok<void>():
-        _event = event;
-        notifyListeners();
+      switch (result) {
+        case Ok<void>():
+          _event = event;
 
-      case Error<void>():
-        _log.severe('Failed to set event');
+        case Error<void>():
+          _log.severe('Failed to set event');
+      }
+      return result;
+    } finally {
+      notifyListeners();
     }
-    return result;
   }
 
   final EventRepository _eventRepository;
