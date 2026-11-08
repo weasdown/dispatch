@@ -181,7 +181,7 @@ class EventRepositoryLocal extends EventRepository {
   int _sequentialId = 0; // Used to generate IDs for events.
 
   @override
-  Future<Result<bool>> setEvent(Event event) async {
+  Future<Result<bool>> selectEvent(Event event) async {
     _selectedEvent = event;
     return const Result.ok(true);
   }

@@ -42,7 +42,7 @@ class AllEventsViewModel extends ChangeNotifier {
   late final Command1<void, Event> selectEvent;
   Future<Result<void>> _selectEvent(Event eventToSelect) {
     _log.fine('Selecting event ${eventToSelect.idLastFour}');
-    final result = _eventRepository.setEvent(eventToSelect);
+    final result = _eventRepository.selectEvent(eventToSelect);
     notifyListeners();
     return result;
   }

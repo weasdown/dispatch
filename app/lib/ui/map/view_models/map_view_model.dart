@@ -197,7 +197,7 @@ class MapViewModel extends ChangeNotifier {
   late final Command0<void> selectEvent;
   Future<Result<void>> _selectEvent() async {
     _eventEdited = true;
-    final result = await _eventRepository.setEvent(_event!);
+    final result = await _eventRepository.selectEvent(_event!);
     switch (result) {
       case Ok<void>():
         _log.fine('Event selected');
