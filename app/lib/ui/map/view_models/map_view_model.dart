@@ -24,6 +24,16 @@ class MapViewModel extends ChangeNotifier {
     dispatchUnit = Command1<void, Unit>(_dispatchUnit);
     standdownUnit = Command1<void, Unit>(_standdownUnit);
 
+    // When an event is updated in the event repository, trigger its map marker to rebuild.
+    rebuildMarkerForEventWithID = Command2<void, EventID, BuildContext>(
+      _rebuildMarkerForEventWithID,
+    );
+    _eventRepository.eventUpdateStream.listen((Event event) {
+      if (context.mounted) {
+        rebuildMarkerForEventWithID.execute(event.id, context);
+      }
+    });
+
     // _loadEvents = Command0<void>(__loadEvents)..execute();
     // _loadUnits = Command0<void>(__loadUnits)..execute();
     loadMarkers = Command2<dynamic, BuildContext, ContextMenuController>(
@@ -99,6 +109,9 @@ class MapViewModel extends ChangeNotifier {
   final EventRepository _eventRepository;
 
   final UnitRepository _unitRepository;
+
+  int _getEventIndexForID(EventID id) =>
+      _events.indexWhere((Event event) => event.id == id);
 
   // FIXME this is being called too often - several times on startup, perhaps at least once per event (as evidenced by number of log entries for "Loaded n units").
   /// Loads map markers for events and units.
@@ -195,6 +208,55 @@ class MapViewModel extends ChangeNotifier {
 
   List<Marker> get markers => _markers;
   List<Marker> _markers = [];
+
+  void _rebuildAllMarkers({
+    required BuildContext context,
+    required ContextMenuController contextMenuController,
+  }) {
+    _markers = [
+      ...buildEventMarkers(),
+      ...buildUnitMarkers(
+        contextMenuController: contextMenuController,
+        context: context,
+      ),
+    ];
+  }
+
+  late final Command2<void, EventID, BuildContext> rebuildMarkerForEventWithID;
+  Future<Result<void>> _rebuildMarkerForEventWithID(
+    EventID id,
+    BuildContext context,
+  ) async {
+    _log.info('Rebuilding marker for event ${id.lastFour}');
+    try {
+      if (!_eventIDs.contains(id)) {
+        _log.severe('Event with ID $id not found in _events');
+        return Result.error(EventNotFoundException(eventID: id));
+      }
+      final int eventIndex = _getEventIndexForID(id);
+
+      final Result<Event> eventResult = await _eventRepository.eventByID(id);
+      switch (eventResult) {
+        case Ok<Event>():
+          _events[eventIndex] = eventResult.value;
+          if (context.mounted) {
+            _rebuildAllMarkers(
+              context: context,
+              contextMenuController: contextMenuController,
+            );
+          }
+
+          return Result.ok(null);
+        case Error<Event>():
+          _log.severe(
+            'Failed to get event with ID ${id.lastFour} from _eventRepository: ${eventResult.error}',
+          );
+          return Result.error(eventResult.error);
+      }
+    } finally {
+      notifyListeners();
+    }
+  }
 
   late final Command0<void> selectEvent;
   Future<Result<void>> _selectEvent() async {
