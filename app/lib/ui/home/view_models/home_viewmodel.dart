@@ -108,7 +108,7 @@ class HomeViewModel extends ChangeNotifier {
   //   return newC1L1.id;
   // }
 
-  Stream<EventID> get newC1L1Stream => _eventRepository.newC1Stream;
+  Stream<Event> get newC1L1Stream => _eventRepository.newC1Stream;
 
   Stream<Event> get newEventStream => _eventRepository.newEventStream;
 
