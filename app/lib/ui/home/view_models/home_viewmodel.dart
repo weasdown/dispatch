@@ -19,6 +19,7 @@ class HomeViewModel extends ChangeNotifier {
     viewNewC1L1 = Command0<void>(_viewNewC1L1);
 
     getEvent = Command1<void, EventID>(_getEvent);
+    updateEvent = Command2<void, EventID, Event>(_updateEvent);
     getUpdatedEvent = Command1<Event, EventID>(_getUpdatedEvent);
 
     load = Command0(_load)..execute();
@@ -123,6 +124,15 @@ class HomeViewModel extends ChangeNotifier {
 
   List<Unit> get units => _units;
   List<Unit> _units = [];
+
+
+  late final Command2<void, EventID, Event> updateEvent;
+  Future<Result<void>> _updateEvent(EventID id, Event newEvent) async {
+    _log.fine('Updating event $id');
+    _eventRepository.updateEvent(id, newEvent);
+    notifyListeners();
+    return Result.ok(null);
+  }
 
   late final Command0<void> viewNewC1L1;
   Future<Result<void>> _viewNewC1L1() async {
