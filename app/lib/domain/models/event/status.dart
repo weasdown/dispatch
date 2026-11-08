@@ -3,7 +3,7 @@ import 'noc.dart';
 import 'priority.dart';
 
 interface class EventStatus implements Comparable<EventStatus> {
-  const EventStatus(this.category, this.description);
+  const EventStatus({required this.category, required this.description});
 
   /// Creates an emergency ambulance [EventStatus].
   const factory EventStatus.nhs999(Category category) =
@@ -36,17 +36,24 @@ interface class EventStatus implements Comparable<EventStatus> {
 }
 
 base class PathwaysDisposition extends EventStatus {
-  const PathwaysDisposition._(super.category, super.description);
+  const PathwaysDisposition._({
+    required super.category,
+    required super.description,
+  });
 
   const PathwaysDisposition._nhs999(Category category)
-    : this._(category, 'NHS999');
+    : this._(category: category, description: 'NHS999');
 }
 
 /// Nature of Call.
 abstract base class NOC extends EventStatus {
-  const NOC(super.category, super.description) : specify = false;
+  const NOC(Category category, String description)
+    : specify = false,
+      super(category: category, description: description);
 
-  const NOC.withSpecify(super.category, super.description) : specify = true;
+  const NOC.withSpecify(Category category, String description)
+    : specify = true,
+      super(category: category, description: description);
 
   // TODO implement detail attribute for "(specify...)" NOCs.
   // /// The extra details provided in response to a "Specify..." prompt.

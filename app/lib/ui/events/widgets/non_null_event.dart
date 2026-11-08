@@ -28,33 +28,28 @@ class NonNullEvent extends StatelessWidget {
   Widget build(BuildContext context) {
     _log.finer('NonNullEvent eventMode: $eventMode');
     return Center(
-      child: SizedBox.expand(
-        child: Align(
-          alignment: AlignmentGeometry.center,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Gap(12),
-                _Overview(event: event, log: _log),
-                const Gap(30),
-                _Location(event: event),
-                const Gap(30),
-                _Buttons(event: event),
-                const Gap(50),
-                const Divider(),
-                const Gap(8),
-                PatientDetails(
-                  eventMode: eventMode,
-                  patientControllers: patientControllers,
-                  viewModel: viewModel,
-                ),
-                const Gap(50),
-                RemarksLog(event: event, viewModel: viewModel),
-              ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Gap(12),
+            _Overview(event: event, log: _log),
+            const Gap(30),
+            _Location(event: event),
+            const Gap(30),
+            _Buttons(event: event),
+            const Gap(50),
+            const Divider(),
+            const Gap(8),
+            PatientDetails(
+              eventMode: eventMode,
+              patientControllers: patientControllers,
+              viewModel: viewModel,
             ),
-          ),
+            const Gap(50),
+            RemarksLog(event: event, viewModel: viewModel),
+          ],
         ),
       ),
     );
@@ -105,14 +100,14 @@ class _Location extends StatelessWidget {
 }
 
 class _Overview extends StatelessWidget {
-  const _Overview({required this.event, required this.log});
+  const _Overview({required this.event, required this._log});
 
   final Event event;
-  final Logger log;
+  final Logger _log;
 
   @override
   Widget build(BuildContext context) {
-    log.info('Building _Overview with event: ${event.idLastFour}');
+    _log.info('Building _Overview with event: ${event.idLastFour}');
     return Center(
       child: Table(
         children: [
@@ -120,7 +115,7 @@ class _Overview extends StatelessWidget {
             children: [
               Text(
                 (event.noc != null)
-                    ? '${event.category.toString()}: ${event.noc!.description}'
+                    ? event.noc!.description
                     : event.status.toString(),
                 style: Theme.of(context).textTheme.headlineSmall,
               ),

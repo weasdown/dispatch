@@ -18,10 +18,10 @@ class Event {
     required this.id,
     required this.address,
     required this.location,
-    required this.status,
+    required this._status,
     required this._patients,
   }) : _accepted = false,
-       category = status.category {
+       category = _status.category {
     if (status == EventStatus.preAlert()) {
       assert(category == null);
     }
@@ -181,7 +181,7 @@ class Event {
   void addNOC(NOC noc) {
     if (_noc == null) {
       _noc = noc;
-      status = EventStatus.nhs999(noc.category!);
+      _status = EventStatus.nhs999(noc.category!);
       category = noc.category;
     } else {
       throw Exception(
@@ -289,6 +289,34 @@ class Event {
 
   UnmodifiableListView<Remark> get remarks => UnmodifiableListView(_remarks);
 
+  /// Sets the nature of call (NOC - [_noc]) for this [Event].
+  ///
+  /// The NOC * only be set if there is not a NOC already set, or if the new NOC is a C1.
+  /// However, overwriting of an existing NOC with a non-Cat 1 NOC is still allowed to cater for misclicks.
+  void setNOC(NOC noc) {
+    if (_noc != null) {
+      if (noc.priority == Priority.zero) {
+        _log.info(
+          'Existing NOC (${_noc!.description}) being overwritten with NOC ${noc.description}',
+        );
+      } else {
+        _log.warning(
+          'Existing NOC (${_noc!.description}) being overwritten with non-C1 NOC ${noc.description}',
+        );
+      }
+    }
+    // _noc == null
+    else {
+      _log.info('NOC being set to ${noc.description}');
+    }
+
+    _noc = noc;
+    _updateStatus();
+    _log.fine('New event status: ${status.description}');
+
+    category = noc.category;
+  }
+
   void standdownUnit(Unit unit) {
     _log.fine('Standing down unit ${unit.callsign} from event $idLastFour');
     final bool unitWasAssigned = assignedUnits.remove(unit);
@@ -303,7 +331,8 @@ class Event {
     }
   }
 
-  EventStatus status;
+  EventStatus get status => _status;
+  EventStatus _status;
 
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -323,6 +352,16 @@ class Event {
 
   void updatePatient(int index, Patient newPatient) {
     _patients[index] = newPatient;
+  }
+
+  void _updateStatus() {
+    if (noc == null) {
+      throw ArgumentError.notNull('noc');
+    }
+    _status = EventStatus(
+      category: noc!.category,
+      description: noc!.description,
+    );
   }
 }
 
