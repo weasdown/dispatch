@@ -12,6 +12,7 @@ import '../../../domain/models/unit/unit.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
 
+// TODO move commands/methods that are used by many widgets (e.g. getEvent, updateEvent) to a new top-level ViewModel class that this will extend.
 class HomeViewModel extends ChangeNotifier {
   HomeViewModel({
     required this._eventRepository,
@@ -99,13 +100,8 @@ class HomeViewModel extends ChangeNotifier {
   bool get newC1Viewed => _newC1Viewed;
   bool _newC1Viewed = true;
 
-  // /// Called when the view model receives a new C1/L1 event from the [_eventRepository].
-  // EventID onNewC1(Event newC1L1) {
-  //   _newC1Viewed = false;
-  //   _log.warning('New C1/L1 event received!');
-  //   notifyListeners();
-  //   return newC1L1.id;
-  // }
+  // TODO implement use of newC1L1sNotifier
+  // final NewC1L1Notifier newC1L1sNotifier = NewC1L1Notifier([]);
 
   Stream<Event> get newC1L1Stream => _eventRepository.newC1Stream;
 
@@ -156,7 +152,22 @@ class HomeViewModel extends ChangeNotifier {
   late final Command0<void> viewNewC1L1;
   Future<Result<void>> _viewNewC1L1() async {
     _newC1Viewed = true;
+    // TODO implement call to newC1L1sNotifier.markAsViewed()
+    // newC1L1sNotifier.markAsViewed();
     notifyListeners();
     return Result.ok(null);
+  }
+}
+
+// TODO add to HomeViewModel so widgets just have to listen to that rather than subscribing to a stream.
+class NewC1L1Notifier extends ValueNotifier<List<Event>> {
+  NewC1L1Notifier(super.value);
+
+  List<Event> get newC1L1s => _newC1L1s;
+  final List<Event> _newC1L1s = [];
+
+  void markAsViewed(Event event) {
+    _newC1L1s.remove(event);
+    notifyListeners();
   }
 }
