@@ -78,24 +78,31 @@ class MapViewModel extends ChangeNotifier {
 
   late final Command1<void, Unit> dispatchUnit;
   Future<Result<void>> _dispatchUnit(Unit unit) async {
-    if (_event == null) {
-      return Result<void>.error(const NoSelectedEventException());
-    }
+    try {
+      if (_selectedEvent == null) {
+        _log.warning('Cannot dispatch ${unit.callsign} to null event');
+        return Result<void>.error(const NoSelectedEventException());
+      }
 
-    _log.fine('Dispatching ${unit.callsign} to event ${_event!.idLastFour}');
-    final result = await _eventRepository.dispatchUnit(unit);
-    switch (result) {
-      case Ok<void>():
-        _log.info(
-          'Successfully dispatched ${unit.callsign} to event ${_event!.idLastFour}',
-        );
-        notifyListeners();
-      case Error<void>():
-        _log.severe(
-          'Failed to dispatch ${unit.callsign} to event ${_event!.idLastFour}: ${result.error}',
-        );
+      _log.fine(
+        'Dispatching ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
+      );
+      final result = await _eventRepository.dispatchUnit(unit);
+      switch (result) {
+        case Ok<void>():
+          _log.info(
+            'Successfully dispatched ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
+          );
+
+        case Error<void>():
+          _log.severe(
+            'Failed to dispatch ${unit.callsign} to event ${_selectedEvent!.idLastFour}: ${result.error}',
+          );
+      }
+      return result;
+    } finally {
+      notifyListeners();
     }
-    return result;
   }
 
   bool get eventEdited => _eventEdited;
@@ -106,8 +113,8 @@ class MapViewModel extends ChangeNotifier {
     // notifyListeners();
   }
 
-  Event? get event => _event;
-  Event? _event;
+  // Event? get event => _event;
+  // Event? _event;
 
   List<EventID> get _eventIDs =>
       _events.map((Event event) => event.id).toList();
@@ -265,6 +272,7 @@ class MapViewModel extends ChangeNotifier {
   Future<Result<void>> _selectEvent(Event event) async {
     _log.fine('Selecting event ${event.idLastFour}');
     try {
+      _selectedEvent = event;
       _eventEdited = true;
       final result = await _eventRepository.selectEvent(event);
       switch (result) {

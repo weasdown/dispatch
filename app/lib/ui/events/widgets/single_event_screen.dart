@@ -456,6 +456,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
               : NonNullEvent(
                   event: _event!,
                   viewModel: widget.viewModel,
+                  homeViewModel: widget.homeViewModel,
                   eventMode: _eventMode,
                   patientControllers: _patientControllers,
                 ),
