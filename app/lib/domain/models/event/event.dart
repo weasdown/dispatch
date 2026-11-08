@@ -313,6 +313,8 @@ class Event {
     _noc = noc;
     _updateStatus();
     _log.fine('New event status: ${status.description}');
+
+    category = noc.category;
   }
 
   void standdownUnit(Unit unit) {
