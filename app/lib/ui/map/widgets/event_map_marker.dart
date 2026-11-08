@@ -35,9 +35,9 @@ class EventMapMarker extends StatelessWidget {
 
   Widget get _body => GestureDetector(
     onTap: () => debugPrint('Tapped event ${_event.idLastFour}'),
-    onDoubleTap: _onDoubleTap,
     onSecondaryTap: () =>
         debugPrint('Secondary tapped event ${_event.idLastFour}'),
+    onDoubleTap: _selectEvent,
     child: Container(
       color: _event.priority.backgroundColour,
       height: 24,
@@ -56,7 +56,7 @@ class EventMapMarker extends StatelessWidget {
     ),
   );
 
-  void _onDoubleTap() {
+  void _selectEvent() {
     debugPrint('Double tapped event ${_event.idLastFour}');
     debugPrint('Setting event to ${_event.idLastFour}');
     _mapViewModel.selectEvent.execute();
