@@ -17,7 +17,7 @@ class MapViewModel extends ChangeNotifier {
     required this._eventRepository,
     required this._unitRepository,
     required BuildContext context,
-    required ContextMenuController contextMenuController,
+    required this.contextMenuController,
   }) : _eventEdited = false {
     selectEvent = Command0<void>(_selectEvent);
 
@@ -50,6 +50,8 @@ class MapViewModel extends ChangeNotifier {
         ).marker(context),
       )
       .toList();
+
+  final ContextMenuController contextMenuController;
 
   late final Command1<void, Unit> dispatchUnit;
   Future<Result<void>> _dispatchUnit(Unit unit) async {
