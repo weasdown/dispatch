@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/person/patient.dart';
+import '../../home/view_models/home_viewmodel.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 import 'patient_info_table.dart';
 import 'single_event_screen.dart';
@@ -15,9 +16,12 @@ class PatientDetails extends StatefulWidget {
     required this.eventMode,
     required this.patientControllers,
     required this.viewModel,
+    required this.homeViewModel,
   });
 
   final EventMode eventMode;
+
+  final HomeViewModel homeViewModel;
 
   // TODO move patientControllers into viewModel.
   final PatientControllers patientControllers;
@@ -29,7 +33,7 @@ class PatientDetails extends StatefulWidget {
 }
 
 class _PatientDetailsState extends State<PatientDetails> {
-  Event get event => widget.viewModel.event!;
+  Event get event => widget.homeViewModel.selectedEvent!;
 
   void _onChanged(String? newValue) {
     _log.finer('In _onChanged');

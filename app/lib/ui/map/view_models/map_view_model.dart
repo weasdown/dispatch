@@ -6,6 +6,7 @@ import '../../../data/repositories/event/event_repository.dart';
 import '../../../data/repositories/unit/unit_repository.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
+import '../../../ui/home/view_models/home_viewmodel.dart';
 import '../../../ui/map/widgets/event_map_marker.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
@@ -18,8 +19,9 @@ class MapViewModel extends ChangeNotifier {
     required this._unitRepository,
     required BuildContext context,
     required this.contextMenuController,
+    required this._homeViewModel,
   }) : _eventEdited = false {
-    selectEvent = Command0<void>(_selectEvent);
+    selectEvent = Command1<void, Event>(_selectEvent);
 
     dispatchUnit = Command1<void, Unit>(_dispatchUnit);
     standdownUnit = Command1<void, Unit>(_standdownUnit);
@@ -48,8 +50,12 @@ class MapViewModel extends ChangeNotifier {
   List<Marker> _buildEventMarkers() {
     _eventMarkers = _events
         .map(
-          (Event event) =>
-              EventMapMarker(event: event, mapViewModel: this).marker,
+          (Event event) => EventMapMarker(
+            event: event,
+            mapViewModel: this,
+            onSelectEvent: (Event newEvent) => selectEvent.execute(newEvent),
+            homeViewModel: _homeViewModel,
+          ).marker,
         )
         .toList();
     return _eventMarkers;
@@ -72,24 +78,31 @@ class MapViewModel extends ChangeNotifier {
 
   late final Command1<void, Unit> dispatchUnit;
   Future<Result<void>> _dispatchUnit(Unit unit) async {
-    if (_event == null) {
-      return Result<void>.error(const NoSelectedEventException());
-    }
+    try {
+      if (_selectedEvent == null) {
+        _log.warning('Cannot dispatch ${unit.callsign} to null event');
+        return Result<void>.error(const NoSelectedEventException());
+      }
 
-    _log.fine('Dispatching ${unit.callsign} to event ${_event!.idLastFour}');
-    final result = await _eventRepository.dispatchUnit(unit);
-    switch (result) {
-      case Ok<void>():
-        _log.info(
-          'Successfully dispatched ${unit.callsign} to event ${_event!.idLastFour}',
-        );
-        notifyListeners();
-      case Error<void>():
-        _log.severe(
-          'Failed to dispatch ${unit.callsign} to event ${_event!.idLastFour}: ${result.error}',
-        );
+      _log.fine(
+        'Dispatching ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
+      );
+      final result = await _eventRepository.dispatchUnit(unit);
+      switch (result) {
+        case Ok<void>():
+          _log.info(
+            'Successfully dispatched ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
+          );
+
+        case Error<void>():
+          _log.severe(
+            'Failed to dispatch ${unit.callsign} to event ${_selectedEvent!.idLastFour}: ${result.error}',
+          );
+      }
+      return result;
+    } finally {
+      notifyListeners();
     }
-    return result;
   }
 
   bool get eventEdited => _eventEdited;
@@ -100,8 +113,8 @@ class MapViewModel extends ChangeNotifier {
     // notifyListeners();
   }
 
-  Event? get event => _event;
-  Event? _event;
+  // Event? get event => _event;
+  // Event? _event;
 
   List<EventID> get _eventIDs =>
       _events.map((Event event) => event.id).toList();
@@ -118,6 +131,8 @@ class MapViewModel extends ChangeNotifier {
 
   int _getEventIndexForID(EventID id) =>
       _events.indexWhere((Event event) => event.id == id);
+
+  final HomeViewModel _homeViewModel;
 
   // FIXME this is being called too often - several times on startup, perhaps at least once per event (as evidenced by number of log entries for "Loaded n units").
   /// Loads map markers for events and units.
@@ -253,18 +268,24 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
-  late final Command0<void> selectEvent;
-  Future<Result<void>> _selectEvent() async {
-    _eventEdited = true;
-    final result = await _eventRepository.selectEvent(_event!);
-    switch (result) {
-      case Ok<void>():
-        _log.fine('Event selected');
-      case Error<void>():
-        _log.warning('Failed to select Event', result.error);
+  late final Command1<void, Event> selectEvent;
+  Future<Result<void>> _selectEvent(Event event) async {
+    _log.fine('Selecting event ${event.idLastFour}');
+    try {
+      _selectedEvent = event;
+      _eventEdited = true;
+      final result = await _eventRepository.selectEvent(event);
+      switch (result) {
+        case Ok<Event>():
+          _log.fine('Event selected');
+        case Error<Event>():
+          _log.warning('Failed to select Event', result.error);
+      }
+
+      return result;
+    } finally {
+      notifyListeners();
     }
-    notifyListeners();
-    return result;
   }
 
   Event? get selectedEvent => _selectedEvent;

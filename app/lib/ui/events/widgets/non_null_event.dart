@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
+import '../../home/view_models/home_viewmodel.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 import 'patient_details.dart';
 import 'remarks_log.dart';
@@ -14,11 +15,13 @@ class NonNullEvent extends StatelessWidget {
     required this.event,
     required this.eventMode,
     required this.viewModel,
+    required this.homeViewModel,
     required this.patientControllers,
   });
 
   final Event event;
   final EventMode eventMode;
+  final HomeViewModel homeViewModel;
   final Logger _log = Logger('NonNullEvent');
   final PatientControllers patientControllers;
   // final GlobalKey<FormState> patientFormKey;
@@ -46,6 +49,7 @@ class NonNullEvent extends StatelessWidget {
               eventMode: eventMode,
               patientControllers: patientControllers,
               viewModel: viewModel,
+              homeViewModel: homeViewModel,
             ),
             const Gap(50),
             RemarksLog(event: event, viewModel: viewModel),

@@ -65,7 +65,7 @@ abstract class EventRepository {
 
   Event? _selectedEvent;
 
-  Future<Result<void>> selectEvent(Event event);
+  Future<Result<Event>> selectEvent(Event event);
 
   Future<Result<void>> setNOC(EventID id, NOC noc);
 

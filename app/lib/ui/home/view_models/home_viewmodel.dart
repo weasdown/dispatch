@@ -21,6 +21,7 @@ class HomeViewModel extends ChangeNotifier {
     viewNewC1L1 = Command0<void>(_viewNewC1L1);
 
     getEvent = Command1<void, EventID>(_getEvent);
+    selectEvent = Command1<void, Event>(_selectEvent);
     updateEvent = Command2<void, EventID, Event>(_updateEvent);
     setNOC = Command2<void, EventID, NOC>(_setNOC);
     getUpdatedEvent = Command1<Event, EventID>(_getUpdatedEvent);
@@ -115,6 +116,17 @@ class HomeViewModel extends ChangeNotifier {
     _events.add(newEvent);
     notifyListeners();
   }
+
+  late final Command1<void, Event> selectEvent;
+  Future<Result<void>> _selectEvent(Event event) async {
+    _log.fine('Selecting event ${event.idLastFour}');
+    _selectedEvent = event;
+    notifyListeners();
+    return Result.ok(null);
+  }
+
+  Event? get selectedEvent => _selectedEvent;
+  Event? _selectedEvent;
 
   late final Command2<void, EventID, NOC> setNOC;
   Future<Result<void>> _setNOC(EventID id, NOC noc) async =>

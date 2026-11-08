@@ -28,20 +28,26 @@ final class UnitContextMenuRegion extends StatelessWidget {
       label: 'Dispatch ${unit.callsign}',
       onPressed: () async {
         _log.info('Dispatching ${unit.callsign} via context menu');
-        _mapViewModel.dispatchUnit.execute(unit);
-
-        while (_mapViewModel.dispatchUnit.running) {
-          _log.finer('Waiting for unitsViewModel.dispatchUnit to finish');
-        }
-
-        final Result<void> result = _mapViewModel.dispatchUnit.result!;
-        switch (result) {
-          case Ok<void>():
-            _log.info('Successfully dispatched ${unit.callsign}');
-          case Error<void>():
-            _log.severe('Failed to dispatch ${unit.callsign}: ${result.error}');
-        }
+        await _mapViewModel.dispatchUnit.execute(unit);
       },
+      //     () async {
+      //   _log.info('Dispatching ${unit.callsign} via context menu');
+      //   _mapViewModel.dispatchUnit.execute(unit);
+      //
+      //   while (_mapViewModel.dispatchUnit.running) {
+      //     //   // _log.finer('Waiting for unitsViewModel.dispatchUnit to finish');
+      //   }
+      //
+      //   final Result<void> result = _mapViewModel.dispatchUnit.result!;
+      //   controller.remove();
+      //
+      //   switch (result) {
+      //     case Ok<void>():
+      //       _log.info('Successfully dispatched ${unit.callsign}');
+      //     case Error<void>():
+      //       _log.severe('Failed to dispatch ${unit.callsign}: ${result.error}');
+      //   }
+      // },
     ),
     // // Mobile
     // UnitContextMenuButtonItem(

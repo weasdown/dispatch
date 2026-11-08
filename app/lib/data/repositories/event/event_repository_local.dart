@@ -163,7 +163,6 @@ class EventRepositoryLocal extends EventRepository {
       location: LatLng(51.57770580851515, -1.5679285114893033),
     );
 
-    // FIXME event not showing up on map until after hot reload
     addEvent(newEvent);
 
     Timer(Duration(seconds: 5), () {
@@ -182,9 +181,9 @@ class EventRepositoryLocal extends EventRepository {
   }
 
   @override
-  Future<Result<bool>> selectEvent(Event event) async {
+  Future<Result<Event>> selectEvent(Event event) async {
     _selectedEvent = event;
-    return const Result.ok(true);
+    return Result.ok(_selectedEvent!);
   }
 
   Event? _selectedEvent;

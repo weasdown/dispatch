@@ -8,6 +8,7 @@ import '../../../domain/models/event/status.dart';
 import '../../../domain/models/location/address.dart';
 import '../../../domain/models/person/gp_practice.dart';
 import '../../../domain/models/person/patient.dart';
+import '../../../ui/home/view_models/home_viewmodel.dart';
 import '../../../utils/result.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 import 'event_mode_button.dart';
@@ -15,7 +16,13 @@ import 'non_null_event.dart';
 import 'null_event.dart';
 
 class SingleEventScreen extends StatefulWidget {
-  const SingleEventScreen({super.key, required this.viewModel});
+  const SingleEventScreen({
+    super.key,
+    required this.viewModel,
+    required this.homeViewModel,
+  });
+
+  final HomeViewModel homeViewModel;
 
   static final patientFormKey = GlobalKey<FormState>();
 
@@ -316,6 +323,8 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
 
   @override
   void initState() {
+    _event = widget.viewModel.event;
+
     _eventControllers.addListener(updateEventModified);
     _patientControllers.addListener(updateEventModified);
     super.initState();
@@ -371,7 +380,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
         }
 
         if (widget.viewModel.load.completed) {
-          _event = widget.viewModel.event;
+          _event = widget.homeViewModel.selectedEvent;
 
           _log.finer(
             'Load has completed with event ${_event?.idLastFour ?? 'null'}',
@@ -447,6 +456,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
               : NonNullEvent(
                   event: _event!,
                   viewModel: widget.viewModel,
+                  homeViewModel: widget.homeViewModel,
                   eventMode: _eventMode,
                   patientControllers: _patientControllers,
                 ),
