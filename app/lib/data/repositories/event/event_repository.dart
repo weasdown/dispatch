@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/event/priority.dart';
 import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/event/status.dart';
 import '../../../domain/models/person/patient.dart';
@@ -9,8 +10,7 @@ import '../../../utils/result.dart';
 
 /// Data source for events.
 abstract class EventRepository {
-  EventRepository()
-    : newC1StreamController = StreamController<Event>.broadcast() {
+  EventRepository() {
     autoCat1Timer = Timer(Duration(seconds: 5), onAutoCat1);
   }
 
@@ -33,9 +33,16 @@ abstract class EventRepository {
 
   int get nextIDNum;
 
-  final StreamController<Event> newC1StreamController;
+  final StreamController<Event> newEventStreamController =
+      StreamController<Event>.broadcast();
 
-  Stream<Event> get newC1Stream => newC1StreamController.stream;
+  Stream<Event> get newEventStream => newEventStreamController.stream;
+
+  final StreamController<Event> newC1StreamController =
+      StreamController<Event>.broadcast();
+
+  Stream<Event> get newC1Stream =>
+      newEventStream.where((Event event) => event.priority == Priority.zero);
 
   void onAutoCat1();
   late final Timer autoCat1Timer;

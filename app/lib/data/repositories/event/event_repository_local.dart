@@ -19,12 +19,16 @@ class EventRepositoryLocal extends EventRepository {
   @override
   Future<Result<void>> addEvent(Event event) async {
     if (!_events.contains(event)) {
+      _log.info(
+        'Adding new ${event.status.description} event ${event.idLastFour}',
+      );
       _events.add(event);
+      newEventStreamController.sink.add(event);
 
-      // Trigger purple banner for new C1/L1.
-      if (event.priority == Priority.zero) {
-        newC1StreamController.sink.add(event);
-      }
+      // // Trigger purple banner for new C1/L1.
+      // if (event.priority == Priority.zero) {
+      //   newC1StreamController.sink.add(event);
+      // }
 
       return Result.ok(null);
     } else {
@@ -115,7 +119,7 @@ class EventRepositoryLocal extends EventRepository {
     }
   }
 
-  final _events = List<Event>.empty(growable: true);
+  final List<Event> _events = List<Event>.empty(growable: true);
 
   Future<Result<List<Event>>> get eventsList async {
     // Initialize the repository with default events.
@@ -144,10 +148,24 @@ class EventRepositoryLocal extends EventRepository {
   void onAutoCat1() {
     _log.fine('Sending new C1 to stream');
 
-    final Event newC1 = _localDataService.defaultC1;
+    // final Event newC1 = _localDataService.defaultC1;
+    // addEvent(newC1);
+    // newC1StreamController.sink.add(newC1);
 
-    addEvent(newC1);
-    newC1StreamController.sink.add(newC1);
+    final Event newEvent = Event.preAlert(
+      idNum: nextIDNum,
+      address: Address(county: 'Oxfordshire'),
+      location: LatLng(51.57770580851515, -1.5679285114893033),
+    );
+
+    // FIXME event not showing up on map until after hot reload
+    addEvent(newEvent);
+
+    Future.delayed(Duration(seconds: 5), () {
+      final Cat1NOC arrest = Cat1NOC.c1ArrestPeriArrest();
+      _log.fine('Automatically setting C1 NOC ${arrest.description}');
+      setNOC(newEvent.id, arrest);
+    });
   }
 
   /// Gets a [Result.ok] holding a random event from `_events`.
