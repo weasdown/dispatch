@@ -1,4 +1,3 @@
-import 'package:dispatch/ui/map/view_models/map_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -7,10 +6,8 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
-import '../../../ui/unit/view_models/units_view_model.dart';
 import '../../../utils/result.dart';
-import '../../events/view_models/all_events_view_model.dart';
-import '../../events/view_models/single_event_screen_viewmodel.dart';
+import '../view_models/map_view_model.dart';
 import 'flutter_map.dart';
 
 /// A page that displays a Google Maps map.
@@ -19,18 +16,13 @@ class MapPage extends StatefulWidget {
   const MapPage({
     super.key,
     required this.mapViewModel,
-    required this.eventsViewModel,
-    required this.singleEventScreenViewModel,
-    required this.unitsViewModel,
     this.centre = MapPage.scasCentre,
     required this.events,
     required this.units,
+    required this.contextMenuController,
   });
 
-  static const LatLng scasCentre = LatLng(
-    51.453100204133726,
-    -1.307710460160255,
-  );
+  final ContextMenuController contextMenuController;
 
   /// The point in the centre of the map when it is first opened.
   final LatLng centre;
@@ -41,19 +33,21 @@ class MapPage extends StatefulWidget {
   /// The [Unit]s that are currently in the SCAS fleet.
   final List<Unit> units;
 
-  final AllEventsViewModel eventsViewModel;
-
   final MapViewModel mapViewModel;
 
-  final SingleEventScreenViewModel singleEventScreenViewModel;
-
-  final UnitsViewModel unitsViewModel;
+  static const LatLng scasCentre = LatLng(
+    51.453100204133726,
+    -1.307710460160255,
+  );
 
   @override
   State<MapPage> createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
+  List<Event> _events = [];
+  List<Unit> _units = [];
+
   bool showEvents = true;
   bool showUnits = true;
   bool showEOCs = true;
@@ -81,39 +75,74 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: Listenable.merge([
-        widget.eventsViewModel.loadEvents,
-        widget.unitsViewModel.loadUnits,
+        widget.mapViewModel.loadMarkers,
+        // widget.mapViewModel.loadEvents,
+        // widget.mapViewModel.loadUnits,
       ]),
       builder: (BuildContext context, Widget? child) {
+        // TODO neaten this collection of ifs
+
         // If either command is running, show progress indicator
-        if (widget.eventsViewModel.loadEvents.running ||
-            widget.unitsViewModel.loadUnits.running) {
+        if (widget.mapViewModel.loadMarkers.running) {
           return const Center(child: CircularProgressIndicator());
         }
+        // if (widget.mapViewModel.loadEvents.running ||
+        //     widget.mapViewModel.loadUnits.running) {
+        //   return const Center(child: CircularProgressIndicator());
+        // }
 
-        // If fails to load events, tap to try again
-        if (widget.eventsViewModel.loadEvents.error) {
+        // If fails to load markers, tap to try again
+        if (widget.mapViewModel.loadMarkers.error) {
           return Center(
             // TODO implement proper display of error that enables user to retry load
             child: ErrorWidget(
-              (widget.eventsViewModel.loadEvents.result as Error<List<Event>>)
+              (widget.mapViewModel.loadMarkers.result as Error<List<Event>>)
                   .error,
             ),
           );
         }
 
-        // If fails to load units, tap to go /home
-        if (widget.unitsViewModel.loadUnits.error) {
-          return Center(
-            // TODO implement proper display of error that enables user to retry load
-            child: ErrorWidget(
-              (widget.unitsViewModel.loadUnits.result as Error<List<Unit>?>)
-                  .error,
-            ),
-          );
-        }
+        // // TODO remove commented code
+        // // If fails to load events, tap to try again
+        // if (widget.mapViewModel.loadEvents.error) {
+        //   return Center(
+        //     // TODO implement proper display of error that enables user to retry load
+        //     child: ErrorWidget(
+        //       (widget.mapViewModel.loadEvents.result as Error<List<Event>>)
+        //           .error,
+        //     ),
+        //   );
+        // }
+        //
+        // // If fails to load units, tap to go /home
+        // if (widget.mapViewModel.loadUnits.error) {
+        //   return Center(
+        //     // TODO implement proper display of error that enables user to retry load
+        //     child: ErrorWidget(
+        //       (widget.mapViewModel.loadUnits.result as Error<List<Unit>?>)
+        //           .error,
+        //     ),
+        //   );
+        // }
 
-        return child!;
+        // // TODO remove these two ifs - debugging only
+        // if (widget.mapViewModel.loadEvents.completed) {
+        //   _log.finer('loadEvents completed');
+        //   _events = widget.mapViewModel.events;
+        // }
+        // if (widget.mapViewModel.loadUnits.completed) {
+        //   _log.finer('loadUnits completed');
+        //   _units = widget.mapViewModel.units;
+        // }
+
+        // FIXME map markers not being displayed until automatic C1 triggers
+        if (widget.mapViewModel.loadMarkers.completed) {
+          _events = widget.mapViewModel.events;
+          _units = widget.mapViewModel.units;
+          return child!;
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
       },
       child: Scaffold(
         appBar: AppBar(
@@ -172,13 +201,13 @@ class _MapPageState extends State<MapPage> {
 
         body: _MapBody(
           mapViewModel: widget.mapViewModel,
-          eventsViewModel: widget.eventsViewModel,
-          singleEventScreenViewModel: widget.singleEventScreenViewModel,
-          unitsViewModel: widget.unitsViewModel,
+          events: _events,
+          units: _units,
           showEvents: showEvents,
           showUnits: showUnits,
           showBases: showBases,
           showEOCs: showEOCs,
+          contextMenuController: widget.contextMenuController,
         ),
         // body: GoogleMapsPage(
         //   singleEventScreenViewModel: widget.singleEventScreenViewModel,
@@ -193,35 +222,36 @@ class _MapPageState extends State<MapPage> {
 class _MapBody extends StatelessWidget {
   const _MapBody({
     required this.mapViewModel,
-    required this.eventsViewModel,
-    required this.singleEventScreenViewModel,
-    required this.unitsViewModel,
+    required this._events,
+    required this._units,
     required this.showEvents,
     required this.showUnits,
     required this.showBases,
     required this.showEOCs,
+    required this.contextMenuController,
   });
 
-  final AllEventsViewModel eventsViewModel;
+  final ContextMenuController contextMenuController;
+
+  final List<Event> _events;
+  final List<Unit> _units;
+
   final MapViewModel mapViewModel;
+
   final bool showBases;
   final bool showEOCs;
   final bool showEvents;
   final bool showUnits;
-  final SingleEventScreenViewModel singleEventScreenViewModel;
-  final UnitsViewModel unitsViewModel;
 
   @override
   Widget build(BuildContext context) {
     return FlutterMapPage(
-      events: showEvents ? eventsViewModel.events : [],
-      units: showUnits ? unitsViewModel.units : [],
-      eventsViewModel: eventsViewModel,
-      mapViewModel: mapViewModel,
-      singleEventScreenViewModel: singleEventScreenViewModel,
-      unitsViewModel: unitsViewModel,
+      viewModel: mapViewModel,
+      events: showEvents ? _events : [],
+      units: showUnits ? _units : [],
       showAmbulanceStations: showBases,
       showEOCs: showEOCs,
+      contextMenuController: contextMenuController,
     );
   }
 }

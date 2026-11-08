@@ -6,13 +6,15 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
-import '../../../ui/unit/view_models/units_view_model.dart';
 import '../data/repositories/auth/auth_repository.dart';
+import '../data/repositories/event/event_repository.dart';
+import '../data/repositories/unit/unit_repository.dart';
 import '../ui/events/view_models/all_events_view_model.dart';
 import '../ui/events/view_models/single_event_screen_viewmodel.dart';
 import '../ui/home/view_models/home_viewmodel.dart';
 import '../ui/home/widgets/home_screen.dart';
 import '../ui/map/view_models/map_view_model.dart';
+import '../ui/unit/view_models/units_view_model.dart';
 import 'routes.dart';
 
 /// Top go_router entry point.
@@ -40,24 +42,42 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
     GoRoute(
       path: Routes.home,
       builder: (context, state) {
+        final EventRepository eventRepository = context.read();
+        final UnitRepository unitRepository = context.read();
+
+        final ContextMenuController contextMenuController =
+            ContextMenuController();
+
         final HomeViewModel homeViewModel = HomeViewModel(
-          eventRepository: context.read(),
+          eventRepository: eventRepository,
+          unitRepository: unitRepository,
         );
+        final AllEventsViewModel eventsViewModel = AllEventsViewModel(
+          eventRepository: eventRepository,
+        );
+        final MapViewModel mapViewModel = MapViewModel(
+          eventRepository: eventRepository,
+          unitRepository: unitRepository,
+          context: context,
+          contextMenuController: contextMenuController,
+        );
+        final SingleEventScreenViewModel singleEventScreenViewModel =
+            SingleEventScreenViewModel(
+              eventRepository: eventRepository,
+              unitRepository: unitRepository,
+            );
+        final UnitsViewModel unitsViewModel = UnitsViewModel(
+          unitRepository: unitRepository,
+          eventRepository: eventRepository,
+        );
+
         return HomeScreen(
           homeViewModel: homeViewModel,
-          eventsViewModel: AllEventsViewModel(eventRepository: context.read()),
-          singleEventScreenViewModel: SingleEventScreenViewModel(
-            eventRepository: context.read(),
-            unitRepository: context.read(),
-          ),
-          allEventsViewModel: AllEventsViewModel(
-            eventRepository: context.read(),
-          ),
-          unitsViewModel: UnitsViewModel(unitRepository: context.read()),
-          mapViewModel: MapViewModel(
-            eventRepository: context.read(),
-            unitRepository: context.read(),
-          ),
+          eventsViewModel: eventsViewModel,
+          mapViewModel: mapViewModel,
+          singleEventScreenViewModel: singleEventScreenViewModel,
+          unitsViewModel: unitsViewModel,
+          contextMenuController: contextMenuController,
         );
       },
       // routes: [

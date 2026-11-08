@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
 import '../../../domain/models/event/event.dart';
-import '../../../domain/models/event/priority.dart';
+import '../../../domain/models/event/noc.dart';
 import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/event/status.dart';
 import '../../../domain/models/location/address.dart';
@@ -19,12 +21,16 @@ class EventRepositoryLocal extends EventRepository {
   @override
   Future<Result<void>> addEvent(Event event) async {
     if (!_events.contains(event)) {
+      _log.info(
+        'Adding new ${event.status.description} event ${event.idLastFour}',
+      );
       _events.add(event);
+      newEventStreamController.sink.add(event);
 
-      // Trigger purple banner for new C1/L1.
-      if (event.priority == Priority.zero) {
-        newC1StreamController.sink.add(event);
-      }
+      // // Trigger purple banner for new C1/L1.
+      // if (event.priority == Priority.zero) {
+      //   newC1StreamController.sink.add(event);
+      // }
 
       return Result.ok(null);
     } else {
@@ -115,7 +121,10 @@ class EventRepositoryLocal extends EventRepository {
     }
   }
 
-  final _events = List<Event>.empty(growable: true);
+  @override
+  List<EventID> get eventIDs => _events.map((Event event) => event.id).toList();
+
+  final List<Event> _events = List<Event>.empty(growable: true);
 
   Future<Result<List<Event>>> get eventsList async {
     // Initialize the repository with default events.
@@ -140,6 +149,30 @@ class EventRepositoryLocal extends EventRepository {
     return newIDNum;
   }
 
+  @override
+  void onAutoCat1() {
+    _log.fine('Sending new C1 to stream');
+
+    // final Event newC1 = _localDataService.defaultC1;
+    // addEvent(newC1);
+    // newC1StreamController.sink.add(newC1);
+
+    final Event newEvent = Event.preAlert(
+      idNum: nextIDNum,
+      address: Address(county: 'Oxfordshire'),
+      location: LatLng(51.57770580851515, -1.5679285114893033),
+    );
+
+    // FIXME event not showing up on map until after hot reload
+    addEvent(newEvent);
+
+    Timer(Duration(seconds: 5), () {
+      final Cat1NOC arrest = Cat1NOC.c1ArrestPeriArrest();
+      _log.fine('Automatically setting C1 NOC ${arrest.description}');
+      setNOC(newEvent.id, arrest);
+    });
+  }
+
   /// Gets a [Result.ok] holding a random event from `_events`.
   @override
   Future<Result<Event?>> get selectedEvent async {
@@ -148,14 +181,27 @@ class EventRepositoryLocal extends EventRepository {
     return Result.ok(_selectedEvent);
   }
 
+  @override
+  Future<Result<bool>> selectEvent(Event event) async {
+    _selectedEvent = event;
+    return const Result.ok(true);
+  }
+
   Event? _selectedEvent;
 
   int _sequentialId = 0; // Used to generate IDs for events.
 
   @override
-  Future<Result<bool>> setEvent(Event event) async {
-    _selectedEvent = event;
-    return const Result.ok(true);
+  Future<Result<void>> setNOC(EventID id, NOC noc) async {
+    final int eventIndex = _events.indexWhere((event) => event.id == id);
+    if (!eventIDs.contains(id)) {
+      return Result<Event>.error(EventNotFoundException(eventID: id));
+    }
+    _events[eventIndex].setNOC(noc);
+
+    _log.finer('Adding event ${id.lastFour} to updatedEventStream');
+    updatedEventStreamController.sink.add(_events[eventIndex]);
+    return Result.ok(null);
   }
 
   @override
@@ -172,6 +218,19 @@ class EventRepositoryLocal extends EventRepository {
       'Standing down ${unit.callsign} from event ${allocatedEvent.idLastFour}',
     );
     return Result<void>.ok(unit.standdown());
+  }
+
+  @override
+  Future<Result<void>> updateEvent(EventID id, Event newEvent) async {
+    _log.finer('Updating event $id');
+    if (!eventIDs.contains(id)) {
+      return Result<void>.error(EventNotFoundException(eventID: id));
+    }
+
+    final int eventIndex = _events.indexWhere((Event event) => event.id == id);
+    _events[eventIndex] = newEvent;
+    updatedEventStreamController.sink.add(newEvent);
+    return Result.ok(null);
   }
 
   @override
@@ -224,15 +283,5 @@ class EventRepositoryLocal extends EventRepository {
         ),
       );
     }
-  }
-
-  @override
-  void onAutoCat1() {
-    _log.fine('Sending new C1 to stream');
-
-    final Event newC1 = _localDataService.defaultC1;
-
-    addEvent(newC1);
-    newC1StreamController.sink.add(newC1);
   }
 }

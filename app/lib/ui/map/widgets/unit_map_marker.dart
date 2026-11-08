@@ -6,17 +6,13 @@ import 'package:material_ui/material_ui.dart';
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../ui/map/view_models/map_view_model.dart';
-import '../../events/view_models/all_events_view_model.dart';
 import '../../unit/unit_status_colour.dart';
-import '../../unit/view_models/units_view_model.dart';
 import '../../unit/widgets/unit_context_menu.dart';
 
 final class UnitMapMarker {
   const UnitMapMarker({
     required this._unit,
-    required this.menuController,
-    required this._eventsViewModel,
-    required this._unitsViewModel,
+    required this.contextMenuController,
     required this._mapViewModel,
   });
 
@@ -26,7 +22,7 @@ final class UnitMapMarker {
 
   final double width = 52;
 
-  final ContextMenuController menuController;
+  final ContextMenuController contextMenuController;
 
   Marker marker(BuildContext context) => Marker(
     point: LatLng(lat, lng),
@@ -59,9 +55,7 @@ final class UnitMapMarker {
     listenable: _mapViewModel,
     builder: (BuildContext context, Widget? child) => UnitContextMenuRegion(
       unit: _unit,
-      controller: menuController,
-      eventsViewModel: _eventsViewModel,
-      unitsViewModel: _unitsViewModel,
+      controller: contextMenuController,
       mapViewModel: _mapViewModel,
       child: Container(
         // height: 100,
@@ -101,10 +95,5 @@ final class UnitMapMarker {
     ),
   );
 
-  final AllEventsViewModel _eventsViewModel;
-
-  // TODO convert to MapViewModel
   final MapViewModel _mapViewModel;
-
-  final UnitsViewModel _unitsViewModel;
 }

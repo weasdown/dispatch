@@ -83,7 +83,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
 
   late final Command1<void, Event> displayEvent;
   Future<Result<void>> _displayEvent(Event event) async {
-    final result = await _eventRepository.setEvent(event);
+    final result = await _eventRepository.selectEvent(event);
 
     switch (result) {
       case Ok<void>():
@@ -161,7 +161,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
       address: null,
       location: null,
     );
-    _eventRepository.setEvent(newEvent);
+    _eventRepository.selectEvent(newEvent);
     // _event =
     //     ((await _eventRepository.eventByID(newEvent.id)) as Ok<Event>).value;
     _event = newEvent;
@@ -210,7 +210,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   late final Command0<void> refreshEvent;
   Future<Result<void>> _refreshEvent() async {
     _eventEdited = true;
-    final result = await _eventRepository.setEvent(_event!);
+    final result = await _eventRepository.selectEvent(_event!);
     switch (result) {
       case Ok<void>():
         _log.fine('Event selected');
@@ -225,7 +225,7 @@ class SingleEventScreenViewModel extends ChangeNotifier {
   Future<Result<void>> _updateEvent(Event newEvent) async {
     _eventEdited = true;
     _event = newEvent;
-    final result = await _eventRepository.setEvent(newEvent);
+    final result = await _eventRepository.selectEvent(newEvent);
     switch (result) {
       case Ok<void>():
         _log.fine('Event selected');
