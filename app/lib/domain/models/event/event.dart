@@ -304,12 +304,15 @@ class Event {
           'Existing NOC (${_noc!.description}) being overwritten with non-C1 NOC ${noc.description}',
         );
       }
-    } else {
-      // _noc == null
+    }
+    // _noc == null
+    else {
       _log.info('NOC being set to ${noc.description}');
     }
 
     _noc = noc;
+    _updateStatus();
+    _log.fine('New event status: ${status.description}');
   }
 
   void standdownUnit(Unit unit) {
@@ -347,6 +350,16 @@ class Event {
 
   void updatePatient(int index, Patient newPatient) {
     _patients[index] = newPatient;
+  }
+
+  void _updateStatus() {
+    if (noc == null) {
+      throw ArgumentError.notNull('noc');
+    }
+    _status = EventStatus(
+      category: noc!.category,
+      description: noc!.description,
+    );
   }
 }
 
