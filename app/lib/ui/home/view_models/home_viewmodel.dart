@@ -1,3 +1,7 @@
+/// @docImport '../../../ui/map/widgets/map.dart';
+library;
+
+import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
@@ -24,6 +28,7 @@ class HomeViewModel extends ChangeNotifier {
   late final Command0<void> load;
   Future<Result<void>> _load() async {
     try {
+      // Load events
       final eventsResult = await _eventRepository.allEvents;
       switch (eventsResult) {
         case Ok<List<Event>>():
@@ -32,13 +37,17 @@ class HomeViewModel extends ChangeNotifier {
           return eventsResult;
       }
 
+      // Load units
       final unitsResult = await _unitRepository.allUnits;
       switch (unitsResult) {
         case Ok<List<Unit>>():
           _units = unitsResult.value;
         case Error<List<Unit>>():
-          return unitsResult;
+          return eventsResult;
       }
+
+      // Listen to the EventRepository's stream for new events.
+      newEventStream.listen(_onNewEvent);
 
       return Result.ok(null);
     } finally {
@@ -48,6 +57,8 @@ class HomeViewModel extends ChangeNotifier {
       // _eventRepository.newC1Stream.listen(onNewC1);
     }
   }
+
+  final _log = Logger('HomeViewModel')..level = Level.ALL;
 
   bool get newC1Viewed => _newC1Viewed;
   bool _newC1Viewed = true;
@@ -60,7 +71,18 @@ class HomeViewModel extends ChangeNotifier {
   //   return newC1L1.id;
   // }
 
-  Stream<Event> get newC1L1Stream => _eventRepository.newC1Stream;
+  Stream<EventID> get newC1L1Stream => _eventRepository.newC1Stream;
+
+  Stream<Event> get newEventStream => _eventRepository.newEventStream;
+
+  /// `_onNewEvent` triggers any listeners to rebuild when a new event is received from the [EventRepository].
+  ///
+  /// This allows screens like the [MapPage] and AllEventsScreen to stay up to date with the latest [Event]s.
+  void _onNewEvent(Event newEvent) async {
+    _log.finer('Calling _onNewEvent');
+    _events.add(newEvent);
+    notifyListeners();
+  }
 
   final UnitRepository _unitRepository;
 

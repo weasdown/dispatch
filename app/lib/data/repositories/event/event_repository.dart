@@ -14,13 +14,15 @@ abstract class EventRepository {
     autoCat1Timer = Timer(Duration(seconds: 5), onAutoCat1);
   }
 
-  Future<Result<List<Event>>> get allEvents;
-
   Future<Result<void>> addPatientToEvent(EventID eventID, Patient patient);
 
   Future<Result<void>> addEvent(Event event);
 
   Future<Result<void>> addRemark(Remark remark);
+
+  Future<Result<List<Event>>> get allEvents;
+
+  late final Timer autoCat1Timer;
 
   Event get defaultC1;
 
@@ -41,11 +43,11 @@ abstract class EventRepository {
   final StreamController<Event> newC1StreamController =
       StreamController<Event>.broadcast();
 
-  Stream<Event> get newC1Stream =>
-      newEventStream.where((Event event) => event.priority == Priority.zero);
+  Stream<EventID> get newC1Stream => newEventStream
+      .where((Event event) => event.priority == Priority.zero)
+      .map((Event event) => event.id);
 
   void onAutoCat1();
-  late final Timer autoCat1Timer;
 
   Future<Result<Event?>> get selectedEvent async => Result.ok(_selectedEvent);
 

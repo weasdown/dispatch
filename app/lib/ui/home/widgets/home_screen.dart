@@ -44,14 +44,16 @@ class _HomeScreenState extends State<HomeScreen> {
   // When a new C1/L1 event is received, it will be sent over the homeViewModel's newC1L1Stream.
   // When a new event is received from the stream, show a snackbar with a button to select the event.
   void _onNewC1L1({
-    required Event newC1L1,
+    required EventID newC1L1ID,
     required AllEventsViewModel allEventsViewModel,
     required SingleEventScreenViewModel singleEventScreenViewModel,
   }) {
     SchedulerBinding.instance.addPostFrameCallback(
       (_) => ScaffoldMessenger.of(context).showSnackBar(
         C1L1PurpleBanner(
-          newC1L1: newC1L1,
+          newC1L1: widget.homeViewModel.events
+              .where((Event event) => event.id == newC1L1ID)
+              .firstOrNull!,
           context: context,
           eventsViewModel: allEventsViewModel,
           singleEventScreenViewModel: singleEventScreenViewModel,
@@ -92,52 +94,60 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: Scaffold(
-        body: StreamBuilder(
-          stream: widget.homeViewModel.newC1L1Stream,
+        // Rebuild when any new event is received.
+        body: StreamBuilder<Event>(
+          stream: widget.homeViewModel.newEventStream,
           builder: (BuildContext context, AsyncSnapshot<Event> snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data == null) {
-                _log.severe('Received null C1/L1 event from stream');
-              }
-              final Event newC1L1 = snapshot.data!;
-              _log.warning(
-                'Received new C1 ${newC1L1.idLastFour}! Showing purple banner',
-              );
-              _onNewC1L1(
-                newC1L1: newC1L1,
-                allEventsViewModel: widget.eventsViewModel,
-                singleEventScreenViewModel: widget.singleEventScreenViewModel,
-              );
-            }
+            // Show a purple banner when any new C1/L1 (Priority.zero) event is received.
+            return StreamBuilder<EventID>(
+              stream: widget.homeViewModel.newC1L1Stream,
+              builder: (BuildContext context, AsyncSnapshot<EventID> snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data == null) {
+                    _log.severe('Received null C1/L1 event from stream');
+                  }
+                  final EventID newC1L1ID = snapshot.data!;
+                  _log.info(
+                    'Received new C1 $newC1L1ID! Showing purple banner',
+                  );
+                  _onNewC1L1(
+                    newC1L1ID: newC1L1ID,
+                    allEventsViewModel: widget.eventsViewModel,
+                    singleEventScreenViewModel:
+                        widget.singleEventScreenViewModel,
+                  );
+                }
 
-            // TODO convert this row of flexibles into tabs, with one tab being displayed on narrow screens, or two tabs side by side on laptop-sized screens.
-            return Row(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: MapPage(
-                    mapViewModel: widget.mapViewModel,
-                    events: widget.homeViewModel.events,
-                    units: widget.homeViewModel.units,
-                    contextMenuController: widget.contextMenuController,
-                  ),
-                ),
-                VerticalDivider(width: 3, thickness: 3),
-                Flexible(
-                  flex: 1,
-                  child: SingleEventScreen(
-                    viewModel: widget.singleEventScreenViewModel,
-                  ),
-                ),
-                // Flexible(
-                //   flex: 1,
-                //   child: AllEventsScreen(viewModel: widget.allEventsViewModel),
-                // ),
-                // Flexible(
-                //   flex: 1,
-                //   child: AllUnitsScreen(viewModel: widget.unitsViewModel),
-                // ),
-              ],
+                // TODO convert this row of flexibles into tabs, with one tab being displayed on narrow screens, or two tabs side by side on laptop-sized screens.
+                return Row(
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: MapPage(
+                        mapViewModel: widget.mapViewModel,
+                        events: widget.homeViewModel.events,
+                        units: widget.homeViewModel.units,
+                        contextMenuController: widget.contextMenuController,
+                      ),
+                    ),
+                    VerticalDivider(width: 3, thickness: 3),
+                    Flexible(
+                      flex: 1,
+                      child: SingleEventScreen(
+                        viewModel: widget.singleEventScreenViewModel,
+                      ),
+                    ),
+                    // Flexible(
+                    //   flex: 1,
+                    //   child: AllEventsScreen(viewModel: widget.allEventsViewModel),
+                    // ),
+                    // Flexible(
+                    //   flex: 1,
+                    //   child: AllUnitsScreen(viewModel: widget.unitsViewModel),
+                    // ),
+                  ],
+                );
+              },
             );
           },
         ),
