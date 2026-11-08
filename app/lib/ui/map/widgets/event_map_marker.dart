@@ -65,7 +65,7 @@ class EventMapMarker extends StatelessWidget {
   void _selectEvent() {
     _log.fine('Double tapped event ${_event.idLastFour}');
     _log.fine('Setting event to ${_event.idLastFour}');
-    _mapViewModel.selectEvent.execute();
+    _mapViewModel.selectEvent.execute(_event);
   }
 
   @override

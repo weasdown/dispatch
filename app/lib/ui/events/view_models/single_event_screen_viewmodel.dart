@@ -212,9 +212,9 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     _eventEdited = true;
     final result = await _eventRepository.selectEvent(_event!);
     switch (result) {
-      case Ok<void>():
+      case Ok<Event>():
         _log.fine('Event selected');
-      case Error<void>():
+      case Error<Event>():
         _log.warning('Failed to select Event', result.error);
     }
     notifyListeners();
@@ -227,9 +227,9 @@ class SingleEventScreenViewModel extends ChangeNotifier {
     _event = newEvent;
     final result = await _eventRepository.selectEvent(newEvent);
     switch (result) {
-      case Ok<void>():
+      case Ok<Event>():
         _log.fine('Event selected');
-      case Error<void>():
+      case Error<Event>():
         _log.warning('Failed to select Event', result.error);
     }
     notifyListeners();

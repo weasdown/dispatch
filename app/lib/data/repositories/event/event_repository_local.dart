@@ -182,9 +182,9 @@ class EventRepositoryLocal extends EventRepository {
   }
 
   @override
-  Future<Result<bool>> selectEvent(Event event) async {
+  Future<Result<Event>> selectEvent(Event event) async {
     _selectedEvent = event;
-    return const Result.ok(true);
+    return Result.ok(_selectedEvent!);
   }
 
   Event? _selectedEvent;

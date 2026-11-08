@@ -19,7 +19,7 @@ class MapViewModel extends ChangeNotifier {
     required BuildContext context,
     required this.contextMenuController,
   }) : _eventEdited = false {
-    selectEvent = Command0<void>(_selectEvent);
+    selectEvent = Command1<void, Event>(_selectEvent);
 
     dispatchUnit = Command1<void, Unit>(_dispatchUnit);
     standdownUnit = Command1<void, Unit>(_standdownUnit);
@@ -253,18 +253,22 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
-  late final Command0<void> selectEvent;
-  Future<Result<void>> _selectEvent() async {
-    _eventEdited = true;
-    final result = await _eventRepository.selectEvent(_event!);
-    switch (result) {
-      case Ok<void>():
-        _log.fine('Event selected');
-      case Error<void>():
-        _log.warning('Failed to select Event', result.error);
+  late final Command1<void, Event> selectEvent;
+  Future<Result<void>> _selectEvent(Event event) async {
+    try {
+      // _eventEdited = true;
+      final result = await _eventRepository.selectEvent(event);
+      switch (result) {
+        case Ok<Event>():
+          _log.fine('Event selected');
+        case Error<Event>():
+          _log.warning('Failed to select Event', result.error);
+      }
+
+      return result;
+    } finally {
+      notifyListeners();
     }
-    notifyListeners();
-    return result;
   }
 
   Event? get selectedEvent => _selectedEvent;
