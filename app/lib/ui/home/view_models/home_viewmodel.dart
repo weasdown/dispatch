@@ -17,6 +17,10 @@ class HomeViewModel extends ChangeNotifier {
     required this._unitRepository,
   }) {
     viewNewC1L1 = Command0<void>(_viewNewC1L1);
+
+    getEvent = Command1<void, EventID>(_getEvent);
+    getUpdatedEvent = Command1<Event, EventID>(_getUpdatedEvent);
+
     load = Command0(_load)..execute();
   }
 
@@ -24,6 +28,33 @@ class HomeViewModel extends ChangeNotifier {
 
   List<Event> get events => _events;
   List<Event> _events = [];
+
+  late final Command1<void, EventID> getEvent;
+  Future<Result<Event?>> _getEvent(EventID id) async {
+    final Result<Event> eventResult = await _eventRepository.eventByID(id);
+    return switch (eventResult) {
+      Ok<Event>() => Result.ok(eventResult.value),
+      Error<Event>() => Result.error(eventResult.error),
+    };
+  }
+
+  int _getEventIndex(EventID id) =>
+      _events.indexWhere((Event event) => event.id == id);
+
+  late final Command1<Event, EventID> getUpdatedEvent;
+  Future<Result<Event>> _getUpdatedEvent(EventID id) async {
+    final Result<Event> updatedEventResult = await _eventRepository.eventByID(
+      id,
+    );
+    switch (updatedEventResult) {
+      case Ok<Event>():
+        _log.finer('Retrieved updated event $id');
+        return Result.ok(updatedEventResult.value);
+      case Error<Event>():
+        _log.severe('Failed to get updated event $id');
+        return Result.error(updatedEventResult.error);
+    }
+  }
 
   late final Command0<void> load;
   Future<Result<void>> _load() async {
