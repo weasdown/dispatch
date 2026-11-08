@@ -2,6 +2,7 @@ import 'dart:async';
 
 import '../../../domain/models/event/event.dart';
 import '../../../domain/models/event/remark.dart';
+import '../../../domain/models/event/status.dart';
 import '../../../domain/models/person/patient.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
@@ -44,6 +45,8 @@ abstract class EventRepository {
   Event? _selectedEvent;
 
   Future<Result<void>> setEvent(Event event);
+
+  Future<Result<void>> setNOC(EventID id, NOC noc);
 
   Future<Result<void>> standdownUnit(Unit unit);
 

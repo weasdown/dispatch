@@ -2,7 +2,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
 import '../../../domain/models/event/event.dart';
-import '../../../domain/models/event/priority.dart';
+import '../../../domain/models/event/noc.dart';
 import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/event/status.dart';
 import '../../../domain/models/location/address.dart';
@@ -166,6 +166,16 @@ class EventRepositoryLocal extends EventRepository {
   Future<Result<bool>> setEvent(Event event) async {
     _selectedEvent = event;
     return const Result.ok(true);
+  }
+
+  @override
+  Future<Result<void>> setNOC(EventID id, NOC noc) async {
+    final int eventIndex = _events.indexWhere((event) => event.id == id);
+    if (eventIndex == -1) {
+      return Result<Event>.error(EventNotFoundException(eventID: id));
+    }
+    _events[eventIndex].setNOC(noc);
+    return Result.ok(null);
   }
 
   @override
