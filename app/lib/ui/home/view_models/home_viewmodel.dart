@@ -52,11 +52,10 @@ class HomeViewModel extends ChangeNotifier {
     switch (updatedEventResult) {
       case Ok<Event>():
         _log.finer('Retrieved updated event $id');
-        return Result.ok(updatedEventResult.value);
       case Error<Event>():
         _log.severe('Failed to get updated event $id');
-        return Result.error(updatedEventResult.error);
     }
+    return updatedEventResult;
   }
 
   late final Command0<void> load;
@@ -86,7 +85,7 @@ class HomeViewModel extends ChangeNotifier {
       return Result.ok(null);
     } finally {
       // Listen for event updates.
-      _eventRepository.eventUpdateStream.listen(_onEventUpdate);
+      _eventRepository.updatedEventStream.listen(_onEventUpdate);
 
       notifyListeners();
       // TODO confirm whether it'd be better to use this rather than the HomeScreen's StreamBuilder

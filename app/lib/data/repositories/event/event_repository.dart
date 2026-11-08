@@ -40,7 +40,12 @@ abstract class EventRepository {
 
   Event? eventForUnit(Unit unit);
 
+  // List<Event> get events;
+
   List<EventID> get eventIDs;
+
+  // int _getEventIndexForID(EventID id) =>
+  //     events.indexWhere((Event event) => event.id == id);
 
   int get nextIDNum;
 
@@ -52,9 +57,7 @@ abstract class EventRepository {
   final StreamController<Event> newC1StreamController =
       StreamController<Event>.broadcast();
 
-  Stream<EventID> get newC1Stream => newEventStream
-      .where((Event event) => event.priority == Priority.zero)
-      .map((Event event) => event.id);
+  Stream<Event> get newC1Stream => newC1StreamController.stream;
 
   void onAutoCat1();
 

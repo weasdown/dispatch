@@ -24,13 +24,17 @@ class MapViewModel extends ChangeNotifier {
     dispatchUnit = Command1<void, Unit>(_dispatchUnit);
     standdownUnit = Command1<void, Unit>(_standdownUnit);
 
+    // Rebuild event markers when a new event is added.
+    _eventRepository.newEventStream.listen(_onNewEvent);
+
     // When an event is updated in the event repository, trigger its map marker to rebuild.
     rebuildMarkerForEventWithID = Command2<void, EventID, BuildContext>(
       _rebuildMarkerForEventWithID,
     );
-    _eventRepository.eventUpdateStream.listen((Event event) {
+    _eventRepository.updatedEventStream.listen((Event updatedEvent) {
       if (context.mounted) {
-        rebuildMarkerForEventWithID.execute(event.id, context);
+        _log.finer('Executing rebuildMarkerForEventWithID');
+        rebuildMarkerForEventWithID.execute(updatedEvent.id, context);
       }
     });
 
@@ -41,25 +45,28 @@ class MapViewModel extends ChangeNotifier {
     )..execute(context, contextMenuController);
   }
 
-  List<Marker> buildEventMarkers() => _events
-      .map(
-        (Event event) =>
-            EventMapMarker(event: event, mapViewModel: this).marker,
-      )
-      .toList();
+  List<Marker> _buildEventMarkers() {
+    _eventMarkers = _events
+        .map(
+          (Event event) =>
+              EventMapMarker(event: event, mapViewModel: this).marker,
+        )
+        .toList();
+    return _eventMarkers;
+  }
 
-  List<Marker> buildUnitMarkers({
-    required ContextMenuController contextMenuController,
-    required BuildContext context,
-  }) => _units
-      .map(
-        (Unit unit) => UnitMapMarker(
-          unit: unit,
-          mapViewModel: this,
-          contextMenuController: contextMenuController,
-        ).marker(context),
-      )
-      .toList();
+  List<Marker> buildUnitMarkers({required BuildContext context}) {
+    _unitMarkers = _units
+        .map(
+          (Unit unit) => UnitMapMarker(
+            unit: unit,
+            mapViewModel: this,
+            contextMenuController: contextMenuController,
+          ).marker(context),
+        )
+        .toList();
+    return _unitMarkers;
+  }
 
   final ContextMenuController contextMenuController;
 
@@ -96,15 +103,14 @@ class MapViewModel extends ChangeNotifier {
   Event? get event => _event;
   Event? _event;
 
+  List<EventID> get _eventIDs =>
+      _events.map((Event event) => event.id).toList();
+
+  List<Marker> get eventMarkers => _eventMarkers;
+  List<Marker> _eventMarkers = [];
+
   List<Event> get events => _events;
   List<Event> _events = [];
-
-  List<Marker> get eventMarkers => events
-      .map(
-        (Event event) =>
-            EventMapMarker(event: event, mapViewModel: this).marker,
-      )
-      .toList();
 
   final EventRepository _eventRepository;
 
@@ -115,8 +121,8 @@ class MapViewModel extends ChangeNotifier {
 
   // FIXME this is being called too often - several times on startup, perhaps at least once per event (as evidenced by number of log entries for "Loaded n units").
   /// Loads map markers for events and units.
-  late final Command2<dynamic, BuildContext, ContextMenuController> loadMarkers;
-  Future<Result> _loadMarkers(
+  late final Command2<void, BuildContext, ContextMenuController> loadMarkers;
+  Future<Result<void>> _loadMarkers(
     BuildContext context,
     ContextMenuController contextMenuController,
   ) async {
@@ -129,7 +135,7 @@ class MapViewModel extends ChangeNotifier {
           _log.fine('Loaded ${eventsValue.length} events');
         case Error<List<Event>>():
           _log.severe('Failed to load events');
-          return eventsResult;
+          return Result.error(eventsResult.error);
       }
 
       final Result<List<Unit>> unitsResult = await _unitRepository.allUnits;
@@ -140,7 +146,7 @@ class MapViewModel extends ChangeNotifier {
           _log.fine('Loaded ${unitsValue.length} units');
         case Error<List<Unit>>():
           _log.severe('Failed to load units');
-          return unitsResult;
+          return Result.error(unitsResult.error);
       }
 
       // // TODO remove - believe no longer needed as EventMapMarker includes checking of isSelected in its build method
@@ -159,16 +165,11 @@ class MapViewModel extends ChangeNotifier {
       // }
 
       if (context.mounted) {
-        _markers = [
-          ...buildEventMarkers(),
-          ...buildUnitMarkers(
-            contextMenuController: contextMenuController,
-            context: context,
-          ),
-        ];
+        _eventMarkers = _buildEventMarkers();
+        _unitMarkers = buildUnitMarkers(context: context);
       }
 
-      return Result.ok(_markers);
+      return Result.ok(null);
     } finally {
       notifyListeners();
     }
@@ -206,20 +207,14 @@ class MapViewModel extends ChangeNotifier {
 
   final _log = Logger('MapViewModel')..level = Level.ALL;
 
-  List<Marker> get markers => _markers;
-  List<Marker> _markers = [];
+  void _onNewEvent(Event newEvent) {
+    _events.add(newEvent);
+    _buildEventMarkers();
+  }
 
-  void _rebuildAllMarkers({
-    required BuildContext context,
-    required ContextMenuController contextMenuController,
-  }) {
-    _markers = [
-      ...buildEventMarkers(),
-      ...buildUnitMarkers(
-        contextMenuController: contextMenuController,
-        context: context,
-      ),
-    ];
+  void _rebuildAllMarkers({required BuildContext context}) {
+    _eventMarkers = _buildEventMarkers();
+    _unitMarkers = buildUnitMarkers(context: context);
   }
 
   late final Command2<void, EventID, BuildContext> rebuildMarkerForEventWithID;
@@ -240,13 +235,13 @@ class MapViewModel extends ChangeNotifier {
         case Ok<Event>():
           _events[eventIndex] = eventResult.value;
           if (context.mounted) {
-            _rebuildAllMarkers(
-              context: context,
-              contextMenuController: contextMenuController,
-            );
+            _rebuildAllMarkers(context: context);
+            return Result.ok(null);
+          } else {
+            // TODO convert base Exception to more appropriate class
+            return Result.error(Exception('Context not mounted'));
           }
 
-          return Result.ok(null);
         case Error<Event>():
           _log.severe(
             'Failed to get event with ID ${id.lastFour} from _eventRepository: ${eventResult.error}',
@@ -289,6 +284,9 @@ class MapViewModel extends ChangeNotifier {
 
     return result;
   }
+
+  List<Marker> get unitMarkers => _unitMarkers;
+  List<Marker> _unitMarkers = [];
 
   List<Unit> get units => _units;
   List<Unit> _units = [];

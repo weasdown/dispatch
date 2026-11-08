@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
@@ -164,7 +166,7 @@ class EventRepositoryLocal extends EventRepository {
     // FIXME event not showing up on map until after hot reload
     addEvent(newEvent);
 
-    Future.delayed(Duration(seconds: 5), () {
+    Timer(Duration(seconds: 5), () {
       final Cat1NOC arrest = Cat1NOC.c1ArrestPeriArrest();
       _log.fine('Automatically setting C1 NOC ${arrest.description}');
       setNOC(newEvent.id, arrest);

@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // When a new C1/L1 event is received, it will be sent over the homeViewModel's newC1L1Stream.
   // When a new event is received from the stream, show a snackbar with a button to select the event.
   void _onNewC1L1({
-    required EventID newC1L1ID,
+    required Event newC1L1,
     required AllEventsViewModel allEventsViewModel,
     required SingleEventScreenViewModel singleEventScreenViewModel,
   }) {
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       (_) => ScaffoldMessenger.of(context).showSnackBar(
         C1L1PurpleBanner(
           newC1L1: widget.homeViewModel.events
-              .where((Event event) => event.id == newC1L1ID)
+              .where((Event event) => event == newC1L1)
               .firstOrNull!,
           context: context,
           eventsViewModel: allEventsViewModel,
@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
       listenable: Listenable.merge([
         // FIXME convert these and other listenables like them in _HomeScreenState to use widget.homeViewModel
         widget.homeViewModel.load,
-        widget.eventsViewModel.loadEvents,
+        // widget.eventsViewModel.loadEvents,
       ]),
       builder: (context, child) {
         if (widget.singleEventScreenViewModel.load.running ||
@@ -94,58 +94,78 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: Scaffold(
-        // Rebuild when any new event is received.
-        body: StreamBuilder<Event>(
-          stream: widget.homeViewModel.newEventStream,
-          builder: (BuildContext context, AsyncSnapshot<Event> snapshot) {
-            // Show a purple banner when any new C1/L1 (Priority.zero) event is received.
-            return StreamBuilder<EventID>(
-              stream: widget.homeViewModel.newC1L1Stream,
-              builder: (BuildContext context, AsyncSnapshot<EventID> snapshot) {
+        // TODO remove listening to updated events - can be handled in MapPage, SingleEventScreen etc.
+        // Rebuild when any event is updated.
+        body: ListenableBuilder(
+          listenable: widget.homeViewModel.getUpdatedEvent,
+          builder: (BuildContext context, Widget? child) {
+            // builder: (BuildContext context, AsyncSnapshot<EventID> snapshot) {
+            // if (snapshot.hasData) {
+            //   final EventID updatedID = snapshot.data!;
+            //   _log.fine('Update available for event ${updatedID.lastFour}');
+            // }
+
+            // Rebuild when any new event is received.
+            return StreamBuilder<Event>(
+              stream: widget.homeViewModel.newEventStream,
+              builder: (BuildContext context, AsyncSnapshot<Event> snapshot) {
                 if (snapshot.hasData) {
-                  if (snapshot.data == null) {
-                    _log.severe('Received null C1/L1 event from stream');
-                  }
-                  final EventID newC1L1ID = snapshot.data!;
-                  _log.info(
-                    'Received new C1 $newC1L1ID! Showing purple banner',
-                  );
-                  _onNewC1L1(
-                    newC1L1ID: newC1L1ID,
-                    allEventsViewModel: widget.eventsViewModel,
-                    singleEventScreenViewModel:
-                        widget.singleEventScreenViewModel,
+                  final Event newEvent = snapshot.data!;
+                  _log.fine(
+                    'Got new event: ${newEvent.idLastFour}, ${newEvent.status.description}',
                   );
                 }
 
-                // TODO convert this row of flexibles into tabs, with one tab being displayed on narrow screens, or two tabs side by side on laptop-sized screens.
-                return Row(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: MapPage(
-                        mapViewModel: widget.mapViewModel,
-                        events: widget.homeViewModel.events,
-                        units: widget.homeViewModel.units,
-                        contextMenuController: widget.contextMenuController,
-                      ),
-                    ),
-                    VerticalDivider(width: 3, thickness: 3),
-                    Flexible(
-                      flex: 1,
-                      child: SingleEventScreen(
-                        viewModel: widget.singleEventScreenViewModel,
-                      ),
-                    ),
-                    // Flexible(
-                    //   flex: 1,
-                    //   child: AllEventsScreen(viewModel: widget.allEventsViewModel),
-                    // ),
-                    // Flexible(
-                    //   flex: 1,
-                    //   child: AllUnitsScreen(viewModel: widget.unitsViewModel),
-                    // ),
-                  ],
+                // Show a purple banner when any new C1/L1 (Priority.zero) event is received.
+                return StreamBuilder<Event>(
+                  stream: widget.homeViewModel.newC1L1Stream,
+                  builder: (BuildContext context, AsyncSnapshot<Event> snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data == null) {
+                        _log.severe('Received null C1/L1 event from stream');
+                      }
+                      final Event newC1L1 = snapshot.data!;
+                      _log.info(
+                        'Received new C1 ${newC1L1.idLastFour}! Showing purple banner',
+                      );
+                      _onNewC1L1(
+                        newC1L1: newC1L1,
+                        allEventsViewModel: widget.eventsViewModel,
+                        singleEventScreenViewModel:
+                            widget.singleEventScreenViewModel,
+                      );
+                    }
+
+                    // TODO convert this row of flexibles into tabs, with one tab being displayed on narrow screens, or two tabs side by side on laptop-sized screens.
+                    return Row(
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: MapPage(
+                            mapViewModel: widget.mapViewModel,
+                            events: widget.homeViewModel.events,
+                            units: widget.homeViewModel.units,
+                            contextMenuController: widget.contextMenuController,
+                          ),
+                        ),
+                        VerticalDivider(width: 3, thickness: 3),
+                        Flexible(
+                          flex: 1,
+                          child: SingleEventScreen(
+                            viewModel: widget.singleEventScreenViewModel,
+                          ),
+                        ),
+                        // Flexible(
+                        //   flex: 1,
+                        //   child: AllEventsScreen(viewModel: widget.allEventsViewModel),
+                        // ),
+                        // Flexible(
+                        //   flex: 1,
+                        //   child: AllUnitsScreen(viewModel: widget.unitsViewModel),
+                        // ),
+                      ],
+                    );
+                  },
                 );
               },
             );
