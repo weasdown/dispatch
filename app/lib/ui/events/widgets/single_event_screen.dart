@@ -238,7 +238,10 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
     // TODO add EventControllers class for storing contents of location box, event status etc.
     final Address newAddress = Address();
     final LatLng newLocation = LatLng(0, 0);
-    final EventStatus newStatus = EventStatus(Category.one, 'PLACEHOLDER');
+    final EventStatus newStatus = EventStatus(
+      category: Category.one,
+      description: 'PLACEHOLDER',
+    );
     final List<Patient> newPatients = [];
 
     late final Event? newEvent;
