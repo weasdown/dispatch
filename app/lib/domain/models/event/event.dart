@@ -18,10 +18,10 @@ class Event {
     required this.id,
     required this.address,
     required this.location,
-    required this.status,
+    required this._status,
     required this._patients,
   }) : _accepted = false,
-       category = status.category {
+       category = _status.category {
     if (status == EventStatus.preAlert()) {
       assert(category == null);
     }
@@ -181,7 +181,7 @@ class Event {
   void addNOC(NOC noc) {
     if (_noc == null) {
       _noc = noc;
-      status = EventStatus.nhs999(noc.category!);
+      _status = EventStatus.nhs999(noc.category!);
       category = noc.category;
     } else {
       throw Exception(
@@ -326,7 +326,8 @@ class Event {
     }
   }
 
-  EventStatus status;
+  EventStatus get status => _status;
+  EventStatus _status;
 
   Map<String, dynamic> toJson() => {
     'id': id,
