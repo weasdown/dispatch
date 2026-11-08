@@ -1,12 +1,13 @@
 /// @docImport '../../../ui/map/widgets/map.dart';
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
-import 'package:material_ui/material_ui.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
 import '../../../data/repositories/unit/unit_repository.dart';
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/event/status.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
@@ -83,6 +84,9 @@ class HomeViewModel extends ChangeNotifier {
 
       return Result.ok(null);
     } finally {
+      // Listen for event updates.
+      _eventRepository.eventUpdateStream.listen(_onEventUpdate);
+
       notifyListeners();
       // TODO confirm whether it'd be better to use this rather than the HomeScreen's StreamBuilder
       // // Listen to the stream for new C1/L1 events.
@@ -125,6 +129,21 @@ class HomeViewModel extends ChangeNotifier {
   List<Unit> get units => _units;
   List<Unit> _units = [];
 
+  void _onEventUpdate(Event updatedEvent) async {
+    _log.finer('Event ${updatedEvent.idLastFour} has an update');
+
+    try {
+      if (!_events.contains(updatedEvent)) {
+        _log.severe(
+          'Trying to update event ${updatedEvent.idLastFour} but it is not already in HomeViewModel._events',
+        );
+      }
+
+      _events[_getEventIndex(updatedEvent.id)] = updatedEvent;
+    } finally {
+      notifyListeners();
+    }
+  }
 
   late final Command2<void, EventID, Event> updateEvent;
   Future<Result<void>> _updateEvent(EventID id, Event newEvent) async {
