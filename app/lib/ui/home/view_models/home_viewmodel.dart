@@ -21,6 +21,7 @@ class HomeViewModel extends ChangeNotifier {
 
     getEvent = Command1<void, EventID>(_getEvent);
     updateEvent = Command2<void, EventID, Event>(_updateEvent);
+    setNOC = Command2<void, EventID, NOC>(_setNOC);
     getUpdatedEvent = Command1<Event, EventID>(_getUpdatedEvent);
 
     load = Command0(_load)..execute();
