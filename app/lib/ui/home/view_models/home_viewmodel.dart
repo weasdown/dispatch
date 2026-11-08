@@ -84,6 +84,10 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  late final Command2<void, EventID, NOC> setNOC;
+  Future<Result<void>> _setNOC(EventID id, NOC noc) async =>
+      _eventRepository.setNOC(id, noc);
+
   final UnitRepository _unitRepository;
 
   List<Unit> get units => _units;

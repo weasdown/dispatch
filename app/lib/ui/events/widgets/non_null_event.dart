@@ -100,14 +100,14 @@ class _Location extends StatelessWidget {
 }
 
 class _Overview extends StatelessWidget {
-  const _Overview({required this.event, required this.log});
+  const _Overview({required this.event, required this._log});
 
   final Event event;
-  final Logger log;
+  final Logger _log;
 
   @override
   Widget build(BuildContext context) {
-    log.info('Building _Overview with event: ${event.idLastFour}');
+    _log.info('Building _Overview with event: ${event.idLastFour}');
     return Center(
       child: Table(
         children: [
