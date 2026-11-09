@@ -323,7 +323,7 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
 
   @override
   void initState() {
-    _event = widget.viewModel.event;
+    _event = widget.homeViewModel.selectedEvent;
 
     _eventControllers.addListener(updateEventModified);
     _patientControllers.addListener(updateEventModified);
