@@ -119,6 +119,7 @@ class MapViewModel extends ChangeNotifier {
           );
       }
 
+      // Automatically mobilise the unit a short time after dispatch.
       final Result<Timer> autoMobiliseResult = await _autoMobiliseUnit();
       switch (autoMobiliseResult) {
         case Ok<Timer>():
