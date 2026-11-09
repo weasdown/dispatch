@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -52,14 +53,67 @@ class MapViewModel extends ChangeNotifier {
   }
 
   /// Triggers a refresh after a dispatch unit should have auto-mobilised.
-  Future<Result<Timer>> _autoMobiliseUnit() async =>
-      // Automatically update once the unit should have automatically gone mobile.
-      Result.ok(
-        Timer(
-          Unit.autoMobiliseDuration + Duration(milliseconds: 200),
-          notifyListeners,
-        ),
-      );
+  Future<Result<Timer>> _autoMobiliseUnit(Unit unit) async {
+    _log.fine('In _autoMobiliseUnit');
+
+    final DateTime mobiliseTime = DateTime.now();
+    final Map<String, List<LatLng>> unitRoutes = _unitRepository.unitRoutes();
+
+    final Map<String, dynamic> travelTimes = _unitRepository.unitTravelTimes();
+    if (!travelTimes.keys.contains(unit.callsign)) {
+      _log.info('No travel time available for ${unit.callsign}');
+      return Result.ok(Timer(Duration(), () {}));
+    }
+
+    // Retrieve how long the unit will take to get to its destination.
+    final int totalTimeToDestination = _unitRepository
+        .unitTravelTimes()[unit.callsign]!
+        .inSeconds;
+
+    final Map<String, List<LatLng>> routes = _unitRepository.unitRoutes();
+    if (!routes.keys.contains(unit.callsign)) {
+      _log.info('No route data available for ${unit.callsign}');
+      return Result.ok(Timer(Duration(), () {}));
+    }
+
+    // Automatically update once the unit should have automatically gone mobile.
+    final Timer autoMobiliseTimer = Timer(
+      Unit.autoMobiliseDuration + Duration(milliseconds: 200),
+      // If unit route data is available, build a location update timer.
+      (unitRoutes.keys.contains(unit.callsign))
+          ? () {
+              _log.fine(
+                'Route data is available for ${unit.callsign} - building location update timer.',
+              );
+              // Every few seconds, move the unit closer to scene (if route data is available).
+              Timer.periodic(Duration(seconds: 4), (Timer t) {
+                _log.fine('Location update tick for ${unit.callsign}');
+
+                // Find how long into its journey the unit is, as a fraction.
+                // Then get the location that's that fraction along the unitRoutes() entry.
+                final List<LatLng> route = routes[unit.callsign]!;
+                final int elapsedTime = DateTime.now()
+                    .difference(mobiliseTime)
+                    .inSeconds;
+                final double completedFraction =
+                    elapsedTime / totalTimeToDestination;
+
+                _log.fine(
+                  'Number of route points for ${unit.callsign}: ${route.length}',
+                );
+
+                final int pointIndex = (route.length * completedFraction)
+                    .round();
+                final LatLng point = route[pointIndex];
+
+                unit.updateLocation(newLocation: point);
+                notifyListeners();
+              });
+            }
+          : () {},
+    );
+    return Result.ok(autoMobiliseTimer);
+  }
 
   List<Marker> _buildEventMarkers() {
     _eventMarkers = _events
@@ -110,23 +164,21 @@ class MapViewModel extends ChangeNotifier {
       _log.fine(
         'Dispatching ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
       );
-      final Result<void> dispatchResult = await _eventRepository.dispatchUnit(
-        unit,
-      );
+      final dispatchResult = await _eventRepository.dispatchUnit(unit);
       switch (dispatchResult) {
-        case Ok<void>():
+        case Ok<Timer>():
           _log.info(
             'Successfully dispatched ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
           );
 
-        case Error<void>():
+        case Error<Timer>():
           _log.severe(
             'Failed to dispatch ${unit.callsign} to event ${_selectedEvent!.idLastFour}: ${dispatchResult.error}',
           );
       }
 
       // Automatically mobilise the unit a short time after dispatch.
-      final Result<Timer> autoMobiliseResult = await _autoMobiliseUnit();
+      final Result<Timer> autoMobiliseResult = await _autoMobiliseUnit(unit);
       switch (autoMobiliseResult) {
         case Ok<Timer>():
           _log.info(

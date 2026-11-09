@@ -21,15 +21,34 @@ final class UnitsViewModel extends ChangeNotifier {
     loadUnits = Command0<void>(_loadUnits)..execute();
   }
 
-  /// Triggers a refresh after a dispatch unit should have auto-mobilised.
-  Future<Result<Timer>> _autoMobiliseUnit() async =>
-      // Automatically update once the unit should have automatically gone mobile.
-      Result.ok(
-        Timer(
-          Unit.autoMobiliseDuration + Duration(milliseconds: 200),
-          notifyListeners,
-        ),
-      );
+  // /// Triggers a refresh after a dispatch unit should have auto-mobilised.
+  // Future<Result<Timer>> _autoMobiliseUnit(Unit unit) async {
+  //   _log.fine('In _autoMobiliseUnit');
+  //   final Map<String, List<LatLng>> unitRoutes = _unitRepository.unitRoutes();
+  //
+  //   // Every few seconds, move the unit closer to scene (if route data is available).
+  //   final Timer locationUpdateTimer = Timer.periodic(Duration(seconds: 4), (
+  //     Timer t,
+  //   ) {
+  //     _log.fine('Location update timer for ${unit.callsign} ticked');
+  //     notifyListeners();
+  //   });
+  //
+  //   // Automatically update once the unit should have automatically gone mobile.
+  //   final Timer autoMobiliseTimer = Timer(
+  //     Unit.autoMobiliseDuration + Duration(milliseconds: 200),
+  //     // If unit route data is available, build a location update timer.
+  //     (unitRoutes.keys.contains(unit.callsign))
+  //         ? () {
+  //             _log.fine(
+  //               'Route data is available for ${unit.callsign} - building location update timer.',
+  //             );
+  //             locationUpdateTimer;
+  //           }
+  //         : () {},
+  //   );
+  //   return Result.ok(autoMobiliseTimer);
+  // }
 
   late final Command2<void, Unit, Event> dispatchUnit;
   Future<Result<void>> _dispatchUnit(Unit unit, Event event) async {
@@ -51,20 +70,20 @@ final class UnitsViewModel extends ChangeNotifier {
         );
     }
 
-    // Automatically mobilise the unit a short time after dispatch.
-    final Result<Timer> autoMobiliseResult = await _autoMobiliseUnit();
-    switch (autoMobiliseResult) {
-      case Ok<Timer>():
-        _log.info(
-          'Successfully triggered auto-mobilising of ${unit.callsign} to event ${event.idLastFour}',
-        );
-
-      case Error<Timer>():
-        _log.severe(
-          'Failed to auto-mobilise ${unit.callsign} to event ${event.idLastFour}: ${autoMobiliseResult.error}',
-        );
-        return autoMobiliseResult;
-    }
+    // // Automatically mobilise the unit a short time after dispatch.
+    // final Result<Timer> autoMobiliseResult = await _autoMobiliseUnit(unit);
+    // switch (autoMobiliseResult) {
+    //   case Ok<Timer>():
+    //     _log.info(
+    //       'Successfully triggered auto-mobilising of ${unit.callsign} to event ${event.idLastFour}',
+    //     );
+    //
+    //   case Error<Timer>():
+    //     _log.severe(
+    //       'Failed to auto-mobilise ${unit.callsign} to event ${event.idLastFour}: ${autoMobiliseResult.error}',
+    //     );
+    //     return autoMobiliseResult;
+    // }
 
     return dispatchResult;
   }

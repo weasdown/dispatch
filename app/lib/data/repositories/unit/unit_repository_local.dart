@@ -15,7 +15,7 @@ import 'unit_repository.dart';
 /// Local implementation of UnitRepository
 class UnitRepositoryLocal extends UnitRepository {
   UnitRepositoryLocal({required this._localDataService}) {
-    // UnitRepositoryLocal._getRoute();
+    UnitRepositoryLocal._getRoute();
   }
 
   // Only create default unit once.
@@ -36,7 +36,11 @@ class UnitRepositoryLocal extends UnitRepository {
     final RoutesAPI routesAPI = GoogleMapsRoutesAPI();
     final Result<GoogleMapsRouteResponse> routeResult = await routesAPI
         .getRoute(
-          LatLng(51.606581509132056, -1.2469909787825841), // Didcot base
+          // LatLng(51.606581509132056, -1.2469909787825841), // Didcot base
+          LatLng(
+            51.59163472547848,
+            -1.427988579419376,
+          ), // Smith's Wharf, Wantage
           LatLng(51.57771040270499, -1.567853251019548), // White horse
         );
 
