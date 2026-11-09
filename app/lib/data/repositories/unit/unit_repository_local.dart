@@ -26,6 +26,9 @@ class UnitRepositoryLocal extends UnitRepository {
   @override
   Future<Result<List<Unit>>> get allUnits => unitsList;
 
+  List<String> get _callsigns =>
+      _units.map((Unit unit) => unit.callsign).toList();
+
   // FIXME remove this method - testing only.
   static Future<Result<Route>> _getRoute() async {
     _log.fine('Getting route');
@@ -52,7 +55,7 @@ class UnitRepositoryLocal extends UnitRepository {
   Future<Result<void>> standdownUnit(Unit unit) async {
     final Unit? foundUnit = _getUnitByCallsign(unit.callsign);
     if (foundUnit == null) {
-      return Result<void>.error(UnitNotFoundException(unit: unit));
+      return Result<void>.error(UnitNotFoundException(callsign: unit.callsign));
     }
 
     final Event? assignedEvent = foundUnit.assignedEvent;
@@ -82,5 +85,20 @@ class UnitRepositoryLocal extends UnitRepository {
     }
 
     return Result.ok(_units);
+  }
+
+  @override
+  Future<Result<void>> updateUnit(String callsign, Unit newUnit) async {
+    _log.finer('Updating unit $callsign');
+    if (!_callsigns.contains(callsign)) {
+      return Result<void>.error(UnitNotFoundException(callsign: callsign));
+    }
+
+    final int unitIndex = _units.indexWhere(
+      (Unit unit) => unit.callsign == callsign,
+    );
+    _units[unitIndex] = newUnit;
+    updatedUnitStreamController.sink.add(newUnit);
+    return Result.ok(null);
   }
 }

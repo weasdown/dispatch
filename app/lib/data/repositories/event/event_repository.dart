@@ -71,7 +71,7 @@ abstract class EventRepository {
 
   Future<Result<void>> standdownUnit(Unit unit);
 
-  /// Triggers the eventUpdateStream to fire an [EventID] when the corresponding [Event] has been updated.
+  /// Triggers the eventUpdateStream to fire an [Event] when the event has been updated.
   final StreamController<Event> updatedEventStreamController =
       StreamController<Event>.broadcast();
 
