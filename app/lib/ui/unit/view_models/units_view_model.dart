@@ -28,19 +28,33 @@ final class UnitsViewModel extends ChangeNotifier {
     }
 
     _log.fine('Dispatching ${unit.callsign} to event ${_event!.idLastFour}');
-    final result = await _eventRepository.dispatchUnit(unit);
-    switch (result) {
-      case Ok<void>():
+    final dispatchResult = await _eventRepository.dispatchUnit(unit);
+    switch (dispatchResult) {
+      case Ok<Timer>():
         _log.info(
           'Successfully dispatched ${unit.callsign} to event ${_event!.idLastFour}',
         );
         notifyListeners();
-      case Error<void>():
+      case Error<Timer>():
+        _log.severe(
+          'Failed to dispatch ${unit.callsign} to event ${_event!.idLastFour}: ${dispatchResult.error}',
+        );
+    }
+
+    // Automatically mobilise the unit a short time after dispatch.
+    final Result<Timer> autoMobiliseResult = await _autoMobiliseUnit();
+    switch (autoMobiliseResult) {
+      case Ok<Timer>():
+        _log.info(
+          'Successfully auto-mobilised ${unit.callsign} to event ${event.idLastFour}',
+        );
+
+      case Error<Timer>():
         _log.severe(
           'Failed to dispatch ${unit.callsign} to event ${_event!.idLastFour}: ${result.error}',
         );
     }
-    return result;
+    return dispatchResult;
   }
 
   Event? _event;

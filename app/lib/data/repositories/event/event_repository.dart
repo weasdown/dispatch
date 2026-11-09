@@ -33,7 +33,7 @@ abstract class EventRepository {
 
   Event get defaultC1;
 
-  Future<Result<void>> dispatchUnit(Unit unit);
+  Future<Result<Timer>> dispatchUnit(Unit unit);
 
   /// Get an event by its ID.
   Future<Result<Event>> eventByID(EventID id);

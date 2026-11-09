@@ -80,16 +80,16 @@ class EventRepositoryLocal extends EventRepository {
   Event get defaultC1 => _localDataService.defaultC1;
 
   @override
-  Future<Result<void>> dispatchUnit(Unit unit) async {
+  Future<Result<Timer>> dispatchUnit(Unit unit) async {
     if (_selectedEvent == null) {
       _log.warning('Cannot dispatch ${unit.callsign} as no event is selected');
-      return Result<void>.error(const NoSelectedEventException());
+      return Result<Timer>.error(const NoSelectedEventException());
     }
 
     _log.info(
       'Dispatching ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
     );
-    return Result<void>.ok(_selectedEvent!.dispatchUnit(unit));
+    return Result<Timer>.ok(_selectedEvent!.dispatchUnit(unit));
   }
 
   @override
