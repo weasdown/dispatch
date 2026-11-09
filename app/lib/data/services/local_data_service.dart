@@ -278,12 +278,13 @@ class LocalDataService {
     getUnit(_DefaultUnits.nd027)?.updateStatus(newStatus: UnitStatus.ab);
     getUnit(_DefaultUnits.nt431)?.updateStatus(newStatus: UnitStatus.ab);
     getUnit(_DefaultUnits.hm24)?.updateStatus(newStatus: UnitStatus.ab);
+    getUnit(_DefaultUnits.na136)?.updateStatus(newStatus: UnitStatus.vc);
 
     // Assign some units to events.
     getUnit(_DefaultUnits.na283)
         ?.assignToEvent(event: getEventByID('3129')!, status: UnitStatus.as);
     getUnit(_DefaultUnits.na402)
-        ?.assignToEvent(event: getEventByID('3126')!, status: UnitStatus.ls);
+        ?.assignToEvent(event: getEventByID('3126')!, status: UnitStatus.mo);
     getUnit(_DefaultUnits.nr154)
         ?.assignToEvent(event: getEventByID('3128')!, status: UnitStatus.as);
     getUnit(_DefaultUnits.na172)
@@ -306,10 +307,14 @@ interface class _DefaultUnits {
   static Unit get na402 => Unit(
     callsign: 'NA402',
     // location: LatLng(51.605, -1.238),
+    // location: LatLng(
+    //   51.6988309555196,
+    //   -1.2664745884997843,
+    // ), // A34 S by Abingdon North exit
     location: LatLng(
-      51.6988309555196,
-      -1.2664745884997843,
-    ), // A34 S by Abingdon North exit
+      51.68396126257906,
+      -1.4222362460016134,
+    ), // A420 westbound at Kingston Bagpuize
     personnel: _defaultCrewMembers.sublist(2, 4),
   )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800);
   static Unit get na283 => Unit(
@@ -392,12 +397,19 @@ interface class _DefaultEvents {
     final User user = LocalDataService.defaultUser;
     return Event.withNOC(
         idNum: 3127,
+        // address: Address(
+        //   buildingNumber: '6',
+        //   street: 'The Greenway',
+        //   county: 'Oxfordshire',
+        // ),
+        // location: LatLng(51.59799446397092, -1.3537030950825775),
         address: Address(
-          buildingNumber: '6',
-          street: 'The Greenway',
+          buildingName: 'Mini Plant Oxford',
+          street: 'Roman Way',
+          district: 'Cowley',
           county: 'Oxfordshire',
         ),
-        location: LatLng(51.59799446397092, -1.3537030950825775),
+        location: LatLng(51.73230943930122, -1.1925436231918494),
         noc: Cat1NOC.c1ArrestPeriArrest(),
       )
       ..addPatient(LocalDataService._defaultPatient)
