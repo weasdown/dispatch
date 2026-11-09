@@ -37,6 +37,17 @@ class Unit {
     );
   }
 
+  /// Automatically set the unit's status as mobile ([UnitStatus.mo]) a short time after dispatch.
+  Timer _autoMobilise(Event event) => Timer(
+    _autoMobiliseDuration,
+    () => updateStatus(newStatus: UnitStatus.mo, time: DateTime.now()),
+  );
+
+  /// This amount of time after being dispatched, the unit will go mobile ([UnitStatus.mo]).
+  ///
+  /// See [_autoMobilise] for implementation.
+  static final Duration _autoMobiliseDuration = Duration(seconds: 2);
+
   AmbulanceStation? get base => _base;
   AmbulanceStation? _base;
 
