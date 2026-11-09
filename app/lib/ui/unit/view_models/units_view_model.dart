@@ -15,14 +15,24 @@ final class UnitsViewModel extends ChangeNotifier {
     required this._unitRepository,
     required this._eventRepository,
   }) {
-    dispatchUnit = Command1<void, Unit>(_dispatchUnit);
+    dispatchUnit = Command2<void, Unit, Event>(_dispatchUnit);
     standdownUnit = Command1<void, Unit>(_standdownUnit);
 
     loadUnits = Command0<void>(_loadUnits)..execute();
   }
 
-  late final Command1<void, Unit> dispatchUnit;
-  Future<Result<void>> _dispatchUnit(Unit unit) async {
+  /// Triggers a refresh after a dispatch unit should have auto-mobilised.
+  Future<Result<Timer>> _autoMobiliseUnit() async =>
+      // Automatically update once the unit should have automatically gone mobile.
+      Result.ok(
+        Timer(
+          Unit.autoMobiliseDuration + Duration(milliseconds: 200),
+          notifyListeners,
+        ),
+      );
+
+  late final Command2<void, Unit, Event> dispatchUnit;
+  Future<Result<void>> _dispatchUnit(Unit unit, Event event) async {
     if (_event == null) {
       return Result<void>.error(const NoSelectedEventException());
     }
@@ -51,9 +61,11 @@ final class UnitsViewModel extends ChangeNotifier {
 
       case Error<Timer>():
         _log.severe(
-          'Failed to dispatch ${unit.callsign} to event ${_event!.idLastFour}: ${result.error}',
+          'Failed to auto-mobilise ${unit.callsign} to event ${event.idLastFour}: ${autoMobiliseResult.error}',
         );
+        return autoMobiliseResult;
     }
+
     return dispatchResult;
   }
 
