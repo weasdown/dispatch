@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
@@ -38,15 +40,22 @@ class Unit {
   }
 
   /// Automatically set the unit's status as mobile ([UnitStatus.mo]) a short time after dispatch.
-  Timer _autoMobilise(Event event) => Timer(
-    _autoMobiliseDuration,
-    () => updateStatus(newStatus: UnitStatus.mo, time: DateTime.now()),
-  );
+  Timer _autoMobilise(Event event) {
+    _log.fine(
+      'Running _autoMobilise() for $callsign - will go mobile after ${autoMobiliseDuration.inSeconds} seconds',
+    );
+    final Timer autoMobiliseTimer = Timer(
+      autoMobiliseDuration,
+      () => updateStatus(newStatus: UnitStatus.mo, time: DateTime.now()),
+    );
+    // autoMobiliseTimer.cancel(); // Start cancelled so the timer can be triggered by the calling view model.
+    return autoMobiliseTimer;
+  }
 
   /// This amount of time after being dispatched, the unit will go mobile ([UnitStatus.mo]).
   ///
   /// See [_autoMobilise] for implementation.
-  static final Duration _autoMobiliseDuration = Duration(seconds: 2);
+  static final Duration autoMobiliseDuration = Duration(seconds: 2);
 
   AmbulanceStation? get base => _base;
   AmbulanceStation? _base;
@@ -54,8 +63,14 @@ class Unit {
   /// A unique identifier for this resource.
   final String callsign;
 
-  void dispatchToEvent({required Event event}) =>
-      assignToEvent(event: event, status: UnitStatus.dp);
+  Timer dispatchToEvent({required Event event}) {
+    assignToEvent(event: event, status: UnitStatus.dp);
+
+    // Automatically go mobile a short time after dispatch.
+    // Return the timer so it can be cancelled if necessary
+    // (e.g. if the unit is stood down or is manually set as mobile before the timer fires).
+    return _autoMobilise(event);
+  }
 
   DateTime? get endOfShift => shiftEnd;
 
