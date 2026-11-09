@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:latlong2/latlong.dart';
@@ -71,7 +72,7 @@ class Event {
         location: location,
         patients: patients,
       ),
-    _ => throw const FormatException('Failed to load album.'),
+    _ => throw const FormatException('Failed to load Event.'),
   };
 
   factory Event.withNOC({
@@ -210,11 +211,14 @@ class Event {
     );
   }
 
-  // TODO use or remove dispatchUnit()
-  void dispatchUnit(Unit unit) {
+  /// Dispatches [unit] to this event.
+  ///
+  /// Returns a [Timer] for auto-mobilisation of the unit.
+  /// Once the timer fires (after [Unit.autoMobiliseDuration] seconds), the unit's status will be automatically set as mobile ([UnitStatus.mo])
+  Timer dispatchUnit(Unit unit) {
     assignedUnits.add(unit);
     addUnitHistory(unit: unit, status: UnitStatus.dp, time: DateTime.now());
-    unit.assignToEvent(event: this, status: UnitStatus.dp);
+    return unit.dispatchToEvent(event: this);
   }
 
   /// The ambulances and other units assigned to this event.

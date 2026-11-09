@@ -1,0 +1,363 @@
+{
+  "routes": [
+    {
+      "legs": [
+        {
+          "distanceMeters": 25136,
+          "duration": "1900s",
+          "staticDuration": "1900s",
+          "polyline": {
+            "encodedPolyline": "{j~yHlprFBd@FnBFB?TCBT|CFx@D`@PnEBzADvAFd@BNL@HRCZGHGB?dAFrA`@jGLhCV`DNlBRpB?DXlELnAF~@H|@T`EFfANdD@XPbEDnG@nALhCRnBHl@Hn@DZFb@RzA`@hD^rD?FHzEL~ATbBH^XfA^fA@Dn@zBPr@BFJt@@BFx@DtA@rA@PBjFB|@tA~HPt@R~@jAxEd@h@TFFHn@?LBTCH?lBQxAIrFBnD_@bC]rCK`A?P?pJb@H?T@|Cb@lC`@VBH?lBR~ATd@MRMNBB@LXBVAHGZSNE?]t@_@z@Qh@c@vAqCpIgBzEIVsAfEs@xC_@pByAxJETc@hCQz@YjB[dCGx@CXCxB?bFErAIxAAPUvCY|BOhA{@|Dc@xAUt@_@lAc@pAy@`Cm@|Ac@`AEH{ArDmA~DGR]rAEJCJWdAg@bDWxCALANOlCYzICx@SrD_@|Dc@|DUvBK|@K`AARAb@CZ@BBLAHCNEBEBIh@IXG~@IfBE`AK~BElA?LAZ@rCDfCEdIApB?LKbJI~GKnCALOfF?zBDz@XbDApAGt@E^{@zFg@nDYnCGdA?LCv@DnKEhBGtAAb@_@rMAbC@\\LtBDd@LjBFzAA~@E`DKvCKbCCnAAb@?P?L?NAV?r@?N@LB`BRbD@V^tCVbBTnAJt@F~@L`FLnAXnDBdAAjA?NGdGMzE?NAXKhCCjBB~AJz@Hp@v@`EJb@R|@r@tDLt@F`@bArI@LlAtKTtBHnB?l@BpAErE?LAdABpB`@xGfAfM@LVtC~@lNXrFL|CF`E?L?L?NAfHAvCD`ELrB`@tFNfEBjANfHFnAJpAp@dFd@dFLxAb@bDv@lFX|Bx@hKXlDVxDd@jIFlANbBRnBXjDT|EDJRt@NTBPFv@@L@L@P|@fHHbBDhAH|AVxCl@zDFZPt@FTPl@bB`G|@~CTbAdBhHf@rBfAzER|@l@|CFd@H`@LlAHdAFhBFLCLDTJ@BD?JGNC@P`C@VXhCVnDJzAF~@BVF`AVvFBn@DhA@b@FrAFl@HB@D?HIHPbBHx@JvA@HNdBJJARABN|@LCHNf@MZKFAd@B^T`@l@f@fA`@nANj@Jd@^|AJj@p@nDLh@Z|ALj@DVTtAD^F^@JJxBB\\?f@Bp@FhCZAAfIDnDAhDAnB?f@?J@lA?dEChCCdAMxBE\\Kz@a@hDo@nECJY~BCnALlEVbED\\Jv@Hl@h@jEDr@@L@LLdBBnB?pBGrEChG@x@BlAh@xKNjCDjBD`BNnBLdAFRtAzH^nCPtAHp@Bn@x@pNHdA`@zGd@zGj@vGXfDn@rI@jAXbDr@vFRzAd@vD\\nDFvBApDArFH|FFpAJ|AFt@PnAb@rBV~@|@tCTj@x@~AzAbCz@pBt@rCVrBHbDG`CCh@IlCA^Av@CnAh@xJLjDFnC@lBIhBm@nEGjAElFMpA]fBi@xBQxAKzAC`B?d@LxF?l@A|FQnDCTSzBOjAIdAIv@u@xGMjBGfCB`Bn@~NFjD?\\CnBEv@ChA@vICxDA^UbGC|EAtD?~A?x@C|BM`FSfB]hBaAjEQx@K~@CbB?VLjDNbD?jAA\\[jEArCPbK@^XfI\\~GDrEBpBB~@^pGCr@LfCBt@?|@QnDKbB]dDM|BCrBDpB@XTfCh@fFApBK~GGrBO~GCx@QhCO`BgAxHi@hDI`AAp@JdARtAR|@V~@j@~AFR`@lALr@?f@Ib@QPWFSAICqAi@a@Ga@HYRa@x@g@xBaAzFS`Ac@~BQlAElADj@DTTl@h@z@^`@t@f@HLJZXzDLt@Nr@`AvCPdABj@FjCP~Bb@bDTbBJlAFzB?z@?HKlCSnBq@vEOjAG|AArB@v@`Bd@fATpAZv@`@bCtBrAz@n@X|@b@`BjADB|@Xf@PZD~AJTBj@VX\\Hr@"
+          },
+          "startLocation": {
+            "latLng": {
+              "latitude": 51.606375199999995,
+              "longitude": -1.2469523999999998
+            }
+          },
+          "endLocation": {
+            "latLng": {
+              "latitude": 51.5776575,
+              "longitude": -1.5678436999999998
+            }
+          },
+          "steps": [
+            {
+              "distanceMeters": 311,
+              "staticDuration": "39s",
+              "polyline": {
+                "encodedPolyline": "{j~yHlprFBd@FnBFB?TCBT|CFx@D`@PnEBzADvAFd@BN"
+              },
+              "startLocation": {
+                "latLng": {
+                  "latitude": 51.606375199999995,
+                  "longitude": -1.2469523999999998
+                }
+              },
+              "endLocation": {
+                "latLng": {
+                  "latitude": 51.605916099999995,
+                  "longitude": -1.2513087
+                }
+              },
+              "navigationInstruction": {
+                "maneuver": "DEPART",
+                "instructions": "Head west on Broadway toward Broadway\nGo through 1 roundabout"
+              },
+              "localizedValues": {
+                "distance": {
+                  "text": "0.3 km"
+                },
+                "staticDuration": {
+                  "text": "1 min"
+                }
+              },
+              "travelMode": "DRIVE"
+            },
+            {
+              "distanceMeters": 1963,
+              "staticDuration": "212s",
+              "polyline": {
+                "encodedPolyline": "_h~yHtksFL@HRCZGHGB?dAFrA`@jGLhCV`DNlBRpB?DXlELnAF~@H|@T`EFfANdD@XPbEDnG@nALhCRnBHl@Hn@DZFb@RzA`@hD^rD?FHzEL~ATbBH^XfA^fA@Dn@zBPr@BFJt@@BFx@DtA@rA@PBjFB|@tA~HPt@R~@jAxEd@h@"
+              },
+              "startLocation": {
+                "latLng": {
+                  "latitude": 51.605916099999995,
+                  "longitude": -1.2513087
+                }
+              },
+              "endLocation": {
+                "latLng": {
+                  "latitude": 51.6015703,
+                  "longitude": -1.278177
+                }
+              },
+              "navigationInstruction": {
+                "maneuver": "ROUNDABOUT_LEFT",
+                "instructions": "At the roundabout, continue straight onto Wantage Rd/B4493\nContinue to follow B4493"
+              },
+              "localizedValues": {
+                "distance": {
+                  "text": "2.0 km"
+                },
+                "staticDuration": {
+                  "text": "4 mins"
+                }
+              },
+              "travelMode": "DRIVE"
+            },
+            {
+              "distanceMeters": 1168,
+              "staticDuration": "76s",
+              "polyline": {
+                "encodedPolyline": "yl}yHrsxFTFFHn@?LBTCH?lBQxAIrFBnD_@bC]rCK`A?P?pJb@H?T@|Cb@lC`@VBH?lBR~ATd@M"
+              },
+              "startLocation": {
+                "latLng": {
+                  "latitude": 51.6015703,
+                  "longitude": -1.278177
+                }
+              },
+              "endLocation": {
+                "latLng": {
+                  "latitude": 51.5911323,
+                  "longitude": -1.2784832
+                }
+              },
+              "navigationInstruction": {
+                "maneuver": "ROUNDABOUT_LEFT",
+                "instructions": "At the roundabout, take the 1st exit onto Harwell Link Rd"
+              },
+              "localizedValues": {
+                "distance": {
+                  "text": "1.2 km"
+                },
+                "staticDuration": {
+                  "text": "1 min"
+                }
+              },
+              "travelMode": "DRIVE"
+            },
+            {
+              "distanceMeters": 8538,
+              "staticDuration": "565s",
+              "polyline": {
+                "encodedPolyline": "qk{yHnuxFRMNBB@LXBVAHGZSNE?]t@_@z@Qh@c@vAqCpIgBzEIVsAfEs@xC_@pByAxJETc@hCQz@YjB[dCGx@CXCxB?bFErAIxAAPUvCY|BOhA{@|Dc@xAUt@_@lAc@pAy@`Cm@|Ac@`AEH{ArDmA~DGR]rAEJCJWdAg@bDWxCALANOlCYzICx@SrD_@|Dc@|DUvBK|@K`AARAb@CZ@BBLAHCNEBEBIh@IXG~@IfBE`AK~BElA?LAZ@rCDfCEdIApB?LKbJI~GKnCALOfF?zBDz@XbDApAGt@E^{@zFg@nDYnCGdA?LCv@DnKEhBGtAAb@_@rMAbC@\\LtBDd@LjBFzAA~@E`DKvCKbCCnAAb@?P?L?NAV?r@?N@LB`BRbD@V^tCVbBTnAJt@F~@L`FLnAXnDBdAAjA?NGdGMzE?NAXKhCCjBB~AJz@Hp@v@`EJb@R|@r@tDLt@F`@bArI@LlAtKTtBHnB?l@BpAErE?LAdABpB`@xGfAfM@LVtC~@lNXrFL|CF`E?L?L?NAfHAvCD`ELrB`@tFNfEBjANfHFnAJpAp@dFd@dFLxAb@bDv@lFX|Bx@hKXlDVxDd@jIFlANbBRnBXjDT|EDJRt@"
+              },
+              "startLocation": {
+                "latLng": {
+                  "latitude": 51.5911323,
+                  "longitude": -1.2784832
+                }
+              },
+              "endLocation": {
+                "latLng": {
+                  "latitude": 51.5941334,
+                  "longitude": -1.3959215
+                }
+              },
+              "navigationInstruction": {
+                "maneuver": "ROUNDABOUT_LEFT",
+                "instructions": "At the roundabout, take the 2nd exit onto Reading Rd/A417"
+              },
+              "localizedValues": {
+                "distance": {
+                  "text": "8.5 km"
+                },
+                "staticDuration": {
+                  "text": "9 mins"
+                }
+              },
+              "travelMode": "DRIVE"
+            },
+            {
+              "distanceMeters": 1761,
+              "staticDuration": "150s",
+              "polyline": {
+                "encodedPolyline": "i~{yHnsoGNTBPFv@@L@L@P|@fHHbBDhAH|AVxCl@zDFZPt@FTPl@bB`G|@~CTbAdBhHf@rBfAzER|@l@|CFd@H`@LlAHdAFhBFLCLDTJ@BD?JGNC@P`C@VXhCVnDJzAF~@BVF`AVvFBn@DhA@b@FrAFl@HB@D?HIHPbBHx@JvA@HNdBJJARABN|@"
+              },
+              "startLocation": {
+                "latLng": {
+                  "latitude": 51.5941334,
+                  "longitude": -1.3959215
+                }
+              },
+              "endLocation": {
+                "latLng": {
+                  "latitude": 51.5890823,
+                  "longitude": -1.4193571999999999
+                }
+              },
+              "navigationInstruction": {
+                "maneuver": "ROUNDABOUT_LEFT",
+                "instructions": "At the roundabout, take the 1st exit onto Reading Rd/A417\nGo through 4 roundabouts"
+              },
+              "localizedValues": {
+                "distance": {
+                  "text": "1.8 km"
+                },
+                "staticDuration": {
+                  "text": "3 mins"
+                }
+              },
+              "travelMode": "DRIVE"
+            },
+            {
+              "distanceMeters": 616,
+              "staticDuration": "92s",
+              "polyline": {
+                "encodedPolyline": "w~zyH~etGLCHNf@MZKFAd@B^T`@l@f@fA`@nANj@Jd@^|AJj@p@nDLh@Z|ALj@DVTtAD^F^@JJxBB\\?f@Bp@FhC"
+              },
+              "startLocation": {
+                "latLng": {
+                  "latitude": 51.5890823,
+                  "longitude": -1.4193571999999999
+                }
+              },
+              "endLocation": {
+                "latLng": {
+                  "latitude": 51.586436899999995,
+                  "longitude": -1.426112
+                }
+              },
+              "navigationInstruction": {
+                "maneuver": "ROUNDABOUT_LEFT",
+                "instructions": "At the roundabout, take the 1st exit onto Ormond Rd/B4507"
+              },
+              "localizedValues": {
+                "distance": {
+                  "text": "0.6 km"
+                },
+                "staticDuration": {
+                  "text": "2 mins"
+                }
+              },
+              "travelMode": "DRIVE"
+            },
+            {
+              "distanceMeters": 15,
+              "staticDuration": "4s",
+              "polyline": {
+                "encodedPolyline": "gnzyHdpuGZA"
+              },
+              "startLocation": {
+                "latLng": {
+                  "latitude": 51.586436899999995,
+                  "longitude": -1.426112
+                }
+              },
+              "endLocation": {
+                "latLng": {
+                  "latitude": 51.5863042,
+                  "longitude": -1.4261015
+                }
+              },
+              "navigationInstruction": {
+                "maneuver": "TURN_LEFT",
+                "instructions": "Turn left onto Newbury St/A338"
+              },
+              "localizedValues": {
+                "distance": {
+                  "text": "15 m"
+                },
+                "staticDuration": {
+                  "text": "1 min"
+                }
+              },
+              "travelMode": "DRIVE"
+            },
+            {
+              "distanceMeters": 10120,
+              "staticDuration": "667s",
+              "polyline": {
+                "encodedPolyline": "kmzyHbpuGAfIDnDAhDAnB?f@?J@lA?dEChCCdAMxBE\\Kz@a@hDo@nECJY~BCnALlEVbED\\Jv@Hl@h@jEDr@@L@LLdBBnB?pBGrEChG@x@BlAh@xKNjCDjBD`BNnBLdAFRtAzH^nCPtAHp@Bn@x@pNHdA`@zGd@zGj@vGXfDn@rI@jAXbDr@vFRzAd@vD\\nDFvBApDArFH|FFpAJ|AFt@PnAb@rBV~@|@tCTj@x@~AzAbCz@pBt@rCVrBHbDG`CCh@IlCA^Av@CnAh@xJLjDFnC@lBIhBm@nEGjAElFMpA]fBi@xBQxAKzAC`B?d@LxF?l@A|FQnDCTSzBOjAIdAIv@u@xGMjBGfCB`Bn@~NFjD?\\CnBEv@ChA@vICxDA^UbGC|EAtD?~A?x@C|BM`FSfB]hBaAjEQx@K~@CbB?VLjDNbD?jAA\\[jEArCPbK@^XfI\\~GDrEBpBB~@^pGCr@LfCBt@?|@QnDKbB]dDM|BCrBDpB@XTfCh@fFApBK~GGrBO~GCx@QhCO`BgAxHi@hDI`AAp@JdARtAR|@V~@j@~AFR`@lALr@?f@Ib@QPWFSAICqAi@a@Ga@HYRa@x@g@xBaAzFS`Ac@~BQlAElADj@DTTl@h@z@^`@t@f@HLJZXzDLt@Nr@`AvCPdABj@FjCP~Bb@bDTbBJlAFzB?z@?HKlCSnBq@vEOjAG|AArB@v@"
+              },
+              "startLocation": {
+                "latLng": {
+                  "latitude": 51.5863042,
+                  "longitude": -1.4261015
+                }
+              },
+              "endLocation": {
+                "latLng": {
+                  "latitude": 51.582994899999996,
+                  "longitude": -1.5647746999999999
+                }
+              },
+              "navigationInstruction": {
+                "maneuver": "TURN_RIGHT",
+                "instructions": "Turn right onto Portway/B4507\nContinue to follow B4507"
+              },
+              "localizedValues": {
+                "distance": {
+                  "text": "10.1 km"
+                },
+                "staticDuration": {
+                  "text": "11 mins"
+                }
+              },
+              "travelMode": "DRIVE"
+            },
+            {
+              "distanceMeters": 644,
+              "staticDuration": "95s",
+              "polyline": {
+                "encodedPolyline": "uxyyHxrpH`Bd@fATpAZv@`@bCtBrAz@n@X|@b@`BjADB|@Xf@PZD~AJTBj@VX\\Hr@"
+              },
+              "startLocation": {
+                "latLng": {
+                  "latitude": 51.582994899999996,
+                  "longitude": -1.5647746999999999
+                }
+              },
+              "endLocation": {
+                "latLng": {
+                  "latitude": 51.5776575,
+                  "longitude": -1.5678436999999998
+                }
+              },
+              "navigationInstruction": {
+                "maneuver": "TURN_LEFT",
+                "instructions": "Turn left onto Dragon Hill Rd\nDestination will be on the right"
+              },
+              "localizedValues": {
+                "distance": {
+                  "text": "0.6 km"
+                },
+                "staticDuration": {
+                  "text": "2 mins"
+                }
+              },
+              "travelMode": "DRIVE"
+            }
+          ],
+          "localizedValues": {
+            "distance": {
+              "text": "25.1 km"
+            },
+            "duration": {
+              "text": "32 mins"
+            },
+            "staticDuration": {
+              "text": "32 mins"
+            }
+          }
+        }
+      ],
+      "distanceMeters": 25135,
+      "duration": "1898s",
+      "staticDuration": "1898s",
+      "polyline": {
+        "encodedPolyline": "{j~yHlprFBd@FnBFB?TCBT|CFx@D`@PnEBzADvAFd@BNL@HRCZGHGB?dAFrA`@jGLhCV`DNlBRpB?DXlELnAF~@H|@T`EFfANdD@XPbEDnG@nALhCRnBHl@Hn@DZFb@RzA`@hD^rD?FHzEL~ATbBH^XfA^fA@Dn@zBPr@BFJt@@BFx@DtA@rA@PBjFB|@tA~HPt@R~@jAxEd@h@TFFHn@?LBTCH?lBQxAIrFBnD_@bC]rCK`A?P?pJb@H?T@|Cb@lC`@VBH?lBR~ATd@MRMNBB@LXBVAHGZSNE?]t@_@z@Qh@c@vAqCpIgBzEIVsAfEs@xC_@pByAxJETc@hCQz@YjB[dCGx@CXCxB?bFErAIxAAPUvCY|BOhA{@|Dc@xAUt@_@lAc@pAy@`Cm@|Ac@`AEH{ArDmA~DGR]rAEJCJWdAg@bDWxCALANOlCYzICx@SrD_@|Dc@|DUvBK|@K`AARAb@CZ@BBLAHCNEBEBIh@IXG~@IfBE`AK~BElA?LAZ@rCDfCEdIApB?LKbJI~GKnCALOfF?zBDz@XbDApAGt@E^{@zFg@nDYnCGdA?LCv@DnKEhBGtAAb@_@rMAbC@\\LtBDd@LjBFzAA~@E`DKvCKbCCnAAb@?P?L?NAV?r@?N@LB`BRbD@V^tCVbBTnAJt@F~@L`FLnAXnDBdAAjA?NGdGMzE?NAXKhCCjBB~AJz@Hp@v@`EJb@R|@r@tDLt@F`@bArI@LlAtKTtBHnB?l@BpAErE?LAdABpB`@xGfAfM@LVtC~@lNXrFL|CF`E?L?L?NAfHAvCD`ELrB`@tFNfEBjANfHFnAJpAp@dFd@dFLxAb@bDv@lFX|Bx@hKXlDVxDd@jIFlANbBRnBXjDT|EDJRt@NTBPFv@@L@L@P|@fHHbBDhAH|AVxCl@zDFZPt@FTPl@bB`G|@~CTbAdBhHf@rBfAzER|@l@|CFd@H`@LlAHdAFhBFLCLDTJ@BD?JGNC@P`C@VXhCVnDJzAF~@BVF`AVvFBn@DhA@b@FrAFl@HB@D?HIHPbBHx@JvA@HNdBJJARABN|@LCHNf@MZKFAd@B^T`@l@f@fA`@nANj@Jd@^|AJj@p@nDLh@Z|ALj@DVTtAD^F^@JJxBB\\?f@Bp@FhCZAAfIDnDAhDAnB?f@?J@lA?dEChCCdAMxBE\\Kz@a@hDo@nECJY~BCnALlEVbED\\Jv@Hl@h@jEDr@@L@LLdBBnB?pBGrEChG@x@BlAh@xKNjCDjBD`BNnBLdAFRtAzH^nCPtAHp@Bn@x@pNHdA`@zGd@zGj@vGXfDn@rI@jAXbDr@vFRzAd@vD\\nDFvBApDArFH|FFpAJ|AFt@PnAb@rBV~@|@tCTj@x@~AzAbCz@pBt@rCVrBHbDG`CCh@IlCA^Av@CnAh@xJLjDFnC@lBIhBm@nEGjAElFMpA]fBi@xBQxAKzAC`B?d@LxF?l@A|FQnDCTSzBOjAIdAIv@u@xGMjBGfCB`Bn@~NFjD?\\CnBEv@ChA@vICxDA^UbGC|EAtD?~A?x@C|BM`FSfB]hBaAjEQx@K~@CbB?VLjDNbD?jAA\\[jEArCPbK@^XfI\\~GDrEBpBB~@^pGCr@LfCBt@?|@QnDKbB]dDM|BCrBDpB@XTfCh@fFApBK~GGrBO~GCx@QhCO`BgAxHi@hDI`AAp@JdARtAR|@V~@j@~AFR`@lALr@?f@Ib@QPWFSAICqAi@a@Ga@HYRa@x@g@xBaAzFS`Ac@~BQlAElADj@DTTl@h@z@^`@t@f@HLJZXzDLt@Nr@`AvCPdABj@FjCP~Bb@bDTbBJlAFzB?z@?HKlCSnBq@vEOjAG|AArB@v@`Bd@fATpAZv@`@bCtBrAz@n@X|@b@`BjADB|@Xf@PZD~AJTBj@VX\\Hr@"
+      },
+      "description": "B4507",
+      "viewport": {
+        "low": {
+          "latitude": 51.5776575,
+          "longitude": -1.5678436999999998
+        },
+        "high": {
+          "latitude": 51.606375199999995,
+          "longitude": -1.2469523999999998
+        }
+      },
+      "travelAdvisory": {},
+      "localizedValues": {
+        "distance": {
+          "text": "25.1 km"
+        },
+        "duration": {
+          "text": "32 mins"
+        },
+        "staticDuration": {
+          "text": "32 mins"
+        }
+      },
+      "routeLabels": [
+        "DEFAULT_ROUTE"
+      ],
+      "polylineDetails": {}
+    }
+  ],
+  "geocodingResults": {}
+}

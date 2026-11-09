@@ -66,8 +66,8 @@ class _FlutterMapPageState extends State<FlutterMapPage> {
         builder: (BuildContext context, _) {
           return FlutterMap(
             options: MapOptions(
-              initialCenter: MapPage.scasCentre,
-              initialZoom: 9,
+              initialCenter: MapPage.neocwCentre,
+              initialZoom: 10,
               onTap: (tapPosition, point) {
                 widget.contextMenuController.remove();
               },

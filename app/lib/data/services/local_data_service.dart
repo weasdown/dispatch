@@ -11,6 +11,7 @@ import '../../domain/models/person/patient.dart';
 import '../../domain/models/person/user.dart';
 import '../../domain/models/unit/unit.dart';
 import '../../domain/models/unit/unit_status.dart';
+import '../repositories/event/event_repository_local.dart';
 
 class LocalDataService {
   LocalDataService()
@@ -128,7 +129,7 @@ class LocalDataService {
 
   static final Patient _defaultPatient = Patient(name: 'Joe Bloggs');
 
-  static final User _defaultUser = const User(
+  static final User defaultUser = const User(
     name: 'Sophie Williamson',
     esr: 12353248763,
     // For demo purposes we use a local asset
@@ -265,7 +266,7 @@ class LocalDataService {
   Unit? getUnit(Unit unit) =>
       _units.where((dbUnit) => dbUnit == unit).firstOrNull;
 
-  User getUser() => _defaultUser;
+  User getUser() => defaultUser;
 
   final List<Unit> _units;
 
@@ -277,24 +278,17 @@ class LocalDataService {
     getUnit(_DefaultUnits.nd027)?.updateStatus(newStatus: UnitStatus.ab);
     getUnit(_DefaultUnits.nt431)?.updateStatus(newStatus: UnitStatus.ab);
     getUnit(_DefaultUnits.hm24)?.updateStatus(newStatus: UnitStatus.ab);
+    getUnit(_DefaultUnits.na136)?.updateStatus(newStatus: UnitStatus.vc);
 
     // Assign some units to events.
     getUnit(_DefaultUnits.na283)
         ?.assignToEvent(event: getEventByID('3129')!, status: UnitStatus.as);
     getUnit(_DefaultUnits.na402)
-        ?.assignToEvent(event: getEventByID('3126')!, status: UnitStatus.ls);
+        ?.assignToEvent(event: getEventByID('3126')!, status: UnitStatus.mo);
     getUnit(_DefaultUnits.nr154)
         ?.assignToEvent(event: getEventByID('3128')!, status: UnitStatus.as);
     getUnit(_DefaultUnits.na172)
         ?.assignToEvent(event: getEventByID('3130')!, status: UnitStatus.mo);
-  }
-}
-
-extension AddRemarks on Event {
-  void _addRemarks(Iterable<Remark> remarks) {
-    for (final remark in remarks) {
-      addRemark(remark);
-    }
   }
 }
 
@@ -304,12 +298,23 @@ DateTime _todayAtTime({required int hour, int? minute}) =>
 interface class _DefaultUnits {
   static Unit get na136 => Unit(
     callsign: 'NA136',
-    location: LatLng(51.607539604000266, -1.237806756282358),
+    location: LatLng(
+      51.599550017653954,
+      -1.3546660181648091,
+    ), // The Extraordinary Hare (PH), West Hendred
     personnel: _defaultCrewMembers.sublist(0, 2),
   )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800);
   static Unit get na402 => Unit(
     callsign: 'NA402',
-    location: LatLng(51.605, -1.238),
+    // location: LatLng(51.605, -1.238),
+    // location: LatLng(
+    //   51.6988309555196,
+    //   -1.2664745884997843,
+    // ), // A34 S by Abingdon North exit
+    location: LatLng(
+      51.68396126257906,
+      -1.4222362460016134,
+    ), // A420 westbound at Kingston Bagpuize
     personnel: _defaultCrewMembers.sublist(2, 4),
   )..updateShiftTimes(shiftStart: today0800, shiftEnd: today1800);
   static Unit get na283 => Unit(
@@ -324,7 +329,10 @@ interface class _DefaultUnits {
   )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000);
   static Unit get nf159 => Unit(
     callsign: 'NF159',
-    location: LatLng(51.62832936052779, -1.1854888181805424),
+    location: LatLng(
+      51.59163472547848,
+      -1.427988579419376,
+    ), // Smith's Wharf, Wantage
     vehicleType: VehicleType.communityFirstResponder,
     personnel: [_defaultCrewMembers[8]],
   )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2200);
@@ -342,7 +350,8 @@ interface class _DefaultUnits {
   )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000);
   static Unit get nt431 => Unit(
     callsign: 'NT431',
-    location: LatLng(51.397809576171085, -1.3230646597735394),
+    // location: LatLng(51.397809576171085, -1.3230646597735394), // Oxford City RC
+    location: LatLng(51.606581509132056, -1.2469909787825841), // Didcot base,
     vehicleType: VehicleType.rrv,
     personnel: [_defaultCrewMembers[12]],
   )..updateShiftTimes(shiftStart: today1000, shiftEnd: today2000);
@@ -385,28 +394,43 @@ interface class _DefaultEvents {
   );
 
   static Event get _greenwayC1 {
-    final User user = LocalDataService._defaultUser;
+    final User user = LocalDataService.defaultUser;
     return Event.withNOC(
         idNum: 3127,
+        // address: Address(
+        //   buildingNumber: '6',
+        //   street: 'The Greenway',
+        //   county: 'Oxfordshire',
+        // ),
+        // location: LatLng(51.59799446397092, -1.3537030950825775),
         address: Address(
-          buildingNumber: '6',
-          street: 'The Greenway',
+          buildingName: 'Mini Plant Oxford',
+          street: 'Roman Way',
+          district: 'Cowley',
           county: 'Oxfordshire',
         ),
-        location: LatLng(51.59799446397092, -1.3537030950825775),
+        location: LatLng(51.73230943930122, -1.1925436231918494),
         noc: Cat1NOC.c1ArrestPeriArrest(),
       )
-      .._addRemarks([
+      ..addPatient(LocalDataService._defaultPatient)
+      ..addRemarks([
         Remark(
           author: user,
           message: 'CPR was already in progress before the call was started.',
         ),
-        Remark(author: user, message: 'NA136 DP Didcot RC'),
-        Remark(author: user, message: 'NF159 DP Smith\'s Wharf, Wantage'),
-        Remark(author: user, message: 'ND027 DP Stokenchurch HEMS base'),
-        Remark(author: user, message: 'NT431 DP Oxford City RC'),
+        Remark(author: user, message: 'The patient is unconscious'),
+        Remark(
+          author: user,
+          message: 'The patient has absent/ineffective breathing',
+        ),
+        // Remark(
+        //   author: user,
+        //   message: 'NA136 DP Extraordinary Hare PH, West Hendred',
+        // ),
+        // Remark(author: user, message: 'NF159 DP Smith\'s Wharf, Wantage'),
+        // Remark(author: user, message: 'ND027 DP Stokenchurch HEMS base'),
+        // Remark(author: user, message: 'NT431 DP Didcot RC'),
       ])
-      ..addPatient(LocalDataService._defaultPatient)
     // // FIXME dispatch doesn't work here
     // ..dispatchUnit(DefaultUnits.nt431())
     ;

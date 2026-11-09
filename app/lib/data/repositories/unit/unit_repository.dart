@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
 import '../../../domain/models/unit/unit.dart';
@@ -13,32 +16,37 @@ abstract class UnitRepository {
     return log;
   }
 
-  /// Get a unit by its callsign.
-  Future<Result<Unit>> unitByCallsign(String callsign);
+  Future<Result<Unit?>> get selectedUnit async => Result.ok(_selectedUnit);
 
   Unit? _selectedUnit;
 
-  Future<Result<Unit?>> get selectedUnit async => Result.ok(_selectedUnit);
-
   Future<Result<void>> standdownUnit(Unit unit);
 
-  Future<Result<bool>> updateUnit(Unit newUnit) async {
-    _selectedUnit = newUnit;
-    return Result.ok(true);
-  }
+  /// Get a unit by its callsign.
+  Future<Result<Unit>> unitByCallsign(String callsign);
+
+  Map<String, List<LatLng>> unitRoutes();
+
+  Map<String, Duration> unitTravelTimes();
+
+  /// Triggers the unitUpdateStream to fire a [Unit] when the unit has been updated.
+  final StreamController<Unit> updatedUnitStreamController =
+      StreamController<Unit>.broadcast();
+
+  Future<Result<void>> updateUnit(String callsign, Unit newUnit);
 }
 
 final class UnitNotFoundException implements Exception {
-  const UnitNotFoundException({required this.unit, this.error});
+  const UnitNotFoundException({required this.callsign, this.error});
 
   final Error? error;
-  final Unit unit;
+  final String callsign;
 
   @override
   String toString() {
     final String optional = (error == null)
         ? ''
         : ', which caused the following error: ${error.toString()}';
-    return 'Unit ${unit.callsign} not found in unit repository$optional';
+    return 'Unit $callsign not found$optional';
   }
 }

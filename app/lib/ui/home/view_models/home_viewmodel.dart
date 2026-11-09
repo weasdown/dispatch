@@ -71,6 +71,7 @@ class HomeViewModel extends ChangeNotifier {
         case Error<List<Event>>():
           return eventsResult;
       }
+      _selectedEvent = _events.first;
 
       // Load units
       final unitsResult = await _unitRepository.allUnits;

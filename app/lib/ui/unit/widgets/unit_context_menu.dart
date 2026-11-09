@@ -1,10 +1,9 @@
-import 'package:dispatch/ui/map/view_models/map_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../domain/models/unit/unit.dart';
-import '../../../utils/result.dart';
+import '../../map/view_models/map_view_model.dart';
 
 final class UnitContextMenuRegion extends StatelessWidget {
   const UnitContextMenuRegion({
@@ -27,6 +26,7 @@ final class UnitContextMenuRegion extends StatelessWidget {
     UnitContextMenuButtonItem(
       label: 'Dispatch ${unit.callsign}',
       onPressed: () async {
+        // FIXME if no event was selected initially, then auto-C1 selected via purple banner, clicking Dispatch in the context menu is not triggering map marker update until dispatched for a second time.
         _log.info('Dispatching ${unit.callsign} via context menu');
         await _mapViewModel.dispatchUnit.execute(unit);
       },
@@ -221,21 +221,7 @@ final class UnitContextMenuRegion extends StatelessWidget {
       label: 'Standdown ${unit.callsign}',
       onPressed: () async {
         _log.info('Standing down ${unit.callsign} via context menu');
-        _mapViewModel.standdownUnit.execute(unit);
-
-        while (_mapViewModel.standdownUnit.running) {
-          _log.finer('Waiting for unitsViewModel.standdownUnit to finish');
-        }
-
-        final Result<void> result = _mapViewModel.standdownUnit.result!;
-        switch (result) {
-          case Ok<void>():
-            _log.info('Successfully stood down ${unit.callsign}');
-          case Error<void>():
-            _log.severe(
-              'Failed to stand down ${unit.callsign}: ${result.error}',
-            );
-        }
+        await _mapViewModel.standdownUnit.execute(unit);
       },
     ),
 

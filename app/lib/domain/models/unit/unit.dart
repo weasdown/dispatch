@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
@@ -11,7 +13,7 @@ import 'unit_status.dart';
 class Unit {
   Unit({
     required this.callsign,
-    required this.location,
+    required this._location,
     this._vehicleType = VehicleType.dca,
     required this._personnel,
   }) : assert(_personnel.isNotEmpty) {
@@ -37,14 +39,55 @@ class Unit {
     );
   }
 
+  /// Distance within which a location update will trigger the unit to auto-at scene.
+  static double get autoAtSceneThresholdMiles => 0.25;
+
+  void _autoAtScene() {
+    if (assignedEvent == null) {
+      throw NoAllocatedEventException(unit: this);
+    }
+    _log.fine(
+      'Auto-at scening $callsign for event ${assignedEvent!.idLastFour}',
+    );
+    updateStatus(
+      newStatus: UnitStatus.as,
+      event: assignedEvent!,
+      time: DateTime.now(),
+    );
+  }
+
+  /// Automatically set the unit's status as mobile ([UnitStatus.mo]) a short time after dispatch.
+  Timer _autoMobilise(Event event) {
+    _log.fine(
+      'Running _autoMobilise() for $callsign - will go mobile after ${autoMobiliseDuration.inSeconds} seconds',
+    );
+    final Timer autoMobiliseTimer = Timer(
+      autoMobiliseDuration,
+      () => updateStatus(newStatus: UnitStatus.mo, time: DateTime.now()),
+    );
+    // autoMobiliseTimer.cancel(); // Start cancelled so the timer can be triggered by the calling view model.
+    return autoMobiliseTimer;
+  }
+
+  /// This amount of time after being dispatched, the unit will go mobile ([UnitStatus.mo]).
+  ///
+  /// See [_autoMobilise] for implementation.
+  static final Duration autoMobiliseDuration = Duration(seconds: 5);
+
   AmbulanceStation? get base => _base;
   AmbulanceStation? _base;
 
   /// A unique identifier for this resource.
   final String callsign;
 
-  void dispatchToEvent({required Event event}) =>
-      assignToEvent(event: event, status: UnitStatus.dp);
+  Timer dispatchToEvent({required Event event}) {
+    assignToEvent(event: event, status: UnitStatus.dp);
+
+    // Automatically go mobile a short time after dispatch.
+    // Return the timer so it can be cancelled if necessary
+    // (e.g. if the unit is stood down or is manually set as mobile before the timer fires).
+    return _autoMobilise(event);
+  }
 
   DateTime? get endOfShift => shiftEnd;
 
@@ -57,7 +100,8 @@ class Unit {
   };
 
   /// The current latitude and longitude of this unit.
-  LatLng location;
+  LatLng get location => _location;
+  LatLng _location;
 
   Unit logon({
     required DateTime shiftStart,
@@ -130,6 +174,25 @@ class Unit {
 
   void updateBase(AmbulanceStation newBase) => _base = newBase;
 
+  void updateLocation({required LatLng newLocation}) {
+    _log.fine('Updating location for $callsign to ${newLocation.toString()}');
+    _location = newLocation;
+
+    // Check whether the new location is close to the unit's event.
+    // If so, mark the unit as at scene.
+    if (assignedEvent != null) {
+      final Distance distance = Distance();
+      final double distanceToEvent = distance.as(
+        LengthUnit.Mile,
+        assignedEvent!.location!,
+        newLocation,
+      );
+      if (distanceToEvent < autoAtSceneThresholdMiles) {
+        _autoAtScene();
+      }
+    }
+  }
+
   void updateShiftTimes({
     required DateTime shiftStart,
     required DateTime shiftEnd,
@@ -143,12 +206,23 @@ class Unit {
     );
   }
 
-  void updateStatus({required UnitStatus newStatus, DateTime? time}) {
+  void updateStatus({
+    required UnitStatus newStatus,
+    Event? event,
+    DateTime? time,
+  }) {
+    _log.fine('Updating status for $callsign to ${newStatus.name}');
     final DateTime newTime = time ?? DateTime.now();
+
+    if (event != null) {
+      _assignedEvent = event;
+    }
 
     _history.add(
       UnitHistoryEntry(unit: this, status: newStatus, time: newTime),
     );
+
+    _log.fine('New status for $callsign: ${status.name}');
   }
 
   // TODO add a separate unitType attribute, or make subclasses of Unit (and make Unit sealed), for storing type, e.g. OpsComm, as opposed to the vehicle they happen to be in.

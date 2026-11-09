@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
 import '../../../data/repositories/unit/unit_repository.dart';
+import '../../../data/services/local_data_service.dart';
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../ui/home/view_models/home_viewmodel.dart';
 import '../../../ui/map/widgets/event_map_marker.dart';
@@ -47,13 +52,74 @@ class MapViewModel extends ChangeNotifier {
     )..execute(context, contextMenuController);
   }
 
+  /// Triggers a refresh after a dispatch unit should have auto-mobilised.
+  Future<Result<Timer>> _autoMobiliseUnit(Unit unit) async {
+    _log.fine('In _autoMobiliseUnit');
+
+    final DateTime mobiliseTime = DateTime.now();
+    final Map<String, List<LatLng>> unitRoutes = _unitRepository.unitRoutes();
+
+    final Map<String, dynamic> travelTimes = _unitRepository.unitTravelTimes();
+    if (!travelTimes.keys.contains(unit.callsign)) {
+      _log.info('No travel time available for ${unit.callsign}');
+      return Result.ok(Timer(Duration(), () {}));
+    }
+
+    // Retrieve how long the unit will take to get to its destination.
+    final int totalTimeToDestination = _unitRepository
+        .unitTravelTimes()[unit.callsign]!
+        .inSeconds;
+
+    final Map<String, List<LatLng>> routes = _unitRepository.unitRoutes();
+    if (!routes.keys.contains(unit.callsign)) {
+      _log.info('No route data available for ${unit.callsign}');
+      return Result.ok(Timer(Duration(), () {}));
+    }
+
+    // Automatically update once the unit should have automatically gone mobile.
+    final Timer autoMobiliseTimer = Timer(
+      Unit.autoMobiliseDuration + Duration(milliseconds: 200),
+      // If unit route data is available, build a location update timer.
+      (unitRoutes.keys.contains(unit.callsign))
+          ? () {
+              _log.fine(
+                'Route data is available for ${unit.callsign} - building location update timer.',
+              );
+              // Every few seconds, move the unit closer to scene (if route data is available).
+              Timer.periodic(Duration(seconds: 4), (Timer t) {
+                _log.fine('Location update tick for ${unit.callsign}');
+
+                // Find how long into its journey the unit is, as a fraction.
+                // Then get the location that's that fraction along the unitRoutes() entry.
+                final List<LatLng> route = routes[unit.callsign]!;
+                final int elapsedTime = DateTime.now()
+                    .difference(mobiliseTime)
+                    .inSeconds;
+                final double completedFraction =
+                    elapsedTime / totalTimeToDestination;
+
+                _log.fine(
+                  'Number of route points for ${unit.callsign}: ${route.length}',
+                );
+
+                final int pointIndex = (route.length * completedFraction)
+                    .round();
+                final LatLng point = route[pointIndex];
+
+                unit.updateLocation(newLocation: point);
+                notifyListeners();
+              });
+            }
+          : () {},
+    );
+    return Result.ok(autoMobiliseTimer);
+  }
+
   List<Marker> _buildEventMarkers() {
     _eventMarkers = _events
         .map(
           (Event event) => EventMapMarker(
             event: event,
-            mapViewModel: this,
-            onSelectEvent: (Event newEvent) => selectEvent.execute(newEvent),
             homeViewModel: _homeViewModel,
           ).marker,
         )
@@ -80,27 +146,62 @@ class MapViewModel extends ChangeNotifier {
   Future<Result<void>> _dispatchUnit(Unit unit) async {
     try {
       if (_selectedEvent == null) {
-        _log.warning('Cannot dispatch ${unit.callsign} to null event');
-        return Result<void>.error(const NoSelectedEventException());
+        _log.fine('No _selectedEvent in MapViewModel - trying _homeViewModel');
+        _selectedEvent = _homeViewModel.selectedEvent;
+
+        if (_selectedEvent == null) {
+          _log.severe(
+            'Cannot dispatch ${unit.callsign} to null event and _homeViewModel does not have a selectedEvent either.',
+          );
+          return Result<void>.error(const NoSelectedEventException());
+        } else {
+          _log.fine(
+            'Got event ${_selectedEvent!.idLastFour} from _homeViewModel',
+          );
+        }
       }
 
       _log.fine(
         'Dispatching ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
       );
-      final result = await _eventRepository.dispatchUnit(unit);
-      switch (result) {
-        case Ok<void>():
+      final dispatchResult = await _eventRepository.dispatchUnit(unit);
+      switch (dispatchResult) {
+        case Ok<Timer>():
           _log.info(
             'Successfully dispatched ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
           );
 
-        case Error<void>():
+        case Error<Timer>():
           _log.severe(
-            'Failed to dispatch ${unit.callsign} to event ${_selectedEvent!.idLastFour}: ${result.error}',
+            'Failed to dispatch ${unit.callsign} to event ${_selectedEvent!.idLastFour}: ${dispatchResult.error}',
           );
       }
-      return result;
+
+      // Automatically mobilise the unit a short time after dispatch.
+      final Result<Timer> autoMobiliseResult = await _autoMobiliseUnit(unit);
+      switch (autoMobiliseResult) {
+        case Ok<Timer>():
+          _log.info(
+            'Successfully triggered auto-mobilising of ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
+          );
+
+        case Error<Timer>():
+          _log.severe(
+            'Failed to auto-mobilise ${unit.callsign} to event ${_selectedEvent!.idLastFour}: ${autoMobiliseResult.error}',
+          );
+          return autoMobiliseResult;
+      }
+
+      return dispatchResult;
     } finally {
+      _selectedEvent!.addRemark(
+        Remark(
+          author: LocalDataService.defaultUser,
+          message:
+              '${unit.callsign} DP ${unit.location.latitude}, ${unit.location.longitude}',
+        ),
+      );
+
       notifyListeners();
     }
   }
