@@ -128,7 +128,7 @@ class MapViewModel extends ChangeNotifier {
       switch (autoMobiliseResult) {
         case Ok<Timer>():
           _log.info(
-            'Successfully auto-mobilised ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
+            'Successfully triggered auto-mobilising of ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
           );
 
         case Error<Timer>():

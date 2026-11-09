@@ -56,7 +56,7 @@ final class UnitsViewModel extends ChangeNotifier {
     switch (autoMobiliseResult) {
       case Ok<Timer>():
         _log.info(
-          'Successfully auto-mobilised ${unit.callsign} to event ${event.idLastFour}',
+          'Successfully triggered auto-mobilising of ${unit.callsign} to event ${event.idLastFour}',
         );
 
       case Error<Timer>():
