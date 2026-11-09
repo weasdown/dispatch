@@ -284,3 +284,11 @@ class EventRepositoryLocal extends EventRepository {
     }
   }
 }
+
+extension AddRemarks on Event {
+  void addRemarks(Iterable<Remark> remarks) {
+    for (final remark in remarks) {
+      addRemark(remark);
+    }
+  }
+}

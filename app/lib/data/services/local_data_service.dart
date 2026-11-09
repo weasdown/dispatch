@@ -290,14 +290,6 @@ class LocalDataService {
   }
 }
 
-extension AddRemarks on Event {
-  void _addRemarks(Iterable<Remark> remarks) {
-    for (final remark in remarks) {
-      addRemark(remark);
-    }
-  }
-}
-
 DateTime _todayAtTime({required int hour, int? minute}) =>
     DateTime.now().copyWith(hour: hour, minute: minute ?? 0);
 

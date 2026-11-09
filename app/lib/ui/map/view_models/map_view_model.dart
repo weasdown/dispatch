@@ -6,7 +6,9 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../data/repositories/event/event_repository.dart';
 import '../../../data/repositories/unit/unit_repository.dart';
+import '../../../data/services/local_data_service.dart';
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/event/remark.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../ui/home/view_models/home_viewmodel.dart';
 import '../../../ui/map/widgets/event_map_marker.dart';
@@ -140,6 +142,14 @@ class MapViewModel extends ChangeNotifier {
 
       return dispatchResult;
     } finally {
+      _selectedEvent!.addRemark(
+        Remark(
+          author: LocalDataService.defaultUser,
+          message:
+              '${unit.callsign} DP ${unit.location.latitude}, ${unit.location.longitude}',
+        ),
+      );
+
       notifyListeners();
     }
   }
