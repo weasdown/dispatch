@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_map/flutter_map.dart';
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
@@ -46,6 +48,16 @@ class MapViewModel extends ChangeNotifier {
       _loadMarkers,
     )..execute(context, contextMenuController);
   }
+
+  /// Triggers a refresh after a dispatch unit should have auto-mobilised.
+  Future<Result<Timer>> _autoMobiliseUnit() async =>
+      // Automatically update once the unit should have automatically gone mobile.
+      Result.ok(
+        Timer(
+          Unit.autoMobiliseDuration + Duration(milliseconds: 200),
+          notifyListeners,
+        ),
+      );
 
   List<Marker> _buildEventMarkers() {
     _eventMarkers = _events
