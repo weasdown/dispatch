@@ -1,6 +1,11 @@
 import 'dart:math' show Random;
 
+import 'package:latlong2/latlong.dart';
+import 'package:logging/logging.dart';
+
+import '../../../data/services/api/maps/routes_api.dart';
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/location/route.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
@@ -8,7 +13,9 @@ import 'unit_repository.dart';
 
 /// Local implementation of UnitRepository
 class UnitRepositoryLocal extends UnitRepository {
-  UnitRepositoryLocal({required this._localDataService});
+  UnitRepositoryLocal({required this._localDataService}) {
+    UnitRepositoryLocal._getRoute();
+  }
 
   // Only create default unit once.
   bool _isInitialized = false;
@@ -19,8 +26,22 @@ class UnitRepositoryLocal extends UnitRepository {
   @override
   Future<Result<List<Unit>>> get allUnits => unitsList;
 
+  // FIXME remove this method - testing only.
+  static Future<Result<Route>> _getRoute() async {
+    _log.fine('Getting route');
+    final RoutesAPI routesAPI = GoogleMapsRoutesAPI();
+    final Result<Route> routeResult = await routesAPI.getRoute(
+      LatLng(51.606581509132056, -1.2469909787825841), // Didcot base
+      LatLng(51.57771040270499, -1.567853251019548), // White horse
+    );
+    _log.finer('routeResult: $routeResult');
+    return routeResult;
+  }
+
   Unit? _getUnitByCallsign(String callsign) =>
       _units.where((Unit unit) => unit.callsign == callsign).firstOrNull;
+
+  static Logger get _log => Logger('UnitRepositoryLocal')..level = Level.ALL;
 
   /// Gets a [Result.ok] holding a random unit from `_units`.
   @override
