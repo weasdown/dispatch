@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
-import '../../../../domain/models/location/route.dart';
 import '../../../../utils/result.dart';
 import '../env.dart';
 
@@ -87,12 +86,16 @@ final class GoogleMapsRoutesAPI implements RoutesAPI {
      */
     final String respBody = response.body;
     _log.fine('Response body: $respBody');
-    final Waypoints route = [];
+    // final Waypoints route = [];
 
     final GoogleMapsRouteResponse routeResponse =
         GoogleMapsRouteResponse.fromJson(
           routesJSON: json.decode(response.body),
         );
+
+    final String polyline =
+        routeResponse.routes.first.polyline!['encodedPolyline'] as String;
+    _log.fine('Polyline: "${polyline.replaceAll("\\\\", "\\")}"');
 
     return Result.ok(routeResponse);
   }
