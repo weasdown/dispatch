@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math' show Random;
 
 import 'package:latlong2/latlong.dart';
@@ -95,6 +97,39 @@ class UnitRepositoryLocal extends UnitRepository {
   }
 
   @override
+  Map<String, List<LatLng>> unitRoutes() {
+    // {
+    //   "NT431": {
+    //     "start": "Didcot RC",
+    //     "points": [...],
+    //   },
+    //   ...
+    // }
+    final File routesFile = File('lib/data/services/api/maps/unit_routes.json');
+    final Map<String, dynamic> routesJSON = json.decode(
+      routesFile.readAsStringSync(),
+    );
+
+    final Map<String, List<LatLng>> unitRoutes = routesJSON.map((
+      String callsign,
+      dynamic data,
+    ) {
+      final _UnitPointsData unitPointsData = _UnitPointsData.fromJson(
+        pointsDataJSON: data as Map<String, dynamic>,
+      );
+      final List<LatLng> pointsData = List<LatLng>.from(
+        unitPointsData.points.map(
+          (Map<String, double> pointEntry) =>
+              LatLng(pointEntry['lat']!, pointEntry['long']!),
+        ),
+      );
+      return MapEntry(callsign, pointsData);
+    });
+
+    return unitRoutes;
+  }
+
+  @override
   Future<Result<void>> updateUnit(String callsign, Unit newUnit) async {
     _log.finer('Updating unit $callsign');
     if (!_callsigns.contains(callsign)) {
@@ -108,4 +143,28 @@ class UnitRepositoryLocal extends UnitRepository {
     updatedUnitStreamController.sink.add(newUnit);
     return Result.ok(null);
   }
+}
+
+class _UnitPointsData {
+  _UnitPointsData({required this.start, required this.points});
+
+  final String start;
+  final List<Map<String, double>> points;
+
+  factory _UnitPointsData.fromJson({
+    required Map<String, dynamic> pointsDataJSON,
+  }) => switch (pointsDataJSON) {
+    {'start': String start, 'points': List<dynamic> points} => _UnitPointsData(
+      start: start,
+      points: List<Map<String, double>>.from(
+        points.map(
+          (dynamic point) =>
+              (point as Map<String, dynamic>).cast<String, double>(),
+        ),
+      ),
+    ),
+    _ => throw FormatException(
+      'Failed to load _UnitPointsData is a ${pointsDataJSON.runtimeType}, with ${pointsDataJSON['points']!.runtimeType} points.',
+    ),
+  };
 }

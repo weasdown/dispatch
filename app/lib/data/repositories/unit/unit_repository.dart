@@ -24,6 +24,8 @@ abstract class UnitRepository {
   /// Get a unit by its callsign.
   Future<Result<Unit>> unitByCallsign(String callsign);
 
+  Map<String, List<LatLng>> unitRoutes();
+
   /// Triggers the unitUpdateStream to fire a [Unit] when the unit has been updated.
   final StreamController<Unit> updatedUnitStreamController =
       StreamController<Unit>.broadcast();
