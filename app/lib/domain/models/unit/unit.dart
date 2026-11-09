@@ -169,12 +169,23 @@ class Unit {
     );
   }
 
-  void updateStatus({required UnitStatus newStatus, DateTime? time}) {
+  void updateStatus({
+    required UnitStatus newStatus,
+    Event? event,
+    DateTime? time,
+  }) {
+    _log.fine('Updating status for $callsign to ${newStatus.name}');
     final DateTime newTime = time ?? DateTime.now();
+
+    if (event != null) {
+      _assignedEvent = event;
+    }
 
     _history.add(
       UnitHistoryEntry(unit: this, status: newStatus, time: newTime),
     );
+
+    _log.fine('New status for $callsign: ${status.name}');
   }
 
   // TODO add a separate unitType attribute, or make subclasses of Unit (and make Unit sealed), for storing type, e.g. OpsComm, as opposed to the vehicle they happen to be in.
