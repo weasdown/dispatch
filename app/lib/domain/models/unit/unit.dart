@@ -13,7 +13,7 @@ import 'unit_status.dart';
 class Unit {
   Unit({
     required this.callsign,
-    required this.location,
+    required this._location,
     this._vehicleType = VehicleType.dca,
     required this._personnel,
   }) : assert(_personnel.isNotEmpty) {
@@ -83,7 +83,8 @@ class Unit {
   };
 
   /// The current latitude and longitude of this unit.
-  LatLng location;
+  LatLng get location => _location;
+  LatLng _location;
 
   Unit logon({
     required DateTime shiftStart,
@@ -155,6 +156,15 @@ class Unit {
   }
 
   void updateBase(AmbulanceStation newBase) => _base = newBase;
+
+  void updateLocation({required LatLng location, DateTime? time}) {
+    _log.fine('Updating location for $callsign to ${location.toString()}');
+    final DateTime newTime = time ?? DateTime.now();
+
+    _location = location;
+
+    _log.fine('New location for $callsign: ${this.location.toString()}');
+  }
 
   void updateShiftTimes({
     required DateTime shiftStart,

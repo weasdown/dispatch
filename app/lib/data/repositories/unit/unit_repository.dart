@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
 import '../../../domain/models/unit/unit.dart';
