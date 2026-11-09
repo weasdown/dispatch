@@ -92,13 +92,19 @@ class MapViewModel extends ChangeNotifier {
   Future<Result<void>> _dispatchUnit(Unit unit) async {
     try {
       if (_selectedEvent == null) {
+        _log.fine('No _selectedEvent in MapViewModel - trying _homeViewModel');
         _selectedEvent = _homeViewModel.selectedEvent;
+
         if (_selectedEvent == null) {
           _log.severe(
             'Cannot dispatch ${unit.callsign} to null event and _homeViewModel does not have a selectedEvent either.',
           );
+          return Result<void>.error(const NoSelectedEventException());
+        } else {
+          _log.fine(
+            'Got event ${_selectedEvent!.idLastFour} from _homeViewModel',
+          );
         }
-        return Result<void>.error(const NoSelectedEventException());
       }
 
       _log.fine(
