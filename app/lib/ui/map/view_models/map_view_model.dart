@@ -64,8 +64,6 @@ class MapViewModel extends ChangeNotifier {
         .map(
           (Event event) => EventMapMarker(
             event: event,
-            mapViewModel: this,
-            onSelectEvent: (Event newEvent) => selectEvent.execute(newEvent),
             homeViewModel: _homeViewModel,
           ).marker,
         )
