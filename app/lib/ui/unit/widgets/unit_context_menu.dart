@@ -27,6 +27,7 @@ final class UnitContextMenuRegion extends StatelessWidget {
     UnitContextMenuButtonItem(
       label: 'Dispatch ${unit.callsign}',
       onPressed: () async {
+        // FIXME if no event was selected initially, then auto-C1 selected via purple banner, clicking Dispatch in the context menu is not triggering map marker update until dispatched for a second time.
         _log.info('Dispatching ${unit.callsign} via context menu');
         await _mapViewModel.dispatchUnit.execute(unit);
       },
@@ -223,8 +224,9 @@ final class UnitContextMenuRegion extends StatelessWidget {
         _log.info('Standing down ${unit.callsign} via context menu');
         _mapViewModel.standdownUnit.execute(unit);
 
+        // FIXME causes hang that crashes the whole app
         while (_mapViewModel.standdownUnit.running) {
-          _log.finer('Waiting for unitsViewModel.standdownUnit to finish');
+          // _log.finer('Waiting for unitsViewModel.standdownUnit to finish');
         }
 
         final Result<void> result = _mapViewModel.standdownUnit.result!;
