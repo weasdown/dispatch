@@ -92,15 +92,22 @@ class MapViewModel extends ChangeNotifier {
   Future<Result<void>> _dispatchUnit(Unit unit) async {
     try {
       if (_selectedEvent == null) {
-        _log.warning('Cannot dispatch ${unit.callsign} to null event');
+        _selectedEvent = _homeViewModel.selectedEvent;
+        if (_selectedEvent == null) {
+          _log.severe(
+            'Cannot dispatch ${unit.callsign} to null event and _homeViewModel does not have a selectedEvent either.',
+          );
+        }
         return Result<void>.error(const NoSelectedEventException());
       }
 
       _log.fine(
         'Dispatching ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
       );
-      final result = await _eventRepository.dispatchUnit(unit);
-      switch (result) {
+      final Result<void> dispatchResult = await _eventRepository.dispatchUnit(
+        unit,
+      );
+      switch (dispatchResult) {
         case Ok<void>():
           _log.info(
             'Successfully dispatched ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
@@ -108,10 +115,25 @@ class MapViewModel extends ChangeNotifier {
 
         case Error<void>():
           _log.severe(
-            'Failed to dispatch ${unit.callsign} to event ${_selectedEvent!.idLastFour}: ${result.error}',
+            'Failed to dispatch ${unit.callsign} to event ${_selectedEvent!.idLastFour}: ${dispatchResult.error}',
           );
       }
-      return result;
+
+      final Result<Timer> autoMobiliseResult = await _autoMobiliseUnit();
+      switch (autoMobiliseResult) {
+        case Ok<Timer>():
+          _log.info(
+            'Successfully auto-mobilised ${unit.callsign} to event ${_selectedEvent!.idLastFour}',
+          );
+
+        case Error<Timer>():
+          _log.severe(
+            'Failed to auto-mobilise ${unit.callsign} to event ${_selectedEvent!.idLastFour}: ${autoMobiliseResult.error}',
+          );
+          return autoMobiliseResult;
+      }
+
+      return dispatchResult;
     } finally {
       notifyListeners();
     }
