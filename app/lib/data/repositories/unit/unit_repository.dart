@@ -13,14 +13,14 @@ abstract class UnitRepository {
     return log;
   }
 
-  /// Get a unit by its callsign.
-  Future<Result<Unit>> unitByCallsign(String callsign);
+  Future<Result<Unit?>> get selectedUnit async => Result.ok(_selectedUnit);
 
   Unit? _selectedUnit;
 
-  Future<Result<Unit?>> get selectedUnit async => Result.ok(_selectedUnit);
-
   Future<Result<void>> standdownUnit(Unit unit);
+
+  /// Get a unit by its callsign.
+  Future<Result<Unit>> unitByCallsign(String callsign);
 
   Future<Result<bool>> updateUnit(Unit newUnit) async {
     _selectedUnit = newUnit;
