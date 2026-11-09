@@ -39,6 +39,23 @@ class Unit {
     );
   }
 
+  /// Distance within which a location update will trigger the unit to auto-at scene.
+  static double get autoAtSceneThresholdMiles => 0.25;
+
+  void _autoAtScene() {
+    if (assignedEvent == null) {
+      throw NoAllocatedEventException(unit: this);
+    }
+    _log.fine(
+      'Auto-at scening $callsign for event ${assignedEvent!.idLastFour}',
+    );
+    updateStatus(
+      newStatus: UnitStatus.as,
+      event: assignedEvent!,
+      time: DateTime.now(),
+    );
+  }
+
   /// Automatically set the unit's status as mobile ([UnitStatus.mo]) a short time after dispatch.
   Timer _autoMobilise(Event event) {
     _log.fine(
@@ -157,13 +174,23 @@ class Unit {
 
   void updateBase(AmbulanceStation newBase) => _base = newBase;
 
-  void updateLocation({required LatLng location, DateTime? time}) {
-    _log.fine('Updating location for $callsign to ${location.toString()}');
-    final DateTime newTime = time ?? DateTime.now();
+  void updateLocation({required LatLng newLocation}) {
+    _log.fine('Updating location for $callsign to ${newLocation.toString()}');
+    _location = newLocation;
 
-    _location = location;
-
-    _log.fine('New location for $callsign: ${this.location.toString()}');
+    // Check whether the new location is close to the unit's event.
+    // If so, mark the unit as at scene.
+    if (assignedEvent != null) {
+      final Distance distance = Distance();
+      final double distanceToEvent = distance.as(
+        LengthUnit.Mile,
+        assignedEvent!.location!,
+        newLocation,
+      );
+      if (distanceToEvent < autoAtSceneThresholdMiles) {
+        _autoAtScene();
+      }
+    }
   }
 
   void updateShiftTimes({
