@@ -40,6 +40,11 @@ class MapPage extends StatefulWidget {
     -1.307710460160255,
   );
 
+  static const LatLng neocwCentre = LatLng(
+    51.672607328676335,
+    -1.2721970494807033,
+  );
+
   @override
   State<MapPage> createState() => _MapPageState();
 }
