@@ -5,7 +5,6 @@ import 'package:logging/logging.dart';
 
 import '../../../data/services/api/maps/routes_api.dart';
 import '../../../domain/models/event/event.dart';
-import '../../../domain/models/location/route.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../../utils/result.dart';
 import '../../services/local_data_service.dart';
@@ -14,7 +13,7 @@ import 'unit_repository.dart';
 /// Local implementation of UnitRepository
 class UnitRepositoryLocal extends UnitRepository {
   UnitRepositoryLocal({required this._localDataService}) {
-    UnitRepositoryLocal._getRoute();
+    // UnitRepositoryLocal._getRoute();
   }
 
   // Only create default unit once.
@@ -30,14 +29,22 @@ class UnitRepositoryLocal extends UnitRepository {
       _units.map((Unit unit) => unit.callsign).toList();
 
   // FIXME remove this method - testing only.
-  static Future<Result<Route>> _getRoute() async {
+  static Future<Result<GoogleMapsRouteResponse>> _getRoute() async {
     _log.fine('Getting route');
     final RoutesAPI routesAPI = GoogleMapsRoutesAPI();
-    final Result<Route> routeResult = await routesAPI.getRoute(
-      LatLng(51.606581509132056, -1.2469909787825841), // Didcot base
-      LatLng(51.57771040270499, -1.567853251019548), // White horse
-    );
-    _log.finer('routeResult: $routeResult');
+    final Result<GoogleMapsRouteResponse> routeResult = await routesAPI
+        .getRoute(
+          LatLng(51.606581509132056, -1.2469909787825841), // Didcot base
+          LatLng(51.57771040270499, -1.567853251019548), // White horse
+        );
+
+    switch (routeResult) {
+      case Ok<GoogleMapsRouteResponse>():
+        _log.finer('Parsed routeResult: ${routeResult.value}');
+      case Error<GoogleMapsRouteResponse>():
+        _log.warning('Failed to parse routeResult: ${routeResult.error}');
+    }
+
     return routeResult;
   }
 
