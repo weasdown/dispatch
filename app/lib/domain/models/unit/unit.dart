@@ -55,7 +55,7 @@ class Unit {
   /// This amount of time after being dispatched, the unit will go mobile ([UnitStatus.mo]).
   ///
   /// See [_autoMobilise] for implementation.
-  static final Duration autoMobiliseDuration = Duration(seconds: 2);
+  static final Duration autoMobiliseDuration = Duration(seconds: 10);
 
   AmbulanceStation? get base => _base;
   AmbulanceStation? _base;
