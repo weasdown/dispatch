@@ -15,7 +15,7 @@ import 'unit_repository.dart';
 /// Local implementation of UnitRepository
 class UnitRepositoryLocal extends UnitRepository {
   UnitRepositoryLocal({required this._localDataService}) {
-    UnitRepositoryLocal._getRoute();
+    // UnitRepositoryLocal._getRoute();
   }
 
   // Only create default unit once.
