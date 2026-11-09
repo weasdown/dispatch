@@ -157,14 +157,45 @@ class EventRepositoryLocal extends EventRepository {
     // addEvent(newC1);
     // newC1StreamController.sink.add(newC1);
 
-    final Event newEvent = Event.preAlert(
-      idNum: nextIDNum,
-      address: Address(county: 'Oxfordshire'),
-      location: LatLng(51.57770580851515, -1.5679285114893033),
-    );
+    final Event newEvent =
+        Event.preAlert(
+          idNum: nextIDNum,
+          address: Address(county: 'Oxfordshire'),
+          location: LatLng(51.57770580851515, -1.5679285114893033),
+        )..addRemarks([
+          Remark(
+            author: LocalDataService.defaultUser,
+            message: 'CPR was already in progress before the call was started.',
+          ),
+          Remark(
+            author: LocalDataService.defaultUser,
+            message: 'The patient is unconscious',
+          ),
+          Remark(
+            author: LocalDataService.defaultUser,
+            message: 'The patient has absent/ineffective breathing',
+          ),
+          // Remark(
+          //   author: user,
+          //   message: 'NA136 DP Extraordinary Hare PH, West Hendred',
+          // ),
+          // Remark(
+          //   author: LocalDataService.defaultUser,
+          //   message: 'NF159 DP Smith\'s Wharf, Wantage',
+          // ),
+          // Remark(
+          //   author: LocalDataService.defaultUser,
+          //   message: 'ND027 DP Stokenchurch HEMS base',
+          // ),
+          // Remark(
+          //   author: LocalDataService.defaultUser,
+          //   message: 'NT431 DP Didcot RC',
+          // ),
+        ]);
 
     addEvent(newEvent);
 
+    // Automatically upgrade the pre-alert to a C1.
     Timer(Duration(seconds: 5), () {
       final Cat1NOC arrest = Cat1NOC.c1ArrestPeriArrest();
       _log.fine('Automatically setting C1 NOC ${arrest.description}');
