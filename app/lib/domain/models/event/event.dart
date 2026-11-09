@@ -72,7 +72,7 @@ class Event {
         location: location,
         patients: patients,
       ),
-    _ => throw const FormatException('Failed to load album.'),
+    _ => throw const FormatException('Failed to load Event.'),
   };
 
   factory Event.withNOC({

@@ -179,7 +179,7 @@ final class Route {
             duration: duration,
             polyline: polyline,
           ),
-        _ => throw const FormatException('Failed to load album.'),
+        _ => throw const FormatException('Failed to load Route.'),
       };
 
   final int? distanceMeters;
