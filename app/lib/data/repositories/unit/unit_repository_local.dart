@@ -129,6 +129,16 @@ class UnitRepositoryLocal extends UnitRepository {
     return unitRoutes;
   }
 
+  /// Mapping of unit callsigns to how long the unit will take to arrive.
+  @override
+  Map<String, Duration> unitTravelTimes() => {
+    'NF159': Duration(minutes: 5),
+    'NA136': Duration(minutes: 12),
+    'NA402': Duration(minutes: 18),
+    'NT431': Duration(minutes: 20),
+    '0024': Duration(minutes: 22),
+  };
+
   @override
   Future<Result<void>> updateUnit(String callsign, Unit newUnit) async {
     _log.finer('Updating unit $callsign');

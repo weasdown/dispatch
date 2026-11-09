@@ -26,6 +26,8 @@ abstract class UnitRepository {
 
   Map<String, List<LatLng>> unitRoutes();
 
+  Map<String, Duration> unitTravelTimes();
+
   /// Triggers the unitUpdateStream to fire a [Unit] when the unit has been updated.
   final StreamController<Unit> updatedUnitStreamController =
       StreamController<Unit>.broadcast();
