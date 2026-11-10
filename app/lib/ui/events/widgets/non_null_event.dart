@@ -2,8 +2,11 @@ import 'package:gap/gap.dart';
 import 'package:logging/logging.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../data/services/local_data_service.dart';
 import '../../../domain/models/event/event.dart';
+import '../../../domain/models/unit/unit.dart';
 import '../../home/view_models/home_viewmodel.dart';
+import '../../unit/unit_status_colour.dart';
 import '../view_models/single_event_screen_viewmodel.dart';
 import 'patient_details.dart';
 import 'remarks_log.dart';
@@ -41,10 +44,21 @@ class NonNullEvent extends StatelessWidget {
             const Gap(30),
             _Location(event: event),
             const Gap(30),
-            _Buttons(event: event),
-            const Gap(50),
-            const Divider(),
-            const Gap(8),
+            LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) =>
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _Buttons(event: event),
+                      SizedBox(width: constraints.maxWidth / 3),
+                      _AllocatedUnitsTable(units: event.assignedUnits),
+                    ],
+                  ),
+            ),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(vertical: 8),
+              child: const Divider(),
+            ),
             PatientDetails(
               eventMode: eventMode,
               patientControllers: patientControllers,
@@ -125,6 +139,62 @@ class _Overview extends StatelessWidget {
               ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AllocatedUnitsTable extends StatelessWidget {
+  const _AllocatedUnitsTable({required this.units});
+
+  final List<Unit> units;
+
+  final double _horizontalPadding = 12.0;
+  final double _verticalPadding = 8.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle headingsStyle = Theme.of(context).textTheme.bodyLarge!
+        .copyWith(fontWeight: FontWeight.bold);
+
+    // Sort the units into ascending order by unit status.
+    units.sort((a, b) => a.status.compareTo(b.status));
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        _horizontalPadding,
+        _verticalPadding,
+        _horizontalPadding,
+        _verticalPadding,
+      ),
+      child: Table(
+        columnWidths: <int, TableColumnWidth>{
+          0: FixedColumnWidth(60),
+          1: FixedColumnWidth(60),
+        },
+        children: [
+          // Header row
+          TableRow(
+            children: [
+              Text('Unit', style: headingsStyle),
+              Text('Status', style: headingsStyle),
+            ],
+          ),
+          // For each unit, built a TableRow showing the unit's callsign and status.
+          // The unit's row is colour-coded to match the unit's status.
+          ...units.map((Unit unit) {
+            final TextStyle unitStyle = TextStyle(
+              color: unit.status.backgroundColour,
+              fontWeight: FontWeight.w500,
+            );
+            return TableRow(
+              children: [
+                Text(unit.callsign, style: unitStyle),
+                Text(unit.status.abbreviation, style: unitStyle),
+              ],
+            );
+          }),
         ],
       ),
     );
