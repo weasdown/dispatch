@@ -211,7 +211,6 @@ class Unit {
     Event? event,
     DateTime? time,
   }) {
-    _log.fine('Updating status for $callsign to ${newStatus.name}');
     final DateTime newTime = time ?? DateTime.now();
 
     if (event != null) {
@@ -221,8 +220,7 @@ class Unit {
     _history.add(
       UnitHistoryEntry(unit: this, status: newStatus, time: newTime),
     );
-
-    _log.fine('New status for $callsign: ${status.name}');
+    _log.fine('Updated status for $callsign to ${newStatus.name}');
   }
 
   // TODO add a separate unitType attribute, or make subclasses of Unit (and make Unit sealed), for storing type, e.g. OpsComm, as opposed to the vehicle they happen to be in.
