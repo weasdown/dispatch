@@ -5,8 +5,8 @@ import 'package:material_ui/material_ui.dart';
 import '../../../domain/models/unit/unit.dart';
 import '../../map/view_models/map_view_model.dart';
 
-final class UnitContextMenuRegion extends StatelessWidget {
-  const UnitContextMenuRegion({
+final class UnitContextMenu extends StatelessWidget {
+  const UnitContextMenu({
     super.key,
     required this.unit,
     required this.controller,
@@ -483,7 +483,7 @@ class _ContextMenuRegionState extends State<ContextMenuRegion> {
 }
 
 // TODO refactor context menu to base it on MenuItemButton/Menu Entry to allow sub-options - see example: https://api.flutter.dev/flutter/material/MenuItemButton-class.html#material.MenuBar.1
-/// Each of the items that appears in a unit context menu ([UnitContextMenuRegion]) is a [UnitContextMenuButtonItem].
+/// Each of the items that appears in a unit context menu ([UnitContextMenu]) is a [UnitContextMenuButtonItem].
 final class UnitContextMenuButtonItem extends ContextMenuButtonItem {
   UnitContextMenuButtonItem({
     required void Function() onPressed,

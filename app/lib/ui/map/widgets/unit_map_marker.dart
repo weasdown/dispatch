@@ -53,7 +53,7 @@ final class UnitMapMarker {
 
   Widget _body(BuildContext context) => ListenableBuilder(
     listenable: _mapViewModel,
-    builder: (BuildContext context, Widget? child) => UnitContextMenuRegion(
+    builder: (BuildContext context, Widget? child) => UnitContextMenu(
       unit: _unit,
       controller: contextMenuController,
       mapViewModel: _mapViewModel,
