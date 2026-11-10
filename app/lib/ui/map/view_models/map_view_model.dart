@@ -202,7 +202,19 @@ class MapViewModel extends ChangeNotifier {
         ),
       );
 
+      // Notify listeners to the MapViewModel.
       notifyListeners();
+
+      // Also notify listeners to the HomeViewModel as this will trigger a
+      // rebuild of the SingleEventScreen to show updated unit statuses.
+      _homeViewModel.triggerRefresh.execute();
+
+      // FIXME don't rely on auto-mobilise *duration* - notifyListeners based on the actual change of status instead.
+      // Rebuild again after the unit has auto-mobilised.
+      Timer(
+        Unit.autoMobiliseDuration,
+        () => _homeViewModel.triggerRefresh.execute(),
+      );
     }
   }
 

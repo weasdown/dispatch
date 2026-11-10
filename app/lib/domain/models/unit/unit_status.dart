@@ -81,6 +81,14 @@ enum UnitStatus implements Comparable<UnitStatus> {
     return sorted.indexOf(this).compareTo(sorted.indexOf(other));
   }
 
+  /// True if dispatched or mobile, otherwise false.
+  bool get isEnRoute => switch (this) {
+    UnitStatus.dp || UnitStatus.mo => true,
+    _ => false,
+  };
+
+  /// True if at scene, request transport, with patient, left scene, at hospital
+  /// or handover, otherwise false.
   bool get isPatientCommitted => switch (this) {
     UnitStatus.as ||
     UnitStatus.rt ||

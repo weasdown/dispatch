@@ -395,71 +395,80 @@ class _SingleEventScreenState extends State<SingleEventScreen> {
           _log.warning('Null event');
         }
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              _event != null ? 'Event ${_event!.idLastFour}' : 'Event',
-            ),
-            elevation: 8,
-            automaticallyImplyLeading: false,
-            actions: [
-              // Include the _AcceptEventButton if in EventMode.create/update
-              ...?(_eventMode.isEditable)
-                  ? [
-                      _AcceptEventButton(
-                        eventControllers: _eventControllers,
-                        patientControllers: _patientControllers,
-                        eventModified: widget.viewModel.eventEdited,
-                        onPressed: onAcceptEvent,
-                        onUpdateEvent: onUpdateEvent,
-                        onUpdatePatient: onUpdatePatient,
-                        viewModel: widget.viewModel,
-                      ),
-                    ]
-                  : null,
-              RadioGroup<EventMode>(
-                groupValue: _eventMode,
-                onChanged: (EventMode? mode) => onEventModeUpdate(mode!),
-                child: Row(
-                  children: [
-                    // Select button
-                    EventModeButton(
-                      label: 'Select',
-                      value: EventMode.select,
-                      onEventModeUpdate: (EventMode? mode) =>
-                          onEventModeUpdate(mode!),
-                    ),
+        return ListenableBuilder(
+          listenable: widget.homeViewModel,
+          builder: (BuildContext context, Widget? child) {
+            _event = widget.homeViewModel.selectedEvent;
+            _log.fine(
+              'Building _SingleEventScreenState for ${(_event?.idLastFour != null) ? 'event ${_event!.idLastFour}' : 'null event'}',
+            );
 
-                    // Create button
-                    EventModeButton(
-                      label: 'Create',
-                      value: EventMode.create,
-                      onEventModeUpdate: (EventMode? mode) =>
-                          onEventModeUpdate(mode!),
-                    ),
-
-                    // Update button
-                    EventModeButton(
-                      label: 'Update',
-                      value: EventMode.update,
-                      onEventModeUpdate: (EventMode? mode) =>
-                          onEventModeUpdate(mode!),
-                      colourOnSelected: Colors.red,
-                    ),
-                  ],
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(
+                  _event != null ? 'Event ${_event!.idLastFour}' : 'Event',
                 ),
+                elevation: 8,
+                automaticallyImplyLeading: false,
+                actions: [
+                  // Include the _AcceptEventButton if in EventMode.create/update
+                  ...?(_eventMode.isEditable)
+                      ? [
+                          _AcceptEventButton(
+                            eventControllers: _eventControllers,
+                            patientControllers: _patientControllers,
+                            eventModified: widget.viewModel.eventEdited,
+                            onPressed: onAcceptEvent,
+                            onUpdateEvent: onUpdateEvent,
+                            onUpdatePatient: onUpdatePatient,
+                            viewModel: widget.viewModel,
+                          ),
+                        ]
+                      : null,
+                  RadioGroup<EventMode>(
+                    groupValue: _eventMode,
+                    onChanged: (EventMode? mode) => onEventModeUpdate(mode!),
+                    child: Row(
+                      children: [
+                        // Select button
+                        EventModeButton(
+                          label: 'Select',
+                          value: EventMode.select,
+                          onEventModeUpdate: (EventMode? mode) =>
+                              onEventModeUpdate(mode!),
+                        ),
+
+                        // Create button
+                        EventModeButton(
+                          label: 'Create',
+                          value: EventMode.create,
+                          onEventModeUpdate: (EventMode? mode) =>
+                              onEventModeUpdate(mode!),
+                        ),
+
+                        // Update button
+                        EventModeButton(
+                          label: 'Update',
+                          value: EventMode.update,
+                          onEventModeUpdate: (EventMode? mode) =>
+                              onEventModeUpdate(mode!),
+                          colourOnSelected: Colors.red,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          body: (_event == null)
-              ? NullEvent(event: _event, log: _log)
-              : NonNullEvent(
-                  event: _event!,
-                  viewModel: widget.viewModel,
-                  homeViewModel: widget.homeViewModel,
-                  eventMode: _eventMode,
-                  patientControllers: _patientControllers,
-                ),
+              body: (_event == null)
+                  ? NullEvent(event: _event, log: _log)
+                  : NonNullEvent(
+                      viewModel: widget.viewModel,
+                      homeViewModel: widget.homeViewModel,
+                      eventMode: _eventMode,
+                      patientControllers: _patientControllers,
+                    ),
+            );
+          },
         );
       },
     );
