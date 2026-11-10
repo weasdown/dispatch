@@ -26,6 +26,8 @@ class HomeViewModel extends ChangeNotifier {
     setNOC = Command2<void, EventID, NOC>(_setNOC);
     getUpdatedEvent = Command1<Event, EventID>(_getUpdatedEvent);
 
+    triggerRefresh = Command0<void>(_triggerRefresh);
+
     load = Command0(_load)..execute();
   }
 
@@ -108,6 +110,9 @@ class HomeViewModel extends ChangeNotifier {
   Stream<Event> get newC1L1Stream => _eventRepository.newC1Stream;
 
   Stream<Event> get newEventStream => _eventRepository.newEventStream;
+
+  late final Command0<void> triggerRefresh;
+  Future<Result<void>> _triggerRefresh() async => Result.ok(notifyListeners());
 
   /// `_onNewEvent` triggers any listeners to rebuild when a new event is received from the [EventRepository].
   ///
