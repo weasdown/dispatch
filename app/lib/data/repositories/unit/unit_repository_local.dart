@@ -31,6 +31,7 @@ class UnitRepositoryLocal extends UnitRepository {
       _units.map((Unit unit) => unit.callsign).toList();
 
   // FIXME remove this method - testing only.
+  // ignore: unused_element
   static Future<Result<GoogleMapsRouteResponse>> _getRoute() async {
     _log.fine('Getting route');
     final RoutesAPI routesAPI = GoogleMapsRoutesAPI();

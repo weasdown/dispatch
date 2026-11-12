@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
+import '../../../../domain/models/location/waypoints.dart';
 import '../../../../utils/result.dart';
 import '../env.dart';
 
@@ -19,6 +20,60 @@ sealed class RoutesAPI {
 /// Implements the [Google Maps Routes API](https://developers.google.com/maps/documentation/routes).
 final class GoogleMapsRoutesAPI implements RoutesAPI {
   String get apiKey => Environment.googleMapsApiKey;
+
+  /// Decodes an enhancedPolyline (e.g. <code>_p~iF~ps|U_ulLnnqC_mqNvxq`@</code>) into a list of lat-long points.
+  ///
+  /// Based on https://gist.github.com/debkanchan/b428e052279b7124b8edb974536f47f9
+  Waypoints decodePolyline(String polyline) {
+    ArgumentError decodeFailed(dynamic e) => ArgumentError.value(
+      polyline,
+      'polyline',
+      'Failed to decode value "$polyline" given for enhancedPolyline due to the error below. '
+          'Please check this is a valid enhancedPolyline using the format documentation at https://developers.google.com/maps/documentation/utilities/polylinealgorithm.'
+          '\n$e',
+    );
+    try {
+      final List<int> codeUnits = polyline.codeUnits;
+      final List lList = [];
+      int index = 0;
+      int c = 0;
+      final Waypoints positions = [];
+      // Repeating until all attributes are decoded
+      do {
+        int shift = 0;
+        int result = 0;
+
+        // For decoding value of one attribute
+        do {
+          c = codeUnits[index] - 63;
+          result |= (c & 0x1F) << (shift * 5);
+          index++;
+          shift++;
+        } while (c >= 32);
+        // If value is negative then bitwise not the value
+        if (result & 1 == 1) {
+          result = ~result;
+        }
+        var result1 = (result >> 1) * 0.00001;
+        lList.add(result1);
+      } while (index < polyline.length);
+
+      // Adding to previous value as done in encoding
+      for (int i = 2; i < lList.length; i++) {
+        lList[i] += lList[i - 2];
+      }
+
+      for (int i = 0; i < lList.length; i += 2) {
+        positions.add(LatLng(lList[i], lList[i + 1]));
+      }
+
+      return positions;
+    } on RangeError catch (re) {
+      throw decodeFailed(re);
+    } on Exception catch (ex) {
+      throw decodeFailed(ex);
+    }
+  }
 
   /// Get a route from a start point to a destination.
   ///
@@ -97,6 +152,9 @@ final class GoogleMapsRoutesAPI implements RoutesAPI {
         routeResponse.routes.first.polyline!['encodedPolyline'] as String;
     _log.fine('Polyline: "${polyline.replaceAll("\\\\", "\\")}"');
 
+    final Waypoints points = decodePolyline(polyline);
+    _log.fine('Points: $points');
+
     return Result.ok(routeResponse);
   }
 
@@ -150,6 +208,10 @@ final class GoogleMapsRouteResponse {
   };
 
   final List<Route> routes;
+
+  @override
+  String toString() =>
+      'GoogleMapsRouteResponse with ${routes.length} route${routes.length != 1 ? 's' : ''}';
 }
 
 /// Example response:
@@ -188,4 +250,6 @@ final class Route {
   final int? distanceMeters;
   final String? duration;
   final Map<String, dynamic>? polyline;
+
+  Waypoints? get points => polyline?["encodedPolyline"];
 }
