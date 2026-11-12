@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="google_maps_routes.dart" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+    <option name="envs">
+      <entry key="GOOGLE_MAPS_API_KEY" value="AIzaSyBMjLCUz6wEqChD_g-I2pJe8bXAW_v8u4A" />
+    </option>
+    <option name="filePath" value="$PROJECT_DIR$/app/lib/data/services/api/maps/google_maps_routes.dart" />
+    <method v="2" />
+  </configuration>
+</component>
