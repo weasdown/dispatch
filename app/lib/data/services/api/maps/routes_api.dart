@@ -150,6 +150,10 @@ final class GoogleMapsRouteResponse {
   };
 
   final List<Route> routes;
+
+  @override
+  String toString() =>
+      'GoogleMapsRouteResponse with ${routes.length} route${routes.length != 1 ? 's' : ''}';
 }
 
 /// Example response:
