@@ -93,6 +93,7 @@ class _RemarksLogState extends State<RemarksLog> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Text box for new remarks
           Form(
             key: _formKey,
             child: Row(
@@ -122,6 +123,7 @@ class _RemarksLogState extends State<RemarksLog> {
             ),
           ),
           Gap(8),
+          // Table of current remarks
           Expanded(
             child: ListView(
               shrinkWrap: true,
