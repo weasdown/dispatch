@@ -34,14 +34,6 @@ class _RemarksLogState extends State<RemarksLog> {
 
   final _formKey = GlobalKey<FormState>();
 
-  Future<void> _submitRemark(BuildContext context) async {
-    if (_formKey.currentState!.validate()) {
-      await widget.viewModel.addRemark(context.read(), _textController.text);
-      _textController.clear();
-      setState(() {});
-    }
-  }
-
   // Text controller to retrieve current value of remark text box.
   final _textController = TextEditingController();
 
@@ -85,6 +77,14 @@ class _RemarksLogState extends State<RemarksLog> {
     }
   }
 
+  Future<void> _submitRemark(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      await widget.viewModel.addRemark(context.read(), _textController.text);
+      _textController.clear();
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting('en_GB', null);
@@ -113,6 +113,7 @@ class _RemarksLogState extends State<RemarksLog> {
                       }
                       return null;
                     },
+                    onFieldSubmitted: (_) => _submitRemark(context),
                   ),
                 ),
                 ElevatedButton(
