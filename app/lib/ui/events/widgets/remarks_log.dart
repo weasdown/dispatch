@@ -32,90 +32,12 @@ class _RemarksLogState extends State<RemarksLog> {
     ];
   }
 
-  final _formKey = GlobalKey<FormState>();
+  final FocusNode remarksTextboxFocusNode = FocusNode();
 
-  Future<void> _submitRemark(BuildContext context) async {
-    if (_formKey.currentState!.validate()) {
-      await widget.viewModel.addRemark(context.read(), _textController.text);
-      _textController.clear();
-      setState(() {});
-    }
-  }
+  final _formKey = GlobalKey<FormState>();
 
   // Text controller to retrieve current value of remark text box.
   final _textController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    initializeDateFormatting('en_GB', null);
-    final UnmodifiableListView<Remark> remarks = widget.event.remarks;
-    return Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Form(
-            key: _formKey,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  // TODO make remark submit on Enter pressed while field is focussed
-                  child: TextFormField(
-                    controller: _textController,
-                    autovalidateMode: AutovalidateMode.onUserInteractionIfError,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return '';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () => _submitRemark(context),
-                  child: Text('Submit'),
-                ),
-              ],
-            ),
-          ),
-          Gap(8),
-          Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                DataTable(
-                  columns: [
-                    DataColumn(
-                      label: Text('Name'),
-                      headingRowAlignment: MainAxisAlignment.start,
-                      columnWidth: FractionColumnWidth(0.2),
-                    ),
-                    DataColumn(
-                      label: Text('Time'),
-                      headingRowAlignment: MainAxisAlignment.start,
-                      columnWidth: FractionColumnWidth(0.2),
-                    ),
-                    DataColumn(
-                      label: Text('Remark'),
-                      headingRowAlignment: MainAxisAlignment.start,
-                      columnWidth: FractionColumnWidth(0.6),
-                    ),
-                  ],
-                  rows: remarks
-                      .map((Remark remark) => DataRow(cells: tableRow(remark)))
-                      .toList(),
-                  dividerThickness: 1,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   void didUpdateWidget(covariant RemarksLog oldWidget) {
@@ -155,5 +77,86 @@ class _RemarksLogState extends State<RemarksLog> {
         ),
       );
     }
+  }
+
+  Future<void> _submitRemark(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      await widget.viewModel.addRemark(context.read(), _textController.text);
+      _textController.clear();
+      setState(() {});
+    }
+    remarksTextboxFocusNode.requestFocus();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    initializeDateFormatting('en_GB', null);
+    final UnmodifiableListView<Remark> remarks = widget.event.remarks;
+    return Expanded(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Text box for new remarks
+          Form(
+            key: _formKey,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: _textController,
+                    autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '';
+                      }
+                      return null;
+                    },
+                    focusNode: remarksTextboxFocusNode,
+                    onFieldSubmitted: (_) => _submitRemark(context),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () => _submitRemark(context),
+                  child: Text('Submit'),
+                ),
+              ],
+            ),
+          ),
+          Gap(8),
+          // Table of current remarks
+          Expanded(
+            child: SingleChildScrollView(
+              child: DataTable(
+                columns: [
+                  DataColumn(
+                    label: Text('Name'),
+                    headingRowAlignment: MainAxisAlignment.start,
+                    columnWidth: FractionColumnWidth(0.2),
+                  ),
+                  DataColumn(
+                    label: Text('Time'),
+                    headingRowAlignment: MainAxisAlignment.start,
+                    columnWidth: FractionColumnWidth(0.2),
+                  ),
+                  DataColumn(
+                    label: Text('Remark'),
+                    headingRowAlignment: MainAxisAlignment.start,
+                    columnWidth: FractionColumnWidth(0.6),
+                  ),
+                ],
+                rows: remarks
+                    .map((Remark remark) => DataRow(cells: tableRow(remark)))
+                    .toList(),
+                dividerThickness: 1,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
