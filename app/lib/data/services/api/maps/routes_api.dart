@@ -112,7 +112,7 @@ final class GoogleMapsRoutesAPI implements RoutesAPI {
     });
 
     final http.Response response = await http.post(
-      root,
+      Uri.parse('${root}/directions/v2:computeRoutes'),
       headers: headers,
       body: body,
     );
@@ -161,8 +161,7 @@ final class GoogleMapsRoutesAPI implements RoutesAPI {
   Logger get _log => Logger('GoogleMapsRoutesAPI')..level = Level.ALL;
 
   @override
-  Uri get root =>
-      Uri.parse('https://routes.googleapis.com/directions/v2:computeRoutes');
+  Uri get root => Uri.parse('https://routes.googleapis.com');
 }
 
 extension QueryFields on LatLng {
