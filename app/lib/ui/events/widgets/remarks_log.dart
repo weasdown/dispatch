@@ -32,6 +32,8 @@ class _RemarksLogState extends State<RemarksLog> {
     ];
   }
 
+  final FocusNode remarksTextboxFocusNode = FocusNode();
+
   final _formKey = GlobalKey<FormState>();
 
   // Text controller to retrieve current value of remark text box.
@@ -83,6 +85,7 @@ class _RemarksLogState extends State<RemarksLog> {
       _textController.clear();
       setState(() {});
     }
+    remarksTextboxFocusNode.requestFocus();
   }
 
   @override
@@ -100,7 +103,6 @@ class _RemarksLogState extends State<RemarksLog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  // TODO make remark submit on Enter pressed while field is focussed
                   child: TextFormField(
                     controller: _textController,
                     autovalidateMode: AutovalidateMode.onUserInteractionIfError,
@@ -113,6 +115,7 @@ class _RemarksLogState extends State<RemarksLog> {
                       }
                       return null;
                     },
+                    focusNode: remarksTextboxFocusNode,
                     onFieldSubmitted: (_) => _submitRemark(context),
                   ),
                 ),
