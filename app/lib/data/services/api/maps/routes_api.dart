@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
+import '../../../../domain/models/location/waypoints.dart';
 import '../../../../utils/result.dart';
 import '../env.dart';
 
@@ -192,4 +193,6 @@ final class Route {
   final int? distanceMeters;
   final String? duration;
   final Map<String, dynamic>? polyline;
+
+  Waypoints? get points => polyline?["encodedPolyline"];
 }
