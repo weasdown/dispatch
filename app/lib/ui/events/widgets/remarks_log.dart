@@ -125,33 +125,30 @@ class _RemarksLogState extends State<RemarksLog> {
           Gap(8),
           // Table of current remarks
           Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                DataTable(
-                  columns: [
-                    DataColumn(
-                      label: Text('Name'),
-                      headingRowAlignment: MainAxisAlignment.start,
-                      columnWidth: FractionColumnWidth(0.2),
-                    ),
-                    DataColumn(
-                      label: Text('Time'),
-                      headingRowAlignment: MainAxisAlignment.start,
-                      columnWidth: FractionColumnWidth(0.2),
-                    ),
-                    DataColumn(
-                      label: Text('Remark'),
-                      headingRowAlignment: MainAxisAlignment.start,
-                      columnWidth: FractionColumnWidth(0.6),
-                    ),
-                  ],
-                  rows: remarks
-                      .map((Remark remark) => DataRow(cells: tableRow(remark)))
-                      .toList(),
-                  dividerThickness: 1,
-                ),
-              ],
+            child: SingleChildScrollView(
+              child: DataTable(
+                columns: [
+                  DataColumn(
+                    label: Text('Name'),
+                    headingRowAlignment: MainAxisAlignment.start,
+                    columnWidth: FractionColumnWidth(0.2),
+                  ),
+                  DataColumn(
+                    label: Text('Time'),
+                    headingRowAlignment: MainAxisAlignment.start,
+                    columnWidth: FractionColumnWidth(0.2),
+                  ),
+                  DataColumn(
+                    label: Text('Remark'),
+                    headingRowAlignment: MainAxisAlignment.start,
+                    columnWidth: FractionColumnWidth(0.6),
+                  ),
+                ],
+                rows: remarks
+                    .map((Remark remark) => DataRow(cells: tableRow(remark)))
+                    .toList(),
+                dividerThickness: 1,
+              ),
             ),
           ),
         ],
