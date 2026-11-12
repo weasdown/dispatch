@@ -46,6 +46,46 @@ class _RemarksLogState extends State<RemarksLog> {
   final _textController = TextEditingController();
 
   @override
+  void didUpdateWidget(covariant RemarksLog oldWidget) {
+    oldWidget.viewModel.refreshEvent.removeListener(_onResult);
+    widget.viewModel.refreshEvent.addListener(_onResult);
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    widget.viewModel.refreshEvent.removeListener(_onResult);
+    // Clean up the controller when the widget is disposed.
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.viewModel.refreshEvent.addListener(_onResult);
+  }
+
+  void _onResult() {
+    if (widget.viewModel.refreshEvent.completed) {
+      widget.viewModel.refreshEvent.clearResult();
+    }
+
+    if (widget.viewModel.refreshEvent.error) {
+      widget.viewModel.refreshEvent.clearResult();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error while setting event'),
+          action: SnackBarAction(
+            label: 'Try again',
+            onPressed: widget.viewModel.refreshEvent.execute,
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     initializeDateFormatting('en_GB', null);
     final UnmodifiableListView<Remark> remarks = widget.event.remarks;
@@ -115,45 +155,5 @@ class _RemarksLogState extends State<RemarksLog> {
         ],
       ),
     );
-  }
-
-  @override
-  void didUpdateWidget(covariant RemarksLog oldWidget) {
-    oldWidget.viewModel.refreshEvent.removeListener(_onResult);
-    widget.viewModel.refreshEvent.addListener(_onResult);
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    widget.viewModel.refreshEvent.removeListener(_onResult);
-    // Clean up the controller when the widget is disposed.
-    _textController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    widget.viewModel.refreshEvent.addListener(_onResult);
-  }
-
-  void _onResult() {
-    if (widget.viewModel.refreshEvent.completed) {
-      widget.viewModel.refreshEvent.clearResult();
-    }
-
-    if (widget.viewModel.refreshEvent.error) {
-      widget.viewModel.refreshEvent.clearResult();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error while setting event'),
-          action: SnackBarAction(
-            label: 'Try again',
-            onPressed: widget.viewModel.refreshEvent.execute,
-          ),
-        ),
-      );
-    }
   }
 }
