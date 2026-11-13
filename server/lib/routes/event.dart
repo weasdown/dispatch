@@ -40,6 +40,7 @@ class EventApi implements Api {
     return _currentIDNum;
   }
 
+  @override
   Router get router {
     final router = Router();
 
