@@ -21,11 +21,14 @@ class LoginRequest {
 class LoginResponse {
   const LoginResponse({
     /// The token to be used for authentication.
-    required String token,
+    required this.token,
 
     /// The user's unique ESR number'.
-    required int esr,
+    required this.esr,
   });
+
+  final int esr;
+  final String token;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) => switch (json) {
     {'token': String token, 'userId': int esr} => LoginResponse(
@@ -34,4 +37,6 @@ class LoginResponse {
     ),
     _ => throw const FormatException('Failed to parse login response.'),
   };
+
+  Map<String, dynamic> toJson() => {'token': token, 'esr': esr};
 }
