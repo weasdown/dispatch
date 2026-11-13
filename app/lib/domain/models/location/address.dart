@@ -1,3 +1,11 @@
+import 'package:json_annotation/json_annotation.dart';
+
+/// This allows the `Address` class to access private members in
+/// the generated file. The value for this is *.g.dart, where
+/// the star denotes the source file name.
+part 'address.g.dart';
+
+@JsonSerializable()
 final class Address {
   const Address({
     this.flatNumberOrName,
@@ -11,6 +19,12 @@ final class Address {
     this.country,
   }) : // Building cannot have a name and a number
        assert(!(buildingName != null && buildingNumber != null));
+
+  /// A necessary factory constructor for creating a new User instance
+  /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
+  /// The constructor is named after the source class, in this case, User.
+  factory Address.fromJson(Map<String, dynamic> json) =>
+      _$AddressFromJson(json);
 
   final String? flatNumberOrName;
 
@@ -40,6 +54,11 @@ final class Address {
     ].where((String? element) => element != null).cast<String>();
     return nonNullParts.isEmpty ? null : nonNullParts.join(', ');
   }
+
+  /// `toJson` is the convention for a class to declare support for serialization
+  /// to JSON. The implementation simply calls the private, generated
+  /// helper method `_$UserToJson`.
+  Map<String, dynamic> toJson() => _$AddressToJson(this);
 
   // TODO define toString() override method
 

@@ -31,6 +31,14 @@ interface class EventStatus implements Comparable<EventStatus> {
 
   Priority get priority => category?.priority ?? Priority.four;
 
+  Map<String, dynamic> toJson() => {
+    'status': {
+      'category': category,
+      'priority': priority,
+      'description': description,
+    },
+  };
+
   @override
   String toString() => description;
 }
@@ -71,7 +79,6 @@ abstract base class NOC extends EventStatus {
 
   static List<NOC> get cat4 => catFourNOCs;
 
-  String toJson() => toString();
 
   @override
   String toString() {

@@ -387,6 +387,8 @@ class EventID implements Comparable<EventID> {
 
   int get _numberPart => int.parse(toString().substring(1));
 
+  String toJson() => toString();
+
   @override
   String toString() {
     final DateTime now = DateTime.now();
