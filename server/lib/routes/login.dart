@@ -17,7 +17,15 @@ class LoginApi implements Api {
     final router = Router();
 
     router.post('/', (Request request) async {
+      log.info('In login / POST endpoint');
+
       final body = await request.readAsString();
+      if (body.isEmpty) {
+        return Response.badRequest(
+          body: 'Request body with credentials must be provided',
+          headers: Constants.contentTypeJSON,
+        );
+      }
       final loginRequest = LoginRequest.fromJson(json.decode(body));
 
       if (loginRequest.email == Constants.email &&
