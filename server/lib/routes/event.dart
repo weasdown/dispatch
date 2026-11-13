@@ -75,8 +75,18 @@ class EventApi implements Api {
     /// Save a new event.
     router.post('/', (Request request) async {
       final body = await request.readAsString();
-      final eventJSON = json.decode(body);
-      final event = Event.fromJson(eventJSON);
+
+      late final Map<String, dynamic>? eventJSON;
+      try {
+        eventJSON = json.decode(body);
+      } on FormatException catch (e) {
+        return Response.badRequest(
+          body: 'Invalid request body: $e',
+          headers: Constants.contentTypeJSON,
+        );
+      }
+
+      final event = Event.fromJson(eventJSON!, nextIDNum);
 
       // Store booking
       _events.add(event);

@@ -559,7 +559,8 @@ final class PatientControllers extends ChangeNotifier {
       return null;
     }
     final GPPractice? nullableGPPractice = GPPractice.tryParse(
-      gpPracticeString,
+      // gpPracticeString,
+      {}, // FIXME fix using of value from controller
     );
 
     // If the dobController had some text but it couldn't parse to a GPPractice, the user has entered an invalid value.
@@ -576,7 +577,10 @@ final class PatientControllers extends ChangeNotifier {
     if (addressString == "") {
       return null;
     }
-    final Address? nullableAddress = Address.tryParse(addressString);
+    final Address? nullableAddress = Address.tryParse(
+      // addressString
+      {}, // FIXME fix using of value from controller
+    );
 
     // If the dobController had some text but it couldn't parse to an Address, the user has entered an invalid value.
     if ((addressString != "") && (nullableAddress == null)) {

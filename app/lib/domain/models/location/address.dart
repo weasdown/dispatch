@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 /// the star denotes the source file name.
 part 'address.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 final class Address {
   const Address({
     this.flatNumberOrName,
@@ -26,23 +26,32 @@ final class Address {
   factory Address.fromJson(Map<String, dynamic> json) =>
       _$AddressFromJson(json);
 
+  @JsonKey(includeIfNull: false)
   final String? flatNumberOrName;
 
+  @JsonKey(includeIfNull: false)
   final String? buildingName;
 
   /// E.g. 25 or 42a.
+  @JsonKey(includeIfNull: false)
   final String? buildingNumber;
 
+  @JsonKey(includeIfNull: false)
   final String? street;
 
+  @JsonKey(includeIfNull: false)
   final String? district;
 
+  @JsonKey(includeIfNull: false)
   final String? townOrCity;
 
+  @JsonKey(includeIfNull: false)
   final String? county;
 
+  @JsonKey(includeIfNull: false)
   final String? postcode;
 
+  @JsonKey(includeIfNull: false)
   final String? country;
 
   String? get firstLine {
@@ -63,7 +72,7 @@ final class Address {
   // TODO define toString() override method
 
   // TODO implement Address.tryParse() static method
-  static Address? tryParse(String value) {
+  static Address? tryParse(Map<String, dynamic> value) {
     throw UnimplementedError(
       'Address.tryParse() static method is not yet implemented',
     );

@@ -57,23 +57,98 @@ class Event {
          patients: [],
        );
 
-  factory Event.fromJson(Map<String, dynamic> json) => switch (json) {
-    {
-      'idNum': int idNum,
-      'address': Address address,
-      'status': EventStatus status,
-      'location': LatLng location,
-      'patients': List<Patient> patients,
-    } =>
-      Event._(
-        id: EventID(id: idNum),
-        address: address,
-        status: status,
-        location: location,
-        patients: patients,
-      ),
-    _ => throw const FormatException('Failed to load Event.'),
-  };
+  factory Event.fromJson(Map<String, dynamic> json, int idNum) {
+    final addressJSON = json['address'];
+    final address = addressJSON == null ? null : Address.fromJson(addressJSON);
+
+    final statusJSON = json['status'];
+
+    final locationJSON = json['location'];
+    final location = LatLng.fromJson(locationJSON);
+
+    final patientsJSON = json['patients'] as List?;
+    final patients =
+        patientsJSON
+            ?.map((dynamic patient) => Patient.fromJson(patient))
+            .toList() ??
+        [];
+
+    if (statusJSON != null) {
+      EventStatus? eventStatus;
+      try {
+        eventStatus = EventStatus.fromJson(statusJSON);
+      } on FormatException catch (fe) {
+        throw ArgumentError.value(json, 'Invalid JSON for EventStatus: $fe');
+      }
+
+      final category = eventStatus.category;
+      final description = eventStatus.description;
+      late final NOC? noc;
+      if (category != null) {
+        final priority = eventStatus.priority;
+        if (category.priority != priority) {
+          throw ArgumentError.value(
+            priority,
+            'priority',
+            'Must be correct priority for Category $category',
+          );
+        }
+
+        // Get matching NOC
+        final List<NOC> nocsToSearch = switch (category) {
+          Category.one => NOC.cat1,
+          Category.two => NOC.cat2,
+          Category.three => NOC.cat3,
+          Category.four => NOC.cat4,
+          Category.five => [],
+        };
+
+        noc = nocsToSearch
+            .where((NOC noc) => noc.description == description)
+            .firstOrNull;
+      }
+
+      if (noc != null) {
+        return Event.withNOC(
+          idNum: idNum,
+          address: address!,
+          location: location,
+          noc: noc,
+        );
+      }
+    }
+
+    return Event._(
+      id: EventID(id: idNum),
+      address: address,
+      status: EventStatus.fromJson(statusJSON),
+      location: location,
+      // patients: [],
+      patients: patients,
+      // patients: patients?.cast<Patient>() ?? [],
+    );
+
+    // return switch (json) {
+    //   {
+    //     // 'address': Address? address,
+    //     'status': EventStatus status,
+    //     // 'location': LatLng? location,
+    //     'patients': List? patients,
+    //   } =>
+    //     Event._(
+    //       id: EventID(id: idNum),
+    //       // address: address,
+    //       address: Address(townOrCity: 'Somewhere'),
+    //       status: status,
+    //       // status: EventStatus.preAlert(),
+    //       location: null,
+    //       // location: location,
+    //       // patients: [],
+    //       patients: patients?.cast<Patient>() ?? [],
+    //     ),
+    //   _ => throw const FormatException('Failed to load Event.'),
+    // };
+  }
 
   factory Event.withNOC({
     required int idNum,
@@ -338,15 +413,24 @@ class Event {
   EventStatus get status => _status;
   EventStatus _status;
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'category': category?.toJson(),
-    'noc': noc,
-    'address': address,
-    'assignedUnits': List<String>.from(
-      assignedUnits.map((Unit assignedUnit) => assignedUnit.callsign),
-    ),
-  };
+  Map<String, dynamic> toJson() {
+    final output = {
+      'id': id,
+      'noc': noc,
+      'status': noc ?? status,
+      'location': location,
+      'address': address,
+      'assignedUnits': List<String>.from(
+        assignedUnits.map((Unit assignedUnit) => assignedUnit.callsign),
+      ),
+    };
+
+    if (category != null) {
+      output['category'] = category;
+    }
+
+    return output;
+  }
 
   @override
   String toString() => 'Event $id';

@@ -51,7 +51,7 @@ enum Priority implements Comparable<Priority> {
     }
   }
 
-  String toJson() => name;
+  int toJson() => number;
 
   @override
   String toString() => 'P$number';

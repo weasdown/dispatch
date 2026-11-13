@@ -41,6 +41,14 @@ final class Patient implements Person {
     );
   }
 
+  factory Patient.fromJson(Map<String, dynamic> json) => Patient(
+    name: json['name'],
+    age: int.tryParse(json['age']),
+    dateOfBirth: DateTime.tryParse(json['dateOfBirth']),
+    homeAddress: Address.tryParse(json['homeAddress']),
+    gpPractice: GPPractice.tryParse(json['gpPractice']),
+  );
+
   @override
   bool operator ==(Object other) =>
       (other is Patient) &&

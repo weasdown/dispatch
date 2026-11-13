@@ -19,13 +19,13 @@ Address _$AddressFromJson(Map<String, dynamic> json) => Address(
 );
 
 Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
-  'flatNumberOrName': instance.flatNumberOrName,
-  'buildingName': instance.buildingName,
-  'buildingNumber': instance.buildingNumber,
-  'street': instance.street,
-  'district': instance.district,
-  'townOrCity': instance.townOrCity,
-  'county': instance.county,
-  'postcode': instance.postcode,
-  'country': instance.country,
+  'flatNumberOrName': ?instance.flatNumberOrName,
+  'buildingName': ?instance.buildingName,
+  'buildingNumber': ?instance.buildingNumber,
+  'street': ?instance.street,
+  'district': ?instance.district,
+  'townOrCity': ?instance.townOrCity,
+  'county': ?instance.county,
+  'postcode': ?instance.postcode,
+  'country': ?instance.country,
 };

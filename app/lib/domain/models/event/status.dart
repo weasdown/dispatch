@@ -11,6 +11,18 @@ interface class EventStatus implements Comparable<EventStatus> {
 
   const EventStatus.preAlert() : category = null, description = _preAlert;
 
+  factory EventStatus.fromJson(Map<String, dynamic>? statusJSON) =>
+      statusJSON == null
+      ? EventStatus.preAlert()
+      : switch (statusJSON) {
+          {'category': int? category, 'description': String description} =>
+            EventStatus(
+              category: category != null ? Category.fromJson(category) : null,
+              description: description,
+            ),
+          _ => throw const FormatException('Failed to load EventStatus.'),
+        };
+
   @override
   bool operator ==(Object other) =>
       other is EventStatus &&
@@ -32,11 +44,9 @@ interface class EventStatus implements Comparable<EventStatus> {
   Priority get priority => category?.priority ?? Priority.four;
 
   Map<String, dynamic> toJson() => {
-    'status': {
-      'category': category,
-      'priority': priority,
-      'description': description,
-    },
+    'category': category,
+    'priority': priority,
+    'description': description,
   };
 
   @override
@@ -78,7 +88,6 @@ abstract base class NOC extends EventStatus {
   static List<NOC> get cat3 => catThreeNOCs;
 
   static List<NOC> get cat4 => catFourNOCs;
-
 
   @override
   String toString() {
