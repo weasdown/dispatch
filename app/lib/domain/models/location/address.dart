@@ -20,9 +20,9 @@ final class Address {
   }) : // Building cannot have a name and a number
        assert(!(buildingName != null && buildingNumber != null));
 
-  /// A necessary factory constructor for creating a new User instance
-  /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
-  /// The constructor is named after the source class, in this case, User.
+  /// A necessary factory constructor for creating a new Address instance
+  /// from a map. Pass the map to the generated `_$AddressFromJson()` constructor.
+  /// The constructor is named after the source class, in this case, Address.
   factory Address.fromJson(Map<String, dynamic> json) =>
       _$AddressFromJson(json);
 
