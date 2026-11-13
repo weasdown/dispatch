@@ -4,12 +4,11 @@
 
 import 'dart:io';
 
-// import 'package:dispatch_server/middleware/auth.dart';
-// import 'package:dispatch_server/routes/event.dart';
+// // import 'package:dispatch_server/middleware/auth.dart';
+// // import 'package:dispatch_server/routes/event.dart';
 import 'package:dispatch_server/routes/login.dart';
-import 'package:dispatch_server/web_socket_server.dart';
 import 'package:logging/logging.dart';
-// import 'package:dispatch_server/routes/unit.dart';
+// // import 'package:dispatch_server/routes/unit.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -25,7 +24,7 @@ void main(List<String> args) async {
   hierarchicalLoggingEnabled = true;
   Logger.root.level = Level.ALL; // TODO set this to a lower level
   Logger.root.onRecord.listen((record) {
-    print('[${record.loggerName}] [${record.level}] ${record.message}');
+    print('[${record.level}] ${record.message}');
   });
   final log = Logger.root;
 
@@ -43,7 +42,4 @@ void main(List<String> args) async {
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
   final server = await serve(handler, ip, port);
   log.info('Server listening on port ${server.port}');
-
-  WebSocketServer.run();
-  log.info('WebSocketServer started');
 }
