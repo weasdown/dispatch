@@ -32,7 +32,6 @@
       <excludeFolder url="file://$MODULE_DIR$/server/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/server/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/server/build" />
-      <excludeFolder url="file://$MODULE_DIR$/server/bin" />
       <excludeFolder url="file://$MODULE_DIR$/server/doc/api" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
