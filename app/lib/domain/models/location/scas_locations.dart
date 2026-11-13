@@ -12,9 +12,9 @@ sealed class SCASLocation {
 
   Marker get marker;
 
-  final String name;
-
   Color get markerColour;
+
+  final String name;
 }
 
 /// Where ambulances are based.
