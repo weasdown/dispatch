@@ -12,6 +12,15 @@ enum Category {
 
   const Category(this.number, this.priority);
 
+  factory Category.fromJson(int number) => switch (number) {
+    1 => Category.one,
+    2 => Category.two,
+    3 => Category.three,
+    4 => Category.four,
+    5 => Category.five,
+    _ => throw ArgumentError.value(number, 'Invalid Category number'),
+  };
+
   List<NOC> get nocs => switch (this) {
     Category.one => catOneNOCs,
     Category.two => catTwoNOCs,
@@ -24,7 +33,7 @@ enum Category {
 
   final Priority priority;
 
-  String toJson() => name;
+  int toJson() => number;
 
   @override
   String toString() => 'C$number';
