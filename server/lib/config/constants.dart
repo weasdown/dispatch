@@ -5,6 +5,10 @@
 import 'package:dispatch/domain/models/person/user.dart';
 
 abstract final class Constants {
+  static const Map<String, String> contentTypeJSON = {
+    'Content-Type': 'application/json',
+  };
+
   /// Email for the hardcoded login.
   static const email = 'email@example.com';
 
