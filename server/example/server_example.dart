@@ -1,6 +1,6 @@
-import 'package:server/server.dart';
+import 'package:dispatch_server/web_socket_server.dart';
 
 void main() {
-  WebSocketServer server = WebSocketServer.run();
+  final server = WebSocketServer.run();
   print(server);
 }

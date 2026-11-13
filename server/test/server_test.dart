@@ -1,4 +1,4 @@
-import 'package:server/server.dart';
+import 'package:dispatch_server/server.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -8,7 +8,7 @@ void main() {
     });
 
     test('First Test', () {
-      WebSocketServer server = WebSocketServer.run();
+      final server = WebSocketServer.run();
       print(server);
     });
   });
