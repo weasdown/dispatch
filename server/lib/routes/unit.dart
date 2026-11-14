@@ -26,16 +26,18 @@ class UnitApi implements Api {
       );
     });
 
-    // /// Get an unit by its callsign.
-    // router.get('/<id>', (Request request, String id) {
-    //   final unit = _units.where((unit) => unit.id.toString() == id).firstOrNull;
-    //
-    //   if (unit == null) {
-    //     return Response.notFound('Invalid ID');
-    //   }
-    //
-    //   return Response.ok(json.encode(unit), headers: Constants.contentTypeJSON);
-    // });
+    /// Get an unit by its callsign.
+    router.get('/<id>', (Request request, String callsign) {
+      final unit = _units
+          .where((unit) => unit.callsign.toString() == callsign)
+          .firstOrNull;
+
+      if (unit == null) {
+        return Response.notFound('Invalid callsign');
+      }
+
+      return Response.ok(json.encode(unit), headers: Constants.contentTypeJSON);
+    });
 
     // /// Save a new unit.
     // router.post('/', (Request request) async {
