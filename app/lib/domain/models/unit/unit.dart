@@ -1,22 +1,16 @@
 import 'dart:async';
 
-import 'package:json_annotation/json_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
 import '../event/event.dart';
+import '../location/latlng_extension.dart';
 import '../location/scas_locations.dart';
 import '../person/crew_member.dart';
 import 'meal_break_window.dart';
 import 'unit_status.dart';
 
-/// This allows the `Unit` class to access private members in
-/// the generated file. The value for this is *.g.dart, where
-/// the star denotes the source file name.
-part 'unit.g.dart';
-
 /// An ambulance vehicle, air ambulance or other resource.
-@JsonSerializable()
 class Unit {
   Unit({
     required this.callsign,
@@ -29,7 +23,14 @@ class Unit {
     );
   }
 
-  factory Unit.fromJson(Map<String, dynamic> json) => _$UnitFromJson(json);
+  factory Unit.fromJson(Map<String, dynamic> json) => Unit(
+    callsign: json['callsign'],
+    location: LatLngJson.fromJson(List<double>.from(json['location'])),
+    vehicleType: VehicleType.fromJson(json['vehicleType']),
+    personnel: [
+      CrewMember(name: 'Davy Jones', esr: 12345678),
+    ], // FIXME fix personnel parsing
+  );
 
   @override
   bool operator ==(Object other) =>
@@ -155,7 +156,7 @@ class Unit {
 
   Map<String, dynamic> toJson() => {
     'callsign': callsign,
-    'vehicleType': vehicleType.toString(),
+    'vehicleType': vehicleType.abbreviation,
     'location': [location.latitude, location.longitude],
   };
 
