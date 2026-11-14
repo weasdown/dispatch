@@ -86,15 +86,31 @@ class EventApi implements Api {
         );
       }
 
-      final event = Event.fromJson(eventJSON!, nextIDNum);
+      late final Event? event;
+      try {
+        event = Event.fromJson(eventJSON!, nextIDNum);
+      } on Exception catch (e) {
+        return Response.badRequest(
+          body: 'Invalid request body: $e',
+          headers: Constants.contentTypeJSON,
+        );
+      }
 
-      // Store booking
-      _events.add(event);
+      _events.add(event); // Store event
+
+      late final String? encodedEvent;
+      try {
+        encodedEvent = json.encode(event);
+      } on JsonUnsupportedObjectError catch (e) {
+        return Response.internalServerError(
+          body: 'Failed to encode built event for response: $e.',
+        );
+      }
 
       // Respond with newly created event
       return Response(
         201, // created
-        body: json.encode(event),
+        body: encodedEvent,
         headers: Constants.contentTypeJSON,
       );
     });

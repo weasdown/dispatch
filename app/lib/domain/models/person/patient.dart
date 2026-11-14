@@ -43,7 +43,7 @@ final class Patient implements Person {
 
   factory Patient.fromJson(Map<String, dynamic> json) => Patient(
     name: json['name'],
-    age: int.tryParse(json['age']),
+    age: json['age'],
     dateOfBirth: DateTime.tryParse(json['dateOfBirth']),
     homeAddress: Address.tryParse(json['homeAddress']),
     gpPractice: GPPractice.tryParse(json['gpPractice']),
@@ -83,6 +83,16 @@ final class Patient implements Person {
     log.level = Level.ALL;
     return log;
   }
+
+  Map<String, dynamic> toJson() => {
+    "name": name,
+    "age": age,
+    "dateOfBirth": dateOfBirth == null
+        ? null
+        : '${dateOfBirth!.year}-${dateOfBirth!.month}-${dateOfBirth!.day}',
+    "homeAddress": homeAddress,
+    "gpPractice": gpPractice?.toJson(),
+  };
 
   @override
   String toString() =>

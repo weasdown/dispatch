@@ -16,10 +16,23 @@ final class GPPractice {
 
   final String? phoneNumber;
 
-  // TODO implement GPPractice.tryParse() static method
-  static GPPractice? tryParse(Map<String, dynamic> value) {
-    throw UnimplementedError(
-      'GPPractice.tryParse() static method is not yet implemented',
+  Map<String, dynamic> toJson() => {
+    "name": name,
+    "address": address?.toJson(),
+    "gpName": gpName,
+    "phoneNumber": phoneNumber,
+  };
+
+  static GPPractice? tryParse(Map<String, dynamic>? value) {
+    if (value == null) {
+      return null;
+    }
+
+    return GPPractice(
+      name: value['name'],
+      address: Address.tryParse(value['address']),
+      gpName: value['gpName'],
+      phoneNumber: value['phoneNumber'],
     );
   }
 }

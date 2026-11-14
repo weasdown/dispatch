@@ -72,11 +72,8 @@ final class Address {
   // TODO define toString() override method
 
   // TODO implement Address.tryParse() static method
-  static Address? tryParse(Map<String, dynamic> value) {
-    throw UnimplementedError(
-      'Address.tryParse() static method is not yet implemented',
-    );
-  }
+  static Address? tryParse(Map<String, dynamic>? value) =>
+      (value == null) ? null : Address.fromJson(value);
 
   @override
   String toString() {

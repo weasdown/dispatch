@@ -123,31 +123,8 @@ class Event {
       address: address,
       status: EventStatus.fromJson(statusJSON),
       location: location,
-      // patients: [],
       patients: patients,
-      // patients: patients?.cast<Patient>() ?? [],
     );
-
-    // return switch (json) {
-    //   {
-    //     // 'address': Address? address,
-    //     'status': EventStatus status,
-    //     // 'location': LatLng? location,
-    //     'patients': List? patients,
-    //   } =>
-    //     Event._(
-    //       id: EventID(id: idNum),
-    //       // address: address,
-    //       address: Address(townOrCity: 'Somewhere'),
-    //       status: status,
-    //       // status: EventStatus.preAlert(),
-    //       location: null,
-    //       // location: location,
-    //       // patients: [],
-    //       patients: patients?.cast<Patient>() ?? [],
-    //     ),
-    //   _ => throw const FormatException('Failed to load Event.'),
-    // };
   }
 
   factory Event.withNOC({
@@ -423,6 +400,7 @@ class Event {
       'assignedUnits': List<String>.from(
         assignedUnits.map((Unit assignedUnit) => assignedUnit.callsign),
       ),
+      "patients": patients.map((Patient patient) => patient.toJson()).toList(),
     };
 
     if (category != null) {
