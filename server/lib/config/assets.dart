@@ -12,7 +12,7 @@ abstract final class Assets {
     File(Assets._events).readAsStringSync(),
   ) as List).map((event) => Event.fromJson(event, event['id'])).toList();
 
-  static final List<Unit> units = (json.decode(
-    File(Assets._units).readAsStringSync(),
-  ) as List).map((unit) => Unit.fromJson(unit)).toList();
+  static List<Unit> get units => List<Map<String, dynamic>>.from(
+    json.decode(File(Assets._units).readAsStringSync()),
+  ).map((unit) => Unit.fromJson(unit)).toList();
 }
