@@ -7,6 +7,9 @@ import 'person.dart';
 base class CrewMember implements Person {
   const CrewMember({required this.name, required this.esr});
 
+  factory CrewMember.fromJson(Map<String, dynamic> json) =>
+      CrewMember(name: json['name'], esr: json['esr']);
+
   /// An NHS-wide unique identifier specific to this person.
   final ESR esr;
 
