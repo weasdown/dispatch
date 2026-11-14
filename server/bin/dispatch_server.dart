@@ -8,8 +8,8 @@ import 'dart:io';
 // // import 'package:dispatch_server/routes/event.dart';
 import 'package:dispatch_server/routes/event.dart';
 import 'package:dispatch_server/routes/login.dart';
+import 'package:dispatch_server/routes/unit.dart';
 import 'package:logging/logging.dart';
-// // import 'package:dispatch_server/routes/unit.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -17,8 +17,7 @@ import 'package:shelf_router/shelf_router.dart';
 // Configure routes.
 final _router = Router()
   ..mount('/event', EventApi().router.call)
-  // ..mount('/unit', UnitApi().router.call)
-  // // TODO add other routes
+  ..mount('/unit', UnitApi().router.call)
   ..mount('/login', LoginApi().router.call);
 
 void main(List<String> args) async {
