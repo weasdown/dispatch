@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:json_annotation/json_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
@@ -9,7 +10,13 @@ import '../person/crew_member.dart';
 import 'meal_break_window.dart';
 import 'unit_status.dart';
 
+/// This allows the `Unit` class to access private members in
+/// the generated file. The value for this is *.g.dart, where
+/// the star denotes the source file name.
+part 'unit.g.dart';
+
 /// An ambulance vehicle, air ambulance or other resource.
+@JsonSerializable()
 class Unit {
   Unit({
     required this.callsign,
@@ -21,6 +28,8 @@ class Unit {
       UnitHistoryEntry(unit: this, status: UnitStatus.pd, time: DateTime.now()),
     );
   }
+
+  factory Unit.fromJson(Map<String, dynamic> json) => _$UnitFromJson(json);
 
   @override
   bool operator ==(Object other) =>
