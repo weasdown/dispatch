@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
 import '../location/address.dart';
+import '../location/latlng_extension.dart';
 import '../person/patient.dart';
 import '../unit/unit.dart';
 import '../unit/unit_status.dart';
@@ -64,7 +65,7 @@ class Event {
     final statusJSON = json['status'];
 
     final locationJSON = json['location'];
-    final location = LatLng.fromJson(locationJSON);
+    final location = LatLngJson.fromJson(locationJSON);
 
     final patientsJSON = json['patients'] as List?;
     final patients =
@@ -395,7 +396,7 @@ class Event {
       'id': id,
       'noc': noc,
       'status': noc ?? status,
-      'location': location,
+      'location': LatLngJson(location)?.toJson(),
       'address': address,
       'assignedUnits': List<String>.from(
         assignedUnits.map((Unit assignedUnit) => assignedUnit.callsign),
