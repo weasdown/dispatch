@@ -262,9 +262,15 @@ enum VehicleType {
 
   const VehicleType(this.name, this.abbreviation);
 
+  factory VehicleType.fromJson(String json) => VehicleType.values
+      .where((VehicleType value) => value.abbreviation == json)
+      .first;
+
   final String abbreviation;
 
   final String name;
+
+  String toJson() => abbreviation;
 }
 
 extension ToHM on DateTime {
