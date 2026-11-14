@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
+import '../config/assets.dart';
 import '../config/constants.dart';
 import 'api.dart';
 
@@ -82,5 +83,5 @@ class UnitApi implements Api {
     return router;
   }
 
-  final List<Unit> _units = List.empty(growable: true);
+  final List<Unit> _units = Assets.units;
 }
