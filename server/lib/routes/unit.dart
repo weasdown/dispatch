@@ -22,7 +22,7 @@ class UnitApi extends Api {
     });
 
     /// Get an unit by its callsign.
-    router.get('/<id>', (Request request, String callsign) {
+    router.get('/<callsign>', (Request request, String callsign) {
       final unit = _units
           .where((unit) => unit.callsign.toString() == callsign)
           .firstOrNull;
