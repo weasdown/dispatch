@@ -4,8 +4,7 @@
 
 import 'dart:io';
 
-// TODO add auth middleware
-// import 'package:dispatch_server/middleware/auth.dart';
+import 'package:dispatch_server/middleware/auth.dart';
 import 'package:dispatch_server/routes/event.dart';
 import 'package:dispatch_server/routes/login.dart';
 import 'package:dispatch_server/routes/unit.dart';
@@ -38,13 +37,14 @@ void main(List<String> args) async {
       ? log.severe('Operation failed with error', message)
       : log.fine(message);
 
+  log.info('Building pipeline');
   final handler = Pipeline()
       .addMiddleware(logRequests(logger: logger))
-      // // TODO add authRequests middleware
-      // .addMiddleware(authRequests())
+      .addMiddleware(authRequests())
       .addHandler(_router.call);
 
   // For running in containers, we respect the PORT environment variable.
+  log.info('Starting server...');
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
   final server = await serve(handler, ip, port);
   log.info('Server listening on port ${server.port}');
