@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:shelf/shelf.dart';
 
-import 'config/constants.dart';
+import '../config/constants.dart';
 
 class JsonResponse extends Response {
   JsonResponse.notFound(

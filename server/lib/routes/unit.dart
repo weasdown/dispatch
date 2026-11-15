@@ -6,7 +6,7 @@ import 'package:shelf_router/shelf_router.dart';
 
 import '../config/assets.dart';
 import '../config/constants.dart';
-import '../json_response.dart';
+import '../model/json_response.dart';
 import 'api.dart';
 
 /// Allows the user to create and update units.

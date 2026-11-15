@@ -4,7 +4,7 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 import '../config/constants.dart';
-import '../json_response.dart';
+import '../model/json_response.dart';
 import '../model/login/login.dart';
 import 'api.dart';
 
