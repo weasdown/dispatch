@@ -4,7 +4,6 @@ import 'package:dispatch/domain/models/event/event.dart';
 import 'package:dispatch/domain/models/event/noc.dart';
 import 'package:dispatch/domain/models/location/address.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -13,7 +12,7 @@ import '../json_response.dart';
 import 'api.dart';
 
 /// Allows the user to create and update events.
-class EventApi implements Api {
+class EventApi extends Api {
   EventApi() {
     // Create a default event
     _events.add(
@@ -35,9 +34,6 @@ class EventApi implements Api {
   // TODO convert to storing events in a SQL database.
   /// Events are kept in memory for demo purposes.
   final List<Event> _events = List.empty(growable: true);
-
-  @override
-  Logger get log => Logger('EventApi');
 
   /// Used to generate IDs for events.
   int get nextIDNum {

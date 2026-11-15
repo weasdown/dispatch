@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -9,10 +8,7 @@ import '../json_response.dart';
 import '../model/login/login.dart';
 import 'api.dart';
 
-class LoginApi implements Api {
-  @override
-  Logger get log => Logger('LoginApi');
-
+class LoginApi extends Api {
   @override
   Router get router {
     final router = Router();

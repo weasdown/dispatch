@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dispatch/domain/models/unit/unit.dart';
-import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -11,10 +10,7 @@ import '../json_response.dart';
 import 'api.dart';
 
 /// Allows the user to create and update units.
-class UnitApi implements Api {
-  @override
-  Logger get log => Logger('UnitApi');
-
+class UnitApi extends Api {
   @override
   Router get router {
     final router = Router();

@@ -22,18 +22,24 @@ final _router = Router()
 
 void main(List<String> args) async {
   hierarchicalLoggingEnabled = true;
-  Logger.root.level = Level.ALL; // TODO set this to a lower level
-  Logger.root.onRecord.listen((record) {
-    print('[${record.level}] ${record.message}');
-  });
-  final log = Logger.root;
+  final log = Logger.root
+    // TODO set this to a lower level
+    ..level = Level.ALL
+    ..onRecord.listen((record) {
+      final loggerName = record.loggerName.isEmpty ? 'root' : record.loggerName;
+      print('${record.time} [$loggerName] [${record.level}] ${record.message}');
+    });
 
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;
 
   // Configure a pipeline that logs requests.
+  void logger(String message, bool isError) => isError
+      ? log.severe('Operation failed with error', message)
+      : log.fine(message);
+
   final handler = Pipeline()
-      .addMiddleware(logRequests())
+      .addMiddleware(logRequests(logger: logger))
       // // TODO add authRequests middleware
       // .addMiddleware(authRequests())
       .addHandler(_router.call);
