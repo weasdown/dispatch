@@ -7,6 +7,7 @@ import 'package:shelf_router/shelf_router.dart';
 
 import '../config/assets.dart';
 import '../config/constants.dart';
+import '../json_response.dart';
 import 'api.dart';
 
 /// Allows the user to create and update units.
@@ -20,10 +21,8 @@ class UnitApi implements Api {
 
     /// Get all units.
     router.get('/', (Request request) {
-      return Response.ok(
-        json.encode(_units),
-        headers: Constants.contentTypeJSON,
-      );
+      log.fine('Getting all units');
+      return JsonResponse.ok(_units);
     });
 
     /// Get an unit by its callsign.
@@ -36,7 +35,7 @@ class UnitApi implements Api {
         return Response.notFound('Invalid callsign');
       }
 
-      return Response.ok(json.encode(unit), headers: Constants.contentTypeJSON);
+      return JsonResponse.ok(unit);
     });
 
     /// Save a new unit.

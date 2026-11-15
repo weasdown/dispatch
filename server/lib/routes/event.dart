@@ -9,6 +9,7 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 import '../config/constants.dart';
+import '../json_response.dart';
 import 'api.dart';
 
 /// Allows the user to create and update events.
@@ -50,10 +51,7 @@ class EventApi implements Api {
 
     /// Get all events.
     router.get('/', (Request request) {
-      return Response.ok(
-        json.encode(_events),
-        headers: Constants.contentTypeJSON,
-      );
+      return JsonResponse.ok(_events);
     });
 
     /// Get an event by its ID.
@@ -66,10 +64,7 @@ class EventApi implements Api {
         return Response.notFound('Invalid ID');
       }
 
-      return Response.ok(
-        json.encode(event),
-        headers: Constants.contentTypeJSON,
-      );
+      return JsonResponse.ok(event);
     });
 
     /// Save a new event.
