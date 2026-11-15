@@ -1,4 +1,4 @@
-import 'package:dispatch_server/server.dart';
+import 'package:dispatch_server/dispatch_server.dart';
 import 'package:test/test.dart';
 
 void main() {
