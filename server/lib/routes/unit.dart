@@ -58,7 +58,7 @@ class UnitApi extends Api {
         );
       }
 
-      if (_unitAlreadyInDatabase(unit.callsign)) {
+      if (_unitInDatabase(unit.callsign)) {
         return Response.badRequest(
           body:
               'Unit with callsign ${unit.callsign} already exists in the database.',
@@ -89,7 +89,7 @@ class UnitApi extends Api {
     return router;
   }
 
-  bool _unitAlreadyInDatabase(String callsign) =>
+  bool _unitInDatabase(String callsign) =>
       _units.where((Unit dbUnit) => dbUnit.callsign == callsign).isNotEmpty;
 
   final List<Unit> _units = Assets.units;
