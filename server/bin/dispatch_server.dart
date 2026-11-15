@@ -4,8 +4,8 @@
 
 import 'dart:io';
 
-// // import 'package:dispatch_server/middleware/auth.dart';
-// // import 'package:dispatch_server/routes/event.dart';
+// TODO add auth middleware
+// import 'package:dispatch_server/middleware/auth.dart';
 import 'package:dispatch_server/routes/event.dart';
 import 'package:dispatch_server/routes/login.dart';
 import 'package:dispatch_server/routes/unit.dart';
