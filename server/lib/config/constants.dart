@@ -9,6 +9,9 @@ abstract final class Constants {
     'Content-Type': 'application/json',
   };
 
+  /// Path for rootCA/server credentials folder, relative to `server`.
+  static const String credentialsPath = 'creds';
+
   /// Email for the hardcoded login.
   static const email = 'email@example.com';
 
