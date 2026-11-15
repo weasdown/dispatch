@@ -39,51 +39,63 @@ class UnitApi implements Api {
       return Response.ok(json.encode(unit), headers: Constants.contentTypeJSON);
     });
 
-    // /// Save a new unit.
-    // router.post('/', (Request request) async {
-    //   final body = await request.readAsString();
-    //
-    //   late final Map<String, dynamic>? unitJSON;
-    //   try {
-    //     unitJSON = json.decode(body);
-    //   } on FormatException catch (e) {
-    //     return Response.badRequest(
-    //       body: 'Invalid request body: $e',
-    //       headers: Constants.contentTypeJSON,
-    //     );
-    //   }
-    //
-    //   late final Unit? unit;
-    //   try {
-    //     unit = Unit.fromJson(unitJSON!, nextIDNum);
-    //   } on Exception catch (e) {
-    //     return Response.badRequest(
-    //       body: 'Invalid request body: $e',
-    //       headers: Constants.contentTypeJSON,
-    //     );
-    //   }
-    //
-    //   _units.add(unit); // Store unit
-    //
-    //   late final String? encodedEvent;
-    //   try {
-    //     encodedEvent = json.encode(unit);
-    //   } on JsonUnsupportedObjectError catch (e) {
-    //     return Response.internalServerError(
-    //       body: 'Failed to encode built unit for response: $e.',
-    //     );
-    //   }
-    //
-    //   // Respond with newly created unit
-    //   return Response(
-    //     201, // created
-    //     body: encodedEvent,
-    //     headers: Constants.contentTypeJSON,
-    //   );
-    // });
+    /// Save a new unit.
+    router.post('/', (Request request) async {
+      final body = await request.readAsString();
+
+      late final Map<String, dynamic>? unitJSON;
+      try {
+        unitJSON = json.decode(body);
+      } on FormatException catch (e) {
+        return Response.badRequest(
+          body: 'Invalid request body: $e',
+          headers: Constants.contentTypeJSON,
+        );
+      }
+
+      late final Unit? unit;
+      try {
+        unit = Unit.fromJson(unitJSON!);
+      } on Exception catch (e) {
+        return Response.badRequest(
+          body: 'Invalid request body: $e',
+          headers: Constants.contentTypeJSON,
+        );
+      }
+
+      if (_unitAlreadyInDatabase(unit.callsign)) {
+        return Response.badRequest(
+          body:
+              'Unit with callsign ${unit.callsign} already exists in the database.',
+        );
+      }
+
+      _units.add(unit); // Store unit
+      log.fine('Added new unit to _units');
+      log.fine('Now ${_units.length} units in _units');
+
+      late final String? encodedEvent;
+      try {
+        encodedEvent = json.encode(unit);
+      } on JsonUnsupportedObjectError catch (e) {
+        return Response.internalServerError(
+          body: 'Failed to encode built unit for response: $e.',
+        );
+      }
+
+      // Respond with newly created unit
+      return Response(
+        201, // created
+        body: encodedEvent,
+        headers: Constants.contentTypeJSON,
+      );
+    });
 
     return router;
   }
+
+  bool _unitAlreadyInDatabase(String callsign) =>
+      _units.where((Unit dbUnit) => dbUnit.callsign == callsign).isNotEmpty;
 
   final List<Unit> _units = Assets.units;
 }
