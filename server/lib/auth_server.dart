@@ -12,6 +12,9 @@ import 'middleware/logger.dart';
 import 'model/json_response.dart';
 
 final class AuthServer {
+  /// Builds a [JSON Web Signature (JWS)](https://www.rfc-editor.org/info/rfc7515/)
+  /// that contains a [JSON Web Token (JWT)](https://www.jwt.io/). The JWT
+  /// authorises the client to perform particular operations on the main dispatch server.
   JsonResponse _buildBearerToken() {
     return JsonResponse.notImplemented(
       'Bearer token endpoint is not yet implemented.',
