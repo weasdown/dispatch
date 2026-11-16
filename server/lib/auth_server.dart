@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
@@ -11,17 +12,50 @@ import 'config/constants.dart';
 import 'middleware/logger.dart';
 import 'model/json_response.dart';
 
+/// Builds [JSON Web Tokens (JWTs)](https://www.jwt.io/).
+class _JWTBuilder {
+  String _build(String clientID) {
+    final JWTAlgorithm algorithm = JWTAlgorithm.HS256;
+
+    // TODO check typ value is correct against RFC JWT/JWS specs
+    final headerMap = {"alg": algorithm.name, "typ": "JWT"};
+
+    // FIXME set appropriate payload keys/values
+    final payloadMap = {"sub": clientID, "admin": true};
+
+    final jwt = JWT(payloadMap, issuer: issuer, header: headerMap);
+
+    final signedJWT = _signJWT(jwt);
+    return signedJWT;
+  }
+
+  String call(String clientID) => _build(clientID);
+
+  static final String issuer = 'https://github.com/weasdown/dispatch/server';
+
+  static final String _secretKey =
+      'ZGlzcGF0Y2gtYXV0aC1zZXJ2ZXItc2VjcmV0LWtleQ==';
+
+  /// Cryptographically signs a JSON Web Token.
+  String _signJWT(JWT jwt) => jwt.sign(
+    SecretKey(_secretKey, isBase64Encoded: true),
+    algorithm: JWTAlgorithm.HS256,
+  );
+}
+
 final class AuthServer {
   /// Builds a [JSON Web Signature (JWS)](https://www.rfc-editor.org/info/rfc7515/)
   /// that contains a [JSON Web Token (JWT)](https://www.jwt.io/). The JWT
   /// authorises the client to perform particular operations on the main dispatch server.
-  JsonResponse _buildBearerToken() {
-    return JsonResponse.notImplemented(
-      'Bearer token endpoint is not yet implemented.',
-    );
+  JsonResponse _buildBearerToken(String clientID) {
+    final jwt = _buildJWT(clientID);
+
+    return JsonResponse.ok(jwt);
   }
 
-  static final String issuer = 'https://github.com/weasdown/dispatch/server';
+  String _buildJWT(String clientID) => _jwtBuilder(clientID);
+
+  final _JWTBuilder _jwtBuilder = _JWTBuilder();
 
   late final Logger log = Logger(runtimeType.toString());
 
@@ -55,7 +89,9 @@ final class AuthServer {
       log.info('In /token endpoint');
       final queryParams = request.url.queryParameters;
 
-      return _validateQueryParameters(queryParams) ?? _buildBearerToken();
+      final validatedCredentials = _validateQueryParameters(queryParams);
+      return validatedCredentials.jsonResponse ??
+          _buildBearerToken(validatedCredentials.clientID!);
     });
 
     return router;
@@ -81,19 +117,25 @@ final class AuthServer {
 
   String get tokenEndpoint => '/token';
 
-  JsonResponse? _validateQueryParameters(Map<String, String> queryParams) {
+  ValidatedClientCredentials _validateQueryParameters(
+    Map<String, String> queryParams,
+  ) {
     // Must have grant_type query parameter.
     final grantTypeValue = queryParams['grant_type'];
     if (grantTypeValue == null || grantTypeValue.isEmpty) {
-      return JsonResponse.badRequest(
-        'Query parameters must contain grant_type.',
+      return ValidatedClientCredentials(
+        jsonResponse: JsonResponse.badRequest(
+          'Query parameters must contain grant_type.',
+        ),
       );
     }
     // grant_type must be one of the supported values.
     if (!_SupportedGrantType.isSupported(grantTypeValue)) {
-      return JsonResponse.notImplemented(
-        'Grant type $grantTypeValue is not yet implemented. Must be one of: '
-        '${_SupportedGrantType._names}',
+      return ValidatedClientCredentials(
+        jsonResponse: JsonResponse.notImplemented(
+          'Grant type $grantTypeValue is not yet implemented. Must be one of: '
+          '${_SupportedGrantType._names}',
+        ),
       );
     }
 
@@ -101,34 +143,45 @@ final class AuthServer {
     final clientIDValue = queryParams['client_id'];
     final clientSecretValue = queryParams['client_secret'];
     if (clientIDValue == null || clientIDValue.isEmpty) {
-      return JsonResponse.badRequest(
-        'Query parameters must contain client_id.',
+      return ValidatedClientCredentials(
+        jsonResponse: JsonResponse.badRequest(
+          'Query parameters must contain client_id.',
+        ),
       );
     }
 
     // Must have a client_secret query parameter.
     if (clientSecretValue == null || clientSecretValue.isEmpty) {
-      return JsonResponse.badRequest(
-        'Query parameters must contain client_secret.',
+      return ValidatedClientCredentials(
+        jsonResponse: JsonResponse.badRequest(
+          'Query parameters must contain client_secret.',
+        ),
       );
     }
 
     // client_id must be recognised.
     final recognisedClientSecret = _recognisedClients[clientIDValue];
     if (recognisedClientSecret == null) {
-      return JsonResponse.unauthorized(
-        'client_id "$clientIDValue" is not recognised.',
+      return ValidatedClientCredentials(
+        jsonResponse: JsonResponse.unauthorized(
+          'client_id "$clientIDValue" is not recognised.',
+        ),
       );
     }
 
     // client_secret must match the recognised value for the  client_id.
     if (recognisedClientSecret != clientSecretValue) {
-      return JsonResponse.unauthorized(
-        'client_secret "$clientSecretValue" is invalid for client_id "$clientIDValue".',
+      return ValidatedClientCredentials(
+        jsonResponse: JsonResponse.unauthorized(
+          'client_secret "$clientSecretValue" is invalid for client_id "$clientIDValue".',
+        ),
       );
     }
 
-    return null;
+    return ValidatedClientCredentials(
+      clientID: clientIDValue,
+      clientSecret: clientSecretValue,
+    );
   }
 }
 
@@ -220,7 +273,7 @@ void rs256() {
     final jwt = JWT({
       'id': 123,
       'server': {'id': '3e4fc296', 'loc': 'euw-2'},
-    }, issuer: AuthServer.issuer);
+    }, issuer: _JWTBuilder.issuer);
 
     print('cwd: ${Directory.current}');
 
@@ -446,3 +499,28 @@ void rs256() {
 //     }
 //   }
 // }
+
+extension StringBase64Encode on String {
+  // String encodeAsBase64() => base64.encode(utf8.encode(this));
+
+  String encodeAsBase64URL() => base64Url.encode(utf8.encode(this));
+}
+
+extension MapBase64Encode on Map<String, Object?> {
+  // String encodeAsBase64() => json.encode(this).encodeAsBase64();
+
+  String encodeAsBase64URL() => json.encode(this).encodeAsBase64URL();
+}
+
+class ValidatedClientCredentials {
+  ValidatedClientCredentials({
+    this.clientID,
+    this.clientSecret,
+    this.jsonResponse,
+  });
+
+  final String? clientID;
+  final String? clientSecret;
+
+  final JsonResponse? jsonResponse;
+}
