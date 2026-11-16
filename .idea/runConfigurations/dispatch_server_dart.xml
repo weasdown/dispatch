@@ -1,5 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="dispatch_server.dart" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+    <option name="envs">
+      <entry key="AUTH_PORT" value="4321" />
+      <entry key="PORT" value="1234" />
+    </option>
     <option name="filePath" value="$PROJECT_DIR$/server/bin/dispatch_server.dart" />
     <method v="2" />
   </configuration>

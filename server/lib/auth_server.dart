@@ -1,14 +1,17 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
+import 'package:shelf/shelf_io.dart' as sio;
 import 'package:shelf_router/shelf_router.dart';
 
-import '../config/constants.dart';
-import '../model/json_response.dart';
-import 'api.dart';
+import 'config/constants.dart';
+import 'middleware/logger.dart';
+import 'model/json_response.dart';
 
-class OAuth2Api extends Api {
+final class AuthServer {
   JsonResponse _buildBearerToken() {
     return JsonResponse.notImplemented(
       'Bearer token endpoint is not yet implemented.',
@@ -16,6 +19,11 @@ class OAuth2Api extends Api {
   }
 
   static final String issuer = 'https://github.com/weasdown/dispatch/server';
+
+  late final Logger log = Logger(runtimeType.toString());
+
+  FutureOr<Response> _notFoundHandler(Request request) =>
+      JsonResponse.notFound('Endpoint ${request.url.path} not found');
 
   // TODO store these in a database instead, and not in plaintext.
   Map<String, String> get _recognisedClients => {
@@ -26,25 +34,46 @@ class OAuth2Api extends Api {
     'ect1': 'ect1Secret',
   };
 
-  @override
+  final String rootPath = '/oauth2';
+
   Router get router {
-    final router = Router();
+    final router = Router(notFoundHandler: _notFoundHandler);
 
     /// Get authorization.
-    router.get('/authorization', (Request request) {
+    router.get('$rootPath/authorization', (Request request) {
+      log.info('In /authorization endpoint');
       return JsonResponse.notImplemented(
         'Authorization endpoint is not yet implemented.',
       );
     });
 
     /// Get a bearer token.
-    router.get('/token', (Request request) {
+    router.get('$rootPath/token', (Request request) {
+      log.info('In /token endpoint');
       final queryParams = request.url.queryParameters;
 
       return _validateQueryParameters(queryParams) ?? _buildBearerToken();
     });
 
     return router;
+  }
+
+  Future<void> serve() async {
+    // Use any available host or container IP (usually `0.0.0.0`).
+    final ip = InternetAddress.anyIPv4;
+
+    final handler = Pipeline()
+        .addMiddleware(logRequests(logger: logger(log)))
+        .addHandler(router.call);
+
+    // For running in containers, we respect the PORT environment variable.
+    log.info('Starting auth server...');
+    final port = int.parse(Platform.environment['AUTH_PORT'] ?? '8081');
+    log.finer('Using port $port for auth server');
+    final server = await sio.serve(handler, ip, port);
+    log.info(
+      'Auth server listening ${ip == InternetAddress.anyIPv4 ? 'for any IPv4 address ' : ''}on port ${server.port}',
+    );
   }
 
   String get tokenEndpoint => '/token';
@@ -188,7 +217,7 @@ void rs256() {
     final jwt = JWT({
       'id': 123,
       'server': {'id': '3e4fc296', 'loc': 'euw-2'},
-    }, issuer: OAuth2Api.issuer);
+    }, issuer: AuthServer.issuer);
 
     print('cwd: ${Directory.current}');
 
