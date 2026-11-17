@@ -555,24 +555,6 @@ final class AccessTokenResponse {
   @JsonKey(name: 'token_type')
   final String tokenType;
 
-  // Map<String, dynamic> toJson() {
-  //   final output = {"access_token": accessToken, "token_type": tokenType};
-  //
-  //   if (expiresIn != null) {
-  //     output["expires_in"] = expiresIn.toString();
-  //   }
-  //
-  //   if (refreshToken != null) {
-  //     output["refresh_token"] = refreshToken!;
-  //   }
-  //
-  //   if (scope != null) {
-  //     output["scope"] = scope!;
-  //   }
-  //
-  //   return output;
-  // }
-
   factory AccessTokenResponse.fromJson(Map<String, dynamic> json) =>
       _$AccessTokenResponseFromJson(json);
 
