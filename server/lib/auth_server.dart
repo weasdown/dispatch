@@ -529,7 +529,7 @@ class ValidatedClientCredentials {
 }
 
 /// See https://www.oauth.com/oauth2-servers/access-tokens/access-token-response/.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 final class AccessTokenResponse {
   const AccessTokenResponse({
     required this.accessToken,
@@ -577,4 +577,64 @@ final class AccessTokenResponse {
       _$AccessTokenResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$AccessTokenResponseToJson(this);
+}
+
+/// See https://www.oauth.com/oauth2-servers/access-tokens/access-token-response/#:~:text=Unsuccessful%20Response.
+@JsonSerializable()
+final class AuthErrorResponse {
+  AuthErrorResponse({
+    this.statusCode = HttpStatus.badRequest,
+    required this.error,
+    this.errorDescription,
+    this.errorUri,
+  });
+
+  final ErrorParameter error;
+
+  @JsonKey(name: 'error_description')
+  final String? errorDescription;
+
+  @JsonKey(name: 'error_uri')
+  final String? errorUri;
+
+  @JsonKey(name: 'status_code')
+  final int statusCode;
+
+  factory AuthErrorResponse.fromJson(Map<String, dynamic> json) =>
+      _$AuthErrorResponseFromJson(json);
+
+  Map<String, Object?> toJson() => _$AuthErrorResponseToJson(this);
+}
+
+/// For use in an [AuthErrorResponse].
+enum ErrorParameter {
+  invalidRequest,
+  invalidClient,
+  invalidGrant,
+  invalidScope,
+  unauthorizedClient,
+  unsupportedGrantType;
+
+  factory ErrorParameter.fromJson(String value) => switch (value) {
+    'invalid_request' => invalidRequest,
+    'invalid_client' => invalidClient,
+    'invalid_grant' => invalidGrant,
+    'invalid_scope' => invalidScope,
+    'unauthorized_client' => unauthorizedClient,
+    'unsupported_grant_type' => unsupportedGrantType,
+    _ => throw ArgumentError.value(
+      value,
+      'value',
+      'invalid error parameter value. Must be one of: ${ErrorParameter.values}',
+    ),
+  };
+
+  String toJson() => switch (this) {
+    ErrorParameter.invalidRequest => 'invalid_request',
+    ErrorParameter.invalidClient => 'invalid_client',
+    ErrorParameter.invalidGrant => 'invalid_grant',
+    ErrorParameter.invalidScope => 'invalid_scope',
+    ErrorParameter.unauthorizedClient => 'unauthorized_client',
+    ErrorParameter.unsupportedGrantType => 'unsupported_grant_type',
+  };
 }

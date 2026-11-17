@@ -24,3 +24,20 @@ Map<String, dynamic> _$AccessTokenResponseToJson(
   'scope': instance.scope,
   'token_type': instance.tokenType,
 };
+
+AuthErrorResponse _$AuthErrorResponseFromJson(Map<String, dynamic> json) =>
+    AuthErrorResponse(
+      statusCode:
+          (json['status_code'] as num?)?.toInt() ?? HttpStatus.badRequest,
+      error: ErrorParameter.fromJson(json['error'] as String),
+      errorDescription: json['error_description'] as String?,
+      errorUri: json['error_uri'] as String?,
+    );
+
+Map<String, dynamic> _$AuthErrorResponseToJson(AuthErrorResponse instance) =>
+    <String, dynamic>{
+      'error': instance.error,
+      'error_description': instance.errorDescription,
+      'error_uri': instance.errorUri,
+      'status_code': instance.statusCode,
+    };
