@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as sio;
@@ -11,6 +12,8 @@ import 'package:shelf_router/shelf_router.dart';
 import 'config/constants.dart';
 import 'middleware/logger.dart';
 import 'model/json_response.dart';
+
+part 'auth_server.g.dart';
 
 /// Builds [JSON Web Tokens (JWTs)](https://www.jwt.io/).
 class _JWTBuilder {
@@ -523,4 +526,55 @@ class ValidatedClientCredentials {
   final String? clientSecret;
 
   final JsonResponse? jsonResponse;
+}
+
+/// See https://www.oauth.com/oauth2-servers/access-tokens/access-token-response/.
+@JsonSerializable()
+final class AccessTokenResponse {
+  const AccessTokenResponse({
+    required this.accessToken,
+    required this.tokenType,
+    this.expiresIn,
+    this.refreshToken,
+    this.scope,
+  });
+
+  @JsonKey(name: 'access_token')
+  final String accessToken;
+
+  @JsonKey(name: 'expires_in')
+  final int? expiresIn;
+
+  @JsonKey(name: 'refresh_token')
+  final String? refreshToken;
+
+  @JsonKey(name: 'scope')
+  final String? scope;
+
+  // TODO convert to enum
+  @JsonKey(name: 'token_type')
+  final String tokenType;
+
+  // Map<String, dynamic> toJson() {
+  //   final output = {"access_token": accessToken, "token_type": tokenType};
+  //
+  //   if (expiresIn != null) {
+  //     output["expires_in"] = expiresIn.toString();
+  //   }
+  //
+  //   if (refreshToken != null) {
+  //     output["refresh_token"] = refreshToken!;
+  //   }
+  //
+  //   if (scope != null) {
+  //     output["scope"] = scope!;
+  //   }
+  //
+  //   return output;
+  // }
+
+  factory AccessTokenResponse.fromJson(Map<String, dynamic> json) =>
+      _$AccessTokenResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AccessTokenResponseToJson(this);
 }
