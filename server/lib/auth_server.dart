@@ -15,63 +15,144 @@ import 'model/json_response.dart';
 
 part 'auth_server.g.dart';
 
+abstract class AccessToken {
+  // String sign();
+  // => jwt.sign(
+  //   SecretKey(_secretKey, isBase64Encoded: true),
+  //   algorithm: JWTAlgorithm.HS256,
+  // );
+}
+
+/// [RFC 9068](https://www.rfc-editor.org/info/rfc9068/) defines required claims
+/// — iss, exp, aud, sub, client_id, iat, jti — and a standard scope claim.
+/// See https://oauth.net/2/jwt-access-tokens/.
+@JsonSerializable()
+final class JWTAccessToken implements AccessToken {
+  const JWTAccessToken({
+    required this.audience,
+    required this.clientID,
+    required this.issuedAt,
+    required this.issuer,
+    required this.jwtID,
+    required this.expirationTime,
+    required this.scope,
+    required this.sub,
+  });
+
+  @JsonKey(name: 'aud')
+  final String audience;
+
+  @JsonKey(name: 'client_id')
+  final String clientID;
+
+  factory JWTAccessToken.fromJson(Map<String, Object?> json) =>
+      _$JWTAccessTokenFromJson(json);
+
+  /// The UNIX timestamp for the datetime at which this token was issued.
+  @JsonKey(name: 'iat')
+  final int issuedAt;
+
+  @JsonKey(name: 'iss')
+  final String issuer;
+
+  @JsonKey(name: 'jti')
+  final String jwtID;
+
+  /// The UNIX timestamp for the datetime at which this token will expire.
+  @JsonKey(name: 'exp')
+  final int expirationTime;
+
+  @JsonKey(name: 'scope')
+  final String scope;
+
+  @JsonKey(name: 'sub')
+  final String sub;
+
+  Map<String, Object?> toJson() => _$JWTAccessTokenToJson(this);
+}
+
 /// Builds [JSON Web Tokens (JWTs)](https://www.jwt.io/).
 class _JWTBuilder {
-  String _build(String clientID) {
+  JWTWithExpiry build(String clientID, String host, int port) {
     final JWTAlgorithm algorithm = JWTAlgorithm.HS256;
+
+    final claims = tokenClaims(host, port);
+    final issuedAt = DateTime.now().toUtc().millisecondsSinceEpoch;
+    final accessToken = JWTAccessToken(
+      audience: claims['aud'] as String,
+      clientID: clientID,
+      issuedAt: issuedAt,
+      issuer: claims['iss'] as String,
+      jwtID: DateTime.now().toIso8601String(),
+      expirationTime: issuedAt + validDuration,
+      scope: AuthServer._recognisedClients[clientID]!['scope'],
+      sub: clientID,
+    );
 
     // TODO check typ value is correct against RFC JWT/JWS specs
     final headerMap = {"alg": algorithm.name, "typ": "JWT"};
 
-    // FIXME set appropriate payload keys/values
-    final payloadMap = {"sub": clientID, "admin": true};
+    final jwt = JWT(accessToken.toJson(), issuer: issuer, header: headerMap);
 
-    final jwt = JWT(payloadMap, issuer: issuer, header: headerMap);
-
-    final signedJWT = _signJWT(jwt);
-    return signedJWT;
+    return JWTWithExpiry(
+      jwt: jwt,
+      expiryDuration: accessToken.expirationTime - accessToken.issuedAt,
+    );
   }
 
-  String call(String clientID) => _build(clientID);
+  static Map<String, Object?> tokenClaims(String host, int port) => {
+    'aud': '$host:$port',
+    'iss': issuer,
+  };
 
   static final String issuer = 'https://github.com/weasdown/dispatch/server';
 
-  static final String _secretKey =
-      'ZGlzcGF0Y2gtYXV0aC1zZXJ2ZXItc2VjcmV0LWtleQ==';
+  /// The amount of time the access token will be valid for, in seconds.
+  final int validDuration = 600;
+}
 
-  /// Cryptographically signs a JSON Web Token.
-  String _signJWT(JWT jwt) => jwt.sign(
-    SecretKey(_secretKey, isBase64Encoded: true),
-    algorithm: JWTAlgorithm.HS256,
-  );
+class JWTWithExpiry {
+  const JWTWithExpiry({required this.jwt, required this.expiryDuration});
+
+  final int expiryDuration;
+  final JWT jwt;
 }
 
 final class AuthServer {
   /// Builds a [JSON Web Signature (JWS)](https://www.rfc-editor.org/info/rfc7515/)
   /// that contains a [JSON Web Token (JWT)](https://www.jwt.io/). The JWT
   /// authorises the client to perform particular operations on the main dispatch server.
-  JsonResponse _buildBearerToken(String clientID) {
-    final jwt = _buildJWT(clientID);
+  JsonResponse _buildBearerToken(String clientID, String host, int port) {
+    final jwtWithExpiry = _JWTBuilder().build(clientID, host, port);
 
-    return JsonResponse.ok(jwt);
+    final jwt = jwtWithExpiry.jwt;
+    final signedJWT = _signJWT(jwt);
+
+    final accessTokenResponse = AccessTokenResponse(
+      accessToken: 'Bearer $signedJWT',
+      expiresIn: jwtWithExpiry.expiryDuration,
+      tokenType: 'Bearer',
+    );
+
+    return JsonResponse.ok(accessTokenResponse);
   }
 
-  String _buildJWT(String clientID) => _jwtBuilder(clientID);
-
-  final _JWTBuilder _jwtBuilder = _JWTBuilder();
+  final String host = 'localhost';
 
   late final Logger log = Logger(runtimeType.toString());
 
   FutureOr<Response> _notFoundHandler(Request request) =>
       JsonResponse.notFound('Endpoint ${request.url.path} not found');
 
+  late final int port;
+
   // TODO store these in a database instead, and not in plaintext.
-  Map<String, String> get _recognisedClients => {
-    'client_id': 'client_secret',
-    'admin': 'admin',
-    'ed1': 'ed1Secret',
-    'eda1': 'eda1Secret',
-    'ect1': 'ect1Secret',
+  static final Map<String, Map<String, dynamic>> _recognisedClients = {
+    'client_id': {"secretID": "client_secret", "scope": "all"},
+    'admin': {"secretID": "admin", "scope": "all"},
+    'ed1': {"secretID": "ed1Secret", "scope": "all"},
+    'eda1': {"secretID": "eda1Secret", "scope": "all"},
+    'ect1': {"secretID": "ect1Secret", "scope": "all"},
   };
 
   final String rootPath = '/oauth2';
@@ -94,11 +175,14 @@ final class AuthServer {
 
       final validatedCredentials = _validateQueryParameters(queryParams);
       return validatedCredentials.jsonResponse ??
-          _buildBearerToken(validatedCredentials.clientID!);
+          _buildBearerToken(validatedCredentials.clientID!, rootPath, port);
     });
 
     return router;
   }
+
+  static final String _secretKey =
+      'ZGlzcGF0Y2gtYXV0aC1zZXJ2ZXItc2VjcmV0LWtleQ==';
 
   Future<void> serve() async {
     // Use any available host or container IP (usually `0.0.0.0`).
@@ -111,12 +195,23 @@ final class AuthServer {
     // For running in containers, we respect the PORT environment variable.
     log.info('Starting auth server...');
     final port = int.parse(Platform.environment['AUTH_PORT'] ?? '8081');
+    this.port = port;
+
     log.finer('Using port $port for auth server');
     final server = await sio.serve(handler, ip, port);
     log.info(
       'Auth server listening ${ip == InternetAddress.anyIPv4 ? 'for any IPv4 address ' : ''}on port ${server.port}',
     );
   }
+
+  /// Cryptographically signs a JSON Web Token.
+  ///
+  /// Produces a string of the base64-encoded, signed value, e.g.
+  /// `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbGllbnRfaWQiLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNzk0OTAzMjY4LCJpc3MiOiJodHRwczovL2dpdGh1Yi5jb20vd2Vhc2Rvd24vZGlzcGF0Y2gvc2VydmVyIn0.DE8TJ4494LhfIvN-YUglgZO-j_rchso2lTicNDXHGfw`.
+  String _signJWT(JWT jwt) => jwt.sign(
+    SecretKey(_secretKey, isBase64Encoded: true),
+    algorithm: JWTAlgorithm.HS256,
+  );
 
   String get tokenEndpoint => '/token';
 
@@ -163,7 +258,8 @@ final class AuthServer {
     }
 
     // client_id must be recognised.
-    final recognisedClientSecret = _recognisedClients[clientIDValue];
+    final recognisedClientSecret =
+        _recognisedClients[clientIDValue]!['secretID'];
     if (recognisedClientSecret == null) {
       return ValidatedClientCredentials(
         jsonResponse: JsonResponse.unauthorized(
@@ -534,7 +630,7 @@ final class AccessTokenResponse {
   const AccessTokenResponse({
     required this.accessToken,
     required this.tokenType,
-    this.expiresIn,
+    required this.expiresIn,
     this.refreshToken,
     this.scope,
   });
@@ -543,7 +639,7 @@ final class AccessTokenResponse {
   final String accessToken;
 
   @JsonKey(name: 'expires_in')
-  final int? expiresIn;
+  final int expiresIn;
 
   @JsonKey(name: 'refresh_token')
   final String? refreshToken;
