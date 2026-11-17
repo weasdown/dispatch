@@ -19,9 +19,9 @@ Map<String, dynamic> _$AccessTokenResponseToJson(
   AccessTokenResponse instance,
 ) => <String, dynamic>{
   'access_token': instance.accessToken,
-  'expires_in': instance.expiresIn,
-  'refresh_token': instance.refreshToken,
-  'scope': instance.scope,
+  'expires_in': ?instance.expiresIn,
+  'refresh_token': ?instance.refreshToken,
+  'scope': ?instance.scope,
   'token_type': instance.tokenType,
 };
 
